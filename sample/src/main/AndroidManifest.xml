@@ -100,6 +100,54 @@
                 android:name="androidx.wear.tiles.PREVIEW"
                 android:resource="@drawable/sample_tile" />
         </service>
+
+        <service
+            android:name="com.google.android.horologist.fitness.FitnessActivitiesTileService"
+            android:exported="true"
+            android:label="@string/tile_activities_label"
+            android:description="@string/activities_tile_description"
+            android:icon="@drawable/ic_person"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="androidx.wear.tiles.PREVIEW"
+                android:resource="@drawable/sample_tile" />
+        </service>
+
+        <service
+            android:name="com.google.android.horologist.fitness.FitnessActivityTileService"
+            android:exported="true"
+            android:label="@string/tile_activity_label"
+            android:description="@string/activity_tile_description"
+            android:icon="@drawable/ic_person"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="androidx.wear.tiles.PREVIEW"
+                android:resource="@drawable/sample_tile" />
+        </service>
+
+        <service
+            android:name="com.google.android.horologist.fitness.WeeklyGoalTileService"
+            android:exported="true"
+            android:label="@string/tile_goal_label"
+            android:description="@string/goal_tile_description"
+            android:icon="@drawable/ic_person"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="androidx.wear.tiles.PREVIEW"
+                android:resource="@drawable/sample_tile" />
+        </service>
     </application>
 
 </manifest>

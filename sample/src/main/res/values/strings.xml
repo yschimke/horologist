@@ -23,4 +23,10 @@
     <string name="tile_text">Hello world</string>
     <string name="tile_sample_label">Sample Tile</string>
     <string name="sample_tile_description">Sample tile description</string>
+    <string name="tile_activities_label">Activities Tile</string>
+    <string name="activities_tile_description">Activities tile description</string>
+    <string name="tile_activity_label">Activity Tile</string>
+    <string name="tile_goal_label">Goal Tile</string>
+    <string name="activity_tile_description">Activity tile description</string>
+    <string name="goal_tile_description">Goal tile description</string>
 </resources>
