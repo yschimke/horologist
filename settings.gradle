@@ -42,6 +42,7 @@ include ':media-sample-benchmark'
 include ':media-sync'
 include ':compose-tools'
 include ':paparazzi'
+include ':figma'
 include ':network-awareness'
 include ':datalayer'
 

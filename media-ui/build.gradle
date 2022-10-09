@@ -21,6 +21,9 @@ plugins {
     id 'app.cash.paparazzi'
 }
 
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
 android {
     compileSdkVersion 32
 
@@ -37,7 +40,7 @@ android {
     }
 
     buildFeatures {
-        buildConfig false
+        buildConfig true
         compose true
     }
 
@@ -65,6 +68,12 @@ android {
         }
     }
 
+    buildTypes {
+        debug {
+            buildConfigField("String", "FIGMA_FILE", "\"" + localProperties['FIGMA_FILE'] + "\"")
+            buildConfigField("String", "FIGMA_TOKEN", "\"" + localProperties['FIGMA_TOKEN'] + "\"")
+        }
+    }
 
     sourceSets {
         main {
@@ -104,6 +113,7 @@ dependencies {
     api projects.media
     api projects.tiles
     api projects.composables
+    api projects.figma
     implementation projects.audio
     implementation projects.audioUi
     implementation projects.composeLayout

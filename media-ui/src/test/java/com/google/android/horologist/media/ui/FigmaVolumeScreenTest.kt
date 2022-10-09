@@ -24,9 +24,12 @@ import com.google.android.horologist.audio.VolumeState
 import com.google.android.horologist.audio.ui.VolumeScreen
 import com.google.android.horologist.compose.tools.ExperimentalHorologistComposeToolsApi
 import com.google.android.horologist.compose.tools.RoundPreview
+import com.google.android.horologist.figma.FigmaSnapshotHandler
 import com.google.android.horologist.media.ui.uamp.UampTheme
 import com.google.android.horologist.paparazzi.ExperimentalHorologistPaparazziApi
 import com.google.android.horologist.paparazzi.WearPaparazzi
+import com.google.android.horologist.paparazzi.WearSnapshotHandler
+import com.google.android.horologist.paparazzi.determineHandler
 import org.junit.Rule
 import org.junit.Test
 
@@ -34,7 +37,17 @@ class FigmaVolumeScreenTest {
 
     @get:Rule
     val paparazzi = WearPaparazzi(
-        maxPercentDifference = 5.0
+        snapshotHandler =
+        WearSnapshotHandler(
+            delegate = FigmaSnapshotHandler(
+                delegate = determineHandler(maxPercentDifference = 0.1),
+                token = BuildConfig.FIGMA_TOKEN,
+                file = BuildConfig.FIGMA_FILE,
+                figmaImage = "153:24553",
+                figmaOverlay = "153:24571"
+            ),
+            round = true
+        )
     )
 
     @Test
