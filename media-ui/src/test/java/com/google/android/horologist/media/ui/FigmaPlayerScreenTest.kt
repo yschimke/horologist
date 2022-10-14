@@ -25,7 +25,6 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import app.cash.paparazzi.DeviceConfig
 import com.google.android.horologist.audio.VolumeState
 import com.google.android.horologist.audio.ui.components.SettingsButtonsDefaults
 import com.google.android.horologist.audio.ui.components.actions.SetVolumeButton
@@ -36,9 +35,6 @@ import com.google.android.horologist.media.ui.state.model.MediaUiModel
 import com.google.android.horologist.media.ui.state.model.TrackPositionUiModel
 import com.google.android.horologist.media.ui.uamp.UampColors
 import com.google.android.horologist.paparazzi.ExperimentalHorologistPaparazziApi
-import com.google.android.horologist.paparazzi.GALAXY_WATCH4_CLASSIC_LARGE
-import com.google.android.horologist.paparazzi.WEAR_OS_SMALL_ROUND
-import com.google.android.horologist.paparazzi.WEAR_OS_SQUARE
 import com.google.android.horologist.paparazzi.WearPaparazzi
 import com.google.android.horologist.paparazzi.WearSnapshotHandler
 import com.google.android.horologist.paparazzi.determineHandler
@@ -49,8 +45,7 @@ class FigmaPlayerScreenTest {
 
     @get:Rule
     val paparazzi = WearPaparazzi(
-        snapshotHandler =
-        WearSnapshotHandler(
+        snapshotHandler = WearSnapshotHandler(
             delegate = FigmaSnapshotHandler(
                 delegate = determineHandler(maxPercentDifference = 0.1),
                 token = BuildConfig.FIGMA_TOKEN,
