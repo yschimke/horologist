@@ -38,7 +38,7 @@ composesnapshot = "-"
 dependencyAnalysis = "1.28.0"
 dokka = "1.9.10"
 googledagger = "2.50"
-gradlePlugin = "8.2.1"
+gradlePlugin = "8.4.0-alpha02"
 gradlePublishPlugin = "0.27.0"
 io-coil-kt = "2.5.0"
 junit = "4.13.2"
@@ -62,11 +62,11 @@ wearToolingPreview = "1.0.0"
 appcompat = "1.6.1"
 material = "1.11.0"
 wearInput = "1.2.0-alpha02"
+androidTools = "31.2.1"
 
 [libraries]
 accompanist-testharness = { module = "com.google.accompanist:accompanist-testharness", version.ref = "accompanist" }
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "gradlePlugin" }
-android-tools-build-gradle = { module = "com.android.tools.build:gradle", version.ref = "gradlePlugin" }
 androidx-activity = { module = "androidx.activity:activity", version.ref = "androidxActivity" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivity" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
@@ -206,6 +206,8 @@ wearcompose-navigation = { module = "androidx.wear.compose:compose-navigation", 
 wearcompose-tooling = { module = "androidx.wear.compose:compose-ui-tooling", version.ref = "wearcompose" }
 androidx-wear-input = { group = "androidx.wear", name = "wear-input", version.ref = "wearInput" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
 
 [plugins]
 dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }

@@ -1,3 +1,5 @@
+import com.google.android.horologist.buildlogic.weardevices.impl.WearDevice
+
 /*
  * Copyright 2023 The Android Open Source Project
  *
@@ -20,6 +22,7 @@ plugins {
 
     id("com.google.devtools.ksp")
     id("me.tylerbwong.gradle.metalava")
+    id("weardevices")
     kotlin("android")
 }
 
@@ -58,6 +61,13 @@ android {
             isIncludeAndroidResources = true
         }
         animationsDisabled = true
+        managedDevices {
+            devices {
+                register("pixelWatch2", WearDevice::class.java) {
+                    serial = "asdlkjdsf"
+                }
+            }
+        }
     }
 
     lint {
@@ -90,6 +100,7 @@ dependencies {
     api(libs.kotlinx.coroutines.core)
     implementation(libs.androidx.tracing.ktx)
     implementation(libs.androidx.core)
+    implementation(libs.kotlinx.coroutines.guava)
 
     testImplementation(libs.junit)
     testImplementation(libs.truth)
@@ -103,6 +114,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.ktx)
     androidTestImplementation(libs.truth)
     androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.kotlinx.coroutines.guava)
 }
 
 tasks.withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {

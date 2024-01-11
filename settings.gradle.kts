@@ -16,6 +16,14 @@
 
 import java.util.Properties
 
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
 plugins {
     id("com.gradle.enterprise") version "3.16.1"
 }
@@ -28,6 +36,8 @@ gradleEnterprise {
 }
 
 rootProject.name = "horologist"
+
+includeBuild("build-logic")
 
 include(":ai:ui")
 include(":annotations")
