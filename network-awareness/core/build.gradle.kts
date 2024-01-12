@@ -64,7 +64,7 @@ android {
         managedDevices {
             devices {
                 register("pixelWatch2", WearDevice::class.java) {
-                    serial = "asdlkjdsf"
+                    serial = "emulator-5556"
                 }
             }
         }

@@ -48,6 +48,8 @@ dependencies {
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.android.tools.common)
     compileOnly(libs.kotlin.gradlePlugin)
+    implementation("com.malinskiy.adam:adam:0.5.2")
+    implementation(libs.kotlinx.coroutines.core)
 }
 
 tasks {
