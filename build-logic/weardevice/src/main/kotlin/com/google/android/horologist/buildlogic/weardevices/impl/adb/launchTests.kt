@@ -25,15 +25,14 @@ import com.malinskiy.adam.request.Feature
 import com.malinskiy.adam.request.pkg.StreamingPackageInstallRequest
 import com.malinskiy.adam.request.testrunner.InstrumentOptions
 import com.malinskiy.adam.request.testrunner.TestAssumptionFailed
-import com.malinskiy.adam.request.testrunner.TestEvent
 import com.malinskiy.adam.request.testrunner.TestFailed
 import com.malinskiy.adam.request.testrunner.TestRunFailed
-import com.malinskiy.adam.request.testrunner.TestRunnerRequest
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.subscribe
 import java.io.File
 
 internal suspend fun AndroidDebugBridgeClient.launchTests(
@@ -55,47 +54,19 @@ internal suspend fun AndroidDebugBridgeClient.launchTests(
     resultsListener.setHostName(host.hostName)
     val parser = mode.createInstrumentationResultParser(testRunData.testRunId, listOf(resultsListener))
 
-    println(testRunData)
-
-    val results = execute(
-        request = TestRunnerRequest(
+    execute(
+        request = ProtoTestRunnerRequest(
             testPackage = testRunData.testData.applicationId,
             runnerClass = testRunData.testData.instrumentationRunner,
-            instrumentOptions = InstrumentOptions(
-            ),
-            outputLogPath = outputLogPath,
+            instrumentOptions = InstrumentOptions(),
             supportedFeatures = supportedFeatures,
             coroutineScope = coroutineScope,
-            protobuf = true
+            parser = parser
         ),
         serial = serial
-    ).consumeAsFlow()
+    ).consumeAsFlow().collect()
 
-
-    var success = true
-
-    results.collectLatest { testResults ->
-        testResults.forEach {
-            println(it)
-            when (it) {
-                is TestRunFailed -> {
-                    success = false
-                }
-
-                is TestFailed -> {
-                    success = false
-                }
-
-                is TestAssumptionFailed -> {
-                    success = false
-                }
-
-                else -> {}
-            }
-        }
-    }
-
-    return success
+    return !resultsListener.runResult.isRunFailure
 }
 
 internal suspend fun AndroidDebugBridgeClient.installApk(
