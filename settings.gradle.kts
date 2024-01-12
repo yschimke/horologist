@@ -39,6 +39,11 @@ rootProject.name = "horologist"
 
 includeBuild("build-logic")
 
+include(":ai:sample:core")
+include(":ai:sample:phone")
+include(":ai:sample:wear-core")
+include(":ai:sample:wear-prompt-app")
+include(":ai:sample:wear-gemini")
 include(":ai:ui")
 include(":annotations")
 include(":auth:composables")
