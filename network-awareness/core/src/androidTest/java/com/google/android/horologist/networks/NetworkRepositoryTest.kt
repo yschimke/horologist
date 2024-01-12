@@ -27,6 +27,7 @@ import com.google.android.horologist.networks.status.NetworkRepositoryImpl
 import com.google.common.truth.Truth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.resetMain
@@ -35,6 +36,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import kotlin.time.Duration.Companion.seconds
 
 @MediumTest
 class NetworkRepositoryTest {
@@ -60,7 +62,7 @@ class NetworkRepositoryTest {
 
     @Suppress("DEPRECATION")
     @Test
-    public fun testNetworks() = scope.runTest {
+    public fun testNetworks() = scope.runTest(timeout = 60.seconds) {
         val networks = networkRepository.networkStatus.value
 
         Truth.assertThat(networks.networks).isNotEmpty()
@@ -74,5 +76,12 @@ class NetworkRepositoryTest {
         val map: List<String> = networks.networks.map { it.id }
         Truth.assertThat(map).containsExactlyElementsIn(networkIds)
         Truth.assertThat(networks.activeNetwork?.id).isEqualTo(activeNetworkId)
+
+//        repeat(10) {
+//            println("sleeping $it")
+//            Thread.sleep(3000)
+//        }
+
+        println("finished")
     }
 }

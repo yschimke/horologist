@@ -14,138 +14,108 @@
  * limitations under the License.
  */
 
+@file:Suppress("UnstableApiUsage")
+
 package com.google.android.horologist.buildlogic.weardevices.impl
 
-import com.android.build.api.instrumentation.StaticTestData
 import com.android.build.api.instrumentation.manageddevice.DeviceTestRunParameters
 import com.android.build.api.instrumentation.manageddevice.DeviceTestRunTaskAction
-import com.malinskiy.adam.AndroidDebugBridgeClient
+import com.android.build.gradle.internal.LoggerWrapper
+import com.android.builder.testing.api.DeviceConfigProvider
+import com.google.android.horologist.buildlogic.weardevices.impl.adb.installApk
+import com.google.android.horologist.buildlogic.weardevices.impl.adb.launchTests
 import com.malinskiy.adam.AndroidDebugBridgeClientFactory
-import com.malinskiy.adam.request.Feature
 import com.malinskiy.adam.request.misc.FetchHostFeaturesRequest
-import com.malinskiy.adam.request.pkg.InstallRemotePackageRequest
-import com.malinskiy.adam.request.pkg.StreamingPackageInstallRequest
-import com.malinskiy.adam.request.shell.v2.ShellCommandRequest
-import com.malinskiy.adam.request.sync.v2.PushFileRequest
-import com.malinskiy.adam.request.testrunner.InstrumentOptions
-import com.malinskiy.adam.request.testrunner.TestEvent
-import com.malinskiy.adam.request.testrunner.TestRunnerRequest
-import kotlinx.coroutines.CoroutineScope
+import com.malinskiy.adam.request.prop.GetPropRequest
+import com.malinskiy.adam.request.testrunner.TestAssumptionFailed
+import com.malinskiy.adam.request.testrunner.TestFailed
+import com.malinskiy.adam.request.testrunner.TestRunFailed
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancelChildren
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withTimeout
-import kotlin.time.Duration.Companion.seconds
+import org.gradle.work.DisableCachingByDefault
 
+
+@DisableCachingByDefault
 open class TestRunTaskAction : DeviceTestRunTaskAction<DeviceTestRunInput> {
+
+
 
     override fun runTests(params: DeviceTestRunParameters<DeviceTestRunInput>): Boolean {
         // TODO run tests
 
         println("TestRunTaskAction ${params}")
 
-        val adb = AndroidDebugBridgeClientFactory()
-            .build()
+        val adb = AndroidDebugBridgeClientFactory().build()
 
         val testData = params.testRunData.testData
         val serial = params.deviceInput.serial.get()
 
-        val results = runBlocking(Dispatchers.Default) {
-            installAndRunTests(adb, serial, testData).also {
-                // TODO find out why needed
-                println(coroutineContext.job.children.toList())
-                coroutineContext.cancelChildren()
+        return runBlocking(Dispatchers.Default) {
+            val props = adb.execute(
+                request = GetPropRequest(),
+                serial = serial
+            )
+
+            val apks = testData.testedApkFinder.invoke(DeviceConfigProvider(props))
+
+            val supportedFeatures = adb.execute(
+                request = FetchHostFeaturesRequest(), serial = serial
+            )
+
+            apks.forEach {
+                adb.installApk(
+                    apk = it, serial = serial, supportedFeatures = supportedFeatures
+                )
             }
-        }
+            adb.installApk(
+                apk = testData.testApk, serial = serial, supportedFeatures = supportedFeatures
+            )
 
-        return true
-    }
-
-    private suspend fun CoroutineScope.installAndRunTests(
-        adb: AndroidDebugBridgeClient,
-        serial: String?,
-        testData: StaticTestData
-    ): List<TestEvent> {
-
-        val supportedFeatures = adb.execute(FetchHostFeaturesRequest(), serial = serial)
-
-        println(supportedFeatures)
-
-        install(testData, adb, serial, supportedFeatures)
-
-        println("Executing")
-        val channel = adb.execute(
-            request = TestRunnerRequest(
-                testPackage = testData.applicationId,
-                runnerClass = testData.instrumentationRunner,
-                instrumentOptions = InstrumentOptions(
-                    pkg = listOf("com.google.android.horologist.networks")
-                ),
+            adb.launchTests(
+                testRunData = params.testRunData,
                 supportedFeatures = supportedFeatures,
+                serial = serial,
+                outputLogPath = "/data/local/tmp/outputLogPath",
                 coroutineScope = this,
-            ),
-            serial = serial
-        )
-        println("Executed")
-
-        return withTimeout(10.seconds) { channel.receive() }
+                logger = LoggerWrapper.getLogger(TestRunTaskAction::class.java)
+            )
+        }
     }
 
-    private suspend fun install(
-        testData: StaticTestData,
-        adb: AndroidDebugBridgeClient,
-        serial: String?,
-        supportedFeatures: List<Feature>
-    ) {
-        coroutineScope {
-            val copyAndInstall = false
-            if (copyAndInstall) {
-                println("Copying ${testData.testApk}")
-                val remoteFile = "/data/local/tmp/${testData.testApk.name}"
+}
 
-                val resultCopy = adb.execute(
-                    PushFileRequest(
-                        local = testData.testApk,
-                        remotePath = remoteFile,
-                        supportedFeatures = supportedFeatures
-                    ),
-                    this,
-                    serial = serial
-                )
-                val completion = resultCopy.consumeAsFlow().last()
-                if (completion != 1.0) {
-                    throw Exception("Incomplete APK copy")
-                }
+class DeviceConfigProvider(private val props: Map<String, String>) : DeviceConfigProvider {
+//    val config = adb.execute(
+//        request = ShellCommandRequest("am get-config"),
+//        serial = serial
+//    )
+//
+//    // mcc310-mnc260-en-rUS-ldltr-sw240dp-w240dp-h240dp-small-notlong-round-nowidecg-lowdr-port-watch-notnight-256dpi-finger-keysexposed-qwerty-navexposed-dpad-384x384-v33
+////            println(config.output)
 
-                println("Installing ${testData.testApk}")
-                val result = adb.execute(
-                    InstallRemotePackageRequest(
-                        absoluteRemoteFilePath = remoteFile,
-                        reinstall = false,
-                    ),
-                    serial = serial
-                )
-                if (result.exitCode != 0) {
-                    throw Exception("Install failed (${result.exitCode}): ${result.output}")
-                }
+    // TODO read from props
+    override fun getConfigFor(abi: String?): String? = abi
 
-                adb.execute(ShellCommandRequest("rm $remoteFile"), serial = serial)
-            } else {
-                println("Streaming install")
-                val success = adb.execute(
-                    StreamingPackageInstallRequest(
-                        pkg = testData.testApk,
-                        supportedFeatures = supportedFeatures,
-                        reinstall = false,
-                        extraArgs = emptyList()
-                    ),
-                    serial = serial
-                )
-            }
-        }
+    override fun getDensity(): Int =
+        (props[PROP_DEVICE_DENSITY] ?: props[PROP_DEVICE_DENSITY])?.toInt()
+            ?: throw Exception("density not found")
+
+    override fun getLanguage(): String? = props[PROP_DEVICE_LANGUAGE]
+
+    override fun getRegion(): String? = props[PROP_DEVICE_REGION]
+
+    override fun getAbis(): List<String> = props[PROP_DEVICE_CPU_ABI_LIST]?.split(",")
+        ?: listOfNotNull(props[PROP_DEVICE_CPU_ABI], props[PROP_DEVICE_CPU_ABI2])
+
+    companion object {
+        // https://cs.android.com/android-studio/platform/tools/base/+/mirror-goog-studio-main:ddmlib/src/main/java/com/android/ddmlib/IDevice.java?q=PROP_DEVICE_LANGUAGE
+        val PROP_DEVICE_DENSITY: String = "ro.sf.lcd_density"
+        val PROP_DEVICE_EMULATOR_DENSITY: String = "qemu.sf.lcd_density"
+        val PROP_DEVICE_LANGUAGE: String = "persist.sys.language"
+        val PROP_DEVICE_REGION: String = "persist.sys.country"
+        val PROP_DEVICE_CPU_ABI_LIST = "ro.product.cpu.abilist";
+        val PROP_DEVICE_CPU_ABI = "ro.product.cpu.abi";
+        val PROP_DEVICE_CPU_ABI2 = "ro.product.cpu.abi2";
     }
 }

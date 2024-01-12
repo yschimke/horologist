@@ -115,6 +115,8 @@ dependencies {
     androidTestImplementation(libs.truth)
     androidTestImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.kotlinx.coroutines.guava)
+
+    androidTestImplementation("com.malinskiy.adam:android-testrunner-contract:0.5.2")
 }
 
 tasks.withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {

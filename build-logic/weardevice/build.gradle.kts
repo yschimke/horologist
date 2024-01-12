@@ -49,6 +49,8 @@ dependencies {
     compileOnly(libs.android.tools.common)
     compileOnly(libs.kotlin.gradlePlugin)
     implementation("com.malinskiy.adam:adam:0.5.2")
+    implementation("com.android.tools.build:builder-test-api:8.2.1")
+    implementation("com.android.tools.ddms:ddmlib:31.2.1")
     implementation(libs.kotlinx.coroutines.core)
 }
 
