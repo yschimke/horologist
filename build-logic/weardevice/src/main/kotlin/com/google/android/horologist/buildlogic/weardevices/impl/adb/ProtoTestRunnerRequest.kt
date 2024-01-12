@@ -31,6 +31,7 @@ class ProtoTestRunnerRequest(
     private val runnerClass: String,
     private val userId: Int? = null,
     private val abi: String? = null,
+    private val outputLogPath: String? = null,
     private val parser: IInstrumentationResultParser,
     socketIdleTimeout: Long? = Long.MAX_VALUE,
 ) : AsyncCompatShellCommandRequest<Unit>(
@@ -47,6 +48,13 @@ class ProtoTestRunnerRequest(
 
 //        if (protobuf) {
         append(" -m")
+
+        if (outputLogPath != null) {
+            append(" -f $outputLogPath")
+        }
+
+        // https://stackoverflow.com/questions/33896315/how-to-retrieve-test-results-when-using-adb-shell-am-instrument
+//        append(" -e listener com.google.android.horologist.networks.ResultsWriter")
 
         append(instrumentOptions.toString())
 

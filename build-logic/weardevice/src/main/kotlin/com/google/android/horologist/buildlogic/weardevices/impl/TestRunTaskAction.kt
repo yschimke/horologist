@@ -76,7 +76,7 @@ open class TestRunTaskAction : DeviceTestRunTaskAction<DeviceTestRunInput> {
                 testRunData = params.testRunData,
                 supportedFeatures = supportedFeatures,
                 serial = serial,
-                outputLogPath = "/data/local/tmp/outputLogPath",
+                outputLogPath = "TestRunTaskAction",
                 coroutineScope = this,
                 logger = LoggerWrapper.getLogger(TestRunTaskAction::class.java)
             )

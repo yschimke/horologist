@@ -24,15 +24,9 @@ import com.malinskiy.adam.AndroidDebugBridgeClient
 import com.malinskiy.adam.request.Feature
 import com.malinskiy.adam.request.pkg.StreamingPackageInstallRequest
 import com.malinskiy.adam.request.testrunner.InstrumentOptions
-import com.malinskiy.adam.request.testrunner.TestAssumptionFailed
-import com.malinskiy.adam.request.testrunner.TestFailed
-import com.malinskiy.adam.request.testrunner.TestRunFailed
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.subscribe
 import java.io.File
 
 internal suspend fun AndroidDebugBridgeClient.launchTests(
@@ -61,7 +55,8 @@ internal suspend fun AndroidDebugBridgeClient.launchTests(
             instrumentOptions = InstrumentOptions(),
             supportedFeatures = supportedFeatures,
             coroutineScope = coroutineScope,
-            parser = parser
+            parser = parser,
+            outputLogPath = outputLogPath
         ),
         serial = serial
     ).consumeAsFlow().collect()
