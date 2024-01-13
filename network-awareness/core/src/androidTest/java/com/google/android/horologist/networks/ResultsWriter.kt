@@ -17,10 +17,16 @@
 package com.google.android.horologist.networks
 
 import androidx.test.internal.runner.listener.InstrumentationRunListener
-import org.junit.runner.Description
+import androidx.test.platform.app.InstrumentationRegistry
+import org.junit.runner.Result
 
 class ResultsWriter: InstrumentationRunListener() {
-    override fun testRunStarted(description: Description?) {
-        println("testRunStarted($description)")
+    override fun testRunFinished(result: Result) {
+        val context = InstrumentationRegistry.getInstrumentation().context
+        println(InstrumentationRegistry.getArguments().keySet().toList())
+        val file = context.getExternalFilesDir("testFinished")
+        println(file)
+        file!!.delete()
+        file.writeText("Finished")
     }
 }

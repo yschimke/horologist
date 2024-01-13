@@ -23,6 +23,7 @@ import com.android.ddmlib.testrunner.RemoteAndroidTestRunner
 import com.malinskiy.adam.AndroidDebugBridgeClient
 import com.malinskiy.adam.request.Feature
 import com.malinskiy.adam.request.pkg.StreamingPackageInstallRequest
+import com.malinskiy.adam.request.sync.v2.PullFileRequest
 import com.malinskiy.adam.request.testrunner.InstrumentOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collect
@@ -31,7 +32,6 @@ import java.io.File
 
 internal suspend fun AndroidDebugBridgeClient.launchTests(
     supportedFeatures: List<Feature>,
-    outputLogPath: String? = null,
     serial: String?,
     coroutineScope: CoroutineScope,
     testRunData: TestRunData,
@@ -55,11 +55,56 @@ internal suspend fun AndroidDebugBridgeClient.launchTests(
             instrumentOptions = InstrumentOptions(),
             supportedFeatures = supportedFeatures,
             coroutineScope = coroutineScope,
-            parser = parser,
-            outputLogPath = outputLogPath
+            parser = parser
         ),
         serial = serial
     ).consumeAsFlow().collect()
+
+    return !resultsListener.runResult.isRunFailure
+}
+
+internal suspend fun AndroidDebugBridgeClient.launchTestsAsync(
+    outputLogPath: String,
+    supportedFeatures: List<Feature>,
+    serial: String?,
+    coroutineScope: CoroutineScope,
+    testRunData: TestRunData,
+    logger: LoggerWrapper
+): Boolean {
+    val mode = RemoteAndroidTestRunner.StatusReporterMode.PROTO_STD
+    val resultsListener = CustomTestRunListener(
+        testRunData.deviceName,
+        testRunData.projectPath,
+        testRunData.variantName,
+        logger
+    )
+    resultsListener.setReportDir(testRunData.outputDirectory.asFile)
+    resultsListener.setHostName(host.hostName)
+    val parser = mode.createInstrumentationResultParser(testRunData.testRunId, listOf(resultsListener))
+
+    execute(
+        request = AsyncProtoTestRunnerRequest(
+            testPackage = testRunData.testData.applicationId,
+            runnerClass = testRunData.testData.instrumentationRunner,
+            instrumentOptions = InstrumentOptions(),
+            outputLogPath = outputLogPath
+        ).also { println(it.cmd) },
+        serial = serial
+    )
+
+    // Wait for test complete signal
+    Thread.sleep(10000)
+
+    val tmpFile = File.createTempFile("sdfdfssdf", "sdffsdd")
+
+    execute(PullFileRequest("/sdcard/$outputLogPath", tmpFile, supportedFeatures), coroutineScope, serial).consumeAsFlow().collect {
+        println(it)
+    }
+
+    println(tmpFile.length())
+
+    val bytes = tmpFile.readBytes()
+    parser.addOutput(bytes, 0, bytes.size)
 
     return !resultsListener.runResult.isRunFailure
 }

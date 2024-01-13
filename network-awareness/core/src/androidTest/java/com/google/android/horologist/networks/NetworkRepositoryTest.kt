@@ -20,6 +20,7 @@ package com.google.android.horologist.networks
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.os.Environment
 import androidx.test.filters.MediumTest
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.android.horologist.networks.data.id
@@ -27,7 +28,6 @@ import com.google.android.horologist.networks.status.NetworkRepositoryImpl
 import com.google.common.truth.Truth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.resetMain

@@ -15,28 +15,21 @@
  */
 
 package com.google.android.horologist.buildlogic.weardevices.impl.adb
-import com.android.ddmlib.testrunner.IInstrumentationResultParser
-import com.malinskiy.adam.request.Feature
-import com.malinskiy.adam.request.shell.AsyncCompatShellCommandRequest
-import com.malinskiy.adam.request.shell.v2.ShellCommandResultChunk
+import com.malinskiy.adam.request.shell.v1.ShellCommandResult
+import com.malinskiy.adam.request.shell.v1.SyncShellCommandRequest
 import com.malinskiy.adam.request.testrunner.InstrumentOptions
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.SendChannel
 
-class ProtoTestRunnerRequest(
+class AsyncProtoTestRunnerRequest(
     private val testPackage: String,
     private val instrumentOptions: InstrumentOptions,
-    supportedFeatures: List<Feature>,
-    coroutineScope: CoroutineScope,
     private val runnerClass: String,
     private val userId: Int? = null,
     private val abi: String? = null,
-    private val parser: IInstrumentationResultParser,
-    socketIdleTimeout: Long? = Long.MAX_VALUE,
-) : AsyncCompatShellCommandRequest<Unit>(
+    private val outputLogPath: String,
+) : SyncShellCommandRequest<Unit>(
     cmd = StringBuilder().apply {
         // https://android.googlesource.com/platform/frameworks/base/+/master/cmds/am/src/com/android/commands/am/Instrument.java#226
-        append("am instrument -w -r")
+        append("am instrument -m -r")
 
         if (userId != null) {
             append(" --user $userId")
@@ -49,25 +42,18 @@ class ProtoTestRunnerRequest(
 //        if (protobuf) {
         append(" -m")
 
+        append(" -f $outputLogPath")
+
         // https://stackoverflow.com/questions/33896315/how-to-retrieve-test-results-when-using-adb-shell-am-instrument
-//        append(" -e listener com.google.android.horologist.networks.ResultsWriter")
+        append(" -e listener com.google.android.horologist.networks.ResultsWriter")
 
         append(instrumentOptions.toString())
 
         append(" $testPackage/$runnerClass")
-    }.toString(),
-    supportedFeatures = supportedFeatures,
-    coroutineScope = coroutineScope,
-    socketIdleTimeout = socketIdleTimeout,
+    }.toString()
 ) {
-
-    override suspend fun convertChunk(response: ShellCommandResultChunk): Unit? {
-        return response.stdout?.let { bytes ->
-            parser.addOutput(bytes, 0, bytes.size)
-        }
-    }
-
-    override suspend fun close(channel: SendChannel<Unit>) {
-        channel.send(Unit)
+    override fun convertResult(response: ShellCommandResult) {
+        println(response.output)
+        return Unit
     }
 }
