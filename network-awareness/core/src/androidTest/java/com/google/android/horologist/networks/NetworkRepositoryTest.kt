@@ -78,8 +78,8 @@ class NetworkRepositoryTest {
         Truth.assertThat(networks.activeNetwork?.id).isEqualTo(activeNetworkId)
 
 //        repeat(10) {
-//            println("sleeping $it")
-//            Thread.sleep(3000)
+            println("sleeping")
+            Thread.sleep(10000)
 //        }
 
         println("finished")

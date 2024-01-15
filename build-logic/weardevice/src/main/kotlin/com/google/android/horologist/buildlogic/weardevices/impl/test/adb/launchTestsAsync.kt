@@ -14,54 +14,24 @@
  * limitations under the License.
  */
 
-package com.google.android.horologist.buildlogic.weardevices.impl.adb
+package com.google.android.horologist.buildlogic.weardevices.impl.test.adb
 
 import com.android.build.api.instrumentation.manageddevice.TestRunData
 import com.android.build.gradle.internal.LoggerWrapper
 import com.android.build.gradle.internal.testing.CustomTestRunListener
 import com.android.ddmlib.testrunner.RemoteAndroidTestRunner
+import com.google.android.horologist.buildlogic.weardevices.impl.test.strategy.TestRunStrategy
 import com.malinskiy.adam.AndroidDebugBridgeClient
 import com.malinskiy.adam.request.Feature
-import com.malinskiy.adam.request.pkg.StreamingPackageInstallRequest
 import com.malinskiy.adam.request.sync.v2.PullFileRequest
 import com.malinskiy.adam.request.testrunner.InstrumentOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onEach
 import java.io.File
-
-internal suspend fun AndroidDebugBridgeClient.launchTests(
-    supportedFeatures: List<Feature>,
-    serial: String?,
-    coroutineScope: CoroutineScope,
-    testRunData: TestRunData,
-    logger: LoggerWrapper
-): Boolean {
-    val mode = RemoteAndroidTestRunner.StatusReporterMode.PROTO_STD
-    val resultsListener = CustomTestRunListener(
-        testRunData.deviceName,
-        testRunData.projectPath,
-        testRunData.variantName,
-        logger
-    )
-    resultsListener.setReportDir(testRunData.outputDirectory.asFile)
-    resultsListener.setHostName(host.hostName)
-    val parser = mode.createInstrumentationResultParser(testRunData.testRunId, listOf(resultsListener))
-
-    execute(
-        request = ProtoTestRunnerRequest(
-            testPackage = testRunData.testData.applicationId,
-            runnerClass = testRunData.testData.instrumentationRunner,
-            instrumentOptions = InstrumentOptions(),
-            supportedFeatures = supportedFeatures,
-            coroutineScope = coroutineScope,
-            parser = parser
-        ),
-        serial = serial
-    ).consumeAsFlow().collect()
-
-    return !resultsListener.runResult.isRunFailure
-}
+import java.time.LocalTime
 
 internal suspend fun AndroidDebugBridgeClient.launchTestsAsync(
     outputLogPath: String,
@@ -69,7 +39,8 @@ internal suspend fun AndroidDebugBridgeClient.launchTestsAsync(
     serial: String?,
     coroutineScope: CoroutineScope,
     testRunData: TestRunData,
-    logger: LoggerWrapper
+    logger: LoggerWrapper,
+    strategy: TestRunStrategy
 ): Boolean {
     val mode = RemoteAndroidTestRunner.StatusReporterMode.PROTO_STD
     val resultsListener = CustomTestRunListener(
@@ -80,24 +51,39 @@ internal suspend fun AndroidDebugBridgeClient.launchTestsAsync(
     )
     resultsListener.setReportDir(testRunData.outputDirectory.asFile)
     resultsListener.setHostName(host.hostName)
-    val parser = mode.createInstrumentationResultParser(testRunData.testRunId, listOf(resultsListener))
+    val parser =
+        mode.createInstrumentationResultParser(testRunData.testRunId, listOf(resultsListener))
 
-    execute(
+    println("" + LocalTime.now() + "Before")
+    val flow = execute(
         request = AsyncProtoTestRunnerRequest(
             testPackage = testRunData.testData.applicationId,
             runnerClass = testRunData.testData.instrumentationRunner,
             instrumentOptions = InstrumentOptions(),
-            outputLogPath = outputLogPath
-        ).also { println(it.cmd) },
+            outputLogPath = outputLogPath,
+            strategy = strategy,
+            supportedFeatures = supportedFeatures,
+            coroutineScope = coroutineScope,
+        ),
         serial = serial
-    )
+    ).consumeAsFlow()
+    println("" + LocalTime.now() + "After flow")
 
-    // Wait for test complete signal
-    Thread.sleep(10000)
+    flow.first()
+
+    println("" + LocalTime.now() + "After first")
+
+    strategy.waitForResults()
+
+    println("" + LocalTime.now() + "After results")
 
     val tmpFile = File.createTempFile("sdfdfssdf", "sdffsdd")
 
-    execute(PullFileRequest("/sdcard/$outputLogPath", tmpFile, supportedFeatures), coroutineScope, serial).consumeAsFlow().collect {
+    execute(
+        PullFileRequest("/sdcard/$outputLogPath", tmpFile, supportedFeatures),
+        coroutineScope,
+        serial
+    ).consumeAsFlow().collect {
         println(it)
     }
 
@@ -107,23 +93,4 @@ internal suspend fun AndroidDebugBridgeClient.launchTestsAsync(
     parser.addOutput(bytes, 0, bytes.size)
 
     return !resultsListener.runResult.isRunFailure
-}
-
-internal suspend fun AndroidDebugBridgeClient.installApk(
-    apk: File,
-    serial: String?,
-    supportedFeatures: List<Feature>
-) {
-    val success = execute(
-        StreamingPackageInstallRequest(
-            pkg = apk,
-            supportedFeatures = supportedFeatures,
-            reinstall = false,
-            extraArgs = emptyList()
-        ),
-        serial = serial
-    )
-    if (!success) {
-        throw Exception("APK ${apk} installation failed")
-    }
 }

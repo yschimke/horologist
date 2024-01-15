@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.horologist.buildlogic.weardevices.impl
+package com.google.android.horologist.buildlogic.weardevices.impl.setup
 
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input

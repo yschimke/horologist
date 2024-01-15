@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.horologist.buildlogic.weardevices.impl.adb
+package com.google.android.horologist.buildlogic.weardevices.impl.test.adb
 import com.android.ddmlib.testrunner.IInstrumentationResultParser
 import com.malinskiy.adam.request.Feature
 import com.malinskiy.adam.request.shell.AsyncCompatShellCommandRequest
@@ -23,15 +23,15 @@ import com.malinskiy.adam.request.testrunner.InstrumentOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.SendChannel
 
-class ProtoTestRunnerRequest(
+class SyncProtoTestRunnerRequest(
     private val testPackage: String,
     private val instrumentOptions: InstrumentOptions,
-    supportedFeatures: List<Feature>,
-    coroutineScope: CoroutineScope,
     private val runnerClass: String,
     private val userId: Int? = null,
     private val abi: String? = null,
     private val parser: IInstrumentationResultParser,
+    supportedFeatures: List<Feature>,
+    coroutineScope: CoroutineScope,
     socketIdleTimeout: Long? = Long.MAX_VALUE,
 ) : AsyncCompatShellCommandRequest<Unit>(
     cmd = StringBuilder().apply {
@@ -46,7 +46,7 @@ class ProtoTestRunnerRequest(
             append(" --abi $abi")
         }
 
-//        if (protobuf) {
+        // Use protobuf
         append(" -m")
 
         // https://stackoverflow.com/questions/33896315/how-to-retrieve-test-results-when-using-adb-shell-am-instrument

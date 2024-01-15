@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.horologist.buildlogic.weardevices.impl
+package com.google.android.horologist.buildlogic.weardevices.impl.util
 
 import com.android.builder.testing.api.DeviceConfigProvider
 

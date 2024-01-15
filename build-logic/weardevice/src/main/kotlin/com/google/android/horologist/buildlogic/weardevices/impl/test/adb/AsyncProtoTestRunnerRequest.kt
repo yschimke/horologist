@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-package com.google.android.horologist.buildlogic.weardevices.impl.adb
+package com.google.android.horologist.buildlogic.weardevices.impl.test.adb
+import com.google.android.horologist.buildlogic.weardevices.impl.test.strategy.TestRunStrategy
+import com.malinskiy.adam.request.Feature
+import com.malinskiy.adam.request.shell.AsyncCompatShellCommandRequest
 import com.malinskiy.adam.request.shell.v1.ShellCommandResult
 import com.malinskiy.adam.request.shell.v1.SyncShellCommandRequest
+import com.malinskiy.adam.request.shell.v2.ShellCommandResultChunk
 import com.malinskiy.adam.request.testrunner.InstrumentOptions
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.SendChannel
 
 class AsyncProtoTestRunnerRequest(
     private val testPackage: String,
@@ -26,10 +32,19 @@ class AsyncProtoTestRunnerRequest(
     private val userId: Int? = null,
     private val abi: String? = null,
     private val outputLogPath: String,
-) : SyncShellCommandRequest<Unit>(
+    private val strategy: TestRunStrategy,
+    supportedFeatures: List<Feature>,
+    coroutineScope: CoroutineScope,
+    socketIdleTimeout: Long? = Long.MAX_VALUE,
+) : AsyncCompatShellCommandRequest<Unit>(
     cmd = StringBuilder().apply {
+        // am instrument -r -m -f TestRunTaskAction -e listener com.google.android.horologist.benchmark.tools.RunWhileOnBatteryListener com.google.android.horologist.network.awareness.test/androidx.test.runner.AndroidJUnitRunner
+
+        // Inspired by
         // https://android.googlesource.com/platform/frameworks/base/+/master/cmds/am/src/com/android/commands/am/Instrument.java#226
-        append("am instrument -m -r")
+
+        // raw mode
+        append("am instrument -r")
 
         if (userId != null) {
             append(" --user $userId")
@@ -39,21 +54,31 @@ class AsyncProtoTestRunnerRequest(
             append(" --abi $abi")
         }
 
-//        if (protobuf) {
+        // use protobuf
         append(" -m")
 
+        // Write to a log to read from later
         append(" -f $outputLogPath")
 
         // https://stackoverflow.com/questions/33896315/how-to-retrieve-test-results-when-using-adb-shell-am-instrument
-        append(" -e listener com.google.android.horologist.networks.ResultsWriter")
+        strategy.instrumentOptions?.let {
+            append(" ")
+            append(it)
+        }
 
         append(instrumentOptions.toString())
 
         append(" $testPackage/$runnerClass")
-    }.toString()
+    }.toString(),
+    supportedFeatures = supportedFeatures,
+    coroutineScope = coroutineScope,
+    socketIdleTimeout = socketIdleTimeout,
 ) {
-    override fun convertResult(response: ShellCommandResult) {
-        println(response.output)
+    override suspend fun convertChunk(response: ShellCommandResultChunk): Unit? {
         return Unit
+    }
+
+    override suspend fun close(channel: SendChannel<Unit>) {
+        channel.send(Unit)
     }
 }

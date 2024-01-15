@@ -14,22 +14,14 @@
  * limitations under the License.
  */
 
-@file:Suppress("UnstableApiUsage")
+package com.google.android.horologist.buildlogic.weardevices.impl.setup
 
-package com.google.android.horologist.buildlogic.weardevices.impl
+import com.android.build.api.instrumentation.manageddevice.DeviceSetupTaskAction
+import org.gradle.api.file.Directory
 
-import com.google.android.horologist.buildlogic.weardevices.TestRunMode
-import com.google.android.horologist.buildlogic.weardevices.WearDevice
+open class SetupTaskAction : DeviceSetupTaskAction<DeviceSetupInput> {
 
-internal abstract class WearDeviceImpl(
-    private val name: String,
-) : WearDevice {
-
-    init {
-        serial.convention("localhost")
-        runMode.convention(TestRunMode.Manual)
+    override fun setup(setupInput: DeviceSetupInput, outputDir: Directory) {
+        // Nothing for now
     }
-
-    override fun getName(): String = name
-
 }

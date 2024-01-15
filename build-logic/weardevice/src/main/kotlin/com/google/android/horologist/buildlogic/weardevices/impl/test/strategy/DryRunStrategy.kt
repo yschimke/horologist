@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.google.android.horologist.buildlogic.weardevices.impl
+package com.google.android.horologist.buildlogic.weardevices.impl.test.strategy
 
-import com.android.build.api.instrumentation.manageddevice.DeviceSetupTaskAction
-import org.gradle.api.file.Directory
-
-open class SetupTaskAction : DeviceSetupTaskAction<DeviceSetupInput> {
-
-    override fun setup(setupInput: DeviceSetupInput, outputDir: Directory) {
-        // Nothing for now
+class DryRunStrategy(override val sync: Boolean) : TestRunStrategy() {
+    override fun waitForResults() {
+        // Wait for test complete signal
+        Thread.sleep(15000)
     }
+
+    override val instrumentOptions: String =
+        "-e listener com.google.android.horologist.benchmark.tools.MarkCompletionListener"
 }

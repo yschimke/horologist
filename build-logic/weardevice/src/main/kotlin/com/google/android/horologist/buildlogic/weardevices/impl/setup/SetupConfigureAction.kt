@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package com.google.android.horologist.buildlogic.weardevices.impl
+package com.google.android.horologist.buildlogic.weardevices.impl.setup
 
-import com.android.build.api.instrumentation.manageddevice.DeviceTestRunConfigureAction
+import com.android.build.api.instrumentation.manageddevice.DeviceSetupConfigureAction
+import com.google.android.horologist.buildlogic.weardevices.WearDevice
 import org.gradle.api.Project
 import org.gradle.api.model.ObjectFactory
-import org.gradle.api.provider.ProviderFactory
 import javax.inject.Inject
 
-open class TestRunConfigureAction @Inject constructor(
+open class SetupConfigureAction @Inject constructor(
     private val objectFactory: ObjectFactory,
-    private val providerFactory: ProviderFactory,
     private val project: Project,
-): DeviceTestRunConfigureAction<WearDevice, DeviceTestRunInput> {
+) : DeviceSetupConfigureAction<WearDevice, DeviceSetupInput> {
 
-    override fun configureTaskInput(deviceDsl: WearDevice): DeviceTestRunInput =
-        objectFactory.newInstance(DeviceTestRunInput::class.java).apply {
+    override fun configureTaskInput(deviceDsl: WearDevice): DeviceSetupInput {
+        return objectFactory.newInstance(DeviceSetupInput::class.java).apply {
             serial.set(deviceDsl.serial)
             serial.disallowChanges()
         }
+    }
 }

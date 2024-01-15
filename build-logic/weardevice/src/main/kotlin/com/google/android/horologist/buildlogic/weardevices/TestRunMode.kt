@@ -14,22 +14,8 @@
  * limitations under the License.
  */
 
-@file:Suppress("UnstableApiUsage")
+package com.google.android.horologist.buildlogic.weardevices
 
-package com.google.android.horologist.buildlogic.weardevices.impl
-
-import com.google.android.horologist.buildlogic.weardevices.TestRunMode
-import com.google.android.horologist.buildlogic.weardevices.WearDevice
-
-internal abstract class WearDeviceImpl(
-    private val name: String,
-) : WearDevice {
-
-    init {
-        serial.convention("localhost")
-        runMode.convention(TestRunMode.Manual)
-    }
-
-    override fun getName(): String = name
-
+enum class TestRunMode {
+    Manual, AsyncDryRun, SyncDryRun
 }

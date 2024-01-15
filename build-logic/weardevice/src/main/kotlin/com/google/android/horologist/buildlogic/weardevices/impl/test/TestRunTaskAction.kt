@@ -16,14 +16,19 @@
 
 @file:Suppress("UnstableApiUsage")
 
-package com.google.android.horologist.buildlogic.weardevices.impl
+package com.google.android.horologist.buildlogic.weardevices.impl.test
 
 import com.android.build.api.instrumentation.manageddevice.DeviceTestRunParameters
 import com.android.build.api.instrumentation.manageddevice.DeviceTestRunTaskAction
 import com.android.build.gradle.internal.LoggerWrapper
-import com.google.android.horologist.buildlogic.weardevices.impl.adb.installApk
-import com.google.android.horologist.buildlogic.weardevices.impl.adb.launchTests
-import com.google.android.horologist.buildlogic.weardevices.impl.adb.launchTestsAsync
+import com.google.android.horologist.buildlogic.weardevices.TestRunMode
+import com.google.android.horologist.buildlogic.weardevices.impl.util.DeviceConfigProvider
+import com.google.android.horologist.buildlogic.weardevices.impl.test.adb.installApk
+import com.google.android.horologist.buildlogic.weardevices.impl.test.adb.launchTestsSync
+import com.google.android.horologist.buildlogic.weardevices.impl.test.adb.launchTestsAsync
+import com.google.android.horologist.buildlogic.weardevices.impl.test.strategy.DryRunStrategy
+import com.google.android.horologist.buildlogic.weardevices.impl.test.strategy.ManualTestRunStrategy
+import com.google.android.horologist.buildlogic.weardevices.impl.test.strategy.TestRunStrategy
 import com.malinskiy.adam.AndroidDebugBridgeClientFactory
 import com.malinskiy.adam.request.misc.FetchHostFeaturesRequest
 import com.malinskiy.adam.request.prop.GetPropRequest
@@ -39,7 +44,7 @@ open class TestRunTaskAction : DeviceTestRunTaskAction<DeviceTestRunInput> {
     override fun runTests(params: DeviceTestRunParameters<DeviceTestRunInput>): Boolean {
         val adb = AndroidDebugBridgeClientFactory().build()
 
-        val sync = false
+        val strategy = findStrategy(params.deviceInput.runMode.get())
 
         val testData = params.testRunData.testData
         val serial = params.deviceInput.serial.get()
@@ -65,9 +70,10 @@ open class TestRunTaskAction : DeviceTestRunTaskAction<DeviceTestRunInput> {
                 apk = testData.testApk, serial = serial, supportedFeatures = supportedFeatures
             )
 
-            if (sync) {
-                adb.launchTests(
+            if (strategy.sync) {
+                adb.launchTestsSync(
                     testRunData = params.testRunData,
+                    strategy = strategy,
                     supportedFeatures = supportedFeatures,
                     serial = serial,
                     coroutineScope = this,
@@ -76,6 +82,7 @@ open class TestRunTaskAction : DeviceTestRunTaskAction<DeviceTestRunInput> {
             } else {
                 adb.launchTestsAsync(
                     testRunData = params.testRunData,
+                    strategy = strategy,
                     supportedFeatures = supportedFeatures,
                     serial = serial,
                     outputLogPath = "TestRunTaskAction",
@@ -86,4 +93,9 @@ open class TestRunTaskAction : DeviceTestRunTaskAction<DeviceTestRunInput> {
         }
     }
 
+    private fun findStrategy(runMode: TestRunMode): TestRunStrategy = when (runMode) {
+        TestRunMode.Manual -> ManualTestRunStrategy()
+        TestRunMode.SyncDryRun -> DryRunStrategy(sync = true)
+        TestRunMode.AsyncDryRun -> DryRunStrategy(sync = false)
+    }
 }

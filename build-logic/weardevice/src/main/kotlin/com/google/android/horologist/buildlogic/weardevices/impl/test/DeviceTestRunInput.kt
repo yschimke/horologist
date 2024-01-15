@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-@file:Suppress("UnstableApiUsage")
-
-package com.google.android.horologist.buildlogic.weardevices.impl
+package com.google.android.horologist.buildlogic.weardevices.impl.test
 
 import com.google.android.horologist.buildlogic.weardevices.TestRunMode
-import com.google.android.horologist.buildlogic.weardevices.WearDevice
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
 
-internal abstract class WearDeviceImpl(
-    private val name: String,
-) : WearDevice {
+abstract class DeviceTestRunInput:
+    com.android.build.api.instrumentation.manageddevice.DeviceTestRunInput {
 
-    init {
-        serial.convention("localhost")
-        runMode.convention(TestRunMode.Manual)
-    }
+    @get: Input
+    abstract val serial: Property<String>
 
-    override fun getName(): String = name
-
+    @get: Input
+    abstract val runMode: Property<TestRunMode>
 }

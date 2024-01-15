@@ -14,17 +14,11 @@
  * limitations under the License.
  */
 
-@file:Suppress("UnstableApiUsage")
+package com.google.android.horologist.buildlogic.weardevices.impl.test.strategy
 
-package com.google.android.horologist.buildlogic.weardevices.impl
+abstract class TestRunStrategy {
+    abstract fun waitForResults()
 
-import com.android.build.api.dsl.Device
-import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Input
-
-interface WearDevice : Device {
-
-    @get:Input
-    val serial: Property<String>
-
+    abstract val instrumentOptions: String?
+    abstract val sync: Boolean
 }

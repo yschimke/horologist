@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package com.google.android.horologist.buildlogic.weardevices.impl
+package com.google.android.horologist.buildlogic.weardevices.impl.test.strategy
 
-import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Input
+class ManualTestRunStrategy : TestRunStrategy() {
+    override val sync: Boolean = false
 
-abstract class DeviceTestRunInput:
-    com.android.build.api.instrumentation.manageddevice.DeviceTestRunInput {
+    override val instrumentOptions: String =
+        "-e listener com.google.android.horologist.benchmark.tools.RunWhileOnBatteryListener"
 
-    @get: Input
-    abstract val serial: Property<String>
+    override fun waitForResults() {
+        // no need to wait because of listener
+        Thread.sleep(10000)
+    }
 }

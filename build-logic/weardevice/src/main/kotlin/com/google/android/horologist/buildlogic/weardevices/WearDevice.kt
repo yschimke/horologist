@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package com.google.android.horologist.networks
+@file:Suppress("UnstableApiUsage")
 
-import androidx.test.internal.runner.listener.InstrumentationRunListener
-import androidx.test.platform.app.InstrumentationRegistry
-import org.junit.runner.Result
+package com.google.android.horologist.buildlogic.weardevices
 
-class ResultsWriter: InstrumentationRunListener() {
-    override fun testRunFinished(result: Result) {
-        val context = InstrumentationRegistry.getInstrumentation().context
-        println(InstrumentationRegistry.getArguments().keySet().toList())
-        val file = context.getExternalFilesDir("testFinished")
-        println(file)
-        file!!.delete()
-        file.writeText("Finished")
-    }
+import com.android.build.api.dsl.Device
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
+
+interface WearDevice : Device {
+
+    @get:Input
+    val serial: Property<String>
+
+    @get:Input
+    val runMode: Property<TestRunMode>
+
 }

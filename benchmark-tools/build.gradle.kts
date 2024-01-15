@@ -1,8 +1,5 @@
-import com.google.android.horologist.buildlogic.weardevices.TestRunMode
-import com.google.android.horologist.buildlogic.weardevices.WearDevice
-
 /*
- * Copyright 2023 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +17,7 @@ import com.google.android.horologist.buildlogic.weardevices.WearDevice
 plugins {
     id("com.android.library")
     id("org.jetbrains.dokka")
-
-    id("com.google.devtools.ksp")
     id("me.tylerbwong.gradle.metalava")
-    id("weardevices")
     kotlin("android")
 }
 
@@ -31,8 +25,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        minSdk = 26
-
+        minSdk = 25
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -41,9 +34,12 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
+    buildFeatures {
+        buildConfig = false
+    }
+
     kotlinOptions {
         jvmTarget = "11"
-        freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.RequiresOptIn"
         freeCompilerArgs = freeCompilerArgs + "-opt-in=com.google.android.horologist.annotations.ExperimentalHorologistApi"
     }
 
@@ -62,26 +58,13 @@ android {
             isIncludeAndroidResources = true
         }
         animationsDisabled = true
-        managedDevices {
-            devices {
-                register("emulator", WearDevice::class.java) {
-                    serial = "emulator-5554"
-                    runMode = TestRunMode.AsyncDryRun
-                }
-                register("pixelWatch2", WearDevice::class.java) {
-                    serial = "32271RUJWR06U2"
-                    runMode = TestRunMode.Manual
-                }
-            }
-        }
     }
 
     lint {
         checkReleaseBuilds = false
         textReport = true
     }
-
-    namespace = "com.google.android.horologist.network.awareness"
+    namespace = "com.google.android.horologist.benchmark.tools"
 }
 
 project.tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
@@ -102,35 +85,12 @@ metalava {
 dependencies {
     api(projects.annotations)
 
-    api(libs.kotlin.stdlib)
-    api(libs.kotlinx.coroutines.core)
-    implementation(libs.androidx.tracing.ktx)
-    implementation(libs.androidx.core)
-    implementation(libs.kotlinx.coroutines.guava)
+    implementation(libs.kotlin.stdlib)
 
-    testImplementation(libs.junit)
-    testImplementation(libs.truth)
-    testImplementation(libs.androidx.test.ext.ktx)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.kotlinx.coroutines.test)
+    // TODO is this needed?
+//    implementation("com.malinskiy.adam:android-testrunner-contract:0.5.2")
 
-    androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext)
-    androidTestImplementation(libs.androidx.test.ext.ktx)
-    androidTestImplementation(libs.truth)
-    androidTestImplementation(libs.kotlinx.coroutines.test)
-    androidTestImplementation(libs.kotlinx.coroutines.guava)
-
-    androidTestImplementation(projects.benchmarkTools)
-}
-
-tasks.withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {
-    dokkaSourceSets {
-        configureEach {
-            moduleName.set("network-awareness-core")
-        }
-    }
+    implementation(libs.androidx.test.runner)
 }
 
 apply(plugin = "com.vanniktech.maven.publish")
