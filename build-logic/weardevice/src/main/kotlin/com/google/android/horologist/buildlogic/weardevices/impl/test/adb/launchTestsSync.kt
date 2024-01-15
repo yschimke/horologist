@@ -25,11 +25,13 @@ import com.malinskiy.adam.AndroidDebugBridgeClient
 import com.malinskiy.adam.request.Feature
 import com.malinskiy.adam.request.testrunner.InstrumentOptions
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.first
 
-internal suspend fun AndroidDebugBridgeClient.launchTestsSync(
+internal suspend fun launchTestsSync(
+    adb: AndroidDebugBridgeClient,
     supportedFeatures: List<Feature>,
     serial: String?,
     coroutineScope: CoroutineScope,
@@ -45,23 +47,29 @@ internal suspend fun AndroidDebugBridgeClient.launchTestsSync(
         logger
     )
     resultsListener.setReportDir(testRunData.outputDirectory.asFile)
-    resultsListener.setHostName(host.hostName)
+    resultsListener.setHostName(adb.host.hostName)
     val parser =
         mode.createInstrumentationResultParser(testRunData.testRunId, listOf(resultsListener))
 
-    execute(
-        request = SyncProtoTestRunnerRequest(
-            testPackage = testRunData.testData.applicationId,
-            runnerClass = testRunData.testData.instrumentationRunner,
-            instrumentOptions = InstrumentOptions(),
-            supportedFeatures = supportedFeatures,
-            coroutineScope = coroutineScope,
-            parser = parser
-        ),
-        serial = serial
-    ).consumeAsFlow().first()
+    strategy.checkAndConfigure(adb)
 
-    strategy.waitForResults()
+    coroutineScope {
+        adb.execute(
+            request = SyncProtoTestRunnerRequest(
+                testPackage = testRunData.testData.applicationId,
+                runnerClass = testRunData.testData.instrumentationRunner,
+                instrumentOptions = InstrumentOptions(),
+                supportedFeatures = supportedFeatures,
+                coroutineScope = coroutineScope,
+                parser = parser
+            ),
+            serial = serial
+        ).consumeAsFlow().first()
+
+        cancel()
+    }
+
+    strategy.waitForResults(adb)
 
     return !resultsListener.runResult.isRunFailure
 }

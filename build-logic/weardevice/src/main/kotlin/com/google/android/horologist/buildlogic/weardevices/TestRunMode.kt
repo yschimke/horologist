@@ -17,5 +17,5 @@
 package com.google.android.horologist.buildlogic.weardevices
 
 enum class TestRunMode {
-    Manual, AsyncDryRun, SyncDryRun
+    Manual, AsyncDryRun, SyncDryRun, InputSuspend
 }

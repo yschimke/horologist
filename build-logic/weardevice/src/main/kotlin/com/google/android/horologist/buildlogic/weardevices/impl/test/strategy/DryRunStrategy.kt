@@ -16,10 +16,19 @@
 
 package com.google.android.horologist.buildlogic.weardevices.impl.test.strategy
 
+import com.malinskiy.adam.AndroidDebugBridgeClient
+import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.seconds
+
 class DryRunStrategy(override val sync: Boolean) : TestRunStrategy() {
-    override fun waitForResults() {
+
+    override suspend fun checkAndConfigure(adb: AndroidDebugBridgeClient) {
+    }
+
+    override suspend fun waitForResults(adb: AndroidDebugBridgeClient) {
+        println("delay(15)")
         // Wait for test complete signal
-        Thread.sleep(15000)
+        delay(15.seconds)
     }
 
     override val instrumentOptions: String =

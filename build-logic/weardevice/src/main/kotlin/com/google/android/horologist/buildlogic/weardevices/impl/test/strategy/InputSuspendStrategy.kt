@@ -18,10 +18,14 @@ package com.google.android.horologist.buildlogic.weardevices.impl.test.strategy
 
 import com.malinskiy.adam.AndroidDebugBridgeClient
 
-abstract class TestRunStrategy {
-    abstract suspend fun checkAndConfigure(adb: AndroidDebugBridgeClient)
-    abstract suspend fun waitForResults(adb: AndroidDebugBridgeClient)
+class InputSuspendStrategy : TestRunStrategy() {
+    override val sync: Boolean = true
 
-    abstract val instrumentOptions: String?
-    abstract val sync: Boolean
+    override suspend fun checkAndConfigure(adb: AndroidDebugBridgeClient) {
+    }
+
+    override suspend fun waitForResults(adb: AndroidDebugBridgeClient) {
+    }
+
+    override val instrumentOptions: String? = null
 }

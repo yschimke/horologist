@@ -16,13 +16,18 @@
 
 package com.google.android.horologist.buildlogic.weardevices.impl.test.strategy
 
+import com.malinskiy.adam.AndroidDebugBridgeClient
+
 class ManualTestRunStrategy : TestRunStrategy() {
     override val sync: Boolean = false
 
     override val instrumentOptions: String =
         "-e listener com.google.android.horologist.benchmark.tools.RunWhileOnBatteryListener"
 
-    override fun waitForResults() {
+    override suspend fun checkAndConfigure(adb: AndroidDebugBridgeClient) {
+    }
+
+    override suspend fun waitForResults(adb: AndroidDebugBridgeClient) {
         // no need to wait because of listener
         Thread.sleep(10000)
     }
