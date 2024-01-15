@@ -60,6 +60,11 @@ class NetworkRepositoryTest {
         Dispatchers.resetMain()
     }
 
+    @Test
+    public fun testFailure() {
+        TODO()
+    }
+
     @Suppress("DEPRECATION")
     @Test
     public fun testNetworks() = scope.runTest(timeout = 60.seconds) {
@@ -77,10 +82,8 @@ class NetworkRepositoryTest {
         Truth.assertThat(map).containsExactlyElementsIn(networkIds)
         Truth.assertThat(networks.activeNetwork?.id).isEqualTo(activeNetworkId)
 
-//        repeat(10) {
-            println("sleeping")
-            Thread.sleep(10000)
-//        }
+        println("sleeping for 10")
+        Thread.sleep(10000)
 
         println("finished")
     }

@@ -23,9 +23,9 @@ import org.gradle.api.tasks.Input
 abstract class DeviceTestRunInput:
     com.android.build.api.instrumentation.manageddevice.DeviceTestRunInput {
 
-    @get: Input
+    @get:Input
     abstract val serial: Property<String>
 
-    @get: Input
+    @get:Input
     abstract val runMode: Property<TestRunMode>
 }

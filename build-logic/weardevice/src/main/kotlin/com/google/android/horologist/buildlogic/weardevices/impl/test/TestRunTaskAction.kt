@@ -50,31 +50,24 @@ open class TestRunTaskAction : DeviceTestRunTaskAction<DeviceTestRunInput> {
         val serial = params.deviceInput.serial.get()
 
         return runBlocking(Dispatchers.Default) {
-            val supportedFeatures = coroutineScope {
-                adb.execute(
-                    request = FetchHostFeaturesRequest(), serial = serial
-                )
-            }
+            val supportedFeatures = adb.execute(
+                request = FetchHostFeaturesRequest(), serial = serial
+            )
 
-            val props = coroutineScope {
-                adb.execute(
-                    request = GetPropRequest(),
-                    serial = serial
-                )
-            }
+            val props = adb.execute(
+                request = GetPropRequest(), serial = serial
+            )
 
-            coroutineScope {
-                val apks = testData.testedApkFinder.invoke(DeviceConfigProvider(props))
+            val apks = testData.testedApkFinder.invoke(DeviceConfigProvider(props))
 
-                apks.forEach {
-                    adb.installApk(
-                        apk = it, serial = serial, supportedFeatures = supportedFeatures
-                    )
-                }
+            apks.forEach {
                 adb.installApk(
-                    apk = testData.testApk, serial = serial, supportedFeatures = supportedFeatures
+                    apk = it, serial = serial, supportedFeatures = supportedFeatures
                 )
             }
+            adb.installApk(
+                apk = testData.testApk, serial = serial, supportedFeatures = supportedFeatures
+            )
 
             if (strategy.sync) {
                 launchTestsSync(
@@ -87,16 +80,14 @@ open class TestRunTaskAction : DeviceTestRunTaskAction<DeviceTestRunInput> {
                     logger = LoggerWrapper.getLogger(TestRunTaskAction::class.java)
                 )
             } else {
-                coroutineScope {
-                    launchTestsAsync(
-                        adb = adb,
-                        testRunData = params.testRunData,
-                        strategy = strategy,
-                        supportedFeatures = supportedFeatures,
-                        serial = serial,
-                        logger = LoggerWrapper.getLogger(TestRunTaskAction::class.java)
-                    )
-                }
+                launchTestsAsync(
+                    adb = adb,
+                    testRunData = params.testRunData,
+                    strategy = strategy,
+                    supportedFeatures = supportedFeatures,
+                    serial = serial,
+                    logger = LoggerWrapper.getLogger(TestRunTaskAction::class.java),
+                )
             }
         }
     }

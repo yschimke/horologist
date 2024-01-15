@@ -26,14 +26,10 @@ import com.malinskiy.adam.AndroidDebugBridgeClientFactory
 import com.malinskiy.adam.request.Feature
 import com.malinskiy.adam.request.sync.v2.PullFileRequest
 import com.malinskiy.adam.request.testrunner.InstrumentOptions
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.isActive
 import java.io.File
-import java.time.LocalTime
 
 internal suspend fun launchTestsAsync(
     adb: AndroidDebugBridgeClient,
@@ -41,7 +37,7 @@ internal suspend fun launchTestsAsync(
     serial: String?,
     testRunData: TestRunData,
     logger: LoggerWrapper,
-    strategy: TestRunStrategy
+    strategy: TestRunStrategy,
 ): Boolean {
     var activeAdb = adb
 
@@ -51,10 +47,7 @@ internal suspend fun launchTestsAsync(
 
     val mode = RemoteAndroidTestRunner.StatusReporterMode.PROTO_STD
     val resultsListener = CustomTestRunListener(
-        testRunData.deviceName,
-        testRunData.projectPath,
-        testRunData.variantName,
-        logger
+        testRunData.deviceName, testRunData.projectPath, testRunData.variantName, logger
     )
     resultsListener.setReportDir(testRunData.outputDirectory.asFile)
     resultsListener.setHostName(activeAdb.host.hostName)
@@ -73,40 +66,34 @@ internal suspend fun launchTestsAsync(
                     strategy = strategy,
                     supportedFeatures = supportedFeatures,
                     coroutineScope = this,
-                ),
-                serial = serial
-            ).consumeAsFlow().first()
-            cancel()
+                ), serial = serial
+            ).consumeAsFlow().collect()
+//            cancel()/
         }
     } catch (e: Exception) {
         e.printStackTrace()
     }
 
-    println("Closing ADB connection")
     activeAdb.close()
 
-    coroutineScope {
-        println("Waiting for results")
-        strategy.waitForResults(activeAdb)
-    }
+    strategy.waitForResults(activeAdb)
 
     activeAdb = AndroidDebugBridgeClientFactory().build()
 
-    val tmpFile = File.createTempFile("sdfdfssdf", "sdffsdd")
+    val tmpFile = File.createTempFile("protoTestOutput", "pb")
 
-    coroutineScope {
-        println("Pulling results")
-        activeAdb.execute(
-            PullFileRequest("/sdcard/$outputLogPath", tmpFile, supportedFeatures),
-            this,
-            serial
-        ).consumeAsFlow().collect {
-            println(it)
+    try {
+        coroutineScope {
+            activeAdb.execute(
+                PullFileRequest("/sdcard/$outputLogPath", tmpFile, supportedFeatures), this, serial
+            ).consumeAsFlow().collect()
         }
-    }
 
-    val bytes = tmpFile.readBytes()
-    parser.addOutput(bytes, 0, bytes.size)
+        val bytes = tmpFile.readBytes()
+        parser.addOutput(bytes, 0, bytes.size)
+    } finally {
+        tmpFile.delete()
+    }
 
     return !resultsListener.runResult.isRunFailure
 }
