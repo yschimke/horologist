@@ -120,6 +120,8 @@ dependencies {
     implementation(libs.wearcompose.foundation)
     implementation(libs.wearcompose.navigation)
 
+    implementation(libs.mikepenz.markdown)
+
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.androidx.wear.tooling.preview)
     debugImplementation(projects.composeTools)
@@ -132,4 +134,6 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.truth)
     testImplementation(libs.robolectric)
+
+    androidTestImplementation(libs.androidx.test.runner)
 }
