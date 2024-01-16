@@ -18,10 +18,12 @@ package com.google.android.horologist.benchmark.tools
 
 import android.annotation.SuppressLint
 import android.os.BatteryManager
+import android.os.Bundle
 import androidx.test.internal.runner.listener.InstrumentationRunListener
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.runner.Description
 import org.junit.runner.Result
+import java.io.PrintStream
 
 @SuppressLint("RestrictedApi")
 class MarkCompletionListener: InstrumentationRunListener() {
@@ -38,9 +40,17 @@ class MarkCompletionListener: InstrumentationRunListener() {
 
         val context = InstrumentationRegistry.getInstrumentation().context
         println(InstrumentationRegistry.getArguments().keySet().toList())
-        val file = context.getExternalFilesDir("testFinished")
-        println(file)
-        file!!.delete()
-        file.writeText("Finished")
+//        val file = context.getExternalFilesDir("testFinished")
+//        println(file)
+//        file!!.delete()
+//        file.writeText("Finished")
+    }
+
+    override fun instrumentationRunFinished(
+        streamResult: PrintStream?,
+        resultBundle: Bundle?,
+        junitResults: Result?
+    ) {
+        super.instrumentationRunFinished(streamResult, resultBundle, junitResults)
     }
 }

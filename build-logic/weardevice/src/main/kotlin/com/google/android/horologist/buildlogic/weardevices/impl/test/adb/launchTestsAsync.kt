@@ -24,8 +24,8 @@ import com.google.android.horologist.buildlogic.weardevices.impl.test.strategy.T
 import com.malinskiy.adam.AndroidDebugBridgeClient
 import com.malinskiy.adam.AndroidDebugBridgeClientFactory
 import com.malinskiy.adam.request.Feature
+import com.malinskiy.adam.request.shell.v1.ShellCommandRequest
 import com.malinskiy.adam.request.sync.v2.PullFileRequest
-import com.malinskiy.adam.request.testrunner.InstrumentOptions
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
@@ -54,25 +54,10 @@ internal suspend fun launchTestsAsync(
     val parser =
         mode.createInstrumentationResultParser(testRunData.testRunId, listOf(resultsListener))
 
-    try {
-        coroutineScope {
-            println("am instrument")
-            activeAdb.execute(
-                request = AsyncProtoTestRunnerRequest(
-                    testPackage = testRunData.testData.applicationId,
-                    runnerClass = testRunData.testData.instrumentationRunner,
-                    instrumentOptions = InstrumentOptions(),
-                    outputLogPath = outputLogPath,
-                    strategy = strategy,
-                    supportedFeatures = supportedFeatures,
-                    coroutineScope = this,
-                ), serial = serial
-            ).consumeAsFlow().collect()
-//            cancel()/
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
+    val cmd =
+        "am instrument -r -m -f $outputLogPath ${strategy.instrumentOptions.orEmpty()} ${testRunData.testData.applicationId}/${testRunData.testData.instrumentationRunner}"
+    val withNohup = "nohup $cmd </dev/null >/dev/null 2>/dev/null &\n echo launched"
+    activeAdb.execute(ShellCommandRequest(withNohup), serial = serial)
 
     activeAdb.close()
 
@@ -95,5 +80,11 @@ internal suspend fun launchTestsAsync(
         tmpFile.delete()
     }
 
-    return !resultsListener.runResult.isRunFailure
+    resultsListener.runResult.testResults.forEach { t, u ->
+        println(t)
+        println(u.status)
+    }
+
+    return !resultsListener.runResult.hasFailedTests()
 }
+

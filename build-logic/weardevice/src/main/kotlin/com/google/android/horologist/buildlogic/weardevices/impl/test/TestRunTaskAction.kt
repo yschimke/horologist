@@ -34,7 +34,6 @@ import com.malinskiy.adam.AndroidDebugBridgeClientFactory
 import com.malinskiy.adam.request.misc.FetchHostFeaturesRequest
 import com.malinskiy.adam.request.prop.GetPropRequest
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import org.gradle.work.DisableCachingByDefault
 
