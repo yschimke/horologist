@@ -68,7 +68,7 @@ class NormalAsyncStrategy : AsyncTestRunStrategy() {
             testRunData = params.testRunData,
             logger = logger,
             parser = parser,
-            instrumentOptions = "-e listener com.google.android.horologist.benchmark.tools.MarkCompletionListener " + "-e marker $markerFile " + "-e signal $uuid",
+            instrumentOptions = "-e listener com.google.android.horologist.benchmark.tools.MarkCompletionListener -e marker $markerFile -e signal $uuid",
             checkAndConfigure = { checkAndConfigure(it) },
             cleanupAndWaitForResults = { cleanupAndWaitForResults(it) })
     }
