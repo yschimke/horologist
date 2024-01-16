@@ -19,11 +19,11 @@
 package com.google.android.horologist.buildlogic.weardevices
 
 import com.android.build.api.variant.AndroidComponentsExtension
+import com.google.android.horologist.buildlogic.weardevices.impl.WearDeviceImpl
 import com.google.android.horologist.buildlogic.weardevices.impl.setup.SetupConfigureAction
 import com.google.android.horologist.buildlogic.weardevices.impl.setup.SetupTaskAction
 import com.google.android.horologist.buildlogic.weardevices.impl.test.TestRunConfigureAction
 import com.google.android.horologist.buildlogic.weardevices.impl.test.TestRunTaskAction
-import com.google.android.horologist.buildlogic.weardevices.impl.WearDeviceImpl
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 

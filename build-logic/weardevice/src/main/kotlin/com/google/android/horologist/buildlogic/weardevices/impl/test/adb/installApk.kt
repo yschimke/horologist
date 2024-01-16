@@ -16,15 +16,11 @@
 
 package com.google.android.horologist.buildlogic.weardevices.impl.test.adb
 
-import com.malinskiy.adam.AndroidDebugBridgeClient
-import com.malinskiy.adam.request.Feature
 import com.malinskiy.adam.request.pkg.StreamingPackageInstallRequest
 import java.io.File
 
-internal suspend fun AndroidDebugBridgeClient.installApk(
+internal suspend fun AdbHolder.installApk(
     apk: File,
-    serial: String?,
-    supportedFeatures: List<Feature>
 ) {
     val success = execute(
         StreamingPackageInstallRequest(
@@ -32,8 +28,7 @@ internal suspend fun AndroidDebugBridgeClient.installApk(
             supportedFeatures = supportedFeatures,
             reinstall = false,
             extraArgs = emptyList()
-        ),
-        serial = serial
+        )
     )
     if (!success) {
         throw Exception("APK $apk installation failed")

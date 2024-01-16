@@ -21,21 +21,19 @@ import com.android.build.gradle.internal.LoggerWrapper
 import com.android.ddmlib.testrunner.IInstrumentationResultParser
 import com.google.android.horologist.buildlogic.weardevices.impl.test.DeviceTestRunInput
 import com.google.android.horologist.buildlogic.weardevices.impl.test.adb.AdbHolder
-import com.malinskiy.adam.request.Feature
 
-class ManualTestRunStrategy : AsyncTestRunStrategy() {
+class NormalSyncStrategy : SyncTestRunStrategy() {
+
     override suspend fun launchTests(
         adb: AdbHolder,
         params: DeviceTestRunParameters<DeviceTestRunInput>,
         logger: LoggerWrapper,
         parser: IInstrumentationResultParser,
     ) {
-        launchTestsAsync(
+        launchTestsSync(
             adb = adb,
             testRunData = params.testRunData,
-            logger = logger,
             parser = parser,
-            instrumentOptions = "-e listener com.google.android.horologist.benchmark.tools.RunWhileOnBatteryListener",
         )
     }
 }

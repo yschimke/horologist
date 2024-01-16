@@ -64,11 +64,19 @@ android {
         animationsDisabled = true
         managedDevices {
             devices {
-                register("emulator", WearDevice::class.java) {
+                register("emulatorSync", WearDevice::class.java) {
                     serial = "emulator-5554"
-                    runMode = TestRunMode.AsyncDryRun
+                    runMode = TestRunMode.NormalSync
                 }
-                register("pixelWatch2", WearDevice::class.java) {
+                register("emulatorAsync", WearDevice::class.java) {
+                    serial = "emulator-5554"
+                    runMode = TestRunMode.NormalAsync
+                }
+                register("pixelWatch2Suspend", WearDevice::class.java) {
+                    serial = "32271RUJWR06U2"
+                    runMode = TestRunMode.InputSuspend
+                }
+                register("pixelWatch2Manual", WearDevice::class.java) {
                     serial = "32271RUJWR06U2"
                     runMode = TestRunMode.Manual
                 }

@@ -18,7 +18,6 @@
 
 package com.google.android.horologist.buildlogic.weardevices.impl
 
-import com.google.android.horologist.buildlogic.weardevices.TestRunMode
 import com.google.android.horologist.buildlogic.weardevices.WearDevice
 
 internal abstract class WearDeviceImpl(
@@ -27,7 +26,6 @@ internal abstract class WearDeviceImpl(
 
     init {
         serial.convention("localhost")
-        runMode.convention(TestRunMode.Manual)
     }
 
     override fun getName(): String = name

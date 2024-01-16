@@ -17,33 +17,34 @@
 package com.google.android.horologist.benchmark.tools
 
 import android.annotation.SuppressLint
-import android.os.BatteryManager
 import android.os.Bundle
 import androidx.test.internal.runner.listener.InstrumentationRunListener
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.runner.Description
 import org.junit.runner.Result
+import java.io.File
 import java.io.PrintStream
 
 @SuppressLint("RestrictedApi")
 class MarkCompletionListener: InstrumentationRunListener() {
+    val markerFile = File(checkNotNull(InstrumentationRegistry.getArguments().getString("marker")) {
+        "Instrument argument 'marker' missing"
+    })
+
+    val markerSignal = InstrumentationRegistry.getArguments().getString("signal") ?: "Finished"
+
     override fun testRunStarted(description: Description?) {
         println("MarkCompletionListener.testRunStarted")
 
-        Thread.sleep(2000)
+        check (!markerFile.exists()) {
+            "Instrument argument 'marker' should not exist: ${markerFile.absolutePath}"
+        }
     }
 
     override fun testRunFinished(result: Result) {
         println("MarkCompletionListener.testRunFinished")
 
-        Thread.sleep(2000)
-
-        val context = InstrumentationRegistry.getInstrumentation().context
-        println(InstrumentationRegistry.getArguments().keySet().toList())
-//        val file = context.getExternalFilesDir("testFinished")
-//        println(file)
-//        file!!.delete()
-//        file.writeText("Finished")
+        markerFile.writeText(markerSignal)
     }
 
     override fun instrumentationRunFinished(
@@ -51,6 +52,6 @@ class MarkCompletionListener: InstrumentationRunListener() {
         resultBundle: Bundle?,
         junitResults: Result?
     ) {
-        super.instrumentationRunFinished(streamResult, resultBundle, junitResults)
+        println("MarkCompletionListener.instrumentationRunFinished")
     }
 }

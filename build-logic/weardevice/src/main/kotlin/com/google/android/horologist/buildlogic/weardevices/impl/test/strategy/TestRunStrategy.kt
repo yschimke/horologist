@@ -16,12 +16,17 @@
 
 package com.google.android.horologist.buildlogic.weardevices.impl.test.strategy
 
-import com.malinskiy.adam.AndroidDebugBridgeClient
+import com.android.build.api.instrumentation.manageddevice.DeviceTestRunParameters
+import com.android.build.gradle.internal.LoggerWrapper
+import com.android.ddmlib.testrunner.IInstrumentationResultParser
+import com.google.android.horologist.buildlogic.weardevices.impl.test.DeviceTestRunInput
+import com.google.android.horologist.buildlogic.weardevices.impl.test.adb.AdbHolder
 
-abstract class TestRunStrategy {
-    abstract suspend fun checkAndConfigure(adb: AndroidDebugBridgeClient)
-    abstract suspend fun waitForResults(adb: AndroidDebugBridgeClient)
-
-    abstract val instrumentOptions: String?
-    abstract val sync: Boolean
+interface TestRunStrategy {
+    suspend fun launchTests(
+        adb: AdbHolder,
+        params: DeviceTestRunParameters<DeviceTestRunInput>,
+        logger: LoggerWrapper,
+        parser: IInstrumentationResultParser
+    )
 }

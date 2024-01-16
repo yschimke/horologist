@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-@file:Suppress("UnstableApiUsage")
-
 package com.google.android.horologist.buildlogic.weardevices.impl.test.strategy
 
 import com.android.build.api.instrumentation.manageddevice.DeviceTestRunParameters
@@ -24,14 +22,40 @@ import com.android.ddmlib.testrunner.IInstrumentationResultParser
 import com.google.android.horologist.buildlogic.weardevices.impl.test.DeviceTestRunInput
 import com.google.android.horologist.buildlogic.weardevices.impl.test.adb.AdbHolder
 import com.malinskiy.adam.request.shell.v2.ShellCommandRequest
+import com.malinskiy.adam.request.sync.v2.StatFileRequest
+import kotlinx.coroutines.delay
+import java.util.UUID
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
-class InputSuspendStrategy : SyncTestRunStrategy() {
-    suspend fun checkAndConfigure(adb: AdbHolder) {
-        adb.execute(ShellCommandRequest("echo 1 > /d/google_charger/input_suspend"))
+class NormalAsyncStrategy : AsyncTestRunStrategy() {
+
+    private val estimatedRunTime: Duration = 1.seconds
+    val uuid = UUID.randomUUID().toString()
+
+    val markerFile = "/sdcard/marker.file.$uuid"
+
+    suspend fun checkAndConfigure(
+        adb: AdbHolder
+    ) {
+        adb.execute(ShellCommandRequest("rm $markerFile"))
+        adb.execute(StatFileRequest(markerFile, adb.supportedFeatures))
     }
 
-    suspend fun cleanupAndWaitForResults(adb: AdbHolder) {
-        adb.execute(ShellCommandRequest("echo 0 > /d/google_charger/input_suspend"))
+    suspend fun cleanupAndWaitForResults(
+        adb: AdbHolder
+    ) {
+        delay(estimatedRunTime)
+        adb.connect()
+
+        for (index in 0 until 10) {
+            if (adb.execute(
+                    request = StatFileRequest(
+                        remotePath = markerFile, supportedFeatures = adb.supportedFeatures
+                    )
+                ).exists()) break
+            delay(1000)
+        }
     }
 
     override suspend fun launchTests(
@@ -40,14 +64,12 @@ class InputSuspendStrategy : SyncTestRunStrategy() {
         logger: LoggerWrapper,
         parser: IInstrumentationResultParser,
     ) {
-        checkAndConfigure(adb)
-
-        launchTestsSync(
-            adb = adb,
+        launchTestsAsync(adb = adb,
             testRunData = params.testRunData,
+            logger = logger,
             parser = parser,
-        )
-
-        cleanupAndWaitForResults(adb)
+            instrumentOptions = "-e listener com.google.android.horologist.benchmark.tools.MarkCompletionListener " + "-e marker $markerFile " + "-e signal $uuid",
+            checkAndConfigure = { checkAndConfigure(it) },
+            cleanupAndWaitForResults = { cleanupAndWaitForResults(it) })
     }
 }

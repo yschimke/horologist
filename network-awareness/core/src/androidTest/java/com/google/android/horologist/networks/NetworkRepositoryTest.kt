@@ -82,8 +82,8 @@ class NetworkRepositoryTest {
         Truth.assertThat(map).containsExactlyElementsIn(networkIds)
         Truth.assertThat(networks.activeNetwork?.id).isEqualTo(activeNetworkId)
 
-        println("sleeping for 10")
-        Thread.sleep(10000)
+        println("sleeping for 3")
+        Thread.sleep(3)
 
         println("finished")
     }
