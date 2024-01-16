@@ -34,15 +34,18 @@ class RunWhileOnBatteryListener : InstrumentationRunListener() {
     override fun testRunStarted(description: Description?) {
         println("RunWhileOnBatteryListener.testRunStarted")
 
-        println("Waiting to stop charging")
+        println("RunWhileOnBatteryListener: Waiting to stop charging")
         while (batteryManager.isCharging) {
             println(".")
             Thread.sleep(1000)
         }
-        println("Not charging")
+        println("RunWhileOnBatteryListener: Not charging")
     }
 
-    @SuppressLint("MissingPermission")
+    override fun testStarted(description: Description?) {
+        check(!batteryManager.isCharging) { "Test $description run while charging" }
+    }
+
     override fun instrumentationRunFinished(
         streamResult: PrintStream?,
         resultBundle: Bundle?,
@@ -50,12 +53,11 @@ class RunWhileOnBatteryListener : InstrumentationRunListener() {
     ) {
         println("RunWhileOnBatteryListener.instrumentationRunFinished")
 
-        println("Waiting to start charging")
-        Toast.makeText(context, "Waiting to start charging", Toast.LENGTH_LONG).show()
+        println("RunWhileOnBatteryListener: Waiting to start charging")
         while (!batteryManager.isCharging) {
             println(".")
             Thread.sleep(1000)
         }
-        println("Charging")
+        println("RunWhileOnBatteryListener: Charging")
     }
 }
