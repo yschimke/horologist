@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
+import com.google.android.horologist.buildlogic.weardevices.TestRunMode
+import com.google.android.horologist.buildlogic.weardevices.WearDevice
+
 plugins {
     id("com.android.test")
     kotlin("android")
+    id("weardevices")
+//    id("com.google.firebase.testlab")
 }
 
 android {
@@ -50,6 +55,41 @@ android {
 
             matchingFallbacks.add("release")
         }
+    }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+        animationsDisabled = true
+        managedDevices {
+            devices {
+                register("emulatorSync", WearDevice::class.java) {
+                    serial = "emulator-5554"
+                    runMode = TestRunMode.NormalSync
+                }
+                register("emulatorAsync", WearDevice::class.java) {
+                    serial = "emulator-5554"
+                    runMode = TestRunMode.NormalAsync
+                }
+                register("pixelWatch2Suspend", WearDevice::class.java) {
+                    serial = "32271RUJWR06U2"
+                    runMode = TestRunMode.InputSuspend
+                }
+                register("pixelWatch2Manual", WearDevice::class.java) {
+                    serial = "32271RUJWR06U2"
+                    runMode = TestRunMode.Manual
+                }
+            }
+        }
+//        firebaseTestLab {
+//            managedDevices {
+//                pixelWatch {
+//                    device = "r11"
+//                    apiLevel = 30
+//                }
+//            }
+//        }
     }
 
     targetProjectPath = ":ai:sample:wear-prompt-app"

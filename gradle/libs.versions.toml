@@ -38,7 +38,7 @@ composesnapshot = "-"
 dependencyAnalysis = "1.28.0"
 dokka = "1.9.10"
 googledagger = "2.50"
-gradlePlugin = "8.4.0-alpha04"
+gradlePlugin = "8.3.0-beta02"
 gradlePublishPlugin = "0.27.0"
 io-coil-kt = "2.5.0"
 junit = "4.13.2"
@@ -220,3 +220,4 @@ kotlinGradle = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 protobuf = "com.google.protobuf:0.9.4"
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+firebaseTestDevices = "com.google.firebase.testlab:0.0.1-dev"
