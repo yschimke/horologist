@@ -119,6 +119,8 @@ dependencies {
     implementation(libs.wearcompose.material)
     implementation(libs.wearcompose.foundation)
     implementation(libs.wearcompose.navigation)
+    implementation(libs.androidx.tracing.ktx)
+    implementation(libs.androidx.tracing.perfetto)
 
     implementation(libs.mikepenz.markdown)
 
