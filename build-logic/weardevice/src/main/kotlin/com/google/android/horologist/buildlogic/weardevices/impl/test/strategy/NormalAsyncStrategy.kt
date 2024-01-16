@@ -45,6 +45,8 @@ class NormalAsyncStrategy : AsyncTestRunStrategy() {
     suspend fun cleanupAndWaitForResults(
         adb: AdbHolder
     ) {
+        adb.close()
+
         delay(estimatedRunTime)
         adb.connect()
 

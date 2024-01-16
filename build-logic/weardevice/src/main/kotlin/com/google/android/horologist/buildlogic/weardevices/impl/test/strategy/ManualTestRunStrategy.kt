@@ -21,9 +21,51 @@ import com.android.build.gradle.internal.LoggerWrapper
 import com.android.ddmlib.testrunner.IInstrumentationResultParser
 import com.google.android.horologist.buildlogic.weardevices.impl.test.DeviceTestRunInput
 import com.google.android.horologist.buildlogic.weardevices.impl.test.adb.AdbHolder
+import com.malinskiy.adam.exception.RequestRejectedException
 import com.malinskiy.adam.request.Feature
+import com.malinskiy.adam.request.shell.v2.ShellCommandRequest
+import com.malinskiy.adam.request.sync.v2.StatFileRequest
+import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.seconds
 
 class ManualTestRunStrategy : AsyncTestRunStrategy() {
+
+    suspend fun checkAndConfigure() {
+    }
+
+    suspend fun cleanupAndWaitForResults(
+        adb: AdbHolder
+    ) {
+        println("Disconnect now")
+        println("Waiting for disconnection")
+
+        while (adb.isConnected()) {
+            println(".")
+            delay(1.seconds)
+        }
+        adb.close()
+
+        println("Disconnected")
+
+        println("Waiting for connection")
+
+        while (true) {
+            println(".")
+            try {
+                adb.connect()
+                if (adb.isConnected()) {
+                    break
+                }
+            } catch (e: RequestRejectedException) {
+
+            }
+
+            delay(1.seconds)
+        }
+
+        println("Connected")
+    }
+
     override suspend fun launchTests(
         adb: AdbHolder,
         params: DeviceTestRunParameters<DeviceTestRunInput>,
@@ -36,6 +78,8 @@ class ManualTestRunStrategy : AsyncTestRunStrategy() {
             logger = logger,
             parser = parser,
             instrumentOptions = "-e listener com.google.android.horologist.benchmark.tools.RunWhileOnBatteryListener",
+            checkAndConfigure = { checkAndConfigure() },
+            cleanupAndWaitForResults = { cleanupAndWaitForResults(it) }
         )
     }
 }

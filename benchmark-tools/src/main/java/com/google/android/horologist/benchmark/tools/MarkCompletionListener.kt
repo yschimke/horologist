@@ -41,17 +41,13 @@ class MarkCompletionListener: InstrumentationRunListener() {
         }
     }
 
-    override fun testRunFinished(result: Result) {
-        println("MarkCompletionListener.testRunFinished")
-
-        markerFile.writeText(markerSignal)
-    }
-
     override fun instrumentationRunFinished(
         streamResult: PrintStream?,
         resultBundle: Bundle?,
         junitResults: Result?
     ) {
         println("MarkCompletionListener.instrumentationRunFinished")
+
+        markerFile.writeText(markerSignal)
     }
 }

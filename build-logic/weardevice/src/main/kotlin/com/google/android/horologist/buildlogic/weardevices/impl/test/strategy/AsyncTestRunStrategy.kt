@@ -46,8 +46,6 @@ abstract class AsyncTestRunStrategy: TestRunStrategy {
         val withNohup = "nohup $cmd </dev/null >/dev/null 2>/dev/null &\n echo launched"
         adb.execute(ShellCommandRequest(withNohup))
 
-        adb.close()
-
         cleanupAndWaitForResults(adb)
 
         val tmpFile = File.createTempFile("protoTestOutput", "pb")

@@ -24,6 +24,7 @@ import com.malinskiy.adam.request.Feature
 import com.malinskiy.adam.request.MultiRequest
 import com.malinskiy.adam.request.emu.EmulatorCommandRequest
 import com.malinskiy.adam.request.misc.FetchHostFeaturesRequest
+import com.malinskiy.adam.request.prop.GetPropRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.consumeAsFlow
@@ -37,11 +38,13 @@ class AdbHolder(val serial: String) {
 
     suspend fun connect() {
         check(instance == null) { "AdbHolder already connected" }
-        instance = AndroidDebugBridgeClientFactory().build()
+        val newAdb = AndroidDebugBridgeClientFactory().build()
 
-        supportedFeatures = adb.execute(
+        supportedFeatures = newAdb.execute(
             request = FetchHostFeaturesRequest(), serial = serial
         )
+
+        instance = newAdb
     }
 
     fun close() {
@@ -57,8 +60,14 @@ class AdbHolder(val serial: String) {
         scope: CoroutineScope
     ): Flow<T> = adb.execute(request, scope, serial).consumeAsFlow()
 
-    suspend fun execute(request: EmulatorCommandRequest): String = adb.execute(request)
-
     suspend fun <T> execute(request: MultiRequest<T>): T = adb.execute(request, serial)
-
+    suspend fun isConnected(): Boolean {
+        return try {
+            execute(GetPropRequest())
+            true
+        } catch (e: Exception) {
+            println(e)
+            false
+        }
+    }
 }
