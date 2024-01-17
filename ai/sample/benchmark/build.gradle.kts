@@ -73,11 +73,11 @@ android {
                     runMode = TestRunMode.NormalAsync
                 }
                 register("pixelWatch2Suspend", WearDevice::class.java) {
-                    serial = "32271RUJWR06U2"
+                    serial = "3B111JEAVL001J"
                     runMode = TestRunMode.InputSuspend
                 }
                 register("pixelWatch2Manual", WearDevice::class.java) {
-                    serial = "32271RUJWR06U2"
+                    serial = "3B111JEAVL001J"
                     runMode = TestRunMode.Manual
                 }
             }

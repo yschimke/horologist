@@ -1,6 +1,3 @@
-import com.google.android.horologist.buildlogic.weardevices.TestRunMode
-import com.google.android.horologist.buildlogic.weardevices.WearDevice
-
 /*
  * Copyright 2023 The Android Open Source Project
  *
@@ -16,6 +13,9 @@ import com.google.android.horologist.buildlogic.weardevices.WearDevice
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import com.google.android.horologist.buildlogic.weardevices.TestRunMode
+import com.google.android.horologist.buildlogic.weardevices.WearDevice
 
 plugins {
     id("com.android.library")
@@ -73,11 +73,11 @@ android {
                     runMode = TestRunMode.NormalAsync
                 }
                 register("pixelWatch2Suspend", WearDevice::class.java) {
-                    serial = "32271RUJWR06U2"
+                    serial = "3B111JEAVL001J"
                     runMode = TestRunMode.InputSuspend
                 }
                 register("pixelWatch2Manual", WearDevice::class.java) {
-                    serial = "32271RUJWR06U2"
+                    serial = "3B111JEAVL001J"
                     runMode = TestRunMode.Manual
                 }
             }

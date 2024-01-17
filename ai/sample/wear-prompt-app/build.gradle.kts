@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
+import com.google.android.horologist.buildlogic.weardevices.TestRunMode
+import com.google.android.horologist.buildlogic.weardevices.WearDevice
+
 plugins {
     id("com.android.application")
     kotlin("android")
     id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
+    id("weardevices")
 }
 
 android {
@@ -80,6 +84,26 @@ android {
             isIncludeAndroidResources = true
         }
         animationsDisabled = true
+        managedDevices {
+            devices {
+                register("emulatorSync", WearDevice::class.java) {
+                    serial = "emulator-5554"
+                    runMode = TestRunMode.NormalSync
+                }
+                register("emulatorAsync", WearDevice::class.java) {
+                    serial = "emulator-5554"
+                    runMode = TestRunMode.NormalAsync
+                }
+                register("pixelWatch2Suspend", WearDevice::class.java) {
+                    serial = "3B111JEAVL001J"
+                    runMode = TestRunMode.InputSuspend
+                }
+                register("pixelWatch2Manual", WearDevice::class.java) {
+                    serial = "3B111JEAVL001J"
+                    runMode = TestRunMode.Manual
+                }
+            }
+        }
     }
 
     namespace = "com.google.android.horologist.ai.sample.prompt"
@@ -137,5 +161,13 @@ dependencies {
     testImplementation(libs.truth)
     testImplementation(libs.robolectric)
 
-    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.ext)
+    androidTestImplementation(libs.androidx.test.ext.ktx)
+    androidTestImplementation(libs.truth)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.kotlinx.coroutines.guava)
+
+    androidTestImplementation(projects.benchmarkTools)
 }
