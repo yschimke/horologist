@@ -107,6 +107,11 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 }
 
+//tasks.withType<Test>().configureEach {
+//    println(name)
+//    forkEvery = 0
+//}
+
 androidComponents {
     beforeVariants(selector().all()) {
         it.enable = it.buildType == "benchmark"
