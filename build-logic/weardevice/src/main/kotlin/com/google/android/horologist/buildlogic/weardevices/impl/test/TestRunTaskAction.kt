@@ -41,6 +41,9 @@ import org.gradle.work.DisableCachingByDefault
 @DisableCachingByDefault
 open class TestRunTaskAction : DeviceTestRunTaskAction<DeviceTestRunInput> {
     override fun runTests(params: DeviceTestRunParameters<DeviceTestRunInput>): Boolean {
+        // TODO output dir
+        // https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:benchmark/gradle-plugin/src/main/kotlin/androidx/benchmark/gradle/BenchmarkReportTask.kt;l=113
+
         val testRunData = params.testRunData
         val testData = testRunData.testData
         val serial = params.deviceInput.serial.get()

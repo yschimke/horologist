@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import com.android.build.gradle.internal.tasks.ManagedDeviceTestTask
 import com.google.android.horologist.buildlogic.weardevices.TestRunMode
 import com.google.android.horologist.buildlogic.weardevices.WearDevice
 
@@ -42,7 +43,8 @@ android {
         targetSdk = 33
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments["androidx.benchmark.fullTracing.enable"] = "true"
+//        testInstrumentationRunnerArguments["androidx.benchmark.fullTracing.enable"] = "true"
+//        testInstrumentationRunnerArguments["androidx.benchmark.output.enable"] = "false"
     }
 
     buildTypes {
@@ -95,6 +97,12 @@ android {
     targetProjectPath = ":ai:sample:wear-prompt-app"
     experimentalProperties["android.experimental.self-instrumenting"] = true
 }
+
+//tasks.withType<ManagedDeviceTestTask>().configureEach {
+//    notCompatibleWithConfigurationCache("Serialization error")
+//    doNotTrackState("Serialization error")
+//    outputs.cacheIf { false }
+//}
 
 dependencies {
     api(projects.annotations)
