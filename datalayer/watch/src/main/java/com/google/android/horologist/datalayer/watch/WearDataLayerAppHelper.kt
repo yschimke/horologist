@@ -22,6 +22,7 @@ import android.net.Uri
 import androidx.annotation.CheckResult
 import androidx.concurrent.futures.await
 import androidx.wear.phone.interactions.PhoneTypeHelper
+import androidx.wear.remote.interactions.RemoteActivityHelper
 import androidx.wear.watchface.complications.data.ComplicationType
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceService
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
@@ -43,12 +44,16 @@ import com.google.android.horologist.data.usageInfo
 import com.google.protobuf.Timestamp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.tasks.await
 
 private const val TAG = "DataLayerAppHelper"
 
 /**
  * Subclass of [DataLayerAppHelper] for use on Wear devices.
+ *
+ * Parameter [appStoreUri] should be provided when using functions like [installOnNode] with an iOS
+ * device.
  */
 @ExperimentalHorologistApi
 public class WearDataLayerAppHelper(
@@ -72,25 +77,56 @@ public class WearDataLayerAppHelper(
          */
         public val surfacesInfo: Flow<SurfacesInfo> = surfacesInfoDataStore.data
 
-        override suspend fun installOnNode(node: String) {
+        override suspend fun installOnNode(nodeId: String): AppHelperResultCode {
             checkIsForegroundOrThrow()
-            if (appStoreUri != null &&
-                PhoneTypeHelper.getPhoneDeviceType(context) == PhoneTypeHelper.DEVICE_TYPE_IOS
-            ) {
-                val intent = Intent(Intent.ACTION_VIEW)
-                    .addCategory(Intent.CATEGORY_BROWSABLE)
-                    .setData(Uri.parse(appStoreUri))
-                remoteActivityHelper.startRemoteActivity(intent, node).await()
-            } else if (PhoneTypeHelper.getPhoneDeviceType(context) == PhoneTypeHelper.DEVICE_TYPE_ANDROID) {
-                val intent = Intent(Intent.ACTION_VIEW)
-                    .addCategory(Intent.CATEGORY_BROWSABLE)
-                    .setData(Uri.parse(playStoreUri))
-                remoteActivityHelper.startRemoteActivity(intent, node).await()
+
+            val intent = when (PhoneTypeHelper.getPhoneDeviceType(context)) {
+                PhoneTypeHelper.DEVICE_TYPE_ANDROID -> {
+                    Intent(Intent.ACTION_VIEW)
+                        .addCategory(Intent.CATEGORY_BROWSABLE)
+                        .setData(Uri.parse(playStoreUri))
+                }
+
+                PhoneTypeHelper.DEVICE_TYPE_IOS -> {
+                    requireNotNull(appStoreUri) {
+                        "The uri for the app store should be provided when using this function with " +
+                            "an iOS device."
+                    }
+
+                    Intent(Intent.ACTION_VIEW)
+                        .addCategory(Intent.CATEGORY_BROWSABLE)
+                        .setData(Uri.parse(appStoreUri))
+                }
+
+                else -> {
+                    return AppHelperResultCode.APP_HELPER_RESULT_CANNOT_DETERMINE_DEVICE_TYPE
+                }
             }
+
+            val availabilityStatus = remoteActivityHelper.availabilityStatus.first()
+
+            // As per documentation, calls should be made when status is either STATUS_AVAILABLE
+            // or STATUS_UNKNOWN.
+            when (availabilityStatus) {
+                RemoteActivityHelper.STATUS_UNAVAILABLE -> {
+                    return AppHelperResultCode.APP_HELPER_RESULT_UNAVAILABLE
+                }
+
+                RemoteActivityHelper.STATUS_TEMPORARILY_UNAVAILABLE -> {
+                    return AppHelperResultCode.APP_HELPER_RESULT_TEMPORARILY_UNAVAILABLE
+                }
+            }
+
+            try {
+                remoteActivityHelper.startRemoteActivity(intent, nodeId).await()
+            } catch (e: RemoteActivityHelper.RemoteIntentException) {
+                return AppHelperResultCode.APP_HELPER_RESULT_ERROR_STARTING_ACTIVITY
+            }
+            return AppHelperResultCode.APP_HELPER_RESULT_SUCCESS
         }
 
         @CheckResult
-        override suspend fun startCompanion(node: String): AppHelperResultCode {
+        override suspend fun startCompanion(nodeId: String): AppHelperResultCode {
             checkIsForegroundOrThrow()
             val localNode = registry.nodeClient.localNode.await()
             val request = launchRequest {
@@ -98,7 +134,7 @@ public class WearDataLayerAppHelper(
                     sourceNode = localNode.id
                 }
             }
-            return sendRequestWithTimeout(node, LAUNCH_APP, request.toByteArray())
+            return sendRequestWithTimeout(nodeId, LAUNCH_APP, request.toByteArray())
         }
 
         /**

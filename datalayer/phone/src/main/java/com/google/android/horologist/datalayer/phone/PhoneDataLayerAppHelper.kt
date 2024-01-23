@@ -22,6 +22,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.annotation.CheckResult
 import androidx.concurrent.futures.await
+import androidx.wear.remote.interactions.RemoteActivityHelper
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.data.AppHelperResultCode
 import com.google.android.horologist.data.WearDataLayerRegistry
@@ -38,18 +39,25 @@ public class PhoneDataLayerAppHelper(
 ) : DataLayerAppHelper(context, registry) {
     private val SAMSUNG_COMPANION_PKG = "com.samsung.android.app.watchmanager"
 
-    override suspend fun installOnNode(node: String) {
+    override suspend fun installOnNode(nodeId: String): AppHelperResultCode {
         checkIsForegroundOrThrow()
+
         val intent = Intent(Intent.ACTION_VIEW)
             .addCategory(Intent.CATEGORY_BROWSABLE)
             .setData(Uri.parse(playStoreUri))
-        remoteActivityHelper.startRemoteActivity(intent, node).await()
+
+        try {
+            remoteActivityHelper.startRemoteActivity(intent, nodeId).await()
+        } catch (e: RemoteActivityHelper.RemoteIntentException) {
+            return AppHelperResultCode.APP_HELPER_RESULT_ERROR_STARTING_ACTIVITY
+        }
+        return AppHelperResultCode.APP_HELPER_RESULT_SUCCESS
     }
 
     @CheckResult
-    override suspend fun startCompanion(node: String): AppHelperResultCode {
+    override suspend fun startCompanion(nodeId: String): AppHelperResultCode {
         checkIsForegroundOrThrow()
-        val companionPackage = registry.nodeClient.getCompanionPackageForNode(node).await()
+        val companionPackage = registry.nodeClient.getCompanionPackageForNode(nodeId).await()
 
         /**
          * Some devices report the wrong companion for actually launching the Companion app: For
