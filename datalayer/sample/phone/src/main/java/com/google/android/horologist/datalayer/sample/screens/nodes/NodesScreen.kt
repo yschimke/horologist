@@ -197,6 +197,7 @@ fun NodesScreenPreview() {
                 AppHelperNodeStatus(
                     id = "a1b2c3d4",
                     displayName = "Pixel Watch",
+                    isNearby = true,
                     appInstallationStatus = AppInstallationStatus.Installed(
                         nodeType = AppInstallationStatusNodeType.WATCH,
                     ),
@@ -230,7 +231,7 @@ fun NodesScreenPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun NodesActionsScreenPreviewEmptyNodes() {
+fun NodesScreenPreviewEmptyNodes() {
     NodesScreen(
         state = NodesScreenState.Loaded(emptyList()),
         onRefreshClick = { },

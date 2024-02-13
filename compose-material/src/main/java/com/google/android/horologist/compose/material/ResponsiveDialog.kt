@@ -20,12 +20,16 @@ import android.R
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -33,10 +37,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.foundation.lazy.ScalingLazyListScope
 import androidx.wear.compose.material.ButtonDefaults
+import androidx.wear.compose.material.ChipColors
+import androidx.wear.compose.material.ChipDefaults
 import androidx.wear.compose.material.LocalTextStyle
 import androidx.wear.compose.material.MaterialTheme
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
@@ -45,6 +54,7 @@ import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults.re
 import com.google.android.horologist.compose.layout.ScalingLazyColumnState
 import com.google.android.horologist.compose.layout.ScreenScaffold
 import com.google.android.horologist.compose.layout.rememberColumnState
+import com.google.android.horologist.images.base.paintable.ImageVectorPaintable
 
 @ExperimentalHorologistApi
 @Composable
@@ -52,11 +62,13 @@ public fun ResponsiveDialogContent(
     modifier: Modifier = Modifier,
     icon: @Composable (() -> Unit)? = null,
     title: @Composable (() -> Unit)? = null,
-    onOkButtonClick: (() -> Unit)? = null,
-    onCancelButtonClick: (() -> Unit)? = null,
+    message: @Composable (() -> Unit)? = null,
+    onOk: (() -> Unit)? = null,
+    onCancel: (() -> Unit)? = null,
     okButtonContentDescription: String = stringResource(R.string.ok),
     cancelButtonContentDescription: String = stringResource(R.string.cancel),
-    state: ScalingLazyColumnState = rememberColumnState(responsive(firstItemIsFullWidth = icon == null)),
+    state: ScalingLazyColumnState =
+        rememberColumnState(responsive(firstItemIsFullWidth = icon == null)),
     showPositionIndicator: Boolean = true,
     content: (ScalingLazyListScope.() -> Unit)? = null,
 ) {
@@ -87,47 +99,65 @@ public fun ResponsiveDialogContent(
                         CompositionLocalProvider(
                             LocalTextStyle provides MaterialTheme.typography.title3,
                         ) {
-                            SidePaddingExtraPct(
-                                8.84f,
-                                Modifier.padding(bottom = 8.dp), // 12.dp bellow icon
+                            Box(
+                                Modifier
+                                    .fillMaxWidth(titleMaxWidthFraction)
+                                    .padding(bottom = 8.dp), // 12.dp below icon
                             ) { it() }
                         }
                     }
                 }
-                content?.let {
-                    if (icon == null && title == null) {
-                        // Ensure the content is visible when there is nothing above it.
-                        item {
-                            Spacer(Modifier.height(20.dp))
-                        }
+                if (icon == null && title == null) {
+                    // Ensure the content is visible when there is nothing above it.
+                    item {
+                        Spacer(Modifier.height(20.dp))
                     }
+                }
+                message?.let {
+                    item {
+                        Box(
+                            Modifier.fillMaxWidth(messageMaxWidthFraction),
+                        ) { it() }
+                    }
+                }
+                content?.let {
                     it()
                 }
-                if (onOkButtonClick != null || onCancelButtonClick != null) {
+                if (onOk != null || onCancel != null) {
                     item {
+                        val width = LocalConfiguration.current.screenWidthDp
+                        // Single buttons, or buttons on smaller screens are not meant to be
+                        // responsive.
+                        val buttonWidth = if (width < 225 || onOk == null || onCancel == null) {
+                            ButtonDefaults.DefaultButtonSize
+                        } else {
+                            // 14.52% margin on the sides, 4.dp between.
+                            ((width * (1f - 2 * 0.1452f) - 4) / 2).dp
+                        }
                         Row(
                             Modifier
                                 .fillMaxWidth()
-                                .padding(top = if (content != null) 12.dp else 0.dp),
-                            horizontalArrangement = spacedBy(
-                                4.dp,
-                                Alignment.CenterHorizontally,
-                            ),
+                                .padding(
+                                    top = if (content != null || message != null) 12.dp else 0.dp,
+                                ),
+                            horizontalArrangement = spacedBy(4.dp, Alignment.CenterHorizontally),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            onCancelButtonClick?.let {
-                                Button(
-                                    imageVector = Icons.Default.Close,
-                                    contentDescription = cancelButtonContentDescription,
+                            onCancel?.let {
+                                ResponsiveButton(
+                                    icon = Icons.Default.Close,
+                                    cancelButtonContentDescription,
                                     onClick = it,
-                                    colors = ButtonDefaults.secondaryButtonColors(),
+                                    buttonWidth,
+                                    ChipDefaults.secondaryChipColors(),
                                 )
                             }
-                            onOkButtonClick?.let {
-                                Button(
-                                    imageVector = Icons.Default.Check,
-                                    contentDescription = okButtonContentDescription,
-                                    onClick = onOkButtonClick,
+                            onOk?.let {
+                                ResponsiveButton(
+                                    icon = Icons.Default.Check,
+                                    okButtonContentDescription,
+                                    onClick = it,
+                                    buttonWidth,
                                 )
                             }
                         }
@@ -138,31 +168,48 @@ public fun ResponsiveDialogContent(
     }
 }
 
-/**
- * Surrounds a composable with padding at the start and end, expressed as a percentage of the
- * available width.
- *
- * @param paddingPct how much padding to add to each side, expressed as a percentage.
- * @param basePaddingPct how much padding has already being applied (expressed as a percentage).
- * This is used to simplify calculations when multiple nested padding need to be applied.
- * @param content the content to show inside the padding.
- */
-@ExperimentalHorologistApi
 @Composable
-internal fun SidePaddingExtraPct(
-    paddingPct: Float,
-    modifier: Modifier = Modifier,
-    basePaddingPct: Float = 5.2f,
-    content: @Composable () -> Unit,
+private fun ResponsiveButton(
+    icon: ImageVector,
+    contentDescription: String,
+    onClick: () -> Unit,
+    buttonWidth: Dp,
+    colors: ChipColors = ChipDefaults.primaryChipColors(),
 ) {
-    val extraPadding = paddingPct / (100f - 2 * basePaddingPct)
-    Row(
-        modifier.fillMaxWidth(),
-    ) {
-        Spacer(Modifier.weight(extraPadding))
-        Box(Modifier.weight(1f - 2 * extraPadding)) {
-            content()
-        }
-        Spacer(Modifier.weight(extraPadding))
-    }
+    androidx.wear.compose.material.Chip(
+        label = {
+            Box(Modifier.fillMaxWidth()) {
+                Icon(
+                    paintable = ImageVectorPaintable(icon),
+                    contentDescription = contentDescription,
+                    modifier = Modifier
+                        .size(ButtonDefaults.DefaultIconSize)
+                        .align(Alignment.Center),
+                )
+            }
+        },
+        contentPadding = PaddingValues(0.dp),
+        shape = CircleShape,
+        onClick = onClick,
+        modifier = Modifier.width(buttonWidth),
+        colors = colors,
+    )
 }
+
+internal const val globalHorizontalPadding = 5.2f
+internal const val messageExtraHorizontalPadding = 4.16f
+internal const val titleExtraHorizontalPadding = 8.84f
+
+// Fraction of the max available width that message should take (after global and message padding)
+internal val messageMaxWidthFraction = 1f - 2f * calculatePaddingFraction(
+    messageExtraHorizontalPadding,
+)
+
+// Fraction of the max available width that title should take (after global and message padding)
+internal val titleMaxWidthFraction = 1f - 2f * calculatePaddingFraction(
+    titleExtraHorizontalPadding,
+)
+
+// Calculate total padding given global padding and additional padding required inside that.
+internal fun calculatePaddingFraction(extraPadding: Float) =
+    extraPadding / (100f - 2f * globalHorizontalPadding)
