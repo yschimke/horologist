@@ -19,5 +19,8 @@ package com.google.android.horologist.buildlogic.weardevices
 import java.io.Serializable
 
 enum class TestRunMode: Serializable {
-    Manual, NormalAsync, NormalSync, InputSuspend
+    Manual,
+    NormalAsync,
+    NormalSync,
+    InputSuspend
 }
