@@ -48,7 +48,8 @@ open class TestRunTaskAction : DeviceTestRunTaskAction<DeviceTestRunInput> {
         val testData = testRunData.testData
         val serial = params.deviceInput.serial.get()
 
-        val strategy = findStrategy(params.deviceInput.runMode.get())
+        val runMode = params.deviceInput.runMode.get()
+        val strategy = findStrategy(runMode)
 
         val adb = AdbHolder(serial)
 
@@ -70,16 +71,20 @@ open class TestRunTaskAction : DeviceTestRunTaskAction<DeviceTestRunInput> {
                 apk = testData.testApk
             )
 
+            val outputDir = params.testRunData.outputDirectory.asFile
+            println("outputDir $outputDir")
+
             val logger = LoggerWrapper.getLogger(TestRunTaskAction::class.java)
 
             val mode = RemoteAndroidTestRunner.StatusReporterMode.PROTO_STD
             val resultsListener = CustomTestRunListener(
                 testRunData.deviceName, testRunData.projectPath, testRunData.variantName, logger
             )
+            val printer = BenchmarkListener(testRunData.additionalTestOutputDir!!.asFile, adb)
             resultsListener.setReportDir(testRunData.outputDirectory.asFile)
             resultsListener.setHostName(adb.adb.host.hostName)
             val parser =
-                mode.createInstrumentationResultParser(testRunData.testRunId, listOf(resultsListener))
+                mode.createInstrumentationResultParser(testRunData.testRunId, listOf(resultsListener, printer))
 
             strategy.launchTests(adb, params, logger, parser)
 

@@ -28,10 +28,10 @@ sealed interface TestRunMode: Serializable {
     ): TestRunMode
 
     object NormalSync: TestRunMode {
-        fun readResolve(): Any = Manual
+        fun readResolve(): Any = NormalSync
     }
 
     object InputSuspend: TestRunMode {
-        fun readResolve(): Any = Manual
+        fun readResolve(): Any = InputSuspend
     }
 }

@@ -32,11 +32,17 @@ sealed interface AdbDisconnect: Serializable {
         fun readResolve(): Any = InputSuspend
 
         override suspend fun disconnect(adb: AdbHolder) {
-            adb.execute(ShellCommandRequest("echo 1 > /d/google_charger/input_suspend"))
+            val x = adb.execute(ShellCommandRequest("echo 1 > /d/google_charger/input_suspend"))
+            if (x.exitCode != 0) {
+                throw Exception("disconnect failed (${x.exitCode}) " + x.errorOutput)
+            }
         }
 
         override suspend fun reconnect(adb: AdbHolder) {
-            adb.execute(ShellCommandRequest("echo 0 > /d/google_charger/input_suspend"))
+            val x = adb.execute(ShellCommandRequest("echo 0 > /d/google_charger/input_suspend"))
+            if (x.exitCode != 0) {
+                throw Exception("disconnect failed (${x.exitCode}) " + x.errorOutput)
+            }
         }
     }
 
