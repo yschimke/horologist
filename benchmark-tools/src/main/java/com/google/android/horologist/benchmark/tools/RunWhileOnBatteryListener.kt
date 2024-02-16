@@ -19,7 +19,6 @@ package com.google.android.horologist.benchmark.tools
 import android.annotation.SuppressLint
 import android.os.BatteryManager
 import android.os.Bundle
-import android.widget.Toast
 import androidx.test.internal.runner.listener.InstrumentationRunListener
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.runner.Description
@@ -27,9 +26,9 @@ import org.junit.runner.Result
 import java.io.PrintStream
 
 @SuppressLint("RestrictedApi")
-class RunWhileOnBatteryListener : InstrumentationRunListener() {
-    val context = InstrumentationRegistry.getInstrumentation().context
-    val batteryManager = context.getSystemService(BatteryManager::class.java)
+public class RunWhileOnBatteryListener : InstrumentationRunListener() {
+    private val context = InstrumentationRegistry.getInstrumentation().context
+    private val batteryManager = context.getSystemService(BatteryManager::class.java)
 
     override fun testRunStarted(description: Description?) {
         println("RunWhileOnBatteryListener.testRunStarted")

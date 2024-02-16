@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("UnstableApiUsage")
+
 package com.google.android.horologist.buildlogic.weardevices.impl.test.strategy
 
 import com.android.build.api.instrumentation.manageddevice.DeviceTestRunParameters
@@ -30,10 +32,11 @@ import kotlin.time.Duration.Companion.seconds
 
 class NormalAsyncStrategy : AsyncTestRunStrategy() {
 
+    private lateinit var additionalTestOutputDir: String
     private val estimatedRunTime: Duration = 1.seconds
     val uuid = UUID.randomUUID().toString()
 
-    val markerFile = "/sdcard/marker.file.$uuid"
+    private lateinit var markerFile: String
 
     suspend fun checkAndConfigure(
         adb: AdbHolder
@@ -50,14 +53,22 @@ class NormalAsyncStrategy : AsyncTestRunStrategy() {
         delay(estimatedRunTime)
         adb.connect()
 
-        for (index in 0 until 10) {
-            if (adb.execute(
-                    request = StatFileRequest(
-                        remotePath = markerFile, supportedFeatures = adb.supportedFeatures
-                    )
-                ).exists()) break
-            delay(1000)
+        var exists = false
+        for (index in 0 until 20) {
+//            println("waiting for $markerFile")
+            exists = adb.execute(
+                request = StatFileRequest(
+                    remotePath = markerFile, supportedFeatures = adb.supportedFeatures
+                )
+            ).exists()
+
+            if (exists) {
+                break
+            }
+            delay(2000)
         }
+
+        check(exists)
     }
 
     override suspend fun launchTests(
@@ -66,6 +77,10 @@ class NormalAsyncStrategy : AsyncTestRunStrategy() {
         logger: LoggerWrapper,
         parser: IInstrumentationResultParser,
     ) {
+        additionalTestOutputDir = "/storage/emulated/0/Android/media/${params.testRunData.testData.applicationId}"
+
+        markerFile = "$additionalTestOutputDir/marker.file.$uuid"
+
         launchTestsAsync(adb = adb,
             testRunData = params.testRunData,
             logger = logger,

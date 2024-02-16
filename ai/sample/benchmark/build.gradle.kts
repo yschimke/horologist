@@ -107,6 +107,8 @@ android {
 dependencies {
     api(projects.annotations)
 
+    implementation(projects.benchmarkTools)
+
     implementation(libs.androidx.benchmark.macro.junit4)
     implementation(libs.androidx.benchmark.junit4)
     implementation(libs.androidx.test.ext.ktx)

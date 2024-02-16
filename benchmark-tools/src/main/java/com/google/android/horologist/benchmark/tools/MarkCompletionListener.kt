@@ -17,7 +17,9 @@
 package com.google.android.horologist.benchmark.tools
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
+import android.os.Environment
 import androidx.test.internal.runner.listener.InstrumentationRunListener
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.runner.Description
@@ -26,12 +28,12 @@ import java.io.File
 import java.io.PrintStream
 
 @SuppressLint("RestrictedApi")
-class MarkCompletionListener: InstrumentationRunListener() {
-    val markerFile = File(checkNotNull(InstrumentationRegistry.getArguments().getString("marker")) {
+public class MarkCompletionListener: InstrumentationRunListener() {
+    private val markerFile = File(checkNotNull(InstrumentationRegistry.getArguments().getString("marker")) {
         "Instrument argument 'marker' missing"
     })
 
-    val markerSignal = InstrumentationRegistry.getArguments().getString("signal") ?: "Finished"
+    private val markerSignal = InstrumentationRegistry.getArguments().getString("signal") ?: "Finished"
 
     override fun testRunStarted(description: Description?) {
         println("MarkCompletionListener.testRunStarted")
@@ -49,5 +51,14 @@ class MarkCompletionListener: InstrumentationRunListener() {
         println("MarkCompletionListener.instrumentationRunFinished")
 
         markerFile.writeText(markerSignal)
+
+        println("wrote $markerFile")
+    }
+}
+
+private fun Context.getFirstMountedMediaDir(): File? {
+    @Suppress("DEPRECATION")
+    return externalMediaDirs.firstOrNull {
+        Environment.getExternalStorageState(it) == Environment.MEDIA_MOUNTED
     }
 }
