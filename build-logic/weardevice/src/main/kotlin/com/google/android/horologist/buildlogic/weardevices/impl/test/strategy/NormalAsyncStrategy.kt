@@ -21,6 +21,7 @@ package com.google.android.horologist.buildlogic.weardevices.impl.test.strategy
 import com.android.build.api.instrumentation.manageddevice.DeviceTestRunParameters
 import com.android.build.gradle.internal.LoggerWrapper
 import com.android.ddmlib.testrunner.IInstrumentationResultParser
+import com.google.android.horologist.buildlogic.weardevices.AdbDisconnect
 import com.google.android.horologist.buildlogic.weardevices.impl.test.DeviceTestRunInput
 import com.google.android.horologist.buildlogic.weardevices.impl.test.adb.AdbHolder
 import com.malinskiy.adam.request.shell.v2.ShellCommandRequest
@@ -30,10 +31,10 @@ import java.util.UUID
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
-class NormalAsyncStrategy : AsyncTestRunStrategy() {
+class NormalAsyncStrategy(private val adbDisconnect: AdbDisconnect) : AsyncTestRunStrategy() {
 
     private lateinit var additionalTestOutputDir: String
-    private val estimatedRunTime: Duration = 1.seconds
+    private val estimatedRunTime: Duration = 30.seconds
     val uuid = UUID.randomUUID().toString()
 
     private lateinit var markerFile: String
@@ -48,10 +49,11 @@ class NormalAsyncStrategy : AsyncTestRunStrategy() {
     suspend fun cleanupAndWaitForResults(
         adb: AdbHolder
     ) {
-        adb.close()
+        adbDisconnect.disconnect(adb)
 
         delay(estimatedRunTime)
-        adb.connect()
+
+        adbDisconnect.reconnect(adb)
 
         var exists = false
         for (index in 0 until 20) {

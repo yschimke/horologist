@@ -18,9 +18,20 @@ package com.google.android.horologist.buildlogic.weardevices
 
 import java.io.Serializable
 
-enum class TestRunMode: Serializable {
-    Manual,
-    NormalAsync,
-    NormalSync,
-    InputSuspend
+sealed interface TestRunMode: Serializable {
+    object Manual: TestRunMode {
+        fun readResolve(): Any = Manual
+    }
+
+    class NormalAsync(
+        val adbDisconnect: AdbDisconnect
+    ): TestRunMode
+
+    object NormalSync: TestRunMode {
+        fun readResolve(): Any = Manual
+    }
+
+    object InputSuspend: TestRunMode {
+        fun readResolve(): Any = Manual
+    }
 }

@@ -33,7 +33,7 @@ class StartupBenchmark {
     @Test
     public fun startup(): Unit = benchmarkRule.measureRepeated(
         packageName = "com.google.android.horologist.ai.sample.prompt",
-        metrics = listOf(StartupTimingMetric()),
+        metrics = listOf(StartupTimingMetric(), Wear4PowerMetric()),
         compilationMode = CompilationMode.None(),
         iterations = 1,
         startupMode = StartupMode.WARM,
