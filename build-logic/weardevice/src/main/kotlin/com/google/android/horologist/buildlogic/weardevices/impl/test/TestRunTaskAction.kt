@@ -94,6 +94,6 @@ open class TestRunTaskAction : DeviceTestRunTaskAction<DeviceTestRunInput> {
         TestRunMode.Manual -> ManualTestRunStrategy()
         TestRunMode.InputSuspend -> InputSuspendStrategy()
         TestRunMode.NormalSync -> NormalSyncStrategy()
-        TestRunMode.NormalAsync -> NormalAsyncStrategy()
+        is TestRunMode.NormalAsync -> NormalAsyncStrategy(runMode.adbDisconnect)
     }
 }

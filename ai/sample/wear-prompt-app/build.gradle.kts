@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import com.google.android.horologist.buildlogic.weardevices.AdbDisconnect
 import com.google.android.horologist.buildlogic.weardevices.TestRunMode
 import com.google.android.horologist.buildlogic.weardevices.WearDevice
 
@@ -92,11 +93,15 @@ android {
                 }
                 register("emulatorAsync", WearDevice::class.java) {
                     serial = "emulator-5554"
-                    runMode = TestRunMode.NormalAsync
+                    runMode = TestRunMode.NormalAsync(adbDisconnect = AdbDisconnect.Simulate)
                 }
                 register("pixelWatch2Suspend", WearDevice::class.java) {
                     serial = "3B111JEAVL001J"
                     runMode = TestRunMode.InputSuspend
+                }
+                register("pixelWatch2Async", WearDevice::class.java) {
+                    serial = "3B111JEAVL001J"
+                    runMode = TestRunMode.NormalAsync(adbDisconnect = AdbDisconnect.UsbControl(port = 4, location = "1-2", uhubctl = File("/usr/local/google/home/yschimke/workspacesda/uhubctl/uhubctl")))
                 }
                 register("pixelWatch2Manual", WearDevice::class.java) {
                     serial = "3B111JEAVL001J"

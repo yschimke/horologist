@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-@file:OptIn(ExperimentalMacrobenchmarkApi::class)
-
 package com.google.android.horologist.mediasample.benchmark
 
 import androidx.benchmark.macro.CompilationMode
-import androidx.benchmark.macro.ExperimentalMacrobenchmarkApi
 import androidx.benchmark.macro.StartupMode
 import androidx.benchmark.macro.StartupTimingMetric
 import androidx.benchmark.macro.junit4.MacrobenchmarkRule
@@ -36,8 +33,8 @@ class StartupBenchmark {
     @Test
     public fun startup(): Unit = benchmarkRule.measureRepeated(
         packageName = "com.google.android.horologist.ai.sample.prompt",
-        metrics = listOf(StartupTimingMetric()),
-        compilationMode = CompilationMode.Ignore(),
+        metrics = listOf(StartupTimingMetric(), Wear4PowerMetric()),
+        compilationMode = CompilationMode.None(),
         iterations = 1,
         startupMode = StartupMode.WARM,
     ) {

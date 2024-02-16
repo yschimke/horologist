@@ -21,17 +21,20 @@ package com.google.android.horologist.buildlogic.weardevices.impl.test.strategy
 import com.android.build.api.instrumentation.manageddevice.DeviceTestRunParameters
 import com.android.build.gradle.internal.LoggerWrapper
 import com.android.ddmlib.testrunner.IInstrumentationResultParser
+import com.google.android.horologist.buildlogic.weardevices.AdbDisconnect
 import com.google.android.horologist.buildlogic.weardevices.impl.test.DeviceTestRunInput
 import com.google.android.horologist.buildlogic.weardevices.impl.test.adb.AdbHolder
 import com.malinskiy.adam.request.shell.v2.ShellCommandRequest
 
 class InputSuspendStrategy : SyncTestRunStrategy() {
+    val adbDisconnect = AdbDisconnect.InputSuspend
+
     suspend fun checkAndConfigure(adb: AdbHolder) {
-        adb.execute(ShellCommandRequest("echo 1 > /d/google_charger/input_suspend"))
+        adbDisconnect.disconnect(adb)
     }
 
     suspend fun cleanupAndWaitForResults(adb: AdbHolder) {
-        adb.execute(ShellCommandRequest("echo 0 > /d/google_charger/input_suspend"))
+        adbDisconnect.reconnect(adb)
     }
 
     override suspend fun launchTests(
