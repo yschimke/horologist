@@ -72,7 +72,6 @@ fun ScreenScaffold(
 
     Scaffold(
         modifier = modifier,
-        timeText = timeText,
         positionIndicator = {
             if (positionIndicator != null) {
                 positionIndicator()

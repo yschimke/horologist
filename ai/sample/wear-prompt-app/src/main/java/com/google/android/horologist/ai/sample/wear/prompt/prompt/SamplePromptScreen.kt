@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.QuestionAnswer
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -41,6 +42,7 @@ import androidx.wear.compose.material.Card
 import androidx.wear.compose.material.CardDefaults
 import androidx.wear.compose.material.LocalContentColor
 import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.ui.tooling.preview.WearPreviewLargeRound
 import androidx.wear.compose.ui.tooling.preview.WearPreviewSmallRound
 import com.google.android.horologist.ai.sample.prompt.R
@@ -51,6 +53,8 @@ import com.google.android.horologist.ai.ui.model.TextPromptUiModel
 import com.google.android.horologist.ai.ui.model.TextResponseUiModel
 import com.google.android.horologist.ai.ui.screens.PromptScreen
 import com.google.android.horologist.ai.ui.screens.PromptUiState
+import com.google.android.horologist.compose.ambient.AmbientAware
+import com.google.android.horologist.compose.ambient.AmbientState
 import com.google.android.horologist.compose.layout.ScalingLazyColumnState
 import com.google.android.horologist.compose.layout.ScreenScaffold
 import com.google.android.horologist.compose.layout.rememberColumnState
@@ -70,18 +74,17 @@ fun SamplePromptScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val voiceLauncher =
-        rememberLauncherForActivityResult(
-            ActivityResultContracts.StartActivityForResult(),
-        ) {
-            it.data?.let { data ->
-                val results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                val enteredPrompt = results?.get(0)
-                if (!enteredPrompt.isNullOrBlank()) {
-                    viewModel.askQuestion(enteredPrompt)
-                }
+    val voiceLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult(),
+    ) {
+        it.data?.let { data ->
+            val results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            val enteredPrompt = results?.get(0)
+            if (!enteredPrompt.isNullOrBlank()) {
+                viewModel.askQuestion(enteredPrompt)
             }
         }
+    }
 
     val voiceIntent: Intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
         putExtra(
@@ -119,23 +122,32 @@ private fun SamplePromptScreen(
     modifier: Modifier = Modifier,
     columnState: ScalingLazyColumnState = rememberColumnState(),
     onSettingsClick: (() -> Unit)? = null,
-    promptEntry: @Composable () -> Unit,
+    promptEntry: (@Composable () -> Unit)?,
 ) {
-    ScreenScaffold(scrollState = columnState) {
-        CompositionLocalProvider(
-            LocalMarkdownColors provides SampleColors(),
-            LocalMarkdownTypography provides SampleTypography(),
+    AmbientAware { ambient ->
+        val ambientState = rememberUpdatedState(newValue = ambient)
+        ScreenScaffold(scrollState = columnState,
+            timeText = {
+                if (ambientState.value.ambientState !is AmbientState.Ambient) {
+                    TimeText()
+                }
+            }
         ) {
-            PromptScreen(
-                uiState = uiState,
-                columnState = columnState,
-                modifier = modifier,
-                promptEntry = promptEntry,
-                onSettingsClick = onSettingsClick,
-                promptDisplay = {
-                    ModelDisplay(it)
-                },
-            )
+            CompositionLocalProvider(
+                LocalMarkdownColors provides SampleColors(),
+                LocalMarkdownTypography provides SampleTypography(),
+            ) {
+                PromptScreen(
+                    uiState = uiState,
+                    columnState = columnState,
+                    modifier = modifier,
+                    promptEntry = if (ambientState.value.ambientState is AmbientState.Ambient) null else promptEntry,
+                    onSettingsClick = if (ambientState.value.ambientState is AmbientState.Ambient) null else onSettingsClick,
+                    promptDisplay = {
+                        ModelDisplay(it)
+                    },
+                )
+            }
         }
     }
 }
@@ -228,11 +240,7 @@ fun SamplePromptScreenPreviewMany() {
                 TextResponseUiModel("To get to the other side."),
                 TextPromptUiModel("why did the chicken cross the road?"),
                 TextResponseUiModel(
-                    "To get to the other side. " +
-                        "To get to the other side. " +
-                        "To get to the other side. " +
-                        "To get to the other side. " +
-                        "To get to the other side.",
+                    "To get to the other side. " + "To get to the other side. " + "To get to the other side. " + "To get to the other side. " + "To get to the other side.",
                 ),
                 TextPromptUiModel("why did the chicken cross the road?"),
                 TextResponseUiModel("To get to the other side."),

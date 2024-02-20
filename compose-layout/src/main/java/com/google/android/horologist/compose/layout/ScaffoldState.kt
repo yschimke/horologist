@@ -62,6 +62,7 @@ internal class ScaffoldState {
     private fun currentContent(): Pair<ScrollableState?, @Composable (() -> Unit)> {
         var resultTimeText: @Composable (() -> Unit)? = null
         var resultState: ScrollableState? = null
+        println(screenContent.toList())
         screenContent.forEach {
             if (it.timeText != null) {
                 resultTimeText = it.timeText

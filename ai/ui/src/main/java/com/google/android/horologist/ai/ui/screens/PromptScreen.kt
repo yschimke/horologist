@@ -63,7 +63,7 @@ public fun PromptScreen(
             onClick = {},
         )
     },
-    promptEntry: @Composable () -> Unit,
+    promptEntry: (@Composable () -> Unit)?,
 ) {
     ScalingLazyColumn(columnState = columnState, modifier = modifier) {
         item {
@@ -102,8 +102,10 @@ public fun PromptScreen(
                 ResponseInProgressCard(InProgressResponseUiModel)
             }
         }
-        item {
-            promptEntry()
+        if (promptEntry != null) {
+            item {
+                promptEntry()
+            }
         }
         if (onSettingsClick != null) {
             item {
