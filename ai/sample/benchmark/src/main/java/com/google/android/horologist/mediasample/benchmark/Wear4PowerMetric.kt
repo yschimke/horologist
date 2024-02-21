@@ -42,6 +42,18 @@ public class Wear4PowerMetric() : TraceMetric() {
                 "BatteryCurrentUaTotal",
                 currentUa.sumOf { it }
             ),
+            Measurement(
+                "BatteryCurrentUaAvg",
+                currentUa.average()
+            ),
+            Measurement(
+                "BatteryCurrentUaMax",
+                currentUa.min()
+            ),
+            Measurement(
+                "BatteryCurrentUaMin",
+                currentUa.max()
+            ),
         )
     }
 }

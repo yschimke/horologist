@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.QuestionAnswer
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
@@ -38,6 +39,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.tracing.Trace
+import androidx.tracing.traceAsync
 import androidx.wear.compose.material.Card
 import androidx.wear.compose.material.CardDefaults
 import androidx.wear.compose.material.LocalContentColor
@@ -125,6 +128,14 @@ private fun SamplePromptScreen(
     promptEntry: (@Composable () -> Unit)?,
 ) {
     AmbientAware { ambient ->
+        DisposableEffect(ambient) {
+            Trace.beginAsyncSection(ambient.ambientState.javaClass.simpleName, 0)
+
+            onDispose {
+                Trace.endAsyncSection(ambient.ambientState.javaClass.simpleName, 0)
+            }
+        }
+
         val ambientState = rememberUpdatedState(newValue = ambient)
         ScreenScaffold(scrollState = columnState,
             timeText = {

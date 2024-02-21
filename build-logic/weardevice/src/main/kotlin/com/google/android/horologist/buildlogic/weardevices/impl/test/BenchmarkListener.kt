@@ -57,12 +57,15 @@ class BenchmarkListener(
 
         val benchmark = testMetrics["android.studio.display.benchmark"]
         val benchmarkv2 = testMetrics["android.studio.v2display.benchmark"]
-        val outputDirPath = testMetrics["android.studio.v2display.benchmark.outputDirPath"]!!
+        val outputDirPath = testMetrics["android.studio.v2display.benchmark.outputDirPath"]
+        println("testMetrics $testMetrics")
 
         println(benchmark)
 
-        runBlocking {
-            copyAdditionalOutput(outputDirPath, additionalTestOutput)
+        if (outputDirPath != null) {
+            runBlocking {
+                copyAdditionalOutput(outputDirPath, additionalTestOutput)
+            }
         }
 
         val logcat = testMetrics["com.android.ddmlib.testrunner.logcat"]

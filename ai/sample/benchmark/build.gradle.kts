@@ -76,15 +76,15 @@ android {
                     runMode = TestRunMode.NormalAsync(adbDisconnect = AdbDisconnect.Simulate)
                 }
                 register("pixelWatch2Suspend", WearDevice::class.java) {
-                    serial = "32271RUJWR06U2"
+                    serial = "3B111JEAVL001J"
                     runMode = TestRunMode.InputSuspend
                 }
                 register("pixelWatch2Async", WearDevice::class.java) {
-                    serial = "32271RUJWR06U2"
+                    serial = "3B111JEAVL001J"
                     runMode = TestRunMode.NormalAsync(adbDisconnect = AdbDisconnect.UsbControl(port = 4, location = "1-2", uhubctl = File("/usr/local/google/home/yschimke/workspacesda/uhubctl/uhubctl")))
                 }
                 register("pixelWatch2Manual", WearDevice::class.java) {
-                    serial = "32271RUJWR06U2"
+                    serial = "3B111JEAVL001J"
                     runMode = TestRunMode.Manual
                 }
             }

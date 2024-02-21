@@ -29,12 +29,13 @@ import com.malinskiy.adam.request.sync.v2.StatFileRequest
 import kotlinx.coroutines.delay
 import java.util.UUID
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 class NormalAsyncStrategy(private val adbDisconnect: AdbDisconnect) : AsyncTestRunStrategy() {
 
     private lateinit var additionalTestOutputDir: String
-    private val estimatedRunTime: Duration = 30.seconds
+    private val estimatedRunTime: Duration = 3.minutes
     val uuid = UUID.randomUUID().toString()
 
     private lateinit var markerFile: String

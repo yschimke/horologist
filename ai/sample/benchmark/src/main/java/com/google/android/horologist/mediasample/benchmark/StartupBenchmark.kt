@@ -16,30 +16,52 @@
 
 package com.google.android.horologist.mediasample.benchmark
 
+import android.content.ComponentName
+import android.content.Intent
 import androidx.benchmark.macro.CompilationMode
+import androidx.benchmark.macro.MacrobenchmarkScope
 import androidx.benchmark.macro.StartupMode
 import androidx.benchmark.macro.StartupTimingMetric
 import androidx.benchmark.macro.junit4.MacrobenchmarkRule
 import androidx.test.filters.LargeTest
+import androidx.test.platform.app.InstrumentationRegistry
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 
 @LargeTest
+@Ignore("testing other")
 class StartupBenchmark {
 
     @get:Rule
     public val benchmarkRule: MacrobenchmarkRule = MacrobenchmarkRule()
 
     @Test
-    public fun startup(): Unit = benchmarkRule.measureRepeated(
-        packageName = "com.google.android.horologist.ai.sample.prompt",
-        metrics = listOf(StartupTimingMetric(), Wear4PowerMetric()),
-        compilationMode = CompilationMode.None(),
-        iterations = 1,
-        startupMode = StartupMode.WARM,
-    ) {
-        startActivityAndWait()
-        // sleep to allow time for report fully drawn
-//        Thread.sleep(5000)
+    public fun startup(): Unit {
+        benchmarkRule.measureRepeated(
+            packageName = packageName,
+            metrics = listOf(StartupTimingMetric(), Wear4PowerMetric()),
+            compilationMode = CompilationMode.None(),
+            iterations = 1,
+            startupMode = StartupMode.WARM,
+        ) {
+            startActivityAndWait()
+            // sleep to allow time for report fully drawn
+    //        Thread.sleep(5000)
+        }
+    }
+
+    companion object {
+        val packageName = "com.google.android.horologist.ai.sample.prompt"
+
+        val MainIntent = Intent(Intent.ACTION_MAIN).apply {
+//            this.`package` = packageName
+            component = ComponentName(packageName, "com.google.android.horologist.ai.sample.wear.prompt.MainActivity")
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+
+        fun MacrobenchmarkScope.startActivity() {
+            InstrumentationRegistry.getInstrumentation().context.startActivity(MainIntent)
+        }
     }
 }
