@@ -38,7 +38,7 @@ composesnapshot = "-"
 dependencyAnalysis = "1.30.0"
 dokka = "1.9.20"
 googledagger = "2.51"
-gradlePlugin = "8.4.0-alpha10"
+gradlePlugin = "8.4.0-alpha13"
 gradlePublishPlugin = "0.28.0"
 io-coil-kt = "2.6.0"
 junit = "4.13.2"
@@ -64,12 +64,11 @@ wearToolingPreview = "1.0.0"
 appcompat = "1.6.1"
 material = "1.11.0"
 wearInput = "1.2.0-alpha02"
-androidTools = "31.2.2"
+androidTools = "31.3.1"
 
 [libraries]
 accompanist-testharness = { module = "com.google.accompanist:accompanist-testharness", version.ref = "accompanist" }
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "gradlePlugin" }
-android-tools-build-gradle = { module = "com.android.tools.build:gradle", version.ref = "gradlePlugin" }
 androidx-activity = { module = "androidx.activity:activity", version.ref = "androidxActivity" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivity" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
