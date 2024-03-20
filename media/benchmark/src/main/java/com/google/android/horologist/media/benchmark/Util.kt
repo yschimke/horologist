@@ -20,9 +20,9 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import java.io.File
 
-object Util {
+public object Util {
 
-    fun UiDevice.executeShellScript(script: String, stdin: String? = null): String {
+    public fun UiDevice.executeShellScript(script: String, stdin: String? = null): String {
         // externalFilesDir is writable, but we can't execute there (as of Q),
         // so we copy to /data/local/tmp
         val context = InstrumentationRegistry.getInstrumentation().context

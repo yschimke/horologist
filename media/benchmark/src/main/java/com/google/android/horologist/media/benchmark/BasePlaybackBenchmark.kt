@@ -118,7 +118,7 @@ public abstract class BasePlaybackBenchmark {
         }
     }
 
-    companion object {
-        val IncludePower = true
+    public companion object {
+        public val IncludePower: Boolean = true
     }
 }
