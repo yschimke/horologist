@@ -34,6 +34,7 @@ import androidx.test.filters.LargeTest
 import androidx.test.rule.GrantPermissionRule
 import com.google.android.horologist.media.benchmark.MediaControllerHelper.startPlaying
 import com.google.android.horologist.media.benchmark.MediaControllerHelper.stopPlaying
+import com.google.android.horologist.media.benchmark.Util.executeShellScript
 import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -47,7 +48,8 @@ import kotlin.time.Duration.Companion.seconds
 public abstract class BasePlaybackBenchmark {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @get:Rule
-    public val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS)
+    public val grantPermissionRule: GrantPermissionRule =
+        GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS)
 
     @get:Rule
     public val benchmarkRule: MacrobenchmarkRule = MacrobenchmarkRule()
@@ -70,6 +72,8 @@ public abstract class BasePlaybackBenchmark {
 
             // Wait for service
             mediaControllerFuture.get()
+
+            device.executeShellScript("echo 1 > /d/google_charger/input_suspend")
         },
     ) {
         onStartup()
@@ -91,12 +95,16 @@ public abstract class BasePlaybackBenchmark {
 
             delay(1.seconds)
         }
+
+        device.executeShellScript("echo 0 > /d/google_charger/input_suspend")
     }
 
-    public open fun metrics(): List<Metric> = listOf(
-        FrameTimingMetric(),
-        PowerMetric(type = PowerMetric.Type.Battery()),
-    )
+    public open fun metrics(): List<Metric> = buildList {
+        add(FrameTimingMetric())
+        if (IncludePower) {
+            add(PowerMetric(type = PowerMetric.Type.Battery()))
+        }
+    }
 
     public open fun MacrobenchmarkScope.onStartup() {
         startActivityAndWait()
@@ -108,5 +116,9 @@ public abstract class BasePlaybackBenchmark {
                 throw IllegalStateException("Not playing after 10 seconds")
             }
         }
+    }
+
+    companion object {
+        val IncludePower = true
     }
 }
