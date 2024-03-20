@@ -54,11 +54,35 @@ fun MenuScreen(
         )
 
         Button(onClick = { navController.navigate(Screen.InstallAppPromptDemoScreen.route) }) {
-            Text(text = stringResource(id = R.string.menu_screen_install_app_demo1_item))
+            Text(text = stringResource(id = R.string.menu_screen_install_app_demo_item))
         }
 
-        Button(onClick = { navController.navigate(Screen.InstallAppPromptDemo2Screen.route) }) {
-            Text(text = stringResource(id = R.string.menu_screen_install_app_demo2_item))
+        Button(onClick = { navController.navigate(Screen.ReEngagePromptDemoScreen.route) }) {
+            Text(text = stringResource(id = R.string.menu_screen_reengage_demo_item))
+        }
+
+        Button(onClick = { navController.navigate(Screen.SignInPromptDemoScreen.route) }) {
+            Text(text = stringResource(id = R.string.menu_screen_signin_demo_item))
+        }
+
+        Button(onClick = { navController.navigate(Screen.InstallTilePromptDemoScreen.route) }) {
+            Text(text = stringResource(id = R.string.menu_screen_install_tile_demo_item))
+        }
+
+        Button(onClick = { navController.navigate(Screen.InstallAppCustomPromptDemoScreen.route) }) {
+            Text(text = stringResource(id = R.string.menu_screen_install_app_custom_demo_item))
+        }
+
+        Button(onClick = { navController.navigate(Screen.ReEngageCustomPromptDemoScreen.route) }) {
+            Text(text = stringResource(id = R.string.menu_screen_reengage_custom_demo_item))
+        }
+
+        Button(onClick = { navController.navigate(Screen.SignInCustomPromptDemoScreen.route) }) {
+            Text(text = stringResource(id = R.string.menu_screen_signin_custom_demo_item))
+        }
+
+        Button(onClick = { navController.navigate(Screen.InstallTileCustomPromptDemoScreen.route) }) {
+            Text(text = stringResource(id = R.string.menu_screen_install_tile_custom_demo_item))
         }
 
         Text(

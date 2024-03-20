@@ -16,6 +16,7 @@
 
 @file:Suppress(
     "TestFunctionName", // incorrectly flagging composable functions
+    "DEPRECATION",
 )
 
 package com.google.android.horologist.composables
@@ -41,7 +42,7 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
-import androidx.wear.compose.material.TimeText
+import com.google.android.horologist.compose.layout.ResponsiveTimeText
 import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults
 import com.google.android.horologist.compose.layout.ScalingLazyColumnState
 import com.google.android.horologist.compose.layout.scrollAway
@@ -201,7 +202,7 @@ class SectionedListTest : ScreenshotBaseTest(
                     PositionIndicator(columnState.state)
                 },
                 timeText = {
-                    TimeText(
+                    ResponsiveTimeText(
                         modifier = Modifier.scrollAway(columnState),
                         timeSource = FixedTimeSource,
                     )

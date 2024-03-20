@@ -26,7 +26,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        minSdk = 21
+        minSdk = 23
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -102,6 +102,7 @@ dependencies {
     api(libs.compose.ui)
     api(projects.annotations)
 
+    implementation(projects.datalayer.phone)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.corektx)
@@ -133,5 +134,4 @@ tasks.withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {
     }
 }
 
-// TODO: not to be released for now
-// apply(plugin = "com.vanniktech.maven.publish")
+apply(plugin = "com.vanniktech.maven.publish")

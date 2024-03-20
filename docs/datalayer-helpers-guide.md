@@ -1,236 +1,266 @@
 # DataLayer helpers libraries
 
-These libraries provides an easy means to detect and install your app across both watch and phone.
+The DataLayer helpers libraries help tracking the connection between phone and watch and
+start flows from the such as installing the app
 
 However, they are not intended to cover complex use cases, or complex interactions between watch and
 phone.
 
 ## Getting started
 
-1.  Include the necessary dependency:
+1. Include the necessary dependency:
+
+   ```
+   dependencies {
+       implementation "com.google.android.horologist:horologist-datalayer-watch:<version>"
+   }
+   ```
+
+   and
+
+   ```
+   dependencies {
+       implementation "com.google.android.horologist:horologist-datalayer-phone:<version>"
+   }
+   ```
+
+   For your watch and phone projects respectively.
+
+2. Add the capabilities
+
+   Add a `wear.xml` file in the `res/values` folder with the following content:
 
     ```
-    dependencies {
-        implementation "com.google.android.horologist:horologist-datalayer-watch:<version>"
-    }
-    ```
-
-    and
-
-    ```
-    dependencies {
-        implementation "com.google.android.horologist:horologist-datalayer-phone:<version>"
-    }
-    ```
-
-    For your watch and phone projects respectively.
-
-1.  Add the capability
-
-    Add a `wear.xml` file in the `res/values` folder with the following content:
-
-    ```xml
     <resources xmlns:tools="http://schemas.android.com/tools"
         tools:keep="@array/android_wear_capabilities">
         <string-array name="android_wear_capabilities">
+            <!-- Used to indicate that the app is installed on this device -->
             <item>data_layer_app_helper_device_watch</item>
+            <!-- Used to indicate the device is a watch -->
+            <item>horologist_watch</item>
         </string-array>
     </resources>
     ```
 
-    and
+   and
 
     ```xml
     <resources xmlns:tools="http://schemas.android.com/tools"
         tools:keep="@array/android_wear_capabilities">
-        <string-array name="android_wear_capabilities">
+        <string-array name="android_wear_capabilities" translatable="false" tools:ignore="UnusedResources">
+            <!-- Used to indicate that the app is installed on this device -->
             <item>data_layer_app_helper_device_phone</item>
-        </string-array>
+            <!-- Used to indicate the device is a phone -->
+            <item>horologist_phone</item>
+    </string-array>
     </resources>
     ```
 
-    On your watch and phone projects respectively.
+   on your wear and phone projects respectively.
 
-    For more details, see
-    [Specify capability names for detecting your apps](https://developer.android.com/training/wearables/apps/standalone-apps#capability-names).
+   For more details, see
+   [Specify capability names for detecting your apps](https://developer.android.com/training/wearables/apps/standalone-apps#capability-names).
 
-1.  Initialize the client, including passing a `WearDataLayerRegistry`.
+3. Initialize the client including passing a `WearDataLayerRegistry`.
 
     ```kotlin
+    // on your watch project
     val appHelper = WearDataLayerAppHelper(context, wearDataLayerRegistry, scope)
 
-    // or
+    // on your phone project
     val appHelper = PhoneDataLayerAppHelper(context, wearDataLayerRegistry)
     ```
 
-## Typical use cases:
+## Check API availability
 
-1.  **Connection and installation status**
+This API relies on Google Play services to be available and up-to-date on the device. You can check
+the availability with:
 
-    This is something that your app may do from time to time, or on start up.
+```kotlin
+if (!phoneDataLayerAppHelper.isAvailable()) {
+    // display error 
+}
+```
 
-    ```kotlin
-    val connectedNodes = appHelper.connectedNodes()
-    ```
+Please refer
+to [GoogleApiAvailability](https://developers.google.com/android/reference/com/google/android/gms/common/GoogleApiAvailability#makeGooglePlayServicesAvailable(android.app.Activity))
+if you would like to display an UI to request the user to install or update Google Play.
 
-    The resulting list might will contain entries such as:
+## Connection and installation status
 
-    ```
-    AppHelperNodeStatus(
-        id=7cd1c38a,
-        displayName=Google Pixel Watch,
-        appInstallationStatus=Installed(nodeType=WATCH),
-        surfacesInfo=# SurfacesInfo@125fcbff
-            complications {
-                instance_id: 1234
-                name: "MyComplication"
-                timestamp {
-                    nanos: 738000000
-                    seconds: 1680015523
-                }
-                type: "SHORT_TEXT"
-            }
-            tiles {
-                name: "MyTile"
-                timestamp {
-                    nanos: 364000000
-                    seconds: 1680016845
-                }
-            }
-            usage_info {
-                timestamp {
-                    nanos: 669000000
-                    seconds: 1701708501
-                }
-                usage_status: USAGE_STATUS_LAUNCHED_ONCE
-                usage_status_value: 1
-            }
-    )
-    ```
+The `DataLayerAppHelper.connectedNodes()` returns information about connected devices. You could
+invoke this method at startup or while the app is running.
 
-1.  **Responding to availability change**
+```kotlin
+val connectedNodes = appHelper.connectedNodes()
+```
 
-    Once you've established the app on both devices, you may wish to respond to when the partner
-    device connects or disconnects. For example, you may only want to show a "launch workout" button
-    on the phone when the watch is connected.
+The resulting list might will contain entries such as:
 
-    ```kotlin
-    val nodes by appHelper.connectedAndInstalledNodes
-        .collectAsStateWithLifecycle()
-    ```
+```
+ AppHelperNodeStatus(
+     id=7cd1c38a,
+     displayName=Google Pixel Watch,
+     appInstallationStatus=Installed(nodeType=WATCH),
+     surfacesInfo=# SurfacesInfo@125fcbff
+         complications {
+             instance_id: 1234
+             name: "MyComplication"
+             timestamp {
+                 nanos: 738000000
+                 seconds: 1680015523
+             }
+             type: "SHORT_TEXT"
+         }
+         tiles {
+             name: "MyTile"
+             timestamp {
+                 nanos: 364000000
+                 seconds: 1680016845
+             }
+         }
+         usage_info {
+             timestamp {
+                 nanos: 669000000
+                 seconds: 1701708501
+             }
+             usage_status: USAGE_STATUS_LAUNCHED_ONCE
+             usage_status_value: 1
+         }
+ )
+```
 
-1.  **Installing the app on the other device**
+## Responding to availability change
 
-    Where the app isn't installed on the other device - be that phone or watch - then the library offers
-    a one step option to launch installation:
+Once you've established the app on both devices, you may wish to respond to when the partner
+device connects or disconnects. For example, you may only want to show a "launch workout" button
+on the phone when the watch is connected.
 
-    ```kotlin
-    appHelper.installOnNode(node.id)
-    ```
+```kotlin
+val nodes by appHelper.connectedAndInstalledNodes
+    .collectAsStateWithLifecycle()
+```
 
-1.  **Launching the app on the other device**
+## Installing the app on the other device
 
-    If the app is installed on the other device, you can launch it remotely:
+Where the app isn't installed on the other device - be that phone or watch - then the library offers
+a one step option to launch installation:
 
-    ```kotlin
-    val result = appHelper.startRemoteOwnApp(node.id)
-    ```
+```kotlin
+appHelper.installOnNode(node.id)
+```
 
-1.  **Launching a specific activity on the other device**
+## Launching the app on the other device
 
-    In addition to launching your own app, you may wish to launch a different
-    activity as part of the user journey:
+If the app is installed on the other device, you can launch it remotely:
 
-    ```kotlin
-    val config = activityConfig { 
-        classFullName = "com.example.myapp.MyActivity"
-    }
-    appHelper.startRemoteActivity(node.id, config)
-    ```
+```kotlin
+val result = appHelper.startRemoteOwnApp(node.id)
+```
 
-1.  **Launching the companion app**
+## Launching a specific activity on the other device
 
-    In some cases, it can be useful to launch the companion app, either from the watch or the phone.
+In addition to launching your own app, you may wish to launch a different
+activity as part of the user journey:
 
-    For example, if the connected device does not have your Tile installed, you may wish to offer the
-    user the option to navigate to the companion app to install it:
+```kotlin
+val config = activityConfig {
+    classFullName = "com.example.myapp.MyActivity"
+}
+appHelper.startRemoteActivity(node.id, config)
+```
 
-    ```kotlin
-    if (node.surfacesInfo.tilesList.isEmpty() && askUserAttempts < MAX_ATTEMPTS) {
-        // Show guidance to the user and then launch companion
-        // to allow the to install the Tile.
-        val result = appHelper.startCompanion(node.id)
-    }
-    ```
+## Launching the companion app
 
-1.  **Tracking Tile installation** (Wear-only)
+In some cases, it can be useful to launch the companion app, either from the watch or the phone.
 
-    To determine whether your Tile(s) are installed, add the following to your `TileService`:
+For example, if the connected device does not have your Tile installed, you may wish to offer the
+user the option to navigate to the companion app to install it:
 
-    In `onTileAddEvent`:
+```kotlin
+if (node.surfacesInfo.tilesList.isEmpty() && askUserAttempts < MAX_ATTEMPTS) {
+    // Show guidance to the user and then launch companion
+    // to allow the to install the Tile.
+    val result = appHelper.startCompanion(node.id)
+}
+```
 
-    ```kotlin
-    wearAppHelper.markTileAsInstalled("SummaryTile")
-    ```
+## Tracking Tile installation (Wear-only)
 
-    In `onTileRemoveEvent`:
+To determine whether your Tile(s) are installed, add the following to your `TileService`:
 
-    ```kotlin
-    wearAppHelper.markTileAsRemoved("SummaryTile")
-    ```
+In `onTileAddEvent`:
 
-1.  **Tracking Complication installation** (Wear-only)
+```kotlin
+wearAppHelper.markTileAsInstalled("SummaryTile")
+```
 
-    To determine whether your Complication(s) are in-use, add the following to your `ComplicationDataSourceService`:
+In `onTileRemoveEvent`:
 
-    In `onComplicationActivated`:
+```kotlin
+wearAppHelper.markTileAsRemoved("SummaryTile")
+```
 
-    ```kotlin
-    wearAppHelper.markComplicationAsActivated("GoalsComplication")
-    ```
+## Deeplink into Tiles settings editor to install a Tile (phone only)
 
-    In `onComplicationDeactivated`:
+If you want to open the Tile Settings editor on your phone, you can use
+`phoneDataLayerAppHelper.checkCompanionVersionSupportTileEditing` to check that the Companion version
+supports deeplink into Tiles Settings editor and `phoneDataLayerAppHelper.findWatchToInstallTile`
+to check if there is a connected watch where the Tile can be installed.
 
-    ```kotlin
-    wearAppHelper.markComplicationAsDeactivated("GoalsComplication")
-    ```
+## Tracking Complication installation (Wear-only)
 
-1. **Tracking the main activity has been launched at least once** (Wear-only)
+To determine whether your Complication(s) are in-use, add the following to
+your `ComplicationDataSourceService`:
 
-   To mark that your main activity on the watch app has been launched once, use: 
+In `onComplicationActivated`:
 
-    ```kotlin
-    wearAppHelper.markActivityLaunchedOnce()
-    ```
+```kotlin
+wearAppHelper.markComplicationAsActivated("GoalsComplication")
+```
 
-    To check it on the phone side, use:
+In `onComplicationDeactivated`:
 
-    ```kotlin
-    val connectedNodes = appHelper.connectedNodes()
-    // after picking a node, check if value is USAGE_STATUS_LAUNCHED_ONCE
-    node.surfacesInfo.usageInfo.usageStatus
-    ```
+```kotlin
+wearAppHelper.markComplicationAsDeactivated("GoalsComplication")
+```
 
-1.  **Tracking the app has been set up** (Wear-only)
+## Tracking the main activity has been launched at least once (Wear-only)
 
-    To mark that the user has completed in the app the necessary setup steps such that it is ready 
-    for use, use the following:
+To mark that your main activity on the watch app has been launched once, use:
 
-    ```kotlin
-    wearAppHelper.markSetupComplete()
-    ```
+```kotlin
+wearAppHelper.markActivityLaunchedOnce()
+```
 
-    And when the app is no longer considered in a fully setup state, use the following:
+To check it on the phone side, use:
 
-    ```kotlin
-    wearAppHelper.markSetupNoLongerComplete()
-    ```
+```kotlin
+val connectedNodes = appHelper.connectedNodes()
+// after picking a node, check if value is USAGE_STATUS_LAUNCHED_ONCE
+node.surfacesInfo.usageInfo.usageStatus
+```
 
-    To check it on the phone side, use:
+## Tracking the app has been set up (Wear-only)
 
-    ```kotlin
-    val connectedNodes = appHelper.connectedNodes()
-    // after picking a node, check if value is either USAGE_STATUS_LAUNCHED_ONCE
-    // or USAGE_STATUS_SETUP_COMPLETE
-    node.surfacesInfo.usageInfo.usageStatus
-    ```
+To mark that the user has completed in the app the necessary setup steps such that it is ready
+for use, use the following:
+
+```kotlin
+wearAppHelper.markSetupComplete()
+```
+
+And when the app is no longer considered in a fully setup state, use the following:
+
+```kotlin
+wearAppHelper.markSetupNoLongerComplete()
+```
+
+To check it on the phone side, use:
+
+```kotlin
+val connectedNodes = appHelper.connectedNodes()
+// after picking a node, check if value is either USAGE_STATUS_LAUNCHED_ONCE
+// or USAGE_STATUS_SETUP_COMPLETE
+node.surfacesInfo.usageInfo.usageStatus
+```

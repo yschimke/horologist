@@ -15,6 +15,7 @@
  */
 
 @file:OptIn(ExperimentalCoroutinesApi::class)
+@file:Suppress("DEPRECATION")
 
 package com.google.android.horologist.screenshots
 
@@ -46,8 +47,8 @@ import androidx.compose.ui.test.onRoot
 import androidx.core.graphics.applyCanvas
 import androidx.test.core.app.ApplicationProvider
 import androidx.wear.compose.material.Scaffold
-import androidx.wear.compose.material.TimeText
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
+import com.google.android.horologist.compose.layout.ResponsiveTimeText
 import com.google.android.horologist.images.coil.FakeImageLoader
 import com.google.android.horologist.screenshots.RobolectricTempHelpers.capture
 import com.google.android.horologist.screenshots.ScreenshotTestRule.RecordMode.Companion.defaultRecordMode
@@ -72,6 +73,7 @@ import kotlin.math.min
  * [ScreenshotBaseTest] for a basic configuration.
  */
 @ExperimentalHorologistApi
+@Deprecated("Use RNG and roborazzi directly")
 public class ScreenshotTestRule(
     private val params: ScreenshotTestRuleParams = screenshotTestRuleParams { },
 ) : TestRule {
@@ -316,7 +318,7 @@ public class ScreenshotTestRule(
     ) {
 
         public class Builder internal constructor() {
-            public var tolerance: Float = 0.01f
+            public var tolerance: Float = 0.005f
             public var enableA11y: Boolean = false
             public var screenTimeText: @Composable () -> Unit = defaultScreenTimeText()
             public var testLabel: String? = null
@@ -326,7 +328,7 @@ public class ScreenshotTestRule(
 
             public fun build(): ScreenshotTestRuleParams {
                 if (enableA11y) {
-                    tolerance = 0.10f
+                    tolerance = 0.02f
                 }
 
                 return ScreenshotTestRuleParams(
@@ -364,7 +366,7 @@ public class ScreenshotTestRule(
 
     public companion object {
         private fun defaultScreenTimeText(): @Composable () -> Unit = {
-            TimeText(
+            ResponsiveTimeText(
                 timeSource = FixedTimeSource,
             )
         }

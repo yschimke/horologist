@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.google.android.horologist.screensizes
 
 import android.content.Context
@@ -63,7 +65,7 @@ abstract class ScreenSizeTest(
         runTest { Content() }
     }
 
-    fun runTest(testFn: () -> Unit = {}, content: @Composable () -> Unit) {
+    fun runTest(testFn: () -> Unit = {}, preScreenshotInteractions: (() -> Unit)? = null, content: @Composable () -> Unit) {
         val shadowDisplay = Shadows.shadowOf(ShadowDisplay.getDefaultDisplay())
         shadowDisplay.setDensity(device.density)
         shadowDisplay.setHeight(device.screenSizePx)
@@ -74,13 +76,18 @@ abstract class ScreenSizeTest(
 
         ApplicationProvider.getApplicationContext<Context>().setDisplayScale(device.density)
 
-        screenshotTestRule.setContent(takeScreenshot = true) {
+        screenshotTestRule.setContent(takeScreenshot = preScreenshotInteractions == null) {
             MaterialTheme(
                 typography = MaterialTheme.typography.copy {
                     this.copy(fontWeight = if (device.boldText) FontWeight.Bold else FontWeight.Medium)
                 },
                 content = content,
             )
+        }
+
+        if (preScreenshotInteractions != null) {
+            preScreenshotInteractions()
+            screenshotTestRule.takeScreenshot()
         }
 
         testFn()

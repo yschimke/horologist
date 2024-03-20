@@ -30,7 +30,6 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.painterResource
-import com.google.android.horologist.datalayer.phone.ui.play.launchPlay
 import kotlinx.coroutines.launch
 
 internal const val INSTALL_APP_KEY_APP_PACKAGE_NAME = "HOROLOGIST_INSTALL_APP_KEY_APP_PACKAGE_NAME"
@@ -53,7 +52,7 @@ internal class InstallAppBottomSheetActivity : ComponentActivity() {
 
         setContent {
             Surface {
-                val installAppBottomSheetState = rememberModalBottomSheetState()
+                val bottomSheetState = rememberModalBottomSheetState()
                 val coroutineScope = rememberCoroutineScope()
 
                 val image: (@Composable () -> Unit)? = imageResId.takeIf { it != NO_IMAGE }?.let {
@@ -73,19 +72,19 @@ internal class InstallAppBottomSheetActivity : ComponentActivity() {
                         setResult(RESULT_CANCELED)
                         coroutineScope.launch {
                             try {
-                                installAppBottomSheetState.hide()
+                                bottomSheetState.hide()
                             } finally {
                                 finishWithoutAnimation()
                             }
                         }
                     },
                     onConfirmation = {
-                        this.launchPlay(appPackageName)
+                        InstallAppPromptAction.run(context = this, appPackageName = appPackageName)
 
                         setResult(RESULT_OK)
                         finishWithoutAnimation()
                     },
-                    sheetState = installAppBottomSheetState,
+                    sheetState = bottomSheetState,
                 )
             }
         }

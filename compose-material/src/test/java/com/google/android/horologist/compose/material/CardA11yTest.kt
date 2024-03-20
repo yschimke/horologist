@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.google.android.horologist.compose.material
 
 import androidx.compose.foundation.layout.Box
@@ -44,7 +46,6 @@ class CardA11yTest : ScreenshotBaseTest(
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                 Card(
                     onClick = { },
-                    onDoubleClick = { },
                     onLongClick = { },
                 ) {
                     Column(
@@ -70,13 +71,39 @@ class CardA11yTest : ScreenshotBaseTest(
     }
 
     @Test
+    fun material() {
+        screenshotTestRule.setContent(takeScreenshot = true) {
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                Card(
+                    onClick = { },
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Text("Hello, Card")
+
+                        androidx.wear.compose.material.Button(onClick = { }) {
+                            Text("Click me!")
+                        }
+                    }
+                }
+            }
+        }
+
+        screenshotTestRule.interact {
+            onNode(keyIsDefined(SemanticsProperties.Role))
+                .assertTextEquals("Click me!")
+                .assertHasClickAction()
+        }
+    }
+
+    @Test
     fun disabled() {
         screenshotTestRule.setContent(takeScreenshot = true) {
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                 Card(
                     onClick = {},
                     onLongClick = {},
-                    onDoubleClick = {},
                     enabled = false,
                 ) {
                     Column(

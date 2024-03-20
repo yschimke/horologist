@@ -30,15 +30,20 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.android.horologist.datalayer.sample.screens.Screen
 import com.google.android.horologist.datalayer.sample.screens.counter.CounterScreen
-import com.google.android.horologist.datalayer.sample.screens.inappprompts.InstallAppPromptDemo2Screen
-import com.google.android.horologist.datalayer.sample.screens.inappprompts.InstallAppPromptDemoScreen
+import com.google.android.horologist.datalayer.sample.screens.inappprompts.custom.installapp.InstallAppCustomPromptDemoScreen
+import com.google.android.horologist.datalayer.sample.screens.inappprompts.custom.installtile.InstallTileCustomPromptDemoScreen
+import com.google.android.horologist.datalayer.sample.screens.inappprompts.custom.reengage.ReEngageCustomPromptDemoScreen
+import com.google.android.horologist.datalayer.sample.screens.inappprompts.custom.signin.SignInCustomPromptDemoScreen
+import com.google.android.horologist.datalayer.sample.screens.inappprompts.installapp.InstallAppPromptDemoScreen
+import com.google.android.horologist.datalayer.sample.screens.inappprompts.installtile.InstallTilePromptDemoScreen
+import com.google.android.horologist.datalayer.sample.screens.inappprompts.reengage.ReEngagePromptDemoScreen
+import com.google.android.horologist.datalayer.sample.screens.inappprompts.signin.SignInPromptDemoScreen
 import com.google.android.horologist.datalayer.sample.screens.menu.MenuScreen
 import com.google.android.horologist.datalayer.sample.screens.nodes.NodesScreen
 import com.google.android.horologist.datalayer.sample.screens.nodeslistener.NodesListenerScreen
 
 @Composable
 fun MainScreen(
-    onShowInstallAppPrompt: () -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
@@ -67,10 +72,28 @@ fun MainScreen(
                     NodesListenerScreen()
                 }
                 composable(route = Screen.InstallAppPromptDemoScreen.route) {
-                    InstallAppPromptDemoScreen(onShowInstallAppPrompt = onShowInstallAppPrompt)
+                    InstallAppPromptDemoScreen()
                 }
-                composable(route = Screen.InstallAppPromptDemo2Screen.route) {
-                    InstallAppPromptDemo2Screen()
+                composable(route = Screen.ReEngagePromptDemoScreen.route) {
+                    ReEngagePromptDemoScreen()
+                }
+                composable(route = Screen.SignInPromptDemoScreen.route) {
+                    SignInPromptDemoScreen()
+                }
+                composable(route = Screen.InstallTilePromptDemoScreen.route) {
+                    InstallTilePromptDemoScreen()
+                }
+                composable(route = Screen.InstallAppCustomPromptDemoScreen.route) {
+                    InstallAppCustomPromptDemoScreen()
+                }
+                composable(route = Screen.ReEngageCustomPromptDemoScreen.route) {
+                    ReEngageCustomPromptDemoScreen()
+                }
+                composable(route = Screen.SignInCustomPromptDemoScreen.route) {
+                    SignInCustomPromptDemoScreen()
+                }
+                composable(route = Screen.InstallTileCustomPromptDemoScreen.route) {
+                    InstallTileCustomPromptDemoScreen()
                 }
                 composable(route = Screen.CounterScreen.route) {
                     CounterScreen()
