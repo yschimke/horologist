@@ -29,11 +29,11 @@ open class TestRunConfigureAction @Inject constructor(
     private val project: Project,
 ): DeviceTestRunConfigureAction<WearDevice, DeviceTestRunInput> {
 
-    override fun configureTaskInput(deviceDsl: WearDevice): DeviceTestRunInput =
+    override fun configureTaskInput(deviceDSL: WearDevice): DeviceTestRunInput =
         objectFactory.newInstance(DeviceTestRunInput::class.java).apply {
-            serial.set(deviceDsl.serial)
+            serial.set(deviceDSL.serial)
             serial.disallowChanges()
-            runMode.set(deviceDsl.runMode)
+            runMode.set(deviceDSL.runMode)
             runMode.disallowChanges()
         }
 }

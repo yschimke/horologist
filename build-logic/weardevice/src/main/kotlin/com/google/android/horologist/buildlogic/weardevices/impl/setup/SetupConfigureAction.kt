@@ -27,9 +27,9 @@ open class SetupConfigureAction @Inject constructor(
     private val project: Project,
 ) : DeviceSetupConfigureAction<WearDevice, DeviceSetupInput> {
 
-    override fun configureTaskInput(deviceDsl: WearDevice): DeviceSetupInput {
+    override fun configureTaskInput(deviceDSL: WearDevice): DeviceSetupInput {
         return objectFactory.newInstance(DeviceSetupInput::class.java).apply {
-            serial.set(deviceDsl.serial)
+            serial.set(deviceDSL.serial)
             serial.disallowChanges()
         }
     }

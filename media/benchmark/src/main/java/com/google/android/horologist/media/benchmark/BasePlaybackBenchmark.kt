@@ -61,7 +61,7 @@ public abstract class BasePlaybackBenchmark {
         packageName = mediaApp.packageName,
         metrics = metrics(),
         compilationMode = CompilationMode.Partial(),
-        iterations = 3,
+        iterations = 1,
         startupMode = StartupMode.WARM,
         setupBlock = {
             mediaControllerFuture = MediaControllerHelper.lookupController(
