@@ -28,6 +28,8 @@
         android:name="android.hardware.bluetooth"
         android:required="false" />
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:name=".ui.app.MediaApplication"
         android:allowBackup="false"
