@@ -58,7 +58,7 @@ public fun PromptScreen(
             onClick = {},
         )
     },
-    promptEntry: @Composable () -> Unit,
+    promptEntry: (@Composable () -> Unit)?,
 ) {
     val columnState = rememberResponsiveColumnState(
         contentPadding = ScalingLazyColumnDefaults.padding(
@@ -109,7 +109,9 @@ public fun PromptScreen(
                 }
             }
             item {
-                promptEntry()
+                if (promptEntry != null) {
+                    promptEntry()
+                }
             }
             if (onSettingsClick != null) {
                 item {
