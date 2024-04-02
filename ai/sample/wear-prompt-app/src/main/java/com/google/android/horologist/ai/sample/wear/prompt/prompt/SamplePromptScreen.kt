@@ -40,7 +40,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.tracing.Trace
-import androidx.tracing.traceAsync
 import androidx.wear.compose.material.Card
 import androidx.wear.compose.material.CardDefaults
 import androidx.wear.compose.material.LocalContentColor
@@ -58,9 +57,7 @@ import com.google.android.horologist.ai.ui.screens.PromptScreen
 import com.google.android.horologist.ai.ui.screens.PromptUiState
 import com.google.android.horologist.compose.ambient.AmbientAware
 import com.google.android.horologist.compose.ambient.AmbientState
-import com.google.android.horologist.compose.layout.ScalingLazyColumnState
 import com.google.android.horologist.compose.layout.ScreenScaffold
-import com.google.android.horologist.compose.layout.rememberColumnState
 import com.google.android.horologist.compose.material.Button
 import com.mikepenz.markdown.compose.LocalMarkdownColors
 import com.mikepenz.markdown.compose.LocalMarkdownTypography
@@ -72,7 +69,6 @@ import com.mikepenz.markdown.model.DefaultMarkdownTypography
 fun SamplePromptScreen(
     modifier: Modifier = Modifier,
     viewModel: SamplePromptViewModel = hiltViewModel(),
-    columnState: ScalingLazyColumnState = rememberColumnState(),
     onSettingsClick: (() -> Unit)? = null,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -104,7 +100,6 @@ fun SamplePromptScreen(
     SamplePromptScreen(
         uiState = uiState,
         modifier = modifier,
-        columnState = columnState,
         onSettingsClick = onSettingsClick,
     ) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
@@ -123,7 +118,6 @@ fun SamplePromptScreen(
 private fun SamplePromptScreen(
     uiState: PromptUiState,
     modifier: Modifier = Modifier,
-    columnState: ScalingLazyColumnState = rememberColumnState(),
     onSettingsClick: (() -> Unit)? = null,
     promptEntry: (@Composable () -> Unit)?,
 ) {
@@ -137,7 +131,7 @@ private fun SamplePromptScreen(
         }
 
         val ambientState = rememberUpdatedState(newValue = ambient)
-        ScreenScaffold(scrollState = columnState,
+        ScreenScaffold(
             timeText = {
                 if (ambientState.value.ambientState !is AmbientState.Ambient) {
                     TimeText()
@@ -150,7 +144,6 @@ private fun SamplePromptScreen(
             ) {
                 PromptScreen(
                     uiState = uiState,
-                    columnState = columnState,
                     modifier = modifier,
                     promptEntry = if (ambientState.value.ambientState is AmbientState.Ambient) null else promptEntry,
                     onSettingsClick = if (ambientState.value.ambientState is AmbientState.Ambient) null else onSettingsClick,
