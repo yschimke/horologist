@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 The Android Open Source Project
+ * Copyright 2024 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,18 @@
 package com.google.android.horologist.mediasample.data.api
 
 import com.google.android.horologist.mediasample.data.api.model.CatalogApiModel
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import javax.inject.Provider
 
-interface UampService {
+class KtorUampService(private val clientFactory: dagger.Lazy<HttpClient>) : UampService {
+    val client: HttpClient by lazy { clientFactory.get() }
 
-    suspend fun catalog(): CatalogApiModel
-
-    companion object {
-        const val BASE_URL = "https://storage.googleapis.com/uamp/"
+    override suspend fun catalog(): CatalogApiModel {
+        println("catalog")
+        return withContext(Dispatchers.IO) { client.get("catalog.json").body() }
     }
 }

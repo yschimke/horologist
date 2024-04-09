@@ -126,8 +126,9 @@ object PlaybackServiceModule {
     fun streamDataSourceFactory(
         callFactory: Call.Factory,
         transferListener: TransferListener,
-    ): OkHttpDataSource.Factory =
-        OkHttpDataSource.Factory(
+    ): OkHttpDataSource.Factory {
+        println("streamDataSourceFactory")
+        return OkHttpDataSource.Factory(
             NetworkAwareCallFactory(
                 callFactory,
                 defaultRequestType = StreamRequest,
@@ -135,6 +136,7 @@ object PlaybackServiceModule {
         )
             .setCacheControl(CacheControl.Builder().noCache().noStore().build())
             .setTransferListener(transferListener)
+    }
 
     @ServiceScoped
     @Provides

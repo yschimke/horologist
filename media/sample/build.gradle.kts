@@ -168,7 +168,8 @@ dependencies {
     implementation(projects.logo)
 
     implementation(
-        project.findProject(":media-lib-datasource-okhttp") ?: libs.androidx.media3.datasourceokhttp,
+        project.findProject(":media-lib-datasource-okhttp")
+            ?: libs.androidx.media3.datasourceokhttp,
     )
 
     implementation(
@@ -199,10 +200,13 @@ dependencies {
 
     implementation(libs.coil)
     implementation(libs.coil.svg)
-    implementation(libs.retrofit2.convertermoshi)
-    implementation(libs.retrofit2.retrofit)
     implementation(libs.com.squareup.okhttp3.okhttp)
     implementation(libs.com.squareup.okhttp3.logging.interceptor)
+
+    implementation("io.ktor:ktor-client-core:2.3.8")
+    implementation("io.ktor:ktor-client-okhttp:2.3.8")
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.7")
+    implementation("com.hypercubetools:ktor-moshi:3.0.0")
 
     implementation(libs.moshi.adapters)
     implementation(libs.moshi.kotlin)

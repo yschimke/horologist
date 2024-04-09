@@ -18,9 +18,12 @@ package com.google.android.horologist.mediasample.di
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.net.http.HttpEngine
+import android.os.Build
 import androidx.media3.database.DatabaseProvider
 import androidx.media3.database.StandaloneDatabaseProvider
 import androidx.media3.datasource.DataSource
+import androidx.media3.datasource.HttpEngineDataSource
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.offline.DownloadIndex
@@ -51,9 +54,12 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.asExecutor
 import okhttp3.CacheControl
 import okhttp3.Call
+import java.util.Optional
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import javax.inject.Provider
@@ -70,16 +76,27 @@ object DownloadModule {
     @Singleton
     @Provides
     fun downloadDataSourceFactory(
-        callFactory: Call.Factory,
+        callFactory: Provider<Call.Factory>,
+        httpEngine: Provider<Optional<HttpEngine>>,
         @DownloadFeature transferListener: TransferListener,
-    ): DataSource.Factory = OkHttpDataSource.Factory(
-        NetworkAwareCallFactory(
-            delegate = callFactory,
-            defaultRequestType = DownloadRequest,
-        ),
-    )
-        .setCacheControl(CacheControl.Builder().noCache().noStore().build())
-        .setTransferListener(transferListener)
+    ): DataSource.Factory {
+        println("downloadDataSourceFactory")
+        return if (Build.VERSION.SDK_INT >= 34) {
+            HttpEngineDataSource.Factory(
+                httpEngine.get().get(),
+                Dispatchers.IO.asExecutor()
+            )
+        } else {
+            OkHttpDataSource.Factory(
+                NetworkAwareCallFactory(
+                    delegate = callFactory.get(),
+                    defaultRequestType = DownloadRequest,
+                ),
+            )
+                .setCacheControl(CacheControl.Builder().noCache().noStore().build())
+                .setTransferListener(transferListener)
+        }
+    }
 
     @DownloadFeature
     @Provides

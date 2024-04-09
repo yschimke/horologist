@@ -68,7 +68,7 @@ android {
         textReport = true
     }
 
-    namespace = "com.google.android.horologist.network.awareness.okhttp"
+    namespace = "com.google.android.horologist.network.awareness.android"
 }
 
 project.tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
@@ -91,7 +91,6 @@ dependencies {
     api(projects.networkAwareness.core)
 
     implementation(libs.kotlin.stdlib)
-    implementation(libs.com.squareup.okhttp3.okhttp)
     implementation(libs.androidx.annotation)
     api(libs.kotlinx.coroutines.core)
     implementation("javax.inject:javax.inject:1")
@@ -109,7 +108,7 @@ dependencies {
 tasks.withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {
     dokkaSourceSets {
         configureEach {
-            moduleName.set("network-awareness-okhttp")
+            moduleName.set("network-awareness-android")
         }
     }
 }

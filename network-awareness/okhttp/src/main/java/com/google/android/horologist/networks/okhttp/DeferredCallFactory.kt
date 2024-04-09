@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 The Android Open Source Project
+ * Copyright 2024 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.google.android.horologist.mediasample.data.api
+package com.google.android.horologist.networks.okhttp
 
-import com.google.android.horologist.mediasample.data.api.model.CatalogApiModel
+import okhttp3.Call
+import okhttp3.Request
 
-interface UampService {
+class DeferredCallFactory(callFactory: () -> Call.Factory): Call.Factory {
+    private val cached by lazy { callFactory() }
 
-    suspend fun catalog(): CatalogApiModel
-
-    companion object {
-        const val BASE_URL = "https://storage.googleapis.com/uamp/"
+    override fun newCall(request: Request): Call {
+        return cached.newCall(request)
     }
 }
