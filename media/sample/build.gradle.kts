@@ -161,6 +161,7 @@ dependencies {
     implementation(projects.media.sync)
     implementation(projects.media.ui)
     implementation(projects.networkAwareness.core)
+    implementation(projects.networkAwareness.android)
     implementation(projects.networkAwareness.ui)
     implementation(projects.networkAwareness.okhttp)
     implementation(projects.networkAwareness.db)

@@ -17,6 +17,7 @@
 package com.google.android.horologist.networks.data
 
 import android.net.LinkProperties
+import android.net.Network
 import android.net.NetworkCapabilities
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import java.net.Inet6Address
@@ -32,6 +33,7 @@ public data class NetworkStatus(
     public val capabilities: NetworkCapabilities?,
     public val linkProperties: LinkProperties?,
     public val bindSocket: (Socket) -> Unit,
+    public val network: Network? = null,
 ) {
     public val firstAddress: InetAddress?
         get() = addresses.minByOrNull { it is Inet6Address }

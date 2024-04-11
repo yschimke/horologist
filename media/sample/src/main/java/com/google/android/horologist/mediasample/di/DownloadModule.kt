@@ -20,6 +20,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.http.HttpEngine
 import android.os.Build
+import android.os.ext.SdkExtensions
+import androidx.annotation.RequiresApi
+import androidx.annotation.RequiresExtension
 import androidx.media3.database.DatabaseProvider
 import androidx.media3.database.StandaloneDatabaseProvider
 import androidx.media3.datasource.DataSource
@@ -41,10 +44,12 @@ import com.google.android.horologist.mediasample.di.annotation.Dispatcher
 import com.google.android.horologist.mediasample.di.annotation.DownloadFeature
 import com.google.android.horologist.mediasample.di.annotation.UampDispatchers.IO
 import com.google.android.horologist.mediasample.ui.AppConfig
+import com.google.android.horologist.networks.data.RequestType
 import com.google.android.horologist.networks.data.RequestType.MediaRequest.Companion.DownloadRequest
 import com.google.android.horologist.networks.highbandwidth.HighBandwidthNetworkMediator
 import com.google.android.horologist.networks.logging.NetworkStatusLogger
 import com.google.android.horologist.networks.okhttp.NetworkAwareCallFactory
+import com.google.android.horologist.networks.okhttp.NetworkSelectingHttpEngine
 import com.google.android.horologist.networks.rules.NetworkingRulesEngine
 import com.google.android.horologist.networks.status.NetworkRepository
 import dagger.Module
@@ -79,13 +84,11 @@ object DownloadModule {
         callFactory: Provider<Call.Factory>,
         httpEngine: Provider<Optional<HttpEngine>>,
         @DownloadFeature transferListener: TransferListener,
+        networkingRulesEngine: NetworkingRulesEngine
     ): DataSource.Factory {
         println("downloadDataSourceFactory")
-        return if (Build.VERSION.SDK_INT >= 34) {
-            HttpEngineDataSource.Factory(
-                httpEngine.get().get(),
-                Dispatchers.IO.asExecutor()
-            )
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE && SdkExtensions.getExtensionVersion(Build.VERSION_CODES.S) >= 7) {
+            httpEngineFactory(httpEngine, networkingRulesEngine)
         } else {
             OkHttpDataSource.Factory(
                 NetworkAwareCallFactory(
@@ -96,6 +99,23 @@ object DownloadModule {
                 .setCacheControl(CacheControl.Builder().noCache().noStore().build())
                 .setTransferListener(transferListener)
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
+    private fun httpEngineFactory(
+        httpEngine: Provider<Optional<HttpEngine>>,
+        networkingRulesEngine: NetworkingRulesEngine
+    ): HttpEngineDataSource.Factory {
+        val factory = NetworkSelectingHttpEngine(
+            httpEngine.get().get(),
+            requestType = DownloadRequest,
+            networkingRulesEngine = networkingRulesEngine
+        )
+        return HttpEngineDataSource.Factory(
+            factory,
+            Dispatchers.IO.asExecutor()
+        )
     }
 
     @DownloadFeature
