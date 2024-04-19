@@ -109,6 +109,8 @@ dependencies {
     implementation(libs.compose.ui.util)
     implementation(libs.androidx.corektx)
 
+    api(libs.androidx.graphics.shapes)
+
     implementation(libs.compose.ui.toolingpreview)
     implementation(libs.androidx.wear.tooling.preview)
     debugImplementation(libs.compose.ui.tooling)

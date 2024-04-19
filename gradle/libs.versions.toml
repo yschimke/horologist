@@ -40,6 +40,7 @@ dokka = "1.9.20"
 googledagger = "2.51.1"
 gradlePlugin = "8.2.2"
 gradlePublishPlugin = "0.28.0"
+graphicsShapes = "1.0.0-alpha05"
 io-coil-kt = "2.6.0"
 junit = "4.13.2"
 kotlin = "1.9.23"
@@ -86,6 +87,7 @@ androidx-corektx = { module = "androidx.core:core-ktx", version.ref = "androidxC
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "androidx-datastore" }
 androidx-datastore-core = { module = "androidx.datastore:datastore-core", version.ref = "androidx-datastore" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore" }
+androidx-graphics-shapes = { module = "androidx.graphics:graphics-shapes", version.ref = "graphicsShapes" }
 androidx-health-services = { module = "androidx.health:health-services-client", version.ref = "androidx-health-services" }
 androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common", version.ref = "androidxLifecycle" }
 androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "androidxLifecycle" }
