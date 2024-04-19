@@ -18,6 +18,7 @@ package com.google.android.horologist.scratch
 
 import android.graphics.PointF
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -143,7 +144,11 @@ public fun PlayPauseButton(
     val iconsMorphs = remember(sizePx) { PlayPause.iconMorphs(sizePx) }
 
     val shapeProgress =
-        animateFloatAsState(targetValue = if (playing()) 1f else 0f, label = "Button Shape")
+        animateFloatAsState(
+            targetValue = if (playing()) 1f else 0f,
+            label = "Button Shape",
+            animationSpec = tween(2_000)
+        )
 
     MorphButton(
         modifier = modifier,

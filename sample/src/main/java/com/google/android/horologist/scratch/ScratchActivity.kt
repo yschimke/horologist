@@ -19,6 +19,7 @@ package com.google.android.horologist.scratch
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -53,7 +54,7 @@ fun WearApp() {
         initialValue = 0f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
-            animation = tween(10_000),
+            animation = tween(10_000, easing = LinearEasing),
             repeatMode = RepeatMode.Reverse
         ), label = "Path animation"
     )
