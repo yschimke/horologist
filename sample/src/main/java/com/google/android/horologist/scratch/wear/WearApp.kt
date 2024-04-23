@@ -20,8 +20,6 @@ package com.google.android.horologist.scratch.wear
 
 import android.view.Surface
 import androidx.compose.foundation.AndroidEmbeddedExternalSurface
-import androidx.compose.foundation.AndroidExternalSurface
-import androidx.compose.foundation.AndroidExternalSurfaceZOrder
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,18 +39,17 @@ import androidx.compose.material.icons.filled.Watch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
@@ -102,9 +99,11 @@ fun WearApp() {
 
     val hazeState = remember { HazeState() }
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .rotary(verticalState, rememberActiveFocusRequester())) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .rotary(verticalState, rememberActiveFocusRequester())
+    ) {
         HierarchicalFocusCoordinator(requiresFocus = { false }) {
             PagerScreen(
                 state = pagerState,
@@ -152,8 +151,9 @@ fun WearApp() {
     }
 }
 
-class QssBehaviour(val screenHeightDp: Dp): RotaryBehavior {
+class QssBehaviour(val screenHeightDp: Dp) : RotaryBehavior {
     private val state = mutableFloatStateOf(-0f)
+    private val _isVisible = derivedStateOf { state.value < 0f }
 
     override suspend fun CoroutineScope.handleScrollEvent(
         timestamp: Long,
@@ -169,6 +169,9 @@ class QssBehaviour(val screenHeightDp: Dp): RotaryBehavior {
             println(it)
         }
     }
+
+    val isVisible: Boolean
+        get() = _isVisible.value
 }
 
 @Composable
@@ -196,37 +199,52 @@ fun TileScreen(tileRenderer: TileLayoutRenderer<Unit, Unit>) {
 @Composable
 fun Qss(modifier: Modifier = Modifier, hazeState: HazeState, verticalState: QssBehaviour) {
 
-    Column(modifier = modifier
-        .graphicsLayer {
-            this.translationY = verticalState.qssOffset() * this.density
-        }
-        .hazeChild(state = hazeState)
-        .clip(CircleShape)
-    ) {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f), horizontalArrangement = Arrangement.Center) {
-            Text(text = "41%")
-        }
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f), horizontalArrangement = Arrangement.Center) {
-            Button(imageVector = Icons.Default.Bed, contentDescription = "", onClick = {  })
-            Button(imageVector = Icons.Default.Power, contentDescription = "", onClick = {  })
-            Button(imageVector = Icons.Default.Settings, contentDescription = "", onClick = {  })
-        }
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f), horizontalArrangement = Arrangement.Center) {
-            Button(imageVector = Icons.Default.DoNotDisturbOn, contentDescription = "", onClick = {  })
-            Button(imageVector = Icons.Default.Watch, contentDescription = "", onClick = {  })
-            Button(imageVector = Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "", onClick = {  })
-        }
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f), horizontalArrangement = Arrangement.Center) {
-            // TODO Pager
-            Text(text = "...")
+    if (verticalState.isVisible) {
+        Column(modifier = modifier
+            .graphicsLayer {
+                this.translationY = verticalState.qssOffset() * this.density
+            }
+            .hazeChild(state = hazeState, shape = CircleShape)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f), horizontalArrangement = Arrangement.Center
+            ) {
+                Text(text = "41%")
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f), horizontalArrangement = Arrangement.Center
+            ) {
+                Button(imageVector = Icons.Default.Bed, contentDescription = "", onClick = { })
+                Button(imageVector = Icons.Default.Power, contentDescription = "", onClick = { })
+                Button(imageVector = Icons.Default.Settings, contentDescription = "", onClick = { })
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f), horizontalArrangement = Arrangement.Center
+            ) {
+                Button(
+                    imageVector = Icons.Default.DoNotDisturbOn,
+                    contentDescription = "",
+                    onClick = { })
+                Button(imageVector = Icons.Default.Watch, contentDescription = "", onClick = { })
+                Button(
+                    imageVector = Icons.AutoMirrored.Filled.VolumeUp,
+                    contentDescription = "",
+                    onClick = { })
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f), horizontalArrangement = Arrangement.Center
+            ) {
+                // TODO Pager
+                Text(text = "...")
+            }
         }
     }
 }
