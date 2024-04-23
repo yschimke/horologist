@@ -26,21 +26,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.platform.LocalView
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
 import androidx.wear.compose.foundation.rememberActiveFocusRequester
+import androidx.wear.compose.foundation.rotary.rotary
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.audio.ui.VolumeViewModel
-import com.google.android.horologist.audio.ui.rotaryVolumeControlsWithFocus
-import com.google.android.horologist.compose.rotaryinput.RotaryDefaults.isLowResInput
+import com.google.android.horologist.audio.ui.volumeRotaryBehavior
 import com.google.android.horologist.media.ui.components.MediaControlButtons
 import com.google.android.horologist.media.ui.components.MediaInfoDisplay
 import com.google.android.horologist.media.ui.state.PlayerUiController
 import com.google.android.horologist.media.ui.state.PlayerUiState
 import com.google.android.horologist.media.ui.state.PlayerViewModel
+import com.google.android.horologist.media.ui.state.model.MediaUiModel
 
 public typealias MediaDisplay = @Composable (playerUiState: PlayerUiState) -> Unit
 
@@ -78,13 +78,14 @@ public fun PlayerScreen(
         mediaDisplay = { mediaDisplay(playerUiState) },
         controlButtons = { controlButtons(playerViewModel.playerUiController, playerUiState) },
         buttons = { buttons(playerUiState) },
-        modifier = modifier.rotaryVolumeControlsWithFocus(
-            focusRequester = focusRequester,
-            volumeUiStateProvider = { volumeUiState },
-            onRotaryVolumeInput = { newVolume -> volumeViewModel.setVolume(newVolume) },
-            localView = LocalView.current,
-            isLowRes = isLowResInput(),
-        ),
+        modifier = modifier
+            .rotary(
+                volumeRotaryBehavior(
+                    volumeUiStateProvider = { volumeUiState },
+                    onRotaryVolumeInput = { newVolume -> volumeViewModel.setVolume(newVolume) },
+                ),
+                focusRequester = focusRequester,
+            ),
         background = { background(playerUiState) },
     )
 }
@@ -94,13 +95,10 @@ public fun PlayerScreen(
  */
 @ExperimentalHorologistApi
 @Composable
-public fun DefaultMediaInfoDisplay(
-    playerUiState: PlayerUiState,
-    modifier: Modifier = Modifier,
-) {
+public fun DefaultMediaInfoDisplay(playerUiState: PlayerUiState, modifier: Modifier = Modifier) {
     MediaInfoDisplay(
         media = playerUiState.media,
-        loading = !playerUiState.connected || playerUiState.media?.loading == true,
+        loading = !playerUiState.connected || playerUiState.media is MediaUiModel.Loading,
         modifier = modifier,
     )
 }

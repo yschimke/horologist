@@ -18,15 +18,14 @@ package com.google.android.horologist.spec
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.hasScrollToNodeAction
-import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeUp
 import com.google.android.horologist.compose.tools.Device
-import com.google.android.horologist.screensizes.ScreenSizeTest
+import com.google.android.horologist.screensizes.WearLegacyScreenSizeTest
 import org.junit.Assume.assumeFalse
 import org.junit.Test
 
-class ScalingLazyColumnExamplesTest(device: Device) : ScreenSizeTest(
+class ScalingLazyColumnExamplesTest(device: Device) : WearLegacyScreenSizeTest(
     device = device,
     showTimeText = false,
 ) {
@@ -108,73 +107,70 @@ class ScalingLazyColumnExamplesTest(device: Device) : ScreenSizeTest(
 
     @Test
     fun bottom1Button() {
-        runTest(preScreenshotInteractions = {
-            scrollToBottom(5)
-        }) {
+        runTest(capture = false) {
             Bottom1Button()
         }
+        scrollToBottom()
+        captureScreenshot()
     }
 
     @Test
     fun bottom2Buttons() {
-        runTest(preScreenshotInteractions = {
-            scrollToBottom(5)
-        }) {
+        runTest(capture = false) {
             Bottom2Buttons()
         }
+        scrollToBottom()
+        captureScreenshot()
     }
 
     @Test
     fun bottom3Buttons() {
-        runTest(preScreenshotInteractions = {
-            scrollToBottom(5)
-        }) {
+        runTest(capture = false) {
             Bottom3Buttons()
         }
+        scrollToBottom()
+        captureScreenshot()
     }
 
     @Test
     fun bottomOtherChips() {
-        runTest(preScreenshotInteractions = {
-            scrollToBottom(4)
-        }) {
+        runTest(capture = false) {
             BottomOtherChips()
         }
+        scrollToBottom()
+        captureScreenshot()
     }
 
     @Test
     fun bottomOtherCards() {
-        runTest(preScreenshotInteractions = {
-            scrollToBottom(1)
-        }) {
+        runTest(capture = false) {
             BottomOtherCards()
         }
+        scrollToBottom()
+        captureScreenshot()
     }
 
     @Test
     fun bottomUnspecified() {
-        runTest(preScreenshotInteractions = {
-            scrollToBottom(1)
-        }) {
+        runTest(capture = false) {
             BottomUnspecified()
         }
+        scrollToBottom()
+        captureScreenshot()
     }
 
     @Test
     fun bottomOtherText() {
-        runTest(preScreenshotInteractions = {
-            scrollToBottom(3)
-        }) {
+        runTest(capture = false) {
             BottomOtherText()
         }
+        scrollToBottom()
+        captureScreenshot()
     }
 
-    private fun scrollToBottom(index: Int) {
-        screenshotTestRule.interact {
-            onNode(hasScrollToNodeAction())
-                .performScrollToIndex(index)
-                .performTouchInput { swipeUp() }
-        }
+    private fun scrollToBottom() {
+        composeRule.onNode(hasScrollToNodeAction())
+            .performTouchInput { repeat(10) { swipeUp() } }
     }
 
     @Test

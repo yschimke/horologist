@@ -19,6 +19,7 @@ plugins {
     id("org.jetbrains.dokka")
     id("me.tylerbwong.gradle.metalava")
     kotlin("android")
+    alias(libs.plugins.roborazzi)
 }
 
 android {
@@ -157,7 +158,7 @@ dependencies {
     testImplementation(projects.roboscreenshots)
     testImplementation(projects.logo)
     testImplementation(libs.compose.ui.test.junit4)
-    testImplementation(libs.espresso.core)
+    testImplementation(libs.androidx.test.espressocore)
     testImplementation(libs.androidx.test.ext)
 }
 

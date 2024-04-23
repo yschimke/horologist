@@ -14,33 +14,43 @@
  * limitations under the License.
  */
 
-@file:Suppress("DEPRECATION")
+@file:OptIn(ExperimentalWearFoundationApi::class)
 
 package com.google.android.horologist.composables
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
+import androidx.wear.compose.foundation.LocalReduceMotion
+import androidx.wear.compose.foundation.ReduceMotion
 import androidx.wear.compose.material.ChipDefaults
-import com.google.android.horologist.screenshots.ScreenshotBaseTest
+import com.google.android.horologist.screenshots.rng.WearLegacyComponentTest
 import org.junit.Test
 
-class PlaceholderChipTest : ScreenshotBaseTest() {
+class PlaceholderChipTest : WearLegacyComponentTest() {
 
     @Test
     fun default() {
-        screenshotTestRule.setContent(
-            isComponent = true,
-            takeScreenshot = true,
-        ) {
+        runComponentTest {
             PlaceholderChip()
         }
     }
 
     @Test
     fun secondaryColors() {
-        screenshotTestRule.setContent(
-            isComponent = true,
-            takeScreenshot = true,
-        ) {
+        runComponentTest {
             PlaceholderChip(colors = ChipDefaults.secondaryChipColors())
+        }
+    }
+
+    @Composable
+    override fun ComponentScaffold(content: @Composable () -> Unit) {
+        CompositionLocalProvider(
+            LocalReduceMotion provides ReduceMotion {
+                true
+            },
+        ) {
+            super.ComponentScaffold(content)
         }
     }
 }

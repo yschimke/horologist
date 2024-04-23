@@ -14,58 +14,94 @@
  * limitations under the License.
  */
 
-@file:OptIn(ExperimentalRoborazziApi::class)
+@file:OptIn(ExperimentalRoborazziApi::class, ExperimentalCoilApi::class)
 
 package com.google.android.horologist.screenshots.rng
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onRoot
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.graphics.HardwareRendererCompat
 import androidx.wear.compose.material.MaterialTheme
+import coil.ImageLoader
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.LocalImageLoader
+import coil.test.FakeImageLoaderEngine
 import com.github.takahirom.roborazzi.ExperimentalRoborazziApi
+import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
 import com.github.takahirom.roborazzi.RoborazziOptions
 import com.github.takahirom.roborazzi.ThresholdValidator
-import com.github.takahirom.roborazzi.captureRoboImage
+import com.github.takahirom.roborazzi.captureScreenRoboImage
+import com.google.android.horologist.compose.layout.AppScaffold
+import com.google.android.horologist.compose.layout.ResponsiveTimeText
+import com.google.android.horologist.screenshots.FixedTimeSource
 import org.junit.Rule
+import org.junit.experimental.categories.Category
+import org.junit.rules.TestName
+import org.junit.runner.RunWith
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
 @Config(
     sdk = [33],
-    qualifiers = "w227dp-h227dp-small-notlong-round-watch-xhdpi-keyshidden-nonav",
+    qualifiers = RobolectricDeviceQualifiers.WearOSLargeRound,
 )
+@RunWith(AndroidJUnit4::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
+@Category(ScreenshotTest::class)
 public abstract class WearScreenshotTest {
+
     @get:Rule
     public val composeRule: ComposeContentTestRule = createComposeRule()
 
-    public abstract val device: WearDevice
+    @get:Rule
+    public val testInfo: TestName = TestName()
+
+    public open val device: WearDevice? = null
 
     // Allow for individual tolerances to be set on each test, should be between 0.0 and 1.0
     public open val tolerance: Float = 0.0f
 
-    public fun runTest(suffix: String? = null, content: @Composable () -> Unit) {
-        RuntimeEnvironment.setQualifiers("+w${device.dp}dp-h${device.dp}dp")
-        RuntimeEnvironment.setFontScale(device.fontScale)
+    public open val imageLoader: FakeImageLoaderEngine? = null
 
-        composeRule.setContent {
-            Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)) {
-                content()
+    public open val forceHardware: Boolean = false
+
+    public fun runTest(
+        suffix: String? = null,
+        device: WearDevice? = this.device,
+        applyDeviceConfig: Boolean = true,
+        captureScreenshot: Boolean = true,
+        content: @Composable () -> Unit,
+    ) {
+        withDrawingEnabled(forceHardware) {
+            if (applyDeviceConfig && device != null) {
+                RuntimeEnvironment.setQualifiers("+w${device.dp}dp-h${device.dp}dp")
+                RuntimeEnvironment.setFontScale(device.fontScale)
+            }
+
+            composeRule.setContent {
+                withImageLoader(imageLoader) {
+                    TestScaffold {
+                        content()
+                    }
+                }
+            }
+            if (captureScreenshot) {
+                captureScreenshot(suffix.orEmpty())
             }
         }
-
-        captureScreenshot(suffix.orEmpty())
     }
 
-    public fun captureScreenshot(suffix: String) {
-        composeRule.onRoot().captureRoboImage(
-            filePath = "src/test/screenshots/${this.javaClass.simpleName}_${device.id}$suffix.png",
+    public fun captureScreenshot(suffix: String = "") {
+        captureScreenRoboImage(
+            filePath = testName(suffix),
             roborazziOptions = RoborazziOptions(
                 recordOptions = RoborazziOptions.RecordOptions(
                     applyDeviceCrop = true,
@@ -75,5 +111,72 @@ public abstract class WearScreenshotTest {
                 ),
             ),
         )
+    }
+
+    @Composable
+    public open fun TestScaffold(content: @Composable () -> Unit) {
+        AppScaffold(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background),
+            timeText = { ResponsiveTimeText(timeSource = FixedTimeSource) },
+        ) {
+            content()
+        }
+    }
+
+    public open fun testName(suffix: String): String =
+        "src/test/screenshots/${this.javaClass.simpleName}_${device?.id ?: WearDevice.GenericLargeRound.id}$suffix.png"
+
+    public companion object {
+        internal const val USE_HARDWARE_RENDERER_NATIVE_ENV = "robolectric.screenshot.hwrdr.native"
+
+        internal const val hardwareEnabled = false
+
+        init {
+            useHardwareRenderer()
+        }
+
+        public fun useHardwareRenderer() {
+            if (hardwareEnabled) {
+                System.setProperty(USE_HARDWARE_RENDERER_NATIVE_ENV, "true")
+            }
+        }
+
+        @Composable
+        public fun withImageLoader(
+            imageLoaderEngine: FakeImageLoaderEngine?,
+            content: @Composable () -> Unit,
+        ) {
+            if (imageLoaderEngine == null) {
+                content()
+            } else {
+                val imageLoader = ImageLoader.Builder(LocalContext.current)
+                    .components { add(imageLoaderEngine) }
+                    .build()
+                @Suppress("DEPRECATION")
+                CompositionLocalProvider(LocalImageLoader provides imageLoader) {
+                    content()
+                }
+            }
+        }
+
+        public fun <R> withDrawingEnabled(forceHardware: Boolean, block: () -> R): R {
+            return if (hardwareEnabled && forceHardware) {
+                val wasDrawingEnabled = HardwareRendererCompat.isDrawingEnabled()
+                try {
+                    if (!wasDrawingEnabled) {
+                        HardwareRendererCompat.setDrawingEnabled(true)
+                    }
+                    block()
+                } finally {
+                    if (!wasDrawingEnabled) {
+                        HardwareRendererCompat.setDrawingEnabled(false)
+                    }
+                }
+            } else {
+                block()
+            }
+        }
     }
 }
