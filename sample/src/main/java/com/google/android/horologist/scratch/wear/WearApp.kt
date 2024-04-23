@@ -14,26 +14,61 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalWearFoundationApi::class)
+
 package com.google.android.horologist.scratch.wear
 
 import android.view.Surface
+import androidx.compose.foundation.AndroidEmbeddedExternalSurface
 import androidx.compose.foundation.AndroidExternalSurface
 import androidx.compose.foundation.AndroidExternalSurfaceZOrder
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.Bed
+import androidx.compose.material.icons.filled.DoNotDisturbOn
+import androidx.compose.material.icons.filled.Power
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Watch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
+import androidx.wear.compose.foundation.HierarchicalFocusCoordinator
+import androidx.wear.compose.foundation.rememberActiveFocusRequester
+import androidx.wear.compose.foundation.rotary.RotaryBehavior
+import androidx.wear.compose.foundation.rotary.rotary
+import androidx.wear.compose.material.Text
+import com.google.android.horologist.compose.material.Button
 import com.google.android.horologist.compose.pager.PagerScreen
 import com.google.android.horologist.compose.tools.TileLayoutPreview
 import com.google.android.horologist.tiles.render.TileLayoutRenderer
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import java.time.LocalTime
 
@@ -60,14 +95,32 @@ fun WearApp() {
         mutableStateOf<Surface?>(null)
     }
 
-    PagerScreen(state = pagerState) { rawPage ->
-        val page = ((rawPage - watchfaceOffset) % (tileCount + 1))
-        if (page == 0) {
-            WatchfaceScreen(surfaceRef)
-        } else {
-            val tileRenderer = tiles[page - 1]
-            TileScreen(tileRenderer)
+    val screenHeightDp = LocalConfiguration.current.screenHeightDp.dp
+    val verticalState = remember {
+        QssBehaviour(screenHeightDp)
+    }
+
+    val hazeState = remember { HazeState() }
+
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .rotary(verticalState, rememberActiveFocusRequester())) {
+        HierarchicalFocusCoordinator(requiresFocus = { false }) {
+            PagerScreen(
+                state = pagerState,
+                modifier = Modifier.haze(hazeState)
+            ) { rawPage ->
+                val page = ((rawPage - watchfaceOffset) % (tileCount + 1))
+                if (page == 0) {
+                    WatchfaceScreen(surfaceRef)
+                } else {
+                    val tileRenderer = tiles[page - 1]
+                    TileScreen(tileRenderer)
+                }
+            }
         }
+
+        Qss(modifier = Modifier.fillMaxSize(), hazeState, verticalState)
     }
 
     val surface = surfaceRef.value
@@ -99,12 +152,30 @@ fun WearApp() {
     }
 }
 
+class QssBehaviour(val screenHeightDp: Dp): RotaryBehavior {
+    private val state = mutableFloatStateOf(-0f)
+
+    override suspend fun CoroutineScope.handleScrollEvent(
+        timestamp: Long,
+        deltaInPixels: Float,
+        deviceId: Int,
+        orientation: Orientation
+    ) {
+        state.value = (state.value + (deltaInPixels / 100)).coerceIn(-1f, 1f)
+    }
+
+    fun qssOffset(): Float {
+        return ((-1f - state.value.coerceIn(-1f, 0f)) * screenHeightDp.value).also {
+            println(it)
+        }
+    }
+}
+
 @Composable
 fun WatchfaceScreen(surfaceRef: MutableState<Surface?>) {
-    AndroidExternalSurface(
+    AndroidEmbeddedExternalSurface(
         modifier = Modifier
             .fillMaxSize(),
-        zOrder = AndroidExternalSurfaceZOrder.Behind
     ) {
         onSurface { surface, _, _ ->
             surfaceRef.value = surface
@@ -120,4 +191,42 @@ fun WatchfaceScreen(surfaceRef: MutableState<Surface?>) {
 @Composable
 fun TileScreen(tileRenderer: TileLayoutRenderer<Unit, Unit>) {
     TileLayoutPreview(Unit, Unit, tileRenderer)
+}
+
+@Composable
+fun Qss(modifier: Modifier = Modifier, hazeState: HazeState, verticalState: QssBehaviour) {
+
+    Column(modifier = modifier
+        .graphicsLayer {
+            this.translationY = verticalState.qssOffset() * this.density
+        }
+        .hazeChild(state = hazeState)
+        .clip(CircleShape)
+    ) {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .weight(1f), horizontalArrangement = Arrangement.Center) {
+            Text(text = "41%")
+        }
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .weight(1f), horizontalArrangement = Arrangement.Center) {
+            Button(imageVector = Icons.Default.Bed, contentDescription = "", onClick = {  })
+            Button(imageVector = Icons.Default.Power, contentDescription = "", onClick = {  })
+            Button(imageVector = Icons.Default.Settings, contentDescription = "", onClick = {  })
+        }
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .weight(1f), horizontalArrangement = Arrangement.Center) {
+            Button(imageVector = Icons.Default.DoNotDisturbOn, contentDescription = "", onClick = {  })
+            Button(imageVector = Icons.Default.Watch, contentDescription = "", onClick = {  })
+            Button(imageVector = Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "", onClick = {  })
+        }
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .weight(1f), horizontalArrangement = Arrangement.Center) {
+            // TODO Pager
+            Text(text = "...")
+        }
+    }
 }
