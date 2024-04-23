@@ -17,13 +17,13 @@
 import java.util.Properties
 
 plugins {
-    id("com.gradle.enterprise") version "3.17.4"
+    id("com.gradle.develocity") version "3.17.4"
 }
 
-gradleEnterprise {
+develocity {
     buildScan {
-        termsOfServiceUrl = "https://gradle.com/terms-of-service"
-        termsOfServiceAgree = "yes"
+        termsOfUseUrl = "https://gradle.com/terms-of-service"
+        termsOfUseAgree = "yes"
     }
 }
 
@@ -38,10 +38,13 @@ include(":ai:ui")
 include(":annotations")
 include(":auth:composables")
 include(":auth:data")
+include(":auth:data-common")
 include(":auth:data-phone")
+include(":auth:data-watch-oauth")
 include(":auth:sample:phone")
 include(":auth:sample:shared")
 include(":auth:sample:wear")
+include(":auth:provider-google")
 include(":auth:ui")
 include(":compose-layout")
 include(":compose-material")

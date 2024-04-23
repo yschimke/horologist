@@ -20,6 +20,8 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.dokka")
     id("com.google.protobuf")
+    id("dagger.hilt.android.plugin")
+    id("com.google.devtools.ksp")
     kotlin("android")
 }
 
@@ -118,6 +120,23 @@ dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.protobuf.kotlin.lite)
+    api(libs.webauthn2.json.serialization)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.com.squareup.okhttp3.okhttp)
+    implementation(libs.com.squareup.okhttp3.logging.interceptor)
+    api(libs.androidx.credentials)
+    api(libs.googleid)
+    api(libs.moshi.kotlin)
+    api(libs.androidx.credentials.play.services.auth)
+    implementation(libs.playservices.auth)
+
+    implementation(libs.dagger.hiltandroid)
+    implementation(libs.androidx.lifecycle.process)
+    ksp(libs.dagger.hiltandroidcompiler)
+    implementation(libs.hilt.navigationcompose)
 
     testImplementation(libs.junit)
     testImplementation(libs.truth)

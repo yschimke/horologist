@@ -18,19 +18,14 @@ package com.google.android.horologist.auth.sample
 
 import android.app.Application
 import android.os.StrictMode
-import com.google.android.horologist.auth.sample.di.SampleAppDI
-import com.google.android.horologist.data.WearDataLayerRegistry
+import com.google.android.horologist.auth.provider.google.WearCredentialManager
+import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
-class SampleApplication : Application() {
-    lateinit var registry: WearDataLayerRegistry
-
-    override fun onCreate() {
-        super.onCreate()
-
-        setStrictMode()
-
-        SampleAppDI.inject(this)
-    }
+@HiltAndroidApp
+class SampleApplication : Application(), WearCredentialManager.Factory {
+    @Inject
+    override lateinit var credentialManager: WearCredentialManager
 
     private fun setStrictMode() {
         StrictMode.setThreadPolicy(

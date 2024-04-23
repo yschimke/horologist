@@ -196,7 +196,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun mooshiConverterFactory(
+    fun moshiConverterFactory(
         moshi: Moshi,
     ): MoshiConverterFactory = MoshiConverterFactory.create(moshi)
 

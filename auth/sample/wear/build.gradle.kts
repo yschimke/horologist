@@ -1,3 +1,5 @@
+import java.util.Properties
+
 /*
  * Copyright 2023 The Android Open Source Project
  *
@@ -17,6 +19,16 @@
 plugins {
     id("com.android.application")
     kotlin("android")
+    id("com.google.devtools.ksp")
+    id("dagger.hilt.android.plugin")
+    kotlin("plugin.serialization")
+}
+
+val localProperties = Properties().apply {
+    val localPropertiesFile = project.rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        load(localPropertiesFile.inputStream())
+    }
 }
 
 android {
@@ -31,17 +43,51 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        buildConfigField(
+            "String",
+            "GSI_CLIENT_ID",
+            "\"" + localProperties["gsiclientid"] + "\"",
+        )
+
+        buildConfigField(
+            "String",
+            "OAUTH_DEVICE_GRANT_CLIENT_ID",
+            "\"" + localProperties["OAUTH_DEVICE_GRANT_CLIENT_ID"] + "\"",
+        )
+
+        buildConfigField(
+            "String",
+            "OAUTH_DEVICE_GRANT_CLIENT_SECRET",
+            "\"" + localProperties["OAUTH_DEVICE_GRANT_CLIENT_SECRET"] + "\"",
+        )
+
+        buildConfigField(
+            "String",
+            "OAUTH_PKCE_CLIENT_ID",
+            "\"" + localProperties["OAUTH_PKCE_CLIENT_ID"] + "\"",
+        )
+
+        buildConfigField(
+            "String",
+            "OAUTH_PKCE_CLIENT_SECRET",
+            "\"" + localProperties["OAUTH_PKCE_CLIENT_SECRET"] + "\"",
+        )
+
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildTypes {
-        debug {
-            applicationIdSuffix = ".debug"
-            manifestPlaceholders["schemeSuffix"] = "-debug"
+    signingConfigs {
+        getByName("debug") {
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+            storeFile = file("../debug.keystore")
+            storePassword = "android"
         }
-        release {
-            manifestPlaceholders["schemeSuffix"] = ""
+    }
 
+    buildTypes {
+        release {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -56,6 +102,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        isCoreLibraryDesugaringEnabled = true
     }
 
     buildFeatures {
@@ -77,11 +124,18 @@ android {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
+    @Suppress("UnstableApiUsage")
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
         }
         animationsDisabled = true
+    }
+
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1,INDEX.LIST,DEPENDENCIES}"
+        }
     }
 
     lint {
@@ -97,7 +151,9 @@ dependencies {
 
     implementation(projects.auth.composables)
     implementation(projects.auth.data)
+    implementation(projects.auth.dataWatchOauth)
     implementation(projects.auth.sample.shared)
+    implementation(projects.auth.providerGoogle)
     implementation(projects.auth.ui)
     implementation(projects.composables)
     implementation(projects.composeLayout)
@@ -112,15 +168,32 @@ dependencies {
     implementation(libs.compose.material.iconscore)
     implementation(libs.compose.material.iconsext)
     implementation(libs.compose.ui.toolingpreview)
+    implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.kotlin.stdlib)
     implementation(libs.wearcompose.material)
     implementation(libs.wearcompose.foundation)
     implementation(libs.wearcompose.navigation)
 
+    implementation(libs.com.squareup.okhttp3.logging.interceptor)
     implementation(libs.com.squareup.okhttp3.okhttp)
     implementation(libs.kotlinx.coroutines.playservices)
+    implementation(libs.moshi.kotlin)
     implementation(libs.playservices.auth)
     implementation(libs.playservices.wearable)
+    implementation(libs.androidx.navigation.runtime)
+    implementation(libs.google.api.client)
+    implementation(libs.google.api.client.android)
+    implementation(libs.google.api.services.drive)
+
+    implementation(libs.kotlinx.serialization.core)
+    implementation(libs.androidx.wear.remote.interactions)
+    implementation(libs.androidx.wear.phone.interactions)
+
+    implementation(libs.dagger.hiltandroid)
+    ksp(libs.dagger.hiltandroidcompiler)
+    implementation(libs.hilt.navigationcompose)
+
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.androidx.wear.tooling.preview)

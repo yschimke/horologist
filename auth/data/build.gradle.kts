@@ -94,6 +94,7 @@ metalava {
 
 dependencies {
     api(projects.datalayer.core)
+    api(projects.auth.dataCommon)
 
     api(libs.androidx.datastore.core)
     api(libs.androidx.wear.phone.interactions)
@@ -102,6 +103,9 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.playservices.auth)
     implementation(libs.playservices.wearable)
+
+    api(libs.androidx.credentials)
+    api(libs.googleid)
 
     testImplementation(libs.kotlinx.coroutines.test)
     testRuntimeOnly(libs.robolectric)

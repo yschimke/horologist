@@ -32,10 +32,16 @@ compose = "1.7.0-beta02"
 compose-compiler = "1.5.14"
 compose-material3 = "1.3.0-beta02"
 composesnapshot = "-"
+credentials = "1.3.0-beta01"
 dependencyAnalysis = "1.32.0"
+desugar_jdk_libs = "2.0.4"
 dokka = "1.9.20"
+googleApiClientAndroid = "1.32.1"
+googleApiClient = "2.4.0"
+googleApiServicesDrive = "v3-rev20220815-2.0.0"
 googledagger = "2.51.1"
-gradlePlugin = "8.4.0"
+gradlePlugin = "8.4.1"
+googleid = "1.1.0"
 gradlePublishPlugin = "0.28.0"
 io-coil-kt = "2.6.0"
 junit = "4.13.2"
@@ -44,6 +50,7 @@ kotlinxCoroutine = "1.8.1"
 kotlinxSerialization = "1.6.3"
 ksp = "1.9.24-1.0.20"
 ktlint = "0.50.0"
+ktorClientCore = "2.3.10"
 metalava = "0.3.5"
 moshi = "1.15.1"
 okio = "3.9.0"
@@ -53,6 +60,7 @@ protobuf = "4.27.0"
 roborazzi = "1.20.0"
 room = "2.6.1"
 runtimeTracing = "1.0.0-beta01"
+securityIdentityCredential = "1.0.0-alpha03"
 spotless = "6.25.0"
 tiles-tooling-preview = "1.3.0"
 truth = "1.4.2"
@@ -61,6 +69,8 @@ wearToolingPreview = "1.0.0"
 appcompat = "1.7.0"
 material = "1.12.0"
 wearInput = "1.2.0-alpha02"
+webauthn2JsonSerialization = "1.0.0-alpha06"
+composeNavigation = "1.3.1"
 
 [libraries]
 accompanist-testharness = { module = "com.google.accompanist:accompanist-testharness", version.ref = "accompanist" }
@@ -79,6 +89,8 @@ androidx-concurrent-future = { module = "androidx.concurrent:concurrent-futures"
 androidx-concurrent-future-ktx = { module = "androidx.concurrent:concurrent-futures-ktx", version.ref = "androidx-concurrent" }
 androidx-core = { module = "androidx.core:core", version.ref = "androidxCore" }
 androidx-corektx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
+androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
+androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "androidx-datastore" }
 androidx-datastore-core = { module = "androidx.datastore:datastore-core", version.ref = "androidx-datastore" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore" }
@@ -111,6 +123,7 @@ androidx-navigation-testing = { module = "androidx.navigation:navigation-testing
 androidx-paging = "androidx.paging:paging-compose:3.3.0"
 androidx-palette-ktx = "androidx.palette:palette-ktx:1.0.0"
 androidx-runtime-tracing = { module = "androidx.compose.runtime:runtime-tracing", version.ref = "runtimeTracing" }
+androidx-security-identity-credential = { module = "androidx.security:security-identity-credential", version.ref = "securityIdentityCredential" }
 androidx-startup = { module = "androidx.startup:startup-runtime", version.ref = "androidxStartup" }
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" }
 androidx-test-espressocore = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-test-espresso" }
@@ -161,7 +174,12 @@ dagger-hiltandroid = { module = "com.google.dagger:hilt-android", version.ref = 
 dagger-hiltandroidcompiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "googledagger" }
 dagger-hiltandroidplugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "googledagger" }
 dagger-hiltandroidtesting = { module = "com.google.dagger:hilt-android-testing", version.ref = "googledagger" }
+desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
+google-api-client = { module = "com.google.api-client:google-api-client", version.ref = "googleApiClient" }
+google-api-client-android = { module = "com.google.api-client:google-api-client-android", version.ref = "googleApiClientAndroid" }
+google-api-services-drive = { module = "com.google.apis:google-api-services-drive", version.ref = "googleApiServicesDrive" }
+googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
 gradleMavenPublishPlugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "gradlePublishPlugin" }
 hilt-ext-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "androidx-hilt" }
 hilt-ext-work = { module = "androidx.hilt:hilt-work", version.ref = "androidx-hilt" }
@@ -180,6 +198,11 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 kotlinx-coroutines-guava = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-guava", version.ref = "kotlinxCoroutine" }
 kotlinx-coroutines-playservices = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutine" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutine" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktorClientCore" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorClientCore" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktorClientCore" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorClientCore" }
+ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktorClientCore" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerialization" }
 lottie-compose = "com.airbnb.android:lottie-compose:6.4.1"
 mikepenz-markdown = "com.mikepenz:multiplatform-markdown-renderer:0.20.0-coil2"
@@ -210,6 +233,8 @@ wearcompose-navigation = { module = "androidx.wear.compose:compose-navigation", 
 wearcompose-tooling = { module = "androidx.wear.compose:compose-ui-tooling", version.ref = "wearcompose" }
 androidx-wear-input = { group = "androidx.wear", name = "wear-input", version.ref = "wearInput" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+webauthn2-json-serialization = { module = "io.github.ryunen344.webauthn:webauthn2-json-serialization", version.ref = "webauthn2JsonSerialization" }
+androidx-compose-navigation = { group = "androidx.wear.compose", name = "compose-navigation", version.ref = "composeNavigation" }
 
 [plugins]
 dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }

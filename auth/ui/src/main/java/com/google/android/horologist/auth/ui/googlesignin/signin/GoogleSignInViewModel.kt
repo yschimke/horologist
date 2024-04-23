@@ -35,8 +35,9 @@ import kotlinx.coroutines.launch
  */
 public open class GoogleSignInViewModel(
     public val googleSignInClient: GoogleSignInClient,
-    private val googleSignInEventListener: GoogleSignInEventListener = GoogleSignInEventListenerNoOpImpl,
 ) : ViewModel() {
+
+    open val googleSignInEventListener: GoogleSignInEventListener = GoogleSignInEventListenerNoOpImpl
 
     private val _uiState = MutableStateFlow<GoogleSignInScreenState>(GoogleSignInScreenState.Idle)
     public val uiState: StateFlow<GoogleSignInScreenState> = _uiState

@@ -130,6 +130,9 @@ dependencies {
     implementation(libs.playservices.auth)
     implementation(libs.wearcompose.material)
 
+    api("androidx.credentials:credentials:1.2.2")
+    api("com.google.android.libraries.identity.googleid:googleid:1.1.0")
+
     debugApi(libs.wearcompose.tooling)
 
     testImplementation(projects.composeTools)

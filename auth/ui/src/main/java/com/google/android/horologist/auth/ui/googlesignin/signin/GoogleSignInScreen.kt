@@ -53,8 +53,8 @@ import com.google.android.horologist.auth.ui.common.logging.TAG
 public fun GoogleSignInScreen(
     onAuthCancelled: () -> Unit,
     failedContent: @Composable () -> Unit,
+    viewModel: GoogleSignInViewModel,
     modifier: Modifier = Modifier,
-    viewModel: GoogleSignInViewModel = viewModel(),
     content: @Composable (successState: GoogleSignInScreenState.Success) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -139,8 +139,8 @@ public fun GoogleSignInScreen(
 public fun GoogleSignInScreen(
     onAuthCancelled: () -> Unit,
     onAuthSucceed: () -> Unit,
+    viewModel: GoogleSignInViewModel,
     modifier: Modifier = Modifier,
-    viewModel: GoogleSignInViewModel = viewModel(),
 ) {
     GoogleSignInScreen(
         onAuthCancelled = {

@@ -25,7 +25,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
  *
  * @sample com.google.android.horologist.auth.sample.screens.googlesignin.signin.GoogleSignInEventListenerSample
  */
-public interface GoogleSignInEventListener {
+public fun interface GoogleSignInEventListener {
 
     /**
      * Called when signed in.

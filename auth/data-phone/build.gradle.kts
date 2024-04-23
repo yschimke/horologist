@@ -93,6 +93,7 @@ metalava {
 
 dependencies {
     api(projects.datalayer.core)
+    api(projects.auth.dataCommon)
 
     api(libs.androidx.datastore.core)
 

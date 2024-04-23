@@ -35,6 +35,7 @@ import com.google.android.horologist.auth.composables.screens.SignInPlaceholderS
 import com.google.android.horologist.compose.layout.ScalingLazyColumn
 import com.google.android.horologist.compose.layout.ScalingLazyColumnState
 import com.google.android.horologist.compose.layout.ScreenScaffold
+import com.google.android.horologist.compose.layout.rememberColumnState
 import com.google.android.horologist.compose.material.Title
 
 /**
@@ -53,12 +54,13 @@ import com.google.android.horologist.compose.material.Title
  * [sign-in alternatives](https://developer.android.com/training/wearables/design/sign-in#alternatives).
  *
  * @sample com.google.android.horologist.auth.sample.screens.googlesignin.prompt.GoogleSignInPromptSampleScreen
+ * @sample com.google.android.horologist.auth.sample.screens.oauth.devicegrant.prompt.DeviceGrantSignInPromptScreen
+ * @sample com.google.android.horologist.auth.sample.screens.oauth.pkce.prompt.PKCESignInPromptScreen
  */
 @Composable
 public fun SignInPromptScreen(
     message: String,
     onAlreadySignedIn: (account: AccountUiModel) -> Unit,
-    columnState: ScalingLazyColumnState,
     modifier: Modifier = Modifier,
     title: String = stringResource(id = R.string.horologist_signin_prompt_title),
     viewModel: SignInPromptViewModel = viewModel(),
@@ -73,7 +75,6 @@ public fun SignInPromptScreen(
         message = message,
         onIdleStateObserved = { viewModel.onIdleStateObserved() },
         onAlreadySignedIn = onAlreadySignedIn,
-        columnState = columnState,
         loadingContent = loadingContent,
         modifier = modifier,
         content = content,
@@ -87,11 +88,12 @@ public fun SignInPromptScreen(
     message: String,
     onIdleStateObserved: () -> Unit,
     onAlreadySignedIn: (account: AccountUiModel) -> Unit,
-    columnState: ScalingLazyColumnState,
     modifier: Modifier = Modifier,
     loadingContent: @Composable () -> Unit = { SignInPlaceholderScreen(modifier = modifier) },
     content: ScalingLazyListScope.() -> Unit,
 ) {
+    val columnState = rememberColumnState()
+
     ScreenScaffold(timeText = {}) {
         when (state) {
             SignInPromptScreenState.Idle -> {

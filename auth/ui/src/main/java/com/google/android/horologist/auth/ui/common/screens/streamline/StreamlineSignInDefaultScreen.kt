@@ -25,6 +25,8 @@ import com.google.android.horologist.auth.composables.dialogs.SignedInConfirmati
 import com.google.android.horologist.auth.composables.model.AccountUiModel
 import com.google.android.horologist.auth.composables.screens.SelectAccountScreen
 import com.google.android.horologist.compose.layout.ScalingLazyColumnState
+import com.google.android.horologist.compose.layout.ScreenScaffold
+import com.google.android.horologist.compose.layout.rememberColumnState
 
 /**
  * An opinionated implementation of [StreamlineSignInScreen] that:
@@ -42,48 +44,51 @@ import com.google.android.horologist.compose.layout.ScalingLazyColumnState
 public fun StreamlineSignInDefaultScreen(
     onSignedInConfirmationDialogDismissOrTimeout: (account: AccountUiModel) -> Unit,
     onNoAccountsAvailable: () -> Unit,
-    columnState: ScalingLazyColumnState,
     viewModel: StreamlineSignInDefaultViewModel,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = { },
 ) {
-    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val columnState = rememberColumnState()
 
-    when (state) {
-        StreamlineSignInDefaultScreenState.Idle -> {
-            SideEffect {
-                viewModel.onIdleStateObserved()
+    ScreenScaffold(scrollState = columnState) {
+        val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+        when (state) {
+            StreamlineSignInDefaultScreenState.Idle -> {
+                SideEffect {
+                    viewModel.onIdleStateObserved()
+                }
             }
-        }
 
-        StreamlineSignInDefaultScreenState.Loading -> {
-            content()
-        }
+            StreamlineSignInDefaultScreenState.Loading -> {
+                content()
+            }
 
-        is StreamlineSignInDefaultScreenState.SignedIn -> {
-            val account = (state as StreamlineSignInDefaultScreenState.SignedIn).account
-            SignedInConfirmationDialog(
-                onDismissOrTimeout = { onSignedInConfirmationDialogDismissOrTimeout(account) },
-                modifier = modifier,
-                accountUiModel = account,
-            )
-        }
+            is StreamlineSignInDefaultScreenState.SignedIn -> {
+                val account = (state as StreamlineSignInDefaultScreenState.SignedIn).account
+                SignedInConfirmationDialog(
+                    onDismissOrTimeout = { onSignedInConfirmationDialogDismissOrTimeout(account) },
+                    modifier = modifier,
+                    accountUiModel = account,
+                )
+            }
 
-        is StreamlineSignInDefaultScreenState.MultipleAccountsAvailable -> {
-            val accounts =
-                (state as StreamlineSignInDefaultScreenState.MultipleAccountsAvailable).accounts
-            SelectAccountScreen(
-                accounts = accounts,
-                onAccountClicked = { _, account ->
-                    viewModel.onAccountSelected(account)
-                },
-                columnState = columnState,
-                modifier = modifier,
-            )
-        }
+            is StreamlineSignInDefaultScreenState.MultipleAccountsAvailable -> {
+                val accounts =
+                    (state as StreamlineSignInDefaultScreenState.MultipleAccountsAvailable).accounts
+                SelectAccountScreen(
+                    accounts = accounts,
+                    onAccountClicked = { _, account ->
+                        viewModel.onAccountSelected(account)
+                    },
+                    columnState = columnState,
+                    modifier = modifier,
+                )
+            }
 
-        StreamlineSignInDefaultScreenState.NoAccountsAvailable -> {
-            onNoAccountsAvailable()
+            StreamlineSignInDefaultScreenState.NoAccountsAvailable -> {
+                onNoAccountsAvailable()
+            }
         }
     }
 }
