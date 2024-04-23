@@ -141,6 +141,8 @@ dependencies {
     implementation(libs.compose.ui.toolingpreview)
     implementation(libs.androidx.wear.tooling.preview)
 
+    implementation("dev.chrisbanes.haze:haze:0.7.0")
+
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(projects.composeTools)
     debugImplementation(libs.androidx.wear.tiles.tooling.preview)
