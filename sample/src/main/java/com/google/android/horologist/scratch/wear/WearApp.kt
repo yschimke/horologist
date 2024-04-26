@@ -170,7 +170,7 @@ class QssBehaviour(val screenHeightDp: Dp) : RotaryBehavior {
         deviceId: Int,
         orientation: Orientation
     ) {
-        state.value = (state.value + (deltaInPixels / 100)).coerceIn(-1f, 1f)
+        state.value = (state.value + (deltaInPixels / 150f)).coerceIn(-1f, 1f)
     }
 
     fun qssOffset(): Float {
