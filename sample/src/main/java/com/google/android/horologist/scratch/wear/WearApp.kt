@@ -61,6 +61,7 @@ import androidx.wear.compose.material.Text
 import com.google.android.horologist.compose.material.Button
 import com.google.android.horologist.compose.pager.PagerScreen
 import com.google.android.horologist.compose.tools.TileLayoutPreview
+import com.google.android.horologist.sample.Screen
 import com.google.android.horologist.tiles.render.TileLayoutRenderer
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
@@ -104,17 +105,22 @@ fun WearApp() {
             .fillMaxSize()
             .rotary(verticalState, rememberActiveFocusRequester())
     ) {
-        HierarchicalFocusCoordinator(requiresFocus = { false }) {
-            PagerScreen(
-                state = pagerState,
-                modifier = Modifier.haze(hazeState)
-            ) { rawPage ->
-                val page = ((rawPage - watchfaceOffset) % (tileCount + 1))
-                if (page == 0) {
-                    WatchfaceScreen(surfaceRef)
-                } else {
-                    val tileRenderer = tiles[page - 1]
-                    TileScreen(tileRenderer)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .haze(hazeState)
+        ) {
+            WatchfaceScreen(surfaceRef)
+
+            HierarchicalFocusCoordinator(requiresFocus = { false }) {
+                PagerScreen(
+                    state = pagerState,
+                ) { rawPage ->
+                    val page = ((rawPage - watchfaceOffset) % (tileCount + 1))
+                    if (page != 0) {
+                        val tileRenderer = tiles[page - 1]
+                        TileScreen(tileRenderer)
+                    }
                 }
             }
         }
