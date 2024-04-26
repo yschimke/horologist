@@ -128,6 +128,11 @@ fun WearApp() {
             this.textSize = 28f
         }
     }
+    val circlePaint = remember {
+        android.graphics.Paint().apply {
+            this.color = Color.White.toArgb()
+        }
+    }
     LaunchedEffect(surface) {
         surface?.let { surface ->
             while (true) {
@@ -135,10 +140,14 @@ fun WearApp() {
                     surface.lockHardwareCanvas().apply {
                         drawColor(Color.Blue.toArgb())
 
+                        if ((System.currentTimeMillis() % 10_000) < 2_000) {
+                            drawCircle(width / 2f, height / 2f, width / 4f, circlePaint)
+                        }
+
                         drawText(
                             LocalTime.now().toString(),
-                            this.width / 3f,
-                            this.height / 2f,
+                            width / 3f,
+                            height / 2f,
                             paint
                         )
 
@@ -152,7 +161,7 @@ fun WearApp() {
 }
 
 class QssBehaviour(val screenHeightDp: Dp) : RotaryBehavior {
-    private val state = mutableFloatStateOf(-0f)
+    private val state = mutableFloatStateOf(-0.4f)
     private val _isVisible = derivedStateOf { state.value < 0f }
 
     override suspend fun CoroutineScope.handleScrollEvent(
