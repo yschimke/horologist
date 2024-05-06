@@ -23,6 +23,7 @@ plugins {
     kotlin("android")
     id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
+    kotlin("plugin.serialization")
     id("weardevices")
 }
 
@@ -150,6 +151,9 @@ dependencies {
     implementation(libs.wearcompose.navigation)
     implementation(libs.androidx.tracing.ktx)
     implementation(libs.androidx.tracing.perfetto)
+    implementation(libs.androidx.navigation.runtime)
+
+    implementation(libs.kotlinx.serialization.core)
 
     implementation(libs.mikepenz.markdown)
 

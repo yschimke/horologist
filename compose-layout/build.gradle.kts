@@ -75,6 +75,8 @@ android {
     lint {
         checkReleaseBuilds = false
         textReport = true
+        // https://buganizer.corp.google.com/issues/328279054
+        disable.add("UnsafeOptInUsageError")
     }
     namespace = "com.google.android.horologist.compose.layout"
 }
@@ -93,9 +95,9 @@ dependencies {
 
     api(libs.androidx.lifecycle.runtime.compose)
     api(libs.androidx.paging)
+    api(libs.androidx.wear)
 
     implementation(libs.compose.ui.util)
-    implementation(libs.androidx.wear)
 
     implementation(libs.compose.ui.tooling)
     implementation(libs.compose.ui.toolingpreview)
@@ -108,7 +110,7 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.truth)
     testImplementation(libs.compose.ui.test.junit4)
-    testImplementation(libs.espresso.core)
+    testImplementation(libs.androidx.test.espressocore)
     testImplementation(libs.robolectric)
     testImplementation(projects.composeTools)
     testImplementation(projects.roboscreenshots)

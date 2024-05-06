@@ -120,6 +120,12 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
+
+    lint {
+        // https://buganizer.corp.google.com/issues/328279054
+        disable.add("UnsafeOptInUsageError")
+    }
+
     namespace = "com.google.android.horologist.mediasample"
 }
 
@@ -168,11 +174,11 @@ dependencies {
     implementation(projects.logo)
 
     implementation(
-        project.findProject(":media-lib-datasource-okhttp") ?: libs.androidx.media3.datasourceokhttp,
+        libs.androidx.media3.datasourceokhttp,
     )
 
     implementation(
-        project.findProject(":media-lib-ui") ?: libs.androidx.media3.ui,
+        libs.androidx.media3.ui,
     )
 
     implementation(libs.compose.ui.util)
@@ -224,10 +230,7 @@ dependencies {
 
     implementation(libs.androidx.metrics.performance)
 
-    implementation(
-        project.findProject(":media-lib-exoplayer-workmanager")
-            ?: libs.androidx.media3.exoplayerworkmanager,
-    )
+    implementation(libs.androidx.media3.exoplayerworkmanager)
 
     implementation(libs.room.common)
     implementation(libs.room.ktx)
@@ -262,7 +265,7 @@ dependencies {
     testImplementation(libs.androidx.work.testing)
 
     androidTestImplementation(libs.compose.ui.test.junit4)
-    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.androidx.test.espressocore)
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.ext.ktx)
@@ -297,5 +300,5 @@ if (device != null) {
     }
 }
 
-tasks.maybeCreate("prepareKotlinIdeaImport")
-    .dependsOn("generateDebugProto")
+// tasks.maybeCreate("prepareKotlinIdeaImport")
+//    .dependsOn("generateDebugProto")

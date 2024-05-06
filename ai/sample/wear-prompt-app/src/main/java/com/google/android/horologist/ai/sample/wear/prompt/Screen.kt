@@ -16,9 +16,10 @@
 
 package com.google.android.horologist.ai.sample.wear.prompt
 
-sealed class Screen(
-    val route: String,
-) {
-    object PromptScreen : Screen("prompt")
-    object SettingsScreen : Screen("settings")
-}
+import kotlinx.serialization.Serializable
+
+@Serializable
+object Prompt
+
+@Serializable
+object Settings

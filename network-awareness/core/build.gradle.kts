@@ -92,6 +92,8 @@ android {
     lint {
         checkReleaseBuilds = false
         textReport = true
+        // https://buganizer.corp.google.com/issues/328279054
+        disable.add("UnsafeOptInUsageError")
     }
 
     namespace = "com.google.android.horologist.network.awareness"
@@ -127,7 +129,7 @@ dependencies {
     testImplementation(libs.robolectric)
     testImplementation(libs.kotlinx.coroutines.test)
 
-    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.androidx.test.espressocore)
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.ext.ktx)

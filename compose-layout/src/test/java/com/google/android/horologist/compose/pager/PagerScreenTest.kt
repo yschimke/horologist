@@ -41,8 +41,9 @@ import androidx.compose.ui.test.onParent
 import androidx.test.filters.MediumTest
 import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
 import androidx.wear.compose.foundation.rememberActiveFocusRequester
+import androidx.wear.compose.foundation.rotary.RotaryScrollableDefaults.behavior
+import androidx.wear.compose.foundation.rotary.rotaryScrollable
 import androidx.wear.compose.material.Text
-import com.google.android.horologist.compose.rotaryinput.rotaryWithScroll
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -80,7 +81,10 @@ class PagerScreenTest {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .rotaryWithScroll(scrollState, focusRequester)
+                        .rotaryScrollable(
+                            behavior = behavior(scrollableState = scrollState),
+                            focusRequester = focusRequester,
+                        )
                         .verticalScroll(scrollState),
                     verticalArrangement = Arrangement.Center,
                 ) {

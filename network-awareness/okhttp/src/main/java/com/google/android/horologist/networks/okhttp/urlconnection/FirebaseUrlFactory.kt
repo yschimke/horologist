@@ -162,7 +162,7 @@ public class FirebaseUrlFactory(private val client: Call.Factory) : URLStreamHan
             return try {
                 val response = getResponse(true)
                 if (hasBody(response) && response.code >= HTTP_BAD_REQUEST) {
-                    response.body?.byteStream()
+                    response.body.byteStream()
                 } else {
                     null
                 }
@@ -223,13 +223,13 @@ public class FirebaseUrlFactory(private val client: Call.Factory) : URLStreamHan
             return toMultimap(requestHeaders.build(), null)
         }
 
-        override fun getInputStream(): InputStream? {
+        override fun getInputStream(): InputStream {
             if (!doInput) {
                 throw ProtocolException("This protocol does not support input")
             }
             val response = getResponse(false)
             if (response.code >= HTTP_BAD_REQUEST) throw FileNotFoundException(url.toString())
-            return response.body?.byteStream()
+            return response.body.byteStream()
         }
 
         override fun getOutputStream(): OutputStream {
@@ -602,11 +602,11 @@ public class FirebaseUrlFactory(private val client: Call.Factory) : URLStreamHan
             }
 
             override fun getResponseCode(): Int {
-                return delegate.getResponseCode()
+                return delegate.responseCode
             }
 
             override fun getResponseMessage(): String {
-                return delegate.getResponseMessage()
+                return delegate.responseMessage
             }
 
             override fun setRequestMethod(method: String) {
@@ -868,13 +868,8 @@ public class FirebaseUrlFactory(private val client: Call.Factory) : URLStreamHan
 
             // If the Content-Length or Transfer-Encoding headers disagree with the response code, the
             // response is malformed. For best compatibility, we honor the headers.
-            return if (contentLength(response.headers) != -1L ||
+            return contentLength(response.headers) != -1L ||
                 "chunked".equals(response.header("Transfer-Encoding"), ignoreCase = true)
-            ) {
-                true
-            } else {
-                false
-            }
         }
 
         fun contentLength(headers: Headers): Long {

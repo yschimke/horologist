@@ -63,10 +63,10 @@ dependencies {
     implementation(libs.androidx.benchmark.macro.junit4)
     implementation(libs.androidx.benchmark.junit4)
     implementation(libs.androidx.test.ext.ktx)
-    implementation(libs.espresso.core)
+    implementation(libs.androidx.test.espressocore)
     implementation(libs.androidx.test.uiautomator)
     implementation(libs.kotlinx.coroutines.android)
-    implementation(project.findProject(":media-lib-session") ?: libs.androidx.media3.session)
+    implementation(libs.androidx.media3.session)
 }
 
 androidComponents {
