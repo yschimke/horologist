@@ -38,7 +38,9 @@ import com.google.android.horologist.compose.nav.composable
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_SIWG_CREDENTIAL
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 
 open class GoogleSignInAuthStrategy(
@@ -54,7 +56,9 @@ open class GoogleSignInAuthStrategy(
     override suspend fun onClearCredential(
         request: ClearCredentialStateRequest,
     ) {
-        googleSignIn.signOut().await()
+        withContext(Dispatchers.IO) {
+            googleSignIn.signOut().await()
+        }
     }
 
     override suspend fun getExistingCredential(
@@ -62,7 +66,9 @@ open class GoogleSignInAuthStrategy(
         request: GetCredentialRequest,
     ): GetCredentialResponse {
         val account = try {
-            googleSignIn.silentSignIn().await()
+            withContext(Dispatchers.IO) {
+                googleSignIn.silentSignIn().await()
+            }
         } catch (e: ApiException) {
             val isNoCredential = when (e.statusCode) {
                 CommonStatusCodes.SIGN_IN_REQUIRED -> true

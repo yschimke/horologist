@@ -62,7 +62,6 @@ import kotlinx.serialization.Serializable
 
 @Composable
 fun MainScreen(
-    navController: NavHostController,
     modifier: Modifier = Modifier,
     viewModel: MainScreenViewModel = hiltViewModel(),
 ) {
@@ -75,13 +74,19 @@ fun MainScreen(
         modifier = modifier,
         screenState = screenState,
         onSignIn = {
-            viewModel.attemptSignIn(context, it)
+            coroutineScope.launch {
+                viewModel.attemptSignIn(context, it)
+            }
         },
         onSignInWithPasskey = {
-            viewModel.attemptPasskeySignIn(context)
+            coroutineScope.launch {
+                viewModel.attemptPasskeySignIn(context)
+            }
         },
         onSignOut = {
-            viewModel.signOut()
+            coroutineScope.launch {
+                viewModel.signOut()
+            }
         },
         openInChrome = {
             val urlString = "https://enchanting-hexagonal-chauffeur.glitch.me"

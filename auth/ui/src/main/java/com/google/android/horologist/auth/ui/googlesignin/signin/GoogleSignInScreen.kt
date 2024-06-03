@@ -94,6 +94,7 @@ public fun GoogleSignInScreen(
                         }
 
                         GoogleSignInContract.Result.Failed -> {
+                            println("GoogleSignInContract.Result.Failed")
                             viewModel.onAccountSelectionFailed()
                         }
 

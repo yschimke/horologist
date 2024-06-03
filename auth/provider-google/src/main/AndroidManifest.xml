@@ -29,6 +29,7 @@
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:exported="false"
             android:enabled="true"
+            android:theme="@android:style/Theme.DeviceDefault"
             android:taskAffinity="">
         </activity>
     </application>

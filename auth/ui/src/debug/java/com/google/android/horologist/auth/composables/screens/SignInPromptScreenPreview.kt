@@ -31,7 +31,7 @@ import com.google.android.horologist.auth.ui.common.screens.prompt.SignInPromptS
 @Composable
 fun SignInPromptScreenPreviewSignedOut() {
     SignInPromptScreen(
-        state = SignInPromptScreenState.SignedOut,
+        state = SignInPromptScreenState.SignedOut(),
         title = "Sign in",
         message = "Send messages and create chat groups with your friends",
         onIdleStateObserved = { },

@@ -72,6 +72,7 @@ public open class GoogleSignInViewModel(
      * Note that [onAuthCancelled] should be used when the user cancel the account selection.
      */
     public fun onAccountSelectionFailed() {
+        println("onAccountSelectionFailed")
         _uiState.value = GoogleSignInScreenState.Failed
     }
 

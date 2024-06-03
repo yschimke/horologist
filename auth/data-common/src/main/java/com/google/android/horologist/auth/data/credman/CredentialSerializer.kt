@@ -31,7 +31,7 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import java.io.InputStream
 import java.io.OutputStream
 
-internal object CredentialSerializer : Serializer<Credential> {
+object CredentialSerializer : Serializer<Credential> {
     override val defaultValue: Credential
         get() = None
 

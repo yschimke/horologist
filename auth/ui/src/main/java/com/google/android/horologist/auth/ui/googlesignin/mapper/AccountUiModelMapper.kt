@@ -21,6 +21,7 @@ package com.google.android.horologist.auth.ui.googlesignin.mapper
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.horologist.auth.composables.model.AccountUiModel
 import com.google.android.horologist.images.coil.CoilPaintable
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 
 /**
  * Functions to map models from Google Sign In into a [AccountUiModel].
@@ -38,4 +39,13 @@ public object AccountUiModelMapper {
         name = account.displayName,
         avatar = account.photoUrl?.let { CoilPaintable(it) },
     )
+
+    fun map(credential: GoogleIdTokenCredential): AccountUiModel {
+        println(credential.data)
+        return AccountUiModel(
+            email = "",//credential.email ?: defaultEmail,
+            name = credential.displayName,
+            avatar = credential.profilePictureUri?.let { CoilPaintable(it.toString()) },
+        )
+    }
 }

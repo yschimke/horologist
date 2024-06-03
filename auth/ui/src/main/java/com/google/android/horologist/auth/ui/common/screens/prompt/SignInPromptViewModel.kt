@@ -16,14 +16,21 @@
 
 package com.google.android.horologist.auth.ui.common.screens.prompt
 
+import android.content.Context
+import androidx.credentials.Credential
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.horologist.auth.composables.model.AccountUiModel
 import com.google.android.horologist.auth.data.common.repository.AuthUserRepository
+import com.google.android.horologist.auth.data.credman.LocalCredentialRepository
 import com.google.android.horologist.auth.ui.ext.compareAndSet
 import com.google.android.horologist.auth.ui.mapper.AccountUiModelMapper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
@@ -57,9 +64,55 @@ public open class SignInPromptViewModel(
                     _uiState.value =
                         SignInPromptScreenState.SignedIn(AccountUiModelMapper.map(authUser))
                 } ?: run {
-                    _uiState.value = SignInPromptScreenState.SignedOut
+                    _uiState.value = SignInPromptScreenState.SignedOut()
                 }
             }
+        }
+    }
+}
+
+open class CredManSignInPromptViewModel(
+    private val localCredentialRepository: LocalCredentialRepository,
+    private val credentialManager: CredentialManager,
+    private val mapper: (Credential) -> AccountUiModel,
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow<SignInPromptScreenState>(SignInPromptScreenState.Idle)
+    public val uiState: StateFlow<SignInPromptScreenState> = _uiState
+
+    /**
+     * Indicate that the screen has observed the [idle][SignInPromptScreenState.Idle] state and that
+     * the view model can start its work.
+     */
+    public fun onIdleStateObserved() {
+        _uiState.compareAndSet(
+            expect = SignInPromptScreenState.Idle,
+            update = SignInPromptScreenState.Loading,
+        ) {
+            viewModelScope.launch {
+                val credential = localCredentialRepository.flow.first()
+                if (credential != null) {
+                    _uiState.value =
+                        SignInPromptScreenState.SignedIn(mapper(credential))
+                } else {
+                    _uiState.value = SignInPromptScreenState.SignedOut()
+                }
+            }
+        }
+    }
+
+    suspend fun signIn(context: Context, request: GetCredentialRequest) {
+        try {
+            val credentialResponse =
+                credentialManager.getCredential(
+                    context = context,
+                    request = request,
+                )
+
+            localCredentialRepository.store(credentialResponse.credential)
+        } catch (e: GetCredentialException) {
+            localCredentialRepository.signOut()
+            _uiState.value = SignInPromptScreenState.SignedOut(e)
         }
     }
 }
@@ -75,5 +128,6 @@ public sealed class SignInPromptScreenState {
 
     public data class SignedIn(val account: AccountUiModel) : SignInPromptScreenState()
 
-    public object SignedOut : SignInPromptScreenState()
+    public data class SignedOut(val error: GetCredentialException? = null) :
+        SignInPromptScreenState()
 }

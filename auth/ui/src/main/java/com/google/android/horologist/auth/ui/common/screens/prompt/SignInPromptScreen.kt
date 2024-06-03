@@ -113,7 +113,7 @@ public fun SignInPromptScreen(
                 onAlreadySignedIn(state.account)
             }
 
-            SignInPromptScreenState.SignedOut -> {
+            is SignInPromptScreenState.SignedOut -> {
                 ScalingLazyColumn(
                     columnState = columnState,
                     modifier = modifier,

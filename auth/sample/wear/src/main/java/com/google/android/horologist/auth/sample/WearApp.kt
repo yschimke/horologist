@@ -36,7 +36,7 @@ fun WearApp(
             navController = navController,
         ) {
             composable<MainScreen> {
-                MainScreen(navController = navController)
+                MainScreen()
             }
         }
     }
