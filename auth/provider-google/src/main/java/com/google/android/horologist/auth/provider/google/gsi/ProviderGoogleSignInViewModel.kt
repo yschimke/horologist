@@ -34,7 +34,6 @@ class ProviderGoogleSignInViewModel(
     val credentialResponse = MutableStateFlow<GetCredentialResponse?>(null)
 
     override val googleSignInEventListener: GoogleSignInEventListener = GoogleSignInEventListener {
-        println("googleSignInEventListener $it")
         credentialResponse.value = GoogleSignInAuthStrategy.buildCredentialResponse(it)
     }
 

@@ -28,6 +28,8 @@ import com.google.android.horologist.auth.data.common.repository.AuthUserReposit
 import com.google.android.horologist.auth.data.credman.LocalCredentialRepository
 import com.google.android.horologist.auth.ui.ext.compareAndSet
 import com.google.android.horologist.auth.ui.mapper.AccountUiModelMapper
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.android.horologist.auth.ui.googlesignin.mapper.AccountUiModelMapper as GoogleAccountUiModelMapper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
@@ -110,6 +112,10 @@ open class CredManSignInPromptViewModel(
                 )
 
             localCredentialRepository.store(credentialResponse.credential)
+
+            _uiState.value = SignInPromptScreenState.SignedIn(GoogleAccountUiModelMapper.map(
+                GoogleIdTokenCredential.createFrom(credentialResponse.credential.data)
+            ))
         } catch (e: GetCredentialException) {
             localCredentialRepository.signOut()
             _uiState.value = SignInPromptScreenState.SignedOut(e)
