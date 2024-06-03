@@ -31,7 +31,7 @@ import okhttp3.OkHttpClient
 
 class SampleOauthPkceAuthStrategy(
     context: Context,
-    okHttpClient: OkHttpClient
+    okHttpClient: OkHttpClient,
 ) : OAuthPkceAuthStrategy<PKCEDefaultConfig, PKCEOAuthCodeGooglePayload>(context) {
     val configRepository = PKCEConfigRepositoryGoogleImpl(
         BuildConfig.OAUTH_PKCE_CLIENT_ID,
@@ -49,7 +49,7 @@ class SampleOauthPkceAuthStrategy(
 
     override suspend fun fetchOAuthCode(
         config: PKCEDefaultConfig,
-        codeVerifier: CodeVerifier
+        codeVerifier: CodeVerifier,
     ): Result<PKCEOAuthCodeGooglePayload> {
         return codeRepository.fetch(config, codeVerifier)
     }
@@ -57,7 +57,7 @@ class SampleOauthPkceAuthStrategy(
     override suspend fun fetchToken(
         config: PKCEDefaultConfig,
         codeVerifier: CodeVerifier,
-        oAuthCodePayload: PKCEOAuthCodeGooglePayload
+        oAuthCodePayload: PKCEOAuthCodeGooglePayload,
     ): Result<Credential> {
         val token = tokenRepository.fetch(config, codeVerifier.value, oAuthCodePayload)
 

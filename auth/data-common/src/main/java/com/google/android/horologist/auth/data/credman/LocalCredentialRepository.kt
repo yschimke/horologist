@@ -31,21 +31,21 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-val Context.credentialStore: DataStore<Credential> by dataStore(
+internal val Context.credentialStore: DataStore<Credential> by dataStore(
     fileName = "credentials.pb",
     serializer = CredentialSerializer,
 )
 
-class CredentialRepository(
+public class LocalCredentialRepository(
     private val context: Context,
 ) : TokenBundleRepository<Credential?> {
-    val credentialStore = context.credentialStore
+    private val credentialStore = context.credentialStore
 
-    suspend fun signOut() {
+    public suspend fun signOut() {
         credentialStore.updateData { None }
     }
 
-    suspend fun store(credential: Credential) {
+    public suspend fun store(credential: Credential) {
         credentialStore.updateData { credential }
     }
 
@@ -55,24 +55,24 @@ class CredentialRepository(
                 .map { it?.normalise() }
         }
 
-    companion object {
-        fun Credential.normalise(): Credential {
+    public companion object {
+        public fun Credential.normalise(): Credential {
             if (this is CustomCredential) {
                 return when (type) {
                     GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL -> GoogleIdTokenCredential.createFrom(
-                        data
+                        data,
                     )
 
                     GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_SIWG_CREDENTIAL -> GoogleIdTokenCredential.createFrom(
-                        data
+                        data,
                     )
 
                     PasswordCredential.TYPE_PASSWORD_CREDENTIAL -> PasswordCredential.createFrom(
-                        data
+                        data,
                     )
 
                     PublicKeyCredential.TYPE_PUBLIC_KEY_CREDENTIAL -> PublicKeyCredential.createFrom(
-                        data
+                        data,
                     )
 
                     else -> CustomCredential(type, data)

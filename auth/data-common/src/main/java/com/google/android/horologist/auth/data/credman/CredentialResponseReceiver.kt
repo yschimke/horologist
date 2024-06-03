@@ -25,10 +25,6 @@ import android.os.ResultReceiver
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
-import androidx.credentials.exceptions.CreateCredentialCancellationException
-import androidx.credentials.exceptions.CreateCredentialException
-import androidx.credentials.exceptions.CreateCredentialInterruptedException
-import androidx.credentials.exceptions.CreateCredentialUnknownException
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.GetCredentialInterruptedException
@@ -37,20 +33,21 @@ import androidx.credentials.exceptions.NoCredentialException
 import kotlinx.coroutines.CompletableDeferred
 import java.util.UUID
 
-class CredentialResponseReceiver {
+internal class CredentialResponseReceiver {
     private val deferred = CompletableDeferred<GetCredentialResponse>()
 
     val resultReceiver = object : ResultReceiver(
-        Handler(Looper.getMainLooper())
+        Handler(Looper.getMainLooper()),
     ) {
         public override fun onReceiveResult(
             resultCode: Int,
-            resultData: Bundle
+            resultData: Bundle,
         ) {
             try {
                 if (resultData.keySet().contains(ResultType)) {
                     val credential = CustomCredential(
-                        resultData.getString(ResultType)!!, resultData.getBundle(ResultData)!!
+                        resultData.getString(ResultType)!!,
+                        resultData.getBundle(ResultData)!!,
                     )
                     println("complete $credential")
                     deferred.complete(GetCredentialResponse(credential))
@@ -78,16 +75,15 @@ class CredentialResponseReceiver {
         return ipcFriendly
     }
 
-    internal fun createCredentialExceptionTypeToException(typeName: String?, msg: String?):
-        GetCredentialException {
+    internal fun createCredentialExceptionTypeToException(typeName: String?, msg: String?): GetCredentialException {
         return when (typeName) {
             GetCredentialCancellationException::class.java.name -> GetCredentialCancellationException(
-                msg
+                msg,
             )
 
             NoCredentialException::class.java.name -> NoCredentialException(msg)
             GetCredentialInterruptedException::class.java.name -> GetCredentialInterruptedException(
-                msg
+                msg,
             )
 
             else -> GetCredentialUnknownException(msg)
@@ -98,7 +94,7 @@ class CredentialResponseReceiver {
         return deferred.await()
     }
 
-    companion object {
+    internal companion object {
         const val Request = "credman.request"
         const val ResultType = "credman.result.type"
         const val ResultData = "credman.result.data"

@@ -16,13 +16,13 @@
 
 package com.google.android.horologist.auth.sample.service
 
-import com.google.android.horologist.auth.data.phone.service.CredentialManagerService
+import com.google.android.horologist.auth.data.phone.service.RemoteCredentialManagerService
 import com.google.android.horologist.data.WearDataLayerRegistry
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SampleCredentialManagerService : CredentialManagerService() {
+class SampleCredentialManagerService : RemoteCredentialManagerService() {
 
     @Inject
     override lateinit var registry: WearDataLayerRegistry

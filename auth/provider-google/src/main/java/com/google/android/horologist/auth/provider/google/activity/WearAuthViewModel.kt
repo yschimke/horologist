@@ -29,7 +29,7 @@ class WearAuthViewModel(
 ) : ViewModel() {
     fun supportedDestinations(
         request: GetCredentialRequest,
-        onNavigate: (Any) -> Unit
+        onNavigate: (Any) -> Unit,
     ): List<MenuChip> {
         return wearCredentialManager.wearProviders.flatMap {
             it.supportedRoutes(request, onNavigate = onNavigate)
@@ -43,7 +43,7 @@ class WearAuthViewModel(
 
             return WearAuthViewModel(
                 request = request,
-                extras.wearCredentialManager
+                extras.wearCredentialManager,
             ) as T
         }
     }

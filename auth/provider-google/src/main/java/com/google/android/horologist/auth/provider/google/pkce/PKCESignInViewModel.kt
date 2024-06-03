@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 
 @ExperimentalHorologistApi
 public open class PKCESignInViewModel<C, T>(
-    private val authStrategy: OAuthPkceAuthStrategy<C, T>
+    private val authStrategy: OAuthPkceAuthStrategy<C, T>,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<PKCEScreenState>(PKCEScreenState.Idle)
     public val uiState: StateFlow<PKCEScreenState> = _uiState

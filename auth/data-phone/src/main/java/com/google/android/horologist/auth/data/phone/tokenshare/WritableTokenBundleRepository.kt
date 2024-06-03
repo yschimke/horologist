@@ -23,7 +23,7 @@ import com.google.android.horologist.auth.data.tokenshare.TokenBundleRepository
  *
  * @sample com.google.android.horologist.auth.sample.MainActivity
  */
-public interface WritableTokenBundleRepository<T>: TokenBundleRepository<T> {
+public interface WritableTokenBundleRepository<T> : TokenBundleRepository<T> {
 
     public suspend fun update(tokenBundle: T)
 }

@@ -23,8 +23,7 @@ import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.NoCredentialException
 import com.google.android.horologist.auth.provider.google.SuspendingCredentialProvider
 
-abstract class OAuthDeviceGrantAuthStrategy(
-) : SuspendingCredentialProvider() {
+abstract class OAuthDeviceGrantAuthStrategy() : SuspendingCredentialProvider() {
     override val types: List<String> = listOf(OAuthDeviceGrant)
 
     override suspend fun isAvailableOnDevice(): Boolean {
@@ -37,7 +36,7 @@ abstract class OAuthDeviceGrantAuthStrategy(
     @SuppressLint("NewApi")
     override suspend fun getExistingCredential(
         context: Context,
-        request: GetCredentialRequest
+        request: GetCredentialRequest,
     ): GetCredentialResponse {
         throw NoCredentialException()
     }

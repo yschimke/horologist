@@ -40,7 +40,7 @@ open class WearAuthActivity : ComponentActivity() {
             BundleCompat.getParcelable(
                 it,
                 CredentialResponseReceiver.Receiver,
-                ResultReceiver::class.java
+                ResultReceiver::class.java,
             )
         }
 
@@ -60,7 +60,7 @@ open class WearAuthActivity : ComponentActivity() {
                     receiver!!.send(RESULT_OK, it.toBundle())
                     completed = true
                     finish()
-                }
+                },
             )
         }
     }
@@ -72,7 +72,7 @@ open class WearAuthActivity : ComponentActivity() {
             receiver?.send(
                 RESULT_OK,
                 Result.failure<GetCredentialResponse>(GetCredentialCancellationException())
-                    .toBundle()
+                    .toBundle(),
             )
         }
         super.onDestroy()

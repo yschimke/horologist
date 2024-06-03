@@ -16,7 +16,6 @@
 
 package com.google.android.horologist.auth.data.watch.oauth.devicegrant.impl.google
 
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.net.Uri

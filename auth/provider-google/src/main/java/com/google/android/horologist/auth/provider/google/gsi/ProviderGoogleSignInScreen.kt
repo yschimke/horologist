@@ -33,7 +33,6 @@ fun ProviderGoogleSignInScreen(
         modifier = modifier,
         onAuthCancelled = { onCompletion(Result.failure(GetCredentialCancellationException())) },
         onAuthSucceed = { onCompletion(Result.success(viewModel.credentialResponse.value!!)) },
-        viewModel = viewModel
+        viewModel = viewModel,
     )
 }
-

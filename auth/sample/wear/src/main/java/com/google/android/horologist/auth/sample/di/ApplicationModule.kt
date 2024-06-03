@@ -23,7 +23,7 @@ import androidx.credentials.CredentialManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.horologist.auth.data.credman.CredentialRepository
+import com.google.android.horologist.auth.data.credman.LocalCredentialRepository
 import com.google.android.horologist.auth.data.tokenshare.impl.CredManTokenShareRepository
 import com.google.android.horologist.auth.data.watch.oauth.common.impl.google.api.GoogleOAuthService
 import com.google.android.horologist.auth.data.watch.oauth.common.impl.google.api.GoogleOAuthServiceFactory
@@ -58,7 +58,7 @@ object ApplicationModule {
         @ApplicationContext context: Context,
         coroutineScope: CoroutineScope,
         googleSignInClient: GoogleSignInClient,
-        okHttpClient: OkHttpClient
+        okHttpClient: OkHttpClient,
     ): WearCredentialManager {
         val registry = WearDataLayerRegistry.fromContext(context, coroutineScope)
         return WearCredentialManager(
@@ -66,14 +66,15 @@ object ApplicationModule {
             listOf(
                 TokenSharingAuthStrategy(CredManTokenShareRepository.create(registry)),
                 GoogleSignInAuthStrategy(googleSignInClient),
-                SampleOauthPkceAuthStrategy(context, okHttpClient)
-            )
+                SampleOauthPkceAuthStrategy(context, okHttpClient),
+            ),
         )
     }
+
     @Singleton
     @Provides
     fun credentialManager(
-        credentialManager: WearCredentialManager
+        credentialManager: WearCredentialManager,
     ): CredentialManager = credentialManager
 
     @Singleton
@@ -116,7 +117,7 @@ object ApplicationModule {
     @Singleton
     @Provides
     fun deviceGrantVerificationInfoRepository(
-        googleOAuthService: GoogleOAuthService
+        googleOAuthService: GoogleOAuthService,
     ) = DeviceGrantVerificationInfoRepositoryGoogleImpl(
         googleOAuthService = googleOAuthService,
     )
@@ -125,7 +126,7 @@ object ApplicationModule {
     @Provides
     fun deviceGrantTokenRepository(
         @ApplicationContext context: Context,
-        googleOAuthService: GoogleOAuthService
+        googleOAuthService: GoogleOAuthService,
     ) = DeviceGrantTokenRepositoryGoogleImpl(
         context = context,
         googleOAuthService = googleOAuthService,
@@ -149,7 +150,7 @@ object ApplicationModule {
     @Singleton
     @Provides
     fun pkceTokenRepository(
-        googleOAuthService: GoogleOAuthService
+        googleOAuthService: GoogleOAuthService,
     ) = PKCETokenRepositoryGoogleImpl(
         googleOAuthService,
     )
@@ -158,5 +159,5 @@ object ApplicationModule {
     @Provides
     fun mainCredentialRepository(
         @ApplicationContext context: Context,
-    ) = CredentialRepository(context)
+    ) = LocalCredentialRepository(context)
 }

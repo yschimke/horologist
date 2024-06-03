@@ -28,7 +28,6 @@ import com.google.android.horologist.auth.provider.google.activity.wearCredentia
 import com.google.android.horologist.auth.ui.googlesignin.signin.GoogleSignInViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
-
 class ProviderGoogleSignInViewModel(
     googleSignInClient: GoogleSignInClient,
 ) : GoogleSignInViewModel(googleSignInClient) {
@@ -46,7 +45,7 @@ class ProviderGoogleSignInViewModel(
             val googleAuthStrategy = extras.wearCredentialManager.get<GoogleSignInAuthStrategy>()
 
             return ProviderGoogleSignInViewModel(
-                googleAuthStrategy.googleSignIn
+                googleAuthStrategy.googleSignIn,
             ) as T
         }
     }

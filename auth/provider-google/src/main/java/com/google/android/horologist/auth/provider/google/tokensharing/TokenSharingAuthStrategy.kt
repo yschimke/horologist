@@ -38,7 +38,7 @@ class TokenSharingAuthStrategy(
     @SuppressLint("NewApi")
     override suspend fun getExistingCredential(
         context: Context,
-        request: GetCredentialRequest
+        request: GetCredentialRequest,
     ): GetCredentialResponse {
         val credential = tokenBundleRepository.flow.firstOrNull()
 

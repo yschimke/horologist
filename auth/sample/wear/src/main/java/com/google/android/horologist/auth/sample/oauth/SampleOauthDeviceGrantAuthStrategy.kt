@@ -19,7 +19,7 @@ package com.google.android.horologist.auth.sample.oauth
 import com.google.android.horologist.auth.provider.google.devicegrant.OAuthDeviceGrantAuthStrategy
 import com.google.android.horologist.auth.sample.BuildConfig
 
-class SampleOauthDeviceGrantAuthStrategy: OAuthDeviceGrantAuthStrategy() {
+class SampleOauthDeviceGrantAuthStrategy : OAuthDeviceGrantAuthStrategy() {
     override val clientId: String = BuildConfig.OAUTH_DEVICE_GRANT_CLIENT_ID
     override val clientSecret: String = BuildConfig.OAUTH_DEVICE_GRANT_CLIENT_SECRET
 }

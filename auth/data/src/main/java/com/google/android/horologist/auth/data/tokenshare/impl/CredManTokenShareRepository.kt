@@ -57,7 +57,7 @@ class CredManTokenShareRepository(
         ): TokenBundleRepository<Credential?> = CredManTokenShareRepository(
             registry = registry,
             path = buildPath(key),
-            node = node
+            node = node,
         )
 
         private fun buildPath(key: String) =

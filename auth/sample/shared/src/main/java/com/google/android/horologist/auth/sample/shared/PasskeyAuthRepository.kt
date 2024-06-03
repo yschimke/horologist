@@ -26,7 +26,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
 class PasskeyAuthRepository(
-    val httpClient: HttpClient
+    val httpClient: HttpClient,
 ) {
     suspend fun getServerChallenge(): PublicKeyCredentialRequestOptions {
         return httpClient.post("https://enchanting-hexagonal-chauffeur.glitch.me/auth/signinRequest") {

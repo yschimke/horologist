@@ -18,6 +18,10 @@ package com.google.android.horologist.auth.data.phone.service
 
 import androidx.credentials.CredentialManager
 import com.google.android.horologist.auth.data.credman.CredentialManagerServiceGrpcKt.CredentialManagerServiceCoroutineImplBase
+import com.google.android.horologist.auth.data.credman.CredentialProto
 
 class CredentialManagerImpl(credentialManager: CredentialManager) : CredentialManagerServiceCoroutineImplBase() {
+    override suspend fun getCredential(request: CredentialProto.GetCredentialRequest): CredentialProto.Credential {
+        return super.getCredential(request)
+    }
 }

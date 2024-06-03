@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialUnsupportedException
-import androidx.credentials.exceptions.NoCredentialException
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import com.google.android.horologist.compose.layout.AppScaffold
@@ -28,11 +27,10 @@ import com.google.android.horologist.compose.nav.SwipeDismissableNavHost
 import com.google.android.horologist.compose.nav.composable
 import kotlinx.serialization.Serializable
 
-
 @Composable
 fun WearAuthScreens(
     onResult: (Result<GetCredentialResponse>) -> Unit,
-    request: GetCredentialRequest
+    request: GetCredentialRequest,
 ) {
     val viewModel: WearAuthViewModel = viewModel(factory = WearAuthViewModel.Factory(request))
 

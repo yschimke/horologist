@@ -23,12 +23,11 @@ import androidx.credentials.CredentialManager
 import androidx.credentials.CredentialOption
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetPublicKeyCredentialOption
-import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.GetCredentialUnknownException
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.horologist.auth.data.credman.CredentialRepository
+import com.google.android.horologist.auth.data.credman.LocalCredentialRepository
 import com.google.android.horologist.auth.sample.shared.PasskeyAuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -44,72 +43,73 @@ import javax.inject.Inject
 
 @SuppressLint("MissingPermission")
 @HiltViewModel
-class MainScreenViewModel @Inject
-constructor(
-    private val credentialManager: CredentialManager,
-    private val passkeyAuthRepository: PasskeyAuthRepository,
-    private val credentialRepository: CredentialRepository,
-    private val json: Json
-) : ViewModel() {
-    private val lastError = MutableStateFlow<GetCredentialException?>(null)
-    val screenState = combine(credentialRepository.flow, lastError) { credentials, error ->
-        MainScreenState(credentials, error)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), MainScreenState())
+class MainScreenViewModel
+    @Inject
+    constructor(
+        private val credentialManager: CredentialManager,
+        private val passkeyAuthRepository: PasskeyAuthRepository,
+        private val localCredentialRepository: LocalCredentialRepository,
+        private val json: Json,
+    ) : ViewModel() {
+        private val lastError = MutableStateFlow<GetCredentialException?>(null)
+        val screenState = combine(localCredentialRepository.flow, lastError) { credentials, error ->
+            MainScreenState(credentials, error)
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), MainScreenState())
 
-    internal fun signOut() {
-        viewModelScope.launch {
-            credentialManager.clearCredentialState(ClearCredentialStateRequest())
-            credentialRepository.signOut()
-        }
-    }
-
-    internal fun attemptSignIn(activityContext: Context, options: List<CredentialOption>) {
-        viewModelScope.launch(Dispatchers.Main.immediate) {
-            signIn(activityContext, options)
-        }
-    }
-
-    private suspend fun signIn(activityContext: Context, options: List<CredentialOption>) {
-        try {
-            val credentialResponse =
-                credentialManager.getCredential(
-                    context = activityContext,
-                    request = GetCredentialRequest.Builder()
-                        .apply {
-                            options.forEach {
-                                addCredentialOption(it)
-                            }
-                        }
-                        .build()
-                )
-
-            credentialRepository.store(credentialResponse.credential)
-        } catch (e: GetCredentialException) {
-            credentialRepository.signOut()
-            lastError.value = e
-        } catch (e: Exception) {
-            credentialRepository.signOut()
-            lastError.value = GetCredentialUnknownException(e.toString())
-        }
-    }
-
-    fun attemptPasskeySignIn(activityContext: Context) {
-        viewModelScope.launch(Dispatchers.Main.immediate) {
-            val requestJson = try {
-                // TODO this is technically unsafe if it switches threads
-                val challenge = passkeyAuthRepository.getServerChallenge()
-
-                // TODO raise a bug
-                json.encodeToString(challenge).replace(",\"extensions\":null", "")
-            } catch (e: IOException) {
-                credentialRepository.signOut()
-                lastError.value = GetCredentialUnknownException(e.toString())
-                return@launch
+        internal fun signOut() {
+            viewModelScope.launch {
+                credentialManager.clearCredentialState(ClearCredentialStateRequest())
+                localCredentialRepository.signOut()
             }
+        }
 
-            val passkeyOption = GetPublicKeyCredentialOption(requestJson, null)
+        internal fun attemptSignIn(activityContext: Context, options: List<CredentialOption>) {
+            viewModelScope.launch(Dispatchers.Main.immediate) {
+                signIn(activityContext, options)
+            }
+        }
 
-            signIn(activityContext = activityContext, options = listOf(passkeyOption))
+        private suspend fun signIn(activityContext: Context, options: List<CredentialOption>) {
+            try {
+                val credentialResponse =
+                    credentialManager.getCredential(
+                        context = activityContext,
+                        request = GetCredentialRequest.Builder()
+                            .apply {
+                                options.forEach {
+                                    addCredentialOption(it)
+                                }
+                            }
+                            .build(),
+                    )
+
+                localCredentialRepository.store(credentialResponse.credential)
+            } catch (e: GetCredentialException) {
+                localCredentialRepository.signOut()
+                lastError.value = e
+            } catch (e: Exception) {
+                localCredentialRepository.signOut()
+                lastError.value = GetCredentialUnknownException(e.toString())
+            }
+        }
+
+        fun attemptPasskeySignIn(activityContext: Context) {
+            viewModelScope.launch(Dispatchers.Main.immediate) {
+                val requestJson = try {
+                    // TODO this is technically unsafe if it switches threads
+                    val challenge = passkeyAuthRepository.getServerChallenge()
+
+                    // TODO raise a bug
+                    json.encodeToString(challenge).replace(",\"extensions\":null", "")
+                } catch (e: IOException) {
+                    localCredentialRepository.signOut()
+                    lastError.value = GetCredentialUnknownException(e.toString())
+                    return@launch
+                }
+
+                val passkeyOption = GetPublicKeyCredentialOption(requestJson, null)
+
+                signIn(activityContext = activityContext, options = listOf(passkeyOption))
+            }
         }
     }
-}

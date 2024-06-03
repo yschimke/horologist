@@ -18,7 +18,6 @@ package com.google.android.horologist.auth.sample.shared
 
 import android.content.Context
 import android.util.Log
-import androidx.credentials.CredentialManager
 import com.google.android.gms.auth.api.identity.Identity
 import com.squareup.moshi.Moshi
 import dagger.Module
@@ -96,9 +95,11 @@ object ApplicationAuthModule {
     ): OkHttpClient {
         return OkHttpClient.Builder().followSslRedirects(false)
             .addInterceptor(alwaysHttpsInterceptor)
-            .addInterceptor(HttpLoggingInterceptor().apply {
-                level = Level.BODY
-            })
+            .addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    level = Level.BODY
+                },
+            )
 //            .eventListenerFactory(LoggingEventListener.Factory())
             .cache(cache)
             .build()
@@ -116,7 +117,7 @@ object ApplicationAuthModule {
     @Provides
     fun httpClient(
         okhttp: OkHttpClient,
-        json: Json
+        json: Json,
     ): HttpClient {
         return HttpClient(OkHttp) {
             engine {

@@ -32,9 +32,8 @@ import com.google.android.horologist.compose.material.Chip
 import com.google.android.horologist.compose.nav.composable
 import kotlinx.serialization.Serializable
 
-
 abstract class OAuthPkceAuthStrategy<OauthConfig, OAuthCodePayload>(
-    val context: Context
+    val context: Context,
 ) : SuspendingCredentialProvider() {
     override val types: List<String> = listOf(OauthPkceOption.Type)
 
@@ -45,7 +44,7 @@ abstract class OAuthPkceAuthStrategy<OauthConfig, OAuthCodePayload>(
     @SuppressLint("NewApi")
     override suspend fun getExistingCredential(
         context: Context,
-        request: GetCredentialRequest
+        request: GetCredentialRequest,
     ): GetCredentialResponse {
         // No internal storage
         // TODO reconsider, especially with refresh
@@ -56,13 +55,13 @@ abstract class OAuthPkceAuthStrategy<OauthConfig, OAuthCodePayload>(
 
     abstract suspend fun fetchOAuthCode(
         config: OauthConfig,
-        codeVerifier: CodeVerifier
+        codeVerifier: CodeVerifier,
     ): Result<OAuthCodePayload>
 
     abstract suspend fun fetchToken(
         config: OauthConfig,
         codeVerifier: CodeVerifier,
-        oAuthCodePayload: OAuthCodePayload
+        oAuthCodePayload: OAuthCodePayload,
     ): Result<Credential>
 
     override val startRoute = PkceScreen
@@ -77,7 +76,7 @@ abstract class OAuthPkceAuthStrategy<OauthConfig, OAuthCodePayload>(
             listOf(
                 MenuChip(PkceScreen) {
                     Chip(label = signInLabel(), onClick = { onNavigate(PkceScreen) })
-                }
+                },
             )
         } else {
             listOf()
@@ -86,7 +85,7 @@ abstract class OAuthPkceAuthStrategy<OauthConfig, OAuthCodePayload>(
 
     override fun NavGraphBuilder.defineRoutes(
         navController: NavHostController,
-        onCompletion: (Result<GetCredentialResponse>) -> Unit
+        onCompletion: (Result<GetCredentialResponse>) -> Unit,
     ) {
         composable<PkceScreen> {
             PKCESignInScreen(onCompletion = onCompletion)

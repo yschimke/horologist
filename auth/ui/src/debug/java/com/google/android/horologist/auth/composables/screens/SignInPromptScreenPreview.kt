@@ -26,7 +26,6 @@ import com.google.android.horologist.auth.composables.chips.GuestModeChip
 import com.google.android.horologist.auth.composables.chips.SignInChip
 import com.google.android.horologist.auth.ui.common.screens.prompt.SignInPromptScreen
 import com.google.android.horologist.auth.ui.common.screens.prompt.SignInPromptScreenState
-import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
 
 @WearPreviewDevices
 @Composable

@@ -31,7 +31,7 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import java.io.InputStream
 import java.io.OutputStream
 
-object CredentialSerializer : Serializer<Credential> {
+internal object CredentialSerializer : Serializer<Credential> {
     override val defaultValue: Credential
         get() = None
 
@@ -43,11 +43,11 @@ object CredentialSerializer : Serializer<Credential> {
         return when (proto.type) {
             "", None.type -> None
             GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL -> GoogleIdTokenCredential.createFrom(
-                data
+                data,
             )
 
             GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_SIWG_CREDENTIAL -> GoogleIdTokenCredential.createFrom(
-                data
+                data,
             )
 
             PasswordCredential.TYPE_PASSWORD_CREDENTIAL -> PasswordCredential.createFrom(data)

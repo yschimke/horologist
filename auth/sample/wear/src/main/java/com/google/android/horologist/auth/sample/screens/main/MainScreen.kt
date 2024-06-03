@@ -59,8 +59,6 @@ import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
-import kotlin.math.sign
-
 
 @Composable
 fun MainScreen(
@@ -114,8 +112,8 @@ fun MainScreen(
     val columnState = rememberResponsiveColumnState(
         contentPadding = padding(
             first = ItemType.Text,
-            last = ItemType.Chip
-        )
+            last = ItemType.Chip,
+        ),
     )
 
     ScreenScaffold(modifier = modifier, scrollState = columnState) {
@@ -151,8 +149,8 @@ fun MainScreen(
                             listOf(
                                 signInWithGoogleOption,
                                 tokenSharingOption,
-                                oauthPkceOption
-                            )
+                                oauthPkceOption,
+                            ),
                         )
                     },
                     modifier = Modifier.wrapContentHeight(),
@@ -237,7 +235,7 @@ private fun ShowError(error: GetCredentialException) {
         is NoCredentialException -> "No credential"
         is GetCredentialUnsupportedException -> "Unsupported ${error.message.orEmpty()}"
         is GetCredentialCancellationException -> "Cancelled ${error.message.orEmpty()}"
-        else ->error.toString()
+        else -> error.toString()
     }
     Text(text = errorMessage, color = MaterialTheme.colors.error)
 }
@@ -289,7 +287,7 @@ val tokenSharingOption = GetCustomCredentialOption(
     type = TokenSharingAuthStrategy.TokenSharing,
     requestData = Bundle(),
     candidateQueryData = Bundle(),
-    isSystemProviderRequired = false
+    isSystemProviderRequired = false,
 )
 
 val signInWithGoogleOption: GetSignInWithGoogleOption =

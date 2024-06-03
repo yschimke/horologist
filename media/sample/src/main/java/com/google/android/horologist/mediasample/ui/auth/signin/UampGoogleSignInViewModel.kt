@@ -29,6 +29,5 @@ class UampGoogleSignInViewModel
     @Inject
     constructor(
         googleSignInClient: GoogleSignInClient,
-        googleSignInEventListener: GoogleSignInEventListener,
     ) :
-    GoogleSignInViewModel(googleSignInClient, googleSignInEventListener)
+    GoogleSignInViewModel(googleSignInClient)

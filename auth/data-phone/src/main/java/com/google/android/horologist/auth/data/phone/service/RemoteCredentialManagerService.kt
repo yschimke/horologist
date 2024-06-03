@@ -22,7 +22,7 @@ import com.google.android.horologist.auth.data.credman.CredentialManagerServiceG
 import com.google.android.horologist.data.WearDataLayerRegistry
 import com.google.android.horologist.datalayer.grpc.server.BaseGrpcDataService
 
-open class CredentialManagerService : BaseGrpcDataService<CredentialManagerServiceCoroutineImplBase>() {
+open class RemoteCredentialManagerService : BaseGrpcDataService<CredentialManagerServiceCoroutineImplBase>() {
     override val registry: WearDataLayerRegistry by lazy {
         WearDataLayerRegistry.fromContext(applicationContext, lifecycleScope)
     }

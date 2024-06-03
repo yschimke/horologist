@@ -42,7 +42,7 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.Serializable
 
 open class GoogleSignInAuthStrategy(
-    val googleSignIn: GoogleSignInClient
+    val googleSignIn: GoogleSignInClient,
 ) : SuspendingCredentialProvider() {
     override val types: List<String> =
         listOf(TYPE_GOOGLE_ID_TOKEN_CREDENTIAL, TYPE_GOOGLE_ID_TOKEN_SIWG_CREDENTIAL)
@@ -59,7 +59,7 @@ open class GoogleSignInAuthStrategy(
 
     override suspend fun getExistingCredential(
         context: Context,
-        request: GetCredentialRequest
+        request: GetCredentialRequest,
     ): GetCredentialResponse {
         val account = try {
             googleSignIn.silentSignIn().await()
@@ -81,7 +81,7 @@ open class GoogleSignInAuthStrategy(
 
     override fun supportedRoutes(
         request: GetCredentialRequest,
-        onNavigate: (Any) -> Unit
+        onNavigate: (Any) -> Unit,
     ): List<MenuChip> {
         val requestTypes = request.types
 
@@ -90,8 +90,9 @@ open class GoogleSignInAuthStrategy(
                 MenuChip(GoogleSignInScreen) {
                     Chip(
                         label = "Sign In With Google",
-                        onClick = { onNavigate(GoogleSignInScreen) })
-                }
+                        onClick = { onNavigate(GoogleSignInScreen) },
+                    )
+                },
             )
         } else {
             listOf()
@@ -130,6 +131,7 @@ open class GoogleSignInAuthStrategy(
                     .setFamilyName(account.familyName)
                     .setDisplayName(account.displayName)
                     .setProfilePictureUri(account.photoUrl)
-                    .build())
+                    .build(),
+            )
     }
 }

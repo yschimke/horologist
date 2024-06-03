@@ -30,8 +30,8 @@ fun WearAuthMenuScreen(supportedDestinations: List<MenuChip>) {
     val columnState = rememberResponsiveColumnState(
         contentPadding = padding(
             first = ScalingLazyColumnDefaults.ItemType.Chip,
-            last = ScalingLazyColumnDefaults.ItemType.Chip
-        )
+            last = ScalingLazyColumnDefaults.ItemType.Chip,
+        ),
     )
 
     ScreenScaffold(scrollState = columnState) {

@@ -32,13 +32,16 @@ public data class TokenResponse(
     @Json(name = "token_type") val tokenType: String,
 ) {
     fun toCredential(): Credential {
-        return CustomCredential("Oauth", Bundle().apply {
-            putString("access_token", accessToken)
-            putInt("expires_in", expiresIn)
-            putString("id_token", idToken)
-            putString("refresh_token", refreshToken)
-            putString("scope", scope)
-            putString("token_type", scope)
-        })
+        return CustomCredential(
+            "Oauth",
+            Bundle().apply {
+                putString("access_token", accessToken)
+                putInt("expires_in", expiresIn)
+                putString("id_token", idToken)
+                putString("refresh_token", refreshToken)
+                putString("scope", scope)
+                putString("token_type", scope)
+            },
+        )
     }
 }

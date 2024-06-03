@@ -35,7 +35,7 @@ import com.google.android.gms.auth.api.identity.AuthorizationClient
 import com.google.android.gms.auth.api.identity.AuthorizationRequest
 import com.google.android.gms.common.api.Scope
 import com.google.android.gms.common.internal.Preconditions.checkMainThread
-import com.google.android.horologist.auth.data.credman.CredentialRepository.Companion.normalise
+import com.google.android.horologist.auth.data.credman.LocalCredentialRepository.Companion.normalise
 import com.google.android.horologist.auth.data.phone.tokenshare.credman.CredentialRepositoryImpl
 import com.google.android.horologist.auth.sample.py.CurrentActivityProvider
 import com.google.android.horologist.auth.sample.shared.PasskeyAuthRepository

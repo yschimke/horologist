@@ -16,7 +16,6 @@
 
 package com.google.android.horologist.auth.data.watch.oauth.pkce.impl
 
-import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.wear.phone.interactions.authentication.CodeChallenge

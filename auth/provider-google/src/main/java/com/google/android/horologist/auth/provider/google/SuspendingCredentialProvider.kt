@@ -74,7 +74,7 @@ abstract class SuspendingCredentialProvider {
 
     open fun supportedRoutes(
         request: GetCredentialRequest,
-        onNavigate: (Any) -> Unit
+        onNavigate: (Any) -> Unit,
     ): List<MenuChip> {
         return listOf()
     }

@@ -35,7 +35,7 @@ import kotlinx.coroutines.coroutineScope
 
 class WearCredentialManager(
     val credentialManager: CredentialManager,
-    val wearProviders: List<SuspendingCredentialProvider> = listOf()
+    val wearProviders: List<SuspendingCredentialProvider> = listOf(),
 ) : CredentialManager by credentialManager {
     private suspend fun availableProviders(): List<SuspendingCredentialProvider> = wearProviders.filter {
         it.isAvailableOnDevice()
@@ -63,7 +63,8 @@ class WearCredentialManager(
     private val useCredentialManager: Boolean = false
 
     override suspend fun getCredential(
-        context: Context, request: GetCredentialRequest
+        context: Context,
+        request: GetCredentialRequest,
     ): GetCredentialResponse {
         if (useCredentialManager) {
             // TODO handle cancel and fallback?
@@ -86,18 +87,20 @@ class WearCredentialManager(
     @SuppressLint("RestrictedApi")
     private suspend fun getCredentialFromActivity(
         context: Context,
-        request: GetCredentialRequest
+        request: GetCredentialRequest,
     ): GetCredentialResponse {
         return coroutineScope {
             val receiver = CredentialResponseReceiver()
 
-            context.startActivity(Intent(context, WearAuthActivity::class.java).apply {
-                putExtra(
-                    CredentialResponseReceiver.Request,
-                    request.toBundle()
-                )
-                putExtra(CredentialResponseReceiver.Receiver, receiver.resultReceiver)
-            })
+            context.startActivity(
+                Intent(context, WearAuthActivity::class.java).apply {
+                    putExtra(
+                        CredentialResponseReceiver.Request,
+                        request.toBundle(),
+                    )
+                    putExtra(CredentialResponseReceiver.Receiver, receiver.resultReceiver)
+                },
+            )
 
             receiver.await()
         }
@@ -106,7 +109,7 @@ class WearCredentialManager(
     private suspend fun getExistingCredentialResponse(
         relevantProviders: List<SuspendingCredentialProvider>,
         context: Context,
-        request: GetCredentialRequest
+        request: GetCredentialRequest,
     ): GetCredentialResponse? {
         relevantProviders.forEach { provider ->
             try {

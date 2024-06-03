@@ -19,7 +19,7 @@ package com.google.android.horologist.auth.provider.google.pkce
 import android.os.Bundle
 import androidx.credentials.GetCustomCredentialOption
 
-class OauthPkceOption: GetCustomCredentialOption(
+class OauthPkceOption : GetCustomCredentialOption(
     Type,
     Bundle(),
     Bundle(),

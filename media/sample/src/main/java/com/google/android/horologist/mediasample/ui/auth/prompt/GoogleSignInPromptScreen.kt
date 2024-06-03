@@ -40,7 +40,6 @@ import com.google.android.horologist.mediasample.ui.navigation.navigateToGoogleS
 @Composable
 fun GoogleSignInPromptScreen(
     navController: NavHostController,
-    columnState: ScalingLazyColumnState = rememberResponsiveColumnState(),
     modifier: Modifier = Modifier,
     viewModel: UampSignInPromptViewModel,
 ) {
@@ -51,7 +50,6 @@ fun GoogleSignInPromptScreen(
         onAlreadySignedIn = {
             showAlreadySignedInDialog = true
         },
-        columnState = columnState,
         modifier = modifier,
         viewModel = viewModel,
     ) {
