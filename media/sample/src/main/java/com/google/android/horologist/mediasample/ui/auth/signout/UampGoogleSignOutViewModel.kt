@@ -17,10 +17,12 @@
 package com.google.android.horologist.mediasample.ui.auth.signout
 
 import android.util.Log
+import androidx.credentials.ClearCredentialStateRequest
+import androidx.credentials.CredentialManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.common.api.ApiException
-import com.google.android.horologist.mediasample.data.auth.GoogleSignInAuthUserRepository
+import com.google.android.horologist.auth.data.credman.LocalCredentialRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,7 +33,8 @@ import javax.inject.Inject
 class UampGoogleSignOutViewModel
     @Inject
     constructor(
-        private val googleSignInAuthUserRepository: GoogleSignInAuthUserRepository,
+        private val localCredentialRepository: LocalCredentialRepository,
+        private val credentialManager: CredentialManager
     ) : ViewModel() {
 
         private val _uiState = MutableStateFlow(GoogleSignOutScreenState.Idle)
@@ -45,7 +48,8 @@ class UampGoogleSignOutViewModel
             ) {
                 viewModelScope.launch {
                     try {
-                        googleSignInAuthUserRepository.signOut()
+                        credentialManager.clearCredentialState(ClearCredentialStateRequest())
+                        localCredentialRepository.signOut()
                         _uiState.value = GoogleSignOutScreenState.Success
                     } catch (apiException: ApiException) {
                         Log.w(TAG, "Sign out failed: $apiException")

@@ -16,11 +16,13 @@
 
 package com.google.android.horologist.mediasample.ui.settings
 
+import androidx.credentials.ClearCredentialStateRequest
+import androidx.credentials.Credential
+import androidx.credentials.CredentialManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.horologist.auth.data.common.model.AuthUser
+import com.google.android.horologist.auth.data.credman.LocalCredentialRepository
 import com.google.android.horologist.mediasample.BuildConfig
-import com.google.android.horologist.mediasample.data.auth.GoogleSignInAuthUserRepository
 import com.google.android.horologist.mediasample.domain.SettingsRepository
 import com.google.android.horologist.mediasample.domain.proto.copy
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,14 +37,15 @@ class SettingsScreenViewModel
     @Inject
     constructor(
         private val settingsRepository: SettingsRepository,
-        private val authUserRepository: GoogleSignInAuthUserRepository,
+        private val localCredentialRepository: LocalCredentialRepository,
+        private val credentialManager: CredentialManager,
     ) : ViewModel() {
         val screenState = combine(
             settingsRepository.settingsFlow,
-            authUserRepository.authState,
-        ) { settings, authState ->
+            localCredentialRepository.flow,
+        ) { settings, credential ->
             SettingsScreenState(
-                authUser = authState,
+                credential = credential,
                 guestMode = settings.guestMode,
                 writable = true,
                 showDeveloperOptions = BuildConfig.DEBUG,
@@ -51,7 +54,7 @@ class SettingsScreenViewModel
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
             SettingsScreenState(
-                authUser = null,
+                credential = null,
                 guestMode = false,
                 writable = false,
                 showDeveloperOptions = BuildConfig.DEBUG,
@@ -63,15 +66,14 @@ class SettingsScreenViewModel
                 settingsRepository.edit {
                     it.copy { guestMode = enabled }
                 }
-                if (enabled) {
-                    authUserRepository.signOut()
-                }
+                credentialManager.clearCredentialState(ClearCredentialStateRequest())
+                localCredentialRepository.signOut()
             }
         }
     }
 
 data class SettingsScreenState(
-    val authUser: AuthUser?,
+    val credential: Credential?,
     val guestMode: Boolean,
     val writable: Boolean,
     val showDeveloperOptions: Boolean,

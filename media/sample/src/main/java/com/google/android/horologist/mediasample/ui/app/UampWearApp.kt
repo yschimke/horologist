@@ -30,7 +30,6 @@ import androidx.navigation.NavHostController
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.navigation.composable
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavHostState
-import com.google.android.horologist.auth.ui.googlesignin.signin.GoogleSignInScreen
 import com.google.android.horologist.compose.layout.ScreenScaffold
 import com.google.android.horologist.compose.layout.rememberColumnState
 import com.google.android.horologist.media.ui.navigation.MediaNavController.navigateToCollection
@@ -42,7 +41,6 @@ import com.google.android.horologist.media.ui.navigation.MediaNavController.navi
 import com.google.android.horologist.media.ui.navigation.MediaPlayerScaffold
 import com.google.android.horologist.mediasample.BuildConfig
 import com.google.android.horologist.mediasample.ui.auth.prompt.GoogleSignInPromptScreen
-import com.google.android.horologist.mediasample.ui.auth.signin.UampGoogleSignInViewModel
 import com.google.android.horologist.mediasample.ui.auth.signout.GoogleSignOutScreen
 import com.google.android.horologist.mediasample.ui.browse.UampBrowseScreen
 import com.google.android.horologist.mediasample.ui.browse.UampStreamingBrowseScreen
@@ -57,7 +55,6 @@ import com.google.android.horologist.mediasample.ui.entity.UampStreamingPlaylist
 import com.google.android.horologist.mediasample.ui.navigation.AudioDebug
 import com.google.android.horologist.mediasample.ui.navigation.DeveloperOptions
 import com.google.android.horologist.mediasample.ui.navigation.GoogleSignInPromptScreen
-import com.google.android.horologist.mediasample.ui.navigation.GoogleSignInScreen
 import com.google.android.horologist.mediasample.ui.navigation.GoogleSignOutScreen
 import com.google.android.horologist.mediasample.ui.navigation.Samples
 import com.google.android.horologist.mediasample.ui.navigation.navigateToGoogleSignInPrompt
@@ -234,14 +231,6 @@ fun UampWearApp(
                     GoogleSignInPromptScreen(
                         navController = navController,
                         viewModel = hiltViewModel(),
-                    )
-                }
-
-                composable(route = GoogleSignInScreen.navRoute) {
-                    GoogleSignInScreen(
-                        onAuthCancelled = { navController.popBackStack() },
-                        onAuthSucceed = { navController.navigateToLibrary() },
-                        viewModel = hiltViewModel<UampGoogleSignInViewModel>(),
                     )
                 }
 

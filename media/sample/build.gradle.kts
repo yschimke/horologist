@@ -23,6 +23,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("com.google.protobuf")
     kotlin("android")
+    kotlin("plugin.serialization")
 }
 
 val localProperties = Properties()
@@ -45,11 +46,26 @@ android {
 
         testInstrumentationRunner =
             "com.google.android.horologist.mediasample.runner.MediaAppRunner"
+
+        buildConfigField(
+            "String",
+            "GSI_CLIENT_ID",
+            "\"" + localProperties["gsiclientid"] + "\"",
+        )
     }
 
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
+        }
+    }
+
+    signingConfigs {
+        getByName("debug") {
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+            storeFile = file("debug.keystore")
+            storePassword = "android"
         }
     }
 
@@ -172,6 +188,8 @@ dependencies {
     implementation(projects.networkAwareness.db)
     implementation(projects.tiles)
     implementation(projects.logo)
+    implementation(projects.auth.providerGoogle)
+    implementation(libs.ktor.serialization.kotlinx.json)
 
     implementation(
         libs.androidx.media3.datasourceokhttp,

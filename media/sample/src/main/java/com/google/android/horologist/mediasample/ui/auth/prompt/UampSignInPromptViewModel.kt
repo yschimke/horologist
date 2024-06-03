@@ -16,30 +16,52 @@
 
 package com.google.android.horologist.mediasample.ui.auth.prompt
 
+import android.content.Context
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
 import androidx.lifecycle.viewModelScope
-import com.google.android.horologist.auth.data.common.repository.AuthUserRepository
-import com.google.android.horologist.auth.ui.common.screens.prompt.SignInPromptViewModel
+import com.google.android.horologist.auth.data.credman.LocalCredentialRepository
+import com.google.android.horologist.auth.ui.common.screens.prompt.CredManSignInPromptViewModel
+import com.google.android.horologist.auth.ui.googlesignin.mapper.AccountUiModelMapper
+import com.google.android.horologist.mediasample.BuildConfig
 import com.google.android.horologist.mediasample.domain.SettingsRepository
 import com.google.android.horologist.mediasample.domain.proto.copy
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class UampSignInPromptViewModel
-    @Inject
-    constructor(
-        authUserRepository: AuthUserRepository,
-        private val settingsRepository: SettingsRepository,
-    ) :
-    SignInPromptViewModel(authUserRepository) {
-        fun selectGuestMode() {
-            viewModelScope.launch {
-                settingsRepository.edit {
-                    it.copy {
-                        guestMode = true
-                    }
+@Inject
+constructor(
+    localCredentialRepository: LocalCredentialRepository,
+    credentialManager: CredentialManager,
+    private val settingsRepository: SettingsRepository,
+) :
+    CredManSignInPromptViewModel(localCredentialRepository, credentialManager, mapper = {
+        AccountUiModelMapper.map(GoogleIdTokenCredential.createFrom(it.data))
+    }) {
+    fun selectGuestMode() {
+        viewModelScope.launch {
+            settingsRepository.edit {
+                it.copy {
+                    guestMode = true
                 }
             }
         }
     }
+
+    suspend fun signIn(context: Context) {
+        signIn(
+            context = context,
+            request = GetCredentialRequest.Builder()
+                .addCredentialOption(
+                    GetSignInWithGoogleOption.Builder(BuildConfig.GSI_CLIENT_ID)
+                        .build()
+                )
+                .build()
+        )
+    }
+}

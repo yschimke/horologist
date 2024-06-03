@@ -19,12 +19,14 @@
 package com.google.android.horologist.mediasample.di
 
 import android.content.Context
+import androidx.credentials.CredentialManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.horologist.auth.data.common.repository.AuthUserRepository
-import com.google.android.horologist.auth.data.googlesignin.GoogleSignInEventListener
-import com.google.android.horologist.mediasample.data.auth.GoogleSignInAuthUserRepository
+import com.google.android.horologist.auth.data.credman.LocalCredentialRepository
+import com.google.android.horologist.auth.provider.google.WearCredentialManager
+import com.google.android.horologist.auth.provider.google.gsi.GoogleSignInAuthStrategy
+import com.google.android.horologist.mediasample.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,29 +44,38 @@ object AuthModule {
         @ApplicationContext application: Context,
     ): GoogleSignInClient = GoogleSignIn.getClient(
         application,
-        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
-            .requestProfile().build(),
+        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .requestProfile()
+            .requestIdToken(BuildConfig.GSI_CLIENT_ID)
+            .build(),
     )
 
     @Singleton
     @Provides
-    fun googleSignInAuthUserRepository(
+    fun localCredentialRepository(
         @ApplicationContext application: Context,
-        googleSignInClient: GoogleSignInClient,
-    ): GoogleSignInAuthUserRepository = GoogleSignInAuthUserRepository(
+    ): LocalCredentialRepository = LocalCredentialRepository(
         application,
-        googleSignInClient,
     )
 
     @Singleton
     @Provides
-    fun authUserRepository(
-        googleSignInAuthUserRepository: GoogleSignInAuthUserRepository,
-    ): AuthUserRepository = googleSignInAuthUserRepository
+    fun wearCredentialManager(
+        @ApplicationContext context: Context,
+        googleSignInClient: GoogleSignInClient,
+    ): WearCredentialManager {
+        return WearCredentialManager(
+            CredentialManager.create(context),
+            listOf(
+                GoogleSignInAuthStrategy(googleSignInClient),
+            ),
+        )
+    }
 
     @Singleton
     @Provides
-    fun googleSignInEventListener(
-        statefulAuthUserRepository: GoogleSignInAuthUserRepository,
-    ): GoogleSignInEventListener = statefulAuthUserRepository
+    fun credentialManager(
+        credentialManager: WearCredentialManager,
+    ): CredentialManager = credentialManager
 }

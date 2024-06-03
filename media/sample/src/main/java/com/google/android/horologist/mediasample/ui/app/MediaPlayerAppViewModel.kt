@@ -18,7 +18,7 @@ package com.google.android.horologist.mediasample.ui.app
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.horologist.auth.data.common.repository.AuthUserRepository
+import com.google.android.horologist.auth.data.credman.LocalCredentialRepository
 import com.google.android.horologist.media.model.Media
 import com.google.android.horologist.media.repository.PlayerRepository
 import com.google.android.horologist.media.repository.PlaylistRepository
@@ -55,7 +55,7 @@ class MediaPlayerAppViewModel
         private val playlistRepository: PlaylistRepository,
         private val snackbarManager: SnackbarManager,
         private val resourceProvider: ResourceProvider,
-        private val authUserRepository: AuthUserRepository,
+        private val localCredentialRepository: LocalCredentialRepository,
     ) : ViewModel() {
 
         val deepLinkPrefix: String = appConfig.deeplinkUriPrefix
@@ -181,7 +181,7 @@ class MediaPlayerAppViewModel
         }
 
         suspend fun isLoggedIn(): Boolean {
-            return authUserRepository.getAuthenticated() != null
+            return localCredentialRepository.flow.first() != null
         }
     }
 

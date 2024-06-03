@@ -20,18 +20,22 @@ import android.app.Application
 import android.os.StrictMode
 import coil.ImageLoader
 import coil.ImageLoaderFactory
+import com.google.android.horologist.auth.provider.google.WearCredentialManager
 import com.google.android.horologist.media.sync.initializers.Sync
 import com.google.android.horologist.mediasample.ui.AppConfig
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
 @HiltAndroidApp
-class MediaApplication : Application(), ImageLoaderFactory {
+class MediaApplication : Application(), ImageLoaderFactory, WearCredentialManager.Factory {
     @Inject
     lateinit var imageLoader: ImageLoader
 
     @Inject
     lateinit var appConfig: AppConfig
+
+    @Inject
+    override lateinit var credentialManager: WearCredentialManager
 
     override fun onCreate() {
         super.onCreate()

@@ -18,24 +18,18 @@ package com.google.android.horologist.mediasample.ui.auth.prompt
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.wear.compose.material.ChipDefaults
-import androidx.wear.compose.material.Text
 import com.google.android.horologist.auth.composables.chips.GuestModeChip
 import com.google.android.horologist.auth.composables.chips.SignInChip
 import com.google.android.horologist.auth.ui.common.screens.prompt.SignInPromptScreen
-import com.google.android.horologist.compose.layout.ScalingLazyColumnState
-import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
-import com.google.android.horologist.compose.material.Confirmation
 import com.google.android.horologist.mediasample.R
-import com.google.android.horologist.mediasample.ui.navigation.navigateToGoogleSignIn
+import kotlinx.coroutines.launch
 
 @Composable
 fun GoogleSignInPromptScreen(
@@ -43,20 +37,26 @@ fun GoogleSignInPromptScreen(
     modifier: Modifier = Modifier,
     viewModel: UampSignInPromptViewModel,
 ) {
-    var showAlreadySignedInDialog by rememberSaveable { mutableStateOf(false) }
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val coroutineScope = rememberCoroutineScope()
 
     SignInPromptScreen(
+        title = stringResource(id = com.google.android.horologist.auth.composables.R.string.horologist_signin_prompt_title),
         message = stringResource(id = R.string.google_sign_in_prompt_message),
         onAlreadySignedIn = {
-            showAlreadySignedInDialog = true
+            navController.popBackStack()
         },
+        onIdleStateObserved = { viewModel.onIdleStateObserved() },
         modifier = modifier,
-        viewModel = viewModel,
+        state = state,
     ) {
         item {
+            val context = LocalContext.current
             SignInChip(
                 onClick = {
-                    navController.navigateToGoogleSignIn()
+                    coroutineScope.launch {
+                        viewModel.signIn(context)
+                    }
                 },
                 colors = ChipDefaults.secondaryChipColors(),
             )
@@ -68,21 +68,6 @@ fun GoogleSignInPromptScreen(
                     navController.popBackStack()
                 },
                 colors = ChipDefaults.secondaryChipColors(),
-            )
-        }
-    }
-
-    if (showAlreadySignedInDialog) {
-        Confirmation(
-            onTimeout = {
-                showAlreadySignedInDialog = false
-                navController.popBackStack()
-            },
-        ) {
-            Text(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                textAlign = TextAlign.Center,
-                text = stringResource(id = R.string.google_sign_in_prompt_already_signed_in_message),
             )
         }
     }

@@ -45,7 +45,7 @@ import com.google.android.horologist.compose.material.ListHeaderDefaults.firstIt
 import com.google.android.horologist.compose.material.ResponsiveListHeader
 import com.google.android.horologist.mediasample.R
 import com.google.android.horologist.mediasample.ui.navigation.navigateToDeveloperOptions
-import com.google.android.horologist.mediasample.ui.navigation.navigateToGoogleSignIn
+import com.google.android.horologist.mediasample.ui.navigation.navigateToGoogleSignInPrompt
 import com.google.android.horologist.mediasample.ui.navigation.navigateToGoogleSignOutScreen
 
 @Composable
@@ -74,11 +74,11 @@ fun UampSettingsScreen(
                 }
             }
             item {
-                if (screenState.authUser == null) {
+                if (screenState.credential == null) {
                     Chip(
                         label = stringResource(id = R.string.login),
                         modifier = Modifier.fillMaxWidth(),
-                        onClick = { navController.navigateToGoogleSignIn() },
+                        onClick = { navController.navigateToGoogleSignInPrompt() },
                         enabled = !screenState.guestMode,
                     )
                 } else {
