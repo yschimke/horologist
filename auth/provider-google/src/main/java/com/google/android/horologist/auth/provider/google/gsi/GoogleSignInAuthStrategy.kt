@@ -27,14 +27,17 @@ import androidx.credentials.exceptions.GetCredentialUnknownException
 import androidx.credentials.exceptions.NoCredentialException
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.horologist.auth.provider.google.SuspendingCredentialProvider
 import com.google.android.horologist.auth.provider.google.types
 import com.google.android.horologist.compose.material.Chip
 import com.google.android.horologist.compose.nav.composable
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_SIWG_CREDENTIAL
@@ -44,7 +47,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 
 open class GoogleSignInAuthStrategy(
-    val googleSignIn: GoogleSignInClient,
+    val context: Context,
 ) : SuspendingCredentialProvider() {
     override val types: List<String> =
         listOf(TYPE_GOOGLE_ID_TOKEN_CREDENTIAL, TYPE_GOOGLE_ID_TOKEN_SIWG_CREDENTIAL)
@@ -57,7 +60,7 @@ open class GoogleSignInAuthStrategy(
         request: ClearCredentialStateRequest,
     ) {
         withContext(Dispatchers.IO) {
-            googleSignIn.signOut().await()
+            googleSignIn().signOut().await()
         }
     }
 
@@ -66,8 +69,10 @@ open class GoogleSignInAuthStrategy(
         request: GetCredentialRequest,
     ): GetCredentialResponse {
         val account = try {
+            val clientId =
+                GetGoogleIdOption.createFrom(request.credentialOptions.first { types.contains(it.type) }.requestData).serverClientId
             withContext(Dispatchers.IO) {
-                googleSignIn.silentSignIn().await()
+                googleSignIn(clientId).silentSignIn().await()
             }
         } catch (e: ApiException) {
             val isNoCredential = when (e.statusCode) {
@@ -85,13 +90,31 @@ open class GoogleSignInAuthStrategy(
         return buildCredentialResponse(account)
     }
 
+    fun googleSignIn(clientId: String? = null): GoogleSignInClient {
+        // TODO consider some form of caching?
+        return GoogleSignIn.getClient(
+            context,
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestProfile()
+                .apply {
+                    if (clientId != null) {
+                        requestIdToken(clientId)
+                    }
+                }
+                .build()
+        )
+    }
+
     override fun supportedRoutes(
         request: GetCredentialRequest,
         onNavigate: (Any) -> Unit,
     ): List<MenuChip> {
         val requestTypes = request.types
 
-        return if (requestTypes.contains(TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) || requestTypes.contains(TYPE_GOOGLE_ID_TOKEN_SIWG_CREDENTIAL)) {
+        return if (requestTypes.contains(TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) || requestTypes.contains(
+                TYPE_GOOGLE_ID_TOKEN_SIWG_CREDENTIAL
+            )) {
             listOf(
                 MenuChip(GoogleSignInScreen) {
                     Chip(

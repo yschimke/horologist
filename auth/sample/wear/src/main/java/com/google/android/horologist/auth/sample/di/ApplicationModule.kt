@@ -57,7 +57,6 @@ object ApplicationModule {
     fun wearCredentialManager(
         @ApplicationContext context: Context,
         coroutineScope: CoroutineScope,
-        googleSignInClient: GoogleSignInClient,
         okHttpClient: OkHttpClient,
     ): WearCredentialManager {
         val registry = WearDataLayerRegistry.fromContext(context, coroutineScope)
@@ -65,7 +64,7 @@ object ApplicationModule {
             CredentialManager.create(context),
             listOf(
                 TokenSharingAuthStrategy(CredManTokenShareRepository.create(registry)),
-                GoogleSignInAuthStrategy(googleSignInClient),
+                GoogleSignInAuthStrategy(context),
                 SampleOauthPkceAuthStrategy(context, okHttpClient),
             ),
         )

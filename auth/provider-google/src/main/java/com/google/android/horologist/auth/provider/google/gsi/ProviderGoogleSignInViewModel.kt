@@ -45,7 +45,8 @@ class ProviderGoogleSignInViewModel(
             val googleAuthStrategy = extras.wearCredentialManager.get<GoogleSignInAuthStrategy>()
 
             return ProviderGoogleSignInViewModel(
-                googleAuthStrategy.googleSignIn,
+                // TODO this should be avoided
+                googleAuthStrategy.googleSignIn(),
             ) as T
         }
     }

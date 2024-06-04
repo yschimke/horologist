@@ -63,12 +63,11 @@ object AuthModule {
     @Provides
     fun wearCredentialManager(
         @ApplicationContext context: Context,
-        googleSignInClient: GoogleSignInClient,
     ): WearCredentialManager {
         return WearCredentialManager(
             CredentialManager.create(context),
             listOf(
-                GoogleSignInAuthStrategy(googleSignInClient),
+                GoogleSignInAuthStrategy(context),
             ),
         )
     }
