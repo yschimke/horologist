@@ -22,6 +22,7 @@ plugins {
     id("com.google.protobuf")
     id("dagger.hilt.android.plugin")
     kotlin("android")
+    kotlin("plugin.compose")
 }
 
 android {
@@ -59,8 +60,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     buildFeatures {
@@ -76,10 +77,6 @@ android {
             listOf(
                 "-opt-in=com.google.android.horologist.annotations.ExperimentalHorologistApi",
             )
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     testOptions {

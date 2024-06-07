@@ -23,6 +23,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("com.google.protobuf")
     kotlin("android")
+    kotlin("plugin.compose")
 }
 
 val localProperties = Properties()
@@ -93,8 +94,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     buildFeatures {
@@ -116,11 +117,6 @@ android {
             "-opt-in=$it"
         }
     }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
-
     lint {
         // https://buganizer.corp.google.com/issues/328279054
         disable.add("UnsafeOptInUsageError")

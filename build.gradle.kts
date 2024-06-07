@@ -47,6 +47,7 @@ plugins {
     alias(libs.plugins.dependencyAnalysis)
     alias(libs.plugins.roborazzi) apply false
     alias(libs.plugins.kotlinx.serialization) apply false
+    alias(libs.plugins.compose.compiler) apply false
 }
 
 apply(plugin = "org.jetbrains.dokka")
@@ -129,8 +130,7 @@ subprojects {
                 // Treat all Kotlin warnings as errors
                 allWarningsAsErrors = true
             }
-            // Set JVM target to 1.8
-            jvmTarget = "11"
+            jvmTarget = JavaVersion.VERSION_17.majorVersion
             freeCompilerArgs = freeCompilerArgs + listOf(
                 // Allow use of @OptIn
                 "-opt-in=kotlin.RequiresOptIn",

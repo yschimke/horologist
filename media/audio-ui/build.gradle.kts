@@ -20,6 +20,7 @@ plugins {
     id("me.tylerbwong.gradle.metalava")
     kotlin("android")
     alias(libs.plugins.roborazzi)
+    kotlin("plugin.compose")
 }
 
 android {
@@ -31,8 +32,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     buildFeatures {
@@ -45,9 +46,6 @@ android {
         freeCompilerArgs = freeCompilerArgs + "-opt-in=com.google.android.horologist.annotations.ExperimentalHorologistApi"
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
     packaging {
         resources {
             excludes +=

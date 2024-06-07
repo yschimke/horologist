@@ -19,6 +19,7 @@ plugins {
     id("org.jetbrains.dokka")
     id("me.tylerbwong.gradle.metalava")
     kotlin("android")
+    kotlin("plugin.compose")
 }
 
 android {
@@ -30,8 +31,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     buildFeatures {
@@ -42,9 +43,6 @@ android {
         jvmTarget = "11"
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
     packaging {
         resources {
             excludes += listOf("/META-INF/AL2.0", "/META-INF/LGPL2.1")

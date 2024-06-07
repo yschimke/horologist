@@ -20,6 +20,7 @@ plugins {
     id("me.tylerbwong.gradle.metalava")
     kotlin("android")
     alias(libs.plugins.roborazzi)
+    kotlin("plugin.compose")
 }
 
 android {
@@ -32,8 +33,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     buildFeatures {
@@ -54,9 +55,6 @@ android {
             }
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
     packaging {
         resources {
             excludes +=

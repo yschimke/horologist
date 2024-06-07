@@ -21,6 +21,7 @@ plugins {
     alias(libs.plugins.dependencyAnalysis)
     kotlin("android")
     alias(libs.plugins.roborazzi)
+    kotlin("plugin.compose")
 }
 
 android {
@@ -33,8 +34,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     buildFeatures {
@@ -49,10 +50,6 @@ android {
                 "-opt-in=com.google.android.horologist.annotations.ExperimentalHorologistApi",
                 "-opt-in=kotlin.RequiresOptIn",
             )
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     packaging {
