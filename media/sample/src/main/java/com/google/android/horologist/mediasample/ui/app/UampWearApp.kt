@@ -185,7 +185,6 @@ fun UampWearApp(
 
                     ScreenScaffold(scrollState = columnState) {
                         AudioDebugScreen(
-                            columnState = columnState,
                             audioDebugScreenViewModel = hiltViewModel(),
                         )
                     }
@@ -201,7 +200,6 @@ fun UampWearApp(
 
                     ScreenScaffold(scrollState = columnState) {
                         SamplesScreen(
-                            columnState = columnState,
                             samplesScreenViewModel = hiltViewModel(),
                             navController = navController,
                         )
@@ -218,7 +216,6 @@ fun UampWearApp(
 
                     ScreenScaffold(scrollState = columnState) {
                         DeveloperOptionsScreen(
-                            columnState = columnState,
                             developerOptionsScreenViewModel = hiltViewModel(),
                             navController = navController,
                         )

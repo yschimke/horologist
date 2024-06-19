@@ -72,18 +72,17 @@ public fun StreamlineSignInDefaultScreen(
                 )
             }
 
-            is StreamlineSignInDefaultScreenState.MultipleAccountsAvailable -> {
-                val accounts =
-                    (state as StreamlineSignInDefaultScreenState.MultipleAccountsAvailable).accounts
-                SelectAccountScreen(
-                    accounts = accounts,
-                    onAccountClicked = { _, account ->
-                        viewModel.onAccountSelected(account)
-                    },
-                    columnState = columnState,
-                    modifier = modifier,
-                )
-            }
+        is StreamlineSignInDefaultScreenState.MultipleAccountsAvailable -> {
+            val accounts =
+                (state as StreamlineSignInDefaultScreenState.MultipleAccountsAvailable).accounts
+            SelectAccountScreen(
+                accounts = accounts,
+                onAccountClicked = { _, account ->
+                    viewModel.onAccountSelected(account)
+                },
+                modifier = modifier,
+            )
+        }
 
             StreamlineSignInDefaultScreenState.NoAccountsAvailable -> {
                 onNoAccountsAvailable()
