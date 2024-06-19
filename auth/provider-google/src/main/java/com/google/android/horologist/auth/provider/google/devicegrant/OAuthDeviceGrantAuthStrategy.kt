@@ -16,7 +16,6 @@
 
 package com.google.android.horologist.auth.provider.google.devicegrant
 
-import android.annotation.SuppressLint
 import android.content.Context
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
@@ -33,7 +32,6 @@ abstract class OAuthDeviceGrantAuthStrategy() : SuspendingCredentialProvider() {
     abstract val clientId: String
     abstract val clientSecret: String
 
-    @SuppressLint("NewApi")
     override suspend fun getExistingCredential(
         context: Context,
         request: GetCredentialRequest,

@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-@file:Suppress("DEPRECATION", "INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
-
 package com.google.android.horologist.auth.provider.google.activity
 
 import android.os.Bundle

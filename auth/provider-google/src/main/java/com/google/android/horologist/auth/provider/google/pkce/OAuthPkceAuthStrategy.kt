@@ -16,7 +16,6 @@
 
 package com.google.android.horologist.auth.provider.google.pkce
 
-import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.credentials.Credential
@@ -41,7 +40,6 @@ abstract class OAuthPkceAuthStrategy<OauthConfig, OAuthCodePayload>(
         return true
     }
 
-    @SuppressLint("NewApi")
     override suspend fun getExistingCredential(
         context: Context,
         request: GetCredentialRequest,

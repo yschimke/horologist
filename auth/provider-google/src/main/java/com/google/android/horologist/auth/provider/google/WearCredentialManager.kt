@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-@file:Suppress("DEPRECATION", "INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
-
 package com.google.android.horologist.auth.provider.google
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.credentials.ClearCredentialStateRequest
@@ -84,7 +81,6 @@ class WearCredentialManager(
         return getCredentialFromActivity(context, request)
     }
 
-    @SuppressLint("RestrictedApi")
     private suspend fun getCredentialFromActivity(
         context: Context,
         request: GetCredentialRequest,

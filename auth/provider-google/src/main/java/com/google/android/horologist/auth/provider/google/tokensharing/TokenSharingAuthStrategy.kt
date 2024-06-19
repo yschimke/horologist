@@ -16,7 +16,6 @@
 
 package com.google.android.horologist.auth.provider.google.tokensharing
 
-import android.annotation.SuppressLint
 import android.content.Context
 import androidx.credentials.Credential
 import androidx.credentials.GetCredentialRequest
@@ -35,7 +34,6 @@ class TokenSharingAuthStrategy(
         return tokenBundleRepository.isAvailable()
     }
 
-    @SuppressLint("NewApi")
     override suspend fun getExistingCredential(
         context: Context,
         request: GetCredentialRequest,

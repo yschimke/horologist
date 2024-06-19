@@ -33,7 +33,7 @@ import androidx.credentials.exceptions.NoCredentialException
 import kotlinx.coroutines.CompletableDeferred
 import java.util.UUID
 
-internal class CredentialResponseReceiver {
+public class CredentialResponseReceiver {
     private val deferred = CompletableDeferred<GetCredentialResponse>()
 
     val resultReceiver = object : ResultReceiver(
@@ -94,7 +94,7 @@ internal class CredentialResponseReceiver {
         return deferred.await()
     }
 
-    internal companion object {
+    companion object {
         const val Request = "credman.request"
         const val ResultType = "credman.result.type"
         const val ResultData = "credman.result.data"

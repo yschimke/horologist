@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 @file:Suppress("DEPRECATION")
 
 package com.google.android.horologist.auth.provider.google.gsi

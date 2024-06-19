@@ -27,6 +27,7 @@ import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.ClearCredentialUnsupportedException
 import androidx.credentials.exceptions.CreateCredentialUnsupportedException
 import androidx.credentials.exceptions.GetCredentialUnsupportedException
+import androidx.credentials.exceptions.NoCredentialException
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 
@@ -35,6 +36,19 @@ abstract class SuspendingCredentialProvider {
 
     open suspend fun isAvailableOnDevice(): Boolean {
         return true
+    }
+
+    open fun NavGraphBuilder.defineRoutes(
+        navController: NavHostController,
+        onCompletion: (Result<GetCredentialResponse>) -> Unit,
+    ) {
+    }
+
+    open suspend fun getExistingCredential(
+        context: Context,
+        request: GetCredentialRequest,
+    ): GetCredentialResponse {
+        throw NoCredentialException()
     }
 
     open suspend fun onClearCredential(
@@ -50,13 +64,6 @@ abstract class SuspendingCredentialProvider {
         throw CreateCredentialUnsupportedException()
     }
 
-    open suspend fun getExistingCredential(
-        context: Context,
-        request: GetCredentialRequest,
-    ): GetCredentialResponse {
-        throw GetCredentialUnsupportedException()
-    }
-
     open suspend fun getPromptedCredential(
         context: Context,
         request: GetCredentialRequest,
@@ -65,12 +72,6 @@ abstract class SuspendingCredentialProvider {
     }
 
     abstract val startRoute: Any?
-
-    open fun NavGraphBuilder.defineRoutes(
-        navController: NavHostController,
-        onCompletion: (Result<GetCredentialResponse>) -> Unit,
-    ) {
-    }
 
     open fun supportedRoutes(
         request: GetCredentialRequest,
