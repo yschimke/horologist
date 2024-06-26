@@ -31,7 +31,7 @@ android {
         applicationId = "com.google.android.horologist.datalayer.sample"
         // Min because of Tiles
         minSdk = 26
-        targetSdk = 30
+        targetSdk = 34
 
         versionCode = 1
         versionName = "1.0"
@@ -89,6 +89,11 @@ android {
         animationsDisabled = true
     }
 
+    lint {
+        // https://buganizer.corp.google.com/issues/328279054
+        disable.add("UnsafeOptInUsageError")
+    }
+
     namespace = "com.google.android.horologist.datalayer.sample"
 }
 
@@ -107,7 +112,7 @@ sourceSets {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:4.26.1"
+        artifact = "com.google.protobuf:protoc:4.27.2"
     }
     plugins {
         id("javalite") {

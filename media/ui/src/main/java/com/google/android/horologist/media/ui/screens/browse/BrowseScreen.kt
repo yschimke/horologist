@@ -33,9 +33,13 @@ import com.google.android.horologist.composables.Section.Companion.ALL_STATES
 import com.google.android.horologist.composables.Section.Companion.LOADED_STATE_ONLY
 import com.google.android.horologist.composables.SectionContentScope
 import com.google.android.horologist.composables.SectionedList
-import com.google.android.horologist.compose.layout.ScalingLazyColumnState
+import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults.ItemType
+import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults.padding
 import com.google.android.horologist.compose.layout.ScreenScaffold
+import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
 import com.google.android.horologist.compose.material.Chip
+import com.google.android.horologist.compose.material.ListHeaderDefaults.firstItemPadding
+import com.google.android.horologist.compose.material.ResponsiveListHeader
 import com.google.android.horologist.compose.material.Title
 import com.google.android.horologist.images.base.paintable.ImageVectorPaintable.Companion.asPaintable
 import com.google.android.horologist.media.ui.R
@@ -55,10 +59,16 @@ import com.google.android.horologist.media.ui.state.model.PlaylistDownloadUiMode
 @ExperimentalHorologistApi
 @Composable
 public fun BrowseScreen(
-    columnState: ScalingLazyColumnState,
     modifier: Modifier = Modifier,
     content: BrowseScreenScope.() -> Unit,
 ) {
+    val columnState = rememberResponsiveColumnState(
+        contentPadding = padding(
+            first = ItemType.Text,
+            last = ItemType.Chip,
+        ),
+    )
+
     ScreenScaffold(scrollState = columnState) {
         SectionedList(
             columnState = columnState,
@@ -87,19 +97,15 @@ public class BrowseScreenScope {
         content: BrowseScreenSectionScope<T>.() -> Unit,
     ) {
         val scope = BrowseScreenSectionScope<T>().apply(content)
-        val firstSectionAdded = sections.isEmpty()
         sections.add(
             Section(
                 state = state,
                 headerContent = {
-                    Title(
-                        textId = titleId,
-                        modifier = if (firstSectionAdded) {
-                            Modifier.padding(bottom = 8.dp)
-                        } else {
-                            Modifier.padding(top = 8.dp, bottom = 8.dp)
-                        },
-                    )
+                    ResponsiveListHeader(
+                        contentPadding = firstItemPadding(),
+                    ) {
+                        Text(text = stringResource(id = titleId))
+                    }
                 },
                 loadingContent = scope.loadingContent,
                 loadedContent = scope.loadedContent,

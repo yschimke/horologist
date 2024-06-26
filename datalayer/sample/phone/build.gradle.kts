@@ -19,6 +19,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
     kotlin("android")
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -27,8 +28,8 @@ android {
     defaultConfig {
         applicationId = "com.google.android.horologist.datalayer.sample"
 
-        minSdk = 23
-        targetSdk = 33
+        minSdk = 21
+        targetSdk = 34
 
         versionCode = 1
         versionName = "1.0"
@@ -116,6 +117,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.compose.material.iconscore)
     implementation(libs.compose.material.iconsext)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.core)
 
     implementation(libs.dagger.hiltandroid)
     ksp(libs.dagger.hiltandroidcompiler)

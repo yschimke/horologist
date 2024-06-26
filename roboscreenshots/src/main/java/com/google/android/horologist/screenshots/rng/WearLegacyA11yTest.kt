@@ -50,8 +50,8 @@ import com.google.android.horologist.compose.layout.AppScaffold
 import com.google.android.horologist.compose.layout.ResponsiveTimeText
 import com.google.android.horologist.screenshots.FixedTimeSource
 import com.google.android.horologist.screenshots.a11y.A11ySnapshotTransformer
+import com.google.android.horologist.screenshots.rng.WearScreenshotTest.Companion.CorrectLayout
 import com.google.android.horologist.screenshots.rng.WearScreenshotTest.Companion.useHardwareRenderer
-import com.google.android.horologist.screenshots.rng.WearScreenshotTest.Companion.withDrawingEnabled
 import com.google.android.horologist.screenshots.rng.WearScreenshotTest.Companion.withImageLoader
 import org.junit.Rule
 import org.junit.rules.TestName
@@ -78,8 +78,6 @@ public abstract class WearLegacyA11yTest {
 
     public open val imageLoader: FakeImageLoaderEngine? = null
 
-    public open val forceHardware: Boolean = false
-
     public fun runScreenTest(
         content: @Composable () -> Unit,
     ) {
@@ -93,30 +91,27 @@ public abstract class WearLegacyA11yTest {
     }
 
     public fun runComponentTest(
-        background: Color? = if (forceHardware) Color.Black.copy(alpha = 0.3f) else null,
+        background: Color? = Color.Black.copy(alpha = 0.3f),
         content: @Composable () -> Unit,
     ) {
-        withDrawingEnabled(forceHardware) {
-            composeRule.setContent {
-                withImageLoader(imageLoader) {
-                    Box(
-                        modifier = Modifier.run {
-                            if (background != null) {
-                                background(background)
-                            } else {
-                                this
-                            }
-                        },
-                    ) {
-                        ComponentScaffold {
-                            content()
+        composeRule.setContent {
+            withImageLoader(imageLoader) {
+                Box(
+                    modifier = Modifier.run {
+                        if (background != null) {
+                            background(background)
+                        } else {
+                            this
                         }
+                    },
+                ) {
+                    ComponentScaffold {
+                        content()
                     }
                 }
             }
-
-            captureScreenshot()
         }
+        captureScreenshot()
     }
 
     public fun captureScreenshot(suffix: String = "") {
@@ -141,16 +136,11 @@ public abstract class WearLegacyA11yTest {
         filePath: String,
         roborazziOptions: RoborazziOptions,
     ) {
-        withDrawingEnabled(forceHardware) {
-            Espresso.onIdle()
-
-            val screenImage = captureScreenImageToBitmap(roborazziOptions)
-
-            val annotatedImage =
-                A11ySnapshotTransformer().transform(composeRule.onRoot(), screenImage)
-
-            annotatedImage.captureRoboImage(filePath, roborazziOptions)
-        }
+        Espresso.onIdle()
+        val screenImage = captureScreenImageToBitmap(roborazziOptions)
+        val annotatedImage =
+            A11ySnapshotTransformer().transform(composeRule.onRoot(), screenImage)
+        annotatedImage.captureRoboImage(filePath, roborazziOptions)
     }
 
     @Suppress("INACCESSIBLE_TYPE")
@@ -173,25 +163,29 @@ public abstract class WearLegacyA11yTest {
 
     @Composable
     public open fun TestScaffold(content: @Composable () -> Unit) {
-        AppScaffold(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background),
-            timeText = { ResponsiveTimeText(timeSource = FixedTimeSource) },
-        ) {
-            content()
+        CorrectLayout {
+            AppScaffold(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.background),
+                timeText = { ResponsiveTimeText(timeSource = FixedTimeSource) },
+            ) {
+                content()
+            }
         }
     }
 
     @Composable
     public open fun ComponentScaffold(content: @Composable () -> Unit) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black),
-        ) {
-            content()
+        CorrectLayout {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black),
+            ) {
+                content()
+            }
         }
     }
 

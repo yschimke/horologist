@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter.ofPattern
+import java.util.Locale
+
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -27,10 +31,12 @@ android {
         applicationId = "com.google.android.horologist.sample"
         // Min because of Tiles
         minSdk = 26
-        targetSdk = 30
+        targetSdk = 34
 
-        versionCode = 1
-        versionName = "1.0"
+        val date = LocalDate.now()
+
+        versionCode = date.format(ofPattern("yyyyMMdd", Locale.ROOT)).toInt()
+        versionName = date.toString()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -71,6 +77,7 @@ android {
             androidx.compose.ui.ExperimentalComposeUiApi
             androidx.wear.compose.material.ExperimentalWearMaterialApi
             com.google.android.horologist.annotations.ExperimentalHorologistApi
+            androidx.compose.foundation.ExperimentalFoundationApi
             kotlin.RequiresOptIn
             kotlinx.coroutines.ExperimentalCoroutinesApi
             """.trim().split("\\s+".toRegex()).map {
@@ -90,6 +97,11 @@ android {
 
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+    }
+
+    lint {
+        // https://buganizer.corp.google.com/issues/328279054
+        disable.add("UnsafeOptInUsageError")
     }
 
     namespace = "com.google.android.horologist.sample"
@@ -140,6 +152,8 @@ dependencies {
 
     implementation(libs.compose.ui.toolingpreview)
     implementation(libs.androidx.wear.tooling.preview)
+
+    implementation(libs.kotlinx.serialization.core)
 
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(projects.composeTools)

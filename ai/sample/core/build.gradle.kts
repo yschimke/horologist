@@ -26,7 +26,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        minSdk = 23
+        minSdk = 21
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -74,14 +74,14 @@ android {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:4.26.1"
+        artifact = "com.google.protobuf:protoc:4.27.2"
     }
     plugins {
         create("javalite") {
             artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0"
         }
         create("grpc") {
-            artifact = "io.grpc:protoc-gen-grpc-java:1.63.0"
+            artifact = "io.grpc:protoc-gen-grpc-java:1.64.0"
         }
         create("grpckt") {
             artifact = "io.grpc:protoc-gen-grpc-kotlin:1.3.0:jdk8@jar"

@@ -41,8 +41,8 @@ import androidx.compose.ui.test.onParent
 import androidx.test.filters.MediumTest
 import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
 import androidx.wear.compose.foundation.rememberActiveFocusRequester
-import androidx.wear.compose.foundation.rotary.RotaryDefaults.scrollBehavior
-import androidx.wear.compose.foundation.rotary.rotary
+import androidx.wear.compose.foundation.rotary.RotaryScrollableDefaults.behavior
+import androidx.wear.compose.foundation.rotary.rotaryScrollable
 import androidx.wear.compose.material.Text
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
@@ -59,7 +59,7 @@ import org.robolectric.annotation.Config
 @MediumTest
 @RunWith(RobolectricTestRunner::class)
 @Config(
-    sdk = [30],
+    sdk = [33],
     qualifiers = "w227dp-h227dp-small-notlong-round-watch-xhdpi-keyshidden-nonav",
 )
 @Ignore("Failing with robolectric")
@@ -81,8 +81,8 @@ class PagerScreenTest {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .rotary(
-                            rotaryBehavior = scrollBehavior(scrollableState = scrollState),
+                        .rotaryScrollable(
+                            behavior = behavior(scrollableState = scrollState),
                             focusRequester = focusRequester,
                         )
                         .verticalScroll(scrollState),

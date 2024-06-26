@@ -47,8 +47,16 @@ package com.google.android.horologist.compose.layout {
     method @androidx.compose.runtime.Stable public static androidx.compose.ui.Modifier fillMaxRectangle(androidx.compose.ui.Modifier);
   }
 
+  public final class FontScaleIndependentKt {
+    method @androidx.compose.runtime.Composable public static void FontScaleIndependent(kotlin.jvm.functions.Function0<kotlin.Unit> content);
+  }
+
   public final class PagerScaffoldKt {
     method @androidx.compose.runtime.Composable public static void PagerScaffold(optional androidx.compose.ui.Modifier modifier, optional kotlin.jvm.functions.Function0<kotlin.Unit>? timeText, optional androidx.compose.foundation.pager.PagerState? pagerState, kotlin.jvm.functions.Function1<? super androidx.compose.foundation.layout.BoxScope,kotlin.Unit> content);
+  }
+
+  public final class PlaceholderKt {
+    method @androidx.compose.runtime.Composable public static androidx.wear.compose.material.PlaceholderState rememberActivePlaceholderState(kotlin.jvm.functions.Function0<java.lang.Boolean> isContentReady);
   }
 
   public final class ResponsiveTimeTextKt {
@@ -86,12 +94,11 @@ package com.google.android.horologist.compose.layout {
   }
 
   @com.google.android.horologist.annotations.ExperimentalHorologistApi public final class ScalingLazyColumnState implements androidx.compose.foundation.gestures.ScrollableState {
-    ctor public ScalingLazyColumnState(optional com.google.android.horologist.compose.layout.ScalingLazyColumnState.ScrollPosition initialScrollPosition, optional androidx.wear.compose.foundation.lazy.AutoCenteringParams? autoCentering, optional int anchorType, optional androidx.compose.foundation.layout.PaddingValues contentPadding, optional com.google.android.horologist.compose.layout.ScalingLazyColumnState.RotaryMode? rotaryMode, optional boolean reverseLayout, optional androidx.compose.foundation.layout.Arrangement.Vertical verticalArrangement, optional androidx.compose.ui.Alignment.Horizontal horizontalAlignment, optional androidx.compose.foundation.gestures.FlingBehavior? flingBehavior, optional boolean userScrollEnabled, optional androidx.wear.compose.foundation.lazy.ScalingParams scalingParams, optional boolean hapticsEnabled);
+    ctor public ScalingLazyColumnState(optional com.google.android.horologist.compose.layout.ScalingLazyColumnState.ScrollPosition initialScrollPosition, optional androidx.wear.compose.foundation.lazy.AutoCenteringParams? autoCentering, optional int anchorType, optional androidx.compose.foundation.layout.PaddingValues contentPadding, optional com.google.android.horologist.compose.layout.ScalingLazyColumnState.RotaryMode? rotaryMode, optional boolean reverseLayout, optional androidx.compose.foundation.layout.Arrangement.Vertical verticalArrangement, optional androidx.compose.ui.Alignment.Horizontal horizontalAlignment, optional boolean userScrollEnabled, optional androidx.wear.compose.foundation.lazy.ScalingParams scalingParams, optional boolean hapticsEnabled);
     method public float dispatchRawDelta(float delta);
     method public int getAnchorType();
     method public androidx.wear.compose.foundation.lazy.AutoCenteringParams? getAutoCentering();
     method public androidx.compose.foundation.layout.PaddingValues getContentPadding();
-    method public androidx.compose.foundation.gestures.FlingBehavior? getFlingBehavior();
     method public boolean getHapticsEnabled();
     method public androidx.compose.ui.Alignment.Horizontal getHorizontalAlignment();
     method public com.google.android.horologist.compose.layout.ScalingLazyColumnState.ScrollPosition getInitialScrollPosition();
@@ -109,7 +116,6 @@ package com.google.android.horologist.compose.layout {
     property public boolean canScrollBackward;
     property public boolean canScrollForward;
     property public final androidx.compose.foundation.layout.PaddingValues contentPadding;
-    property public final androidx.compose.foundation.gestures.FlingBehavior? flingBehavior;
     property public final boolean hapticsEnabled;
     property public final androidx.compose.ui.Alignment.Horizontal horizontalAlignment;
     property public final com.google.android.horologist.compose.layout.ScalingLazyColumnState.ScrollPosition initialScrollPosition;
@@ -165,6 +171,22 @@ package com.google.android.horologist.compose.layout {
 
 }
 
+package com.google.android.horologist.compose.nav {
+
+  public final class TypeSafeKt {
+    method @androidx.compose.runtime.Composable @com.google.android.horologist.annotations.ExperimentalHorologistApi public static void SwipeDismissableNavHost(androidx.navigation.NavHostController navController, Object startDestination, optional androidx.compose.ui.Modifier modifier, optional boolean userSwipeEnabled, optional androidx.wear.compose.navigation.SwipeDismissableNavHostState state, optional kotlin.reflect.KClass<?>? route, kotlin.jvm.functions.Function1<? super androidx.navigation.NavGraphBuilder,kotlin.Unit> builder);
+    method @com.google.android.horologist.annotations.ExperimentalHorologistApi public static inline <reified T> void composable(androidx.navigation.NavGraphBuilder, optional java.util.Map<kotlin.reflect.KType,androidx.navigation.NavType<?>> typeMap, optional java.util.List<? extends androidx.navigation.NavDeepLink> deepLinks, kotlin.jvm.functions.Function1<? super androidx.navigation.NavBackStackEntry,? extends kotlin.Unit> content);
+  }
+
+  public final class WearComposeNavigatorDestinationBuilder extends androidx.navigation.NavDestinationBuilder<androidx.wear.compose.navigation.WearNavigator.Destination> {
+    ctor public WearComposeNavigatorDestinationBuilder(androidx.wear.compose.navigation.WearNavigator wearNavigator, kotlin.reflect.KClass<?> route, java.util.Map<kotlin.reflect.KType,androidx.navigation.NavType<?>> typeMap, kotlin.jvm.functions.Function1<? super androidx.navigation.NavBackStackEntry,kotlin.Unit> content);
+    method public androidx.wear.compose.navigation.WearNavigator getWearNavigator();
+    method protected androidx.wear.compose.navigation.WearNavigator.Destination instantiateDestination();
+    property public final androidx.wear.compose.navigation.WearNavigator wearNavigator;
+  }
+
+}
+
 package com.google.android.horologist.compose.pager {
 
   public final class HorizontalPagerDefaults {
@@ -183,7 +205,7 @@ package com.google.android.horologist.compose.pager {
   }
 
   public final class PagerScreenKt {
-    method @androidx.compose.runtime.Composable public static void PagerScreen(optional androidx.compose.ui.Modifier modifier, androidx.compose.foundation.pager.PagerState state, kotlin.jvm.functions.Function1<? super java.lang.Integer,kotlin.Unit> content);
+    method @androidx.compose.runtime.Composable public static void PagerScreen(androidx.compose.foundation.pager.PagerState state, optional androidx.compose.ui.Modifier modifier, optional int beyondViewportPageCount, optional boolean userScrollEnabled, optional boolean reverseLayout, optional kotlin.jvm.functions.Function1<? super java.lang.Integer,?>? key, optional androidx.compose.ui.input.nestedscroll.NestedScrollConnection pageNestedScrollConnection, kotlin.jvm.functions.Function1<? super java.lang.Integer,kotlin.Unit> content);
   }
 
   public final class VerticalPageIndicatorKt {
@@ -191,7 +213,7 @@ package com.google.android.horologist.compose.pager {
   }
 
   public final class VerticalPagerScreenKt {
-    method @androidx.compose.runtime.Composable @com.google.android.horologist.annotations.ExperimentalHorologistApi public static void VerticalPagerScreen(androidx.compose.foundation.pager.PagerState state, optional androidx.compose.ui.Modifier modifier, kotlin.jvm.functions.Function1<? super java.lang.Integer,kotlin.Unit> content);
+    method @androidx.compose.runtime.Composable @com.google.android.horologist.annotations.ExperimentalHorologistApi public static void VerticalPagerScreen(androidx.compose.foundation.pager.PagerState state, optional androidx.compose.ui.Modifier modifier, optional int beyondViewportPageCount, optional boolean userScrollEnabled, optional boolean reverseLayout, optional kotlin.jvm.functions.Function1<? super java.lang.Integer,?>? key, optional androidx.compose.ui.input.nestedscroll.NestedScrollConnection pageNestedScrollConnection, kotlin.jvm.functions.Function1<? super java.lang.Integer,kotlin.Unit> content);
   }
 
 }
@@ -207,7 +229,7 @@ package com.google.android.horologist.compose.paging {
 package com.google.android.horologist.compose.rotaryinput {
 
   public final class AccumulatedRotaryInputModifierKt {
-    method @androidx.compose.runtime.Composable public static androidx.wear.compose.foundation.rotary.RotaryBehavior accumulatedBehavior(optional long eventAccumulationThresholdMs, optional float minValueChangeDistancePx, optional long rateLimitCoolDownMs, kotlin.jvm.functions.Function1<? super java.lang.Float,kotlin.Unit> onValueChange);
+    method @androidx.compose.runtime.Composable public static androidx.wear.compose.foundation.rotary.RotaryScrollableBehavior accumulatedBehavior(optional long eventAccumulationThresholdMs, optional float minValueChangeDistancePx, optional long rateLimitCoolDownMs, kotlin.jvm.functions.Function1<? super java.lang.Float,kotlin.Unit> onValueChange);
     method @Deprecated @com.google.android.horologist.annotations.ExperimentalHorologistApi public static androidx.compose.ui.Modifier onRotaryInputAccumulated(androidx.compose.ui.Modifier, optional long eventAccumulationThresholdMs, optional float minValueChangeDistancePx, optional long rateLimitCoolDownMs, optional boolean isLowRes, kotlin.jvm.functions.Function1<? super java.lang.Float,kotlin.Unit> onValueChange);
     method @Deprecated @com.google.android.horologist.annotations.ExperimentalHorologistApi public static androidx.compose.ui.Modifier onRotaryInputAccumulatedWithFocus(androidx.compose.ui.Modifier, optional androidx.compose.ui.focus.FocusRequester? focusRequester, optional boolean isLowRes, kotlin.jvm.functions.Function1<? super java.lang.Float,kotlin.Unit> onValueChange);
   }
@@ -292,7 +314,7 @@ package com.google.android.horologist.compose.rotaryinput {
   }
 
   public final class RotaryWithPagerKt {
-    method @androidx.compose.runtime.Composable public static androidx.wear.compose.foundation.rotary.RotaryBehavior pagerRotaryBehaviour(androidx.compose.foundation.pager.PagerState state);
+    method @androidx.compose.runtime.Composable public static androidx.wear.compose.foundation.rotary.RotaryScrollableBehavior pagerRotaryBehaviour(androidx.compose.foundation.pager.PagerState state);
     method public static androidx.compose.ui.Modifier rotaryWithPager(androidx.compose.ui.Modifier, androidx.compose.foundation.pager.PagerState state, androidx.compose.ui.focus.FocusRequester focusRequester);
   }
 

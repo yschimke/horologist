@@ -19,6 +19,7 @@ plugins {
     kotlin("android")
     id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -27,7 +28,7 @@ android {
     defaultConfig {
         applicationId = "com.google.android.horologist.ai.sample"
 
-        minSdk = 23
+        minSdk = 21
         targetSdk = 34
 
         versionCode = 1
@@ -85,6 +86,11 @@ android {
         }
     }
 
+    lint {
+        // https://buganizer.corp.google.com/issues/328279054
+        disable.add("UnsafeOptInUsageError")
+    }
+
     namespace = "com.google.android.horologist.ai.sample"
 }
 
@@ -99,6 +105,7 @@ dependencies {
     implementation(libs.dagger.hiltandroid)
     ksp(libs.dagger.hiltandroidcompiler)
     implementation(libs.hilt.navigationcompose)
+    implementation(libs.androidx.navigation.compose)
 
     implementation(projects.datalayer.core)
     implementation(projects.datalayer.grpc)
@@ -118,6 +125,8 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.playservices.wearable)
     implementation(libs.androidx.lifecycle.service)
+
+    implementation(libs.kotlinx.serialization.core)
 
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)

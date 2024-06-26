@@ -18,16 +18,19 @@
 
 package com.google.android.horologist.screenshots.rng
 
+import android.util.LayoutDirection.RTL
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.graphics.HardwareRendererCompat
 import androidx.wear.compose.material.MaterialTheme
 import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
@@ -71,8 +74,6 @@ public abstract class WearScreenshotTest {
 
     public open val imageLoader: FakeImageLoaderEngine? = null
 
-    public open val forceHardware: Boolean = false
-
     public fun runTest(
         suffix: String? = null,
         device: WearDevice? = this.device,
@@ -80,22 +81,20 @@ public abstract class WearScreenshotTest {
         captureScreenshot: Boolean = true,
         content: @Composable () -> Unit,
     ) {
-        withDrawingEnabled(forceHardware) {
-            if (applyDeviceConfig && device != null) {
-                RuntimeEnvironment.setQualifiers("+w${device.dp}dp-h${device.dp}dp")
-                RuntimeEnvironment.setFontScale(device.fontScale)
-            }
+        if (applyDeviceConfig && device != null) {
+            RuntimeEnvironment.setQualifiers("+w${device.dp}dp-h${device.dp}dp" + (if (device.isRound) "" else "-notround"))
+            RuntimeEnvironment.setFontScale(device.fontScale)
+        }
 
-            composeRule.setContent {
-                withImageLoader(imageLoader) {
-                    TestScaffold {
-                        content()
-                    }
+        composeRule.setContent {
+            withImageLoader(imageLoader) {
+                TestScaffold {
+                    content()
                 }
             }
-            if (captureScreenshot) {
-                captureScreenshot(suffix.orEmpty())
-            }
+        }
+        if (captureScreenshot) {
+            captureScreenshot(suffix.orEmpty())
         }
     }
 
@@ -115,13 +114,15 @@ public abstract class WearScreenshotTest {
 
     @Composable
     public open fun TestScaffold(content: @Composable () -> Unit) {
-        AppScaffold(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background),
-            timeText = { ResponsiveTimeText(timeSource = FixedTimeSource) },
-        ) {
-            content()
+        CorrectLayout {
+            AppScaffold(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.background),
+                timeText = { ResponsiveTimeText(timeSource = FixedTimeSource) },
+            ) {
+                content()
+            }
         }
     }
 
@@ -129,18 +130,14 @@ public abstract class WearScreenshotTest {
         "src/test/screenshots/${this.javaClass.simpleName}_${device?.id ?: WearDevice.GenericLargeRound.id}$suffix.png"
 
     public companion object {
-        internal const val USE_HARDWARE_RENDERER_NATIVE_ENV = "robolectric.screenshot.hwrdr.native"
-
-        internal const val hardwareEnabled = false
+        internal const val PIXEL_COPY_RENDER_MODE = "robolectric.pixelCopyRenderMode"
 
         init {
             useHardwareRenderer()
         }
 
         public fun useHardwareRenderer() {
-            if (hardwareEnabled) {
-                System.setProperty(USE_HARDWARE_RENDERER_NATIVE_ENV, "true")
-            }
+            System.setProperty(PIXEL_COPY_RENDER_MODE, "hardware")
         }
 
         @Composable
@@ -161,21 +158,17 @@ public abstract class WearScreenshotTest {
             }
         }
 
-        public fun <R> withDrawingEnabled(forceHardware: Boolean, block: () -> R): R {
-            return if (hardwareEnabled && forceHardware) {
-                val wasDrawingEnabled = HardwareRendererCompat.isDrawingEnabled()
-                try {
-                    if (!wasDrawingEnabled) {
-                        HardwareRendererCompat.setDrawingEnabled(true)
-                    }
-                    block()
-                } finally {
-                    if (!wasDrawingEnabled) {
-                        HardwareRendererCompat.setDrawingEnabled(false)
-                    }
-                }
-            } else {
-                block()
+        @Composable
+        public fun CorrectLayout(
+            content: @Composable () -> Unit,
+        ) {
+            // TODO why needed
+            val layoutDirection = when (LocalConfiguration.current.layoutDirection) {
+                RTL -> LayoutDirection.Rtl
+                else -> LayoutDirection.Ltr
+            }
+            CompositionLocalProvider(value = LocalLayoutDirection provides layoutDirection) {
+                content()
             }
         }
     }

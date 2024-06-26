@@ -26,7 +26,7 @@ android {
         applicationId = "com.google.android.horologist.auth.sample"
         // Min because of Tiles
         minSdk = 26
-        targetSdk = 30
+        targetSdk = 34
 
         versionCode = 1
         versionName = "1.0"
@@ -82,6 +82,11 @@ android {
             isIncludeAndroidResources = true
         }
         animationsDisabled = true
+    }
+
+    lint {
+        // https://buganizer.corp.google.com/issues/328279054
+        disable.add("UnsafeOptInUsageError")
     }
 
     namespace = "com.google.android.horologist.auth.sample"

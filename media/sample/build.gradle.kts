@@ -38,7 +38,7 @@ android {
         applicationId = "com.google.android.horologist.mediasample"
         // Min because of Tiles
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 34
 
         versionCode = 1
         versionName = "1.0"
@@ -120,12 +120,18 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
+
+    lint {
+        // https://buganizer.corp.google.com/issues/328279054
+        disable.add("UnsafeOptInUsageError")
+    }
+
     namespace = "com.google.android.horologist.mediasample"
 }
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:4.26.1"
+        artifact = "com.google.protobuf:protoc:4.27.2"
     }
     plugins {
         id("javalite") {
@@ -168,11 +174,11 @@ dependencies {
     implementation(projects.logo)
 
     implementation(
-        project.findProject(":media-lib-datasource-okhttp") ?: libs.androidx.media3.datasourceokhttp,
+        libs.androidx.media3.datasourceokhttp,
     )
 
     implementation(
-        project.findProject(":media-lib-ui") ?: libs.androidx.media3.ui,
+        libs.androidx.media3.ui,
     )
 
     implementation(libs.compose.ui.util)
@@ -224,10 +230,7 @@ dependencies {
 
     implementation(libs.androidx.metrics.performance)
 
-    implementation(
-        project.findProject(":media-lib-exoplayer-workmanager")
-            ?: libs.androidx.media3.exoplayerworkmanager,
-    )
+    implementation(libs.androidx.media3.exoplayerworkmanager)
 
     implementation(libs.room.common)
     implementation(libs.room.ktx)

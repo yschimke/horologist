@@ -19,6 +19,7 @@ plugins {
     kotlin("android")
     id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -28,7 +29,7 @@ android {
         applicationId = "com.google.android.horologist.ai.sample.prompt"
         // Min because of Tiles
         minSdk = 30
-        targetSdk = 33
+        targetSdk = 34
 
         versionCode = 1
         versionName = "1.0"
@@ -119,6 +120,9 @@ dependencies {
     implementation(libs.wearcompose.material)
     implementation(libs.wearcompose.foundation)
     implementation(libs.wearcompose.navigation)
+    implementation(libs.androidx.navigation.runtime)
+
+    implementation(libs.kotlinx.serialization.core)
 
     implementation(libs.mikepenz.markdown)
 

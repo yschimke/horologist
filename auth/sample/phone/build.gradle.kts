@@ -17,6 +17,7 @@
 plugins {
     id("com.android.application")
     kotlin("android")
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -25,8 +26,8 @@ android {
     defaultConfig {
         applicationId = "com.google.android.horologist.auth.sample"
 
-        minSdk = 23
-        targetSdk = 33
+        minSdk = 21
+        targetSdk = 34
 
         versionCode = 1
         versionName = "1.0"
@@ -110,6 +111,8 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.playservices.wearable)
     implementation(libs.androidx.lifecycle.service)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.core)
 
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
