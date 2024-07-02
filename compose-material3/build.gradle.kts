@@ -1,23 +1,26 @@
+@file:Suppress("UnstableApiUsage")
+
 /*
- * Copyright 2022 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+* Copyright 2023 The Android Open Source Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 plugins {
     id("com.android.library")
     id("org.jetbrains.dokka")
     id("me.tylerbwong.gradle.metalava")
+    alias(libs.plugins.dependencyAnalysis)
     kotlin("android")
     alias(libs.plugins.roborazzi)
 }
@@ -29,6 +32,12 @@ android {
         minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            isPseudoLocalesEnabled = true
+        }
     }
 
     compileOptions {
@@ -46,7 +55,6 @@ android {
         freeCompilerArgs += listOf(
             "-opt-in=com.google.android.horologist.annotations.ExperimentalHorologistApi",
             "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
-            "-opt-in=androidx.wear.compose.material.ExperimentalWearMaterialApi",
         )
     }
 
@@ -63,6 +71,10 @@ android {
         }
     }
 
+    sourceSets.getByName("main") {
+        assets.srcDir("src/main/assets")
+    }
+
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
@@ -75,9 +87,8 @@ android {
     lint {
         checkReleaseBuilds = false
         textReport = true
-        disable += listOf("MissingTranslation", "ExtraTranslation")
     }
-    namespace = "com.google.android.horologist.composables"
+    namespace = "com.google.android.horologist.compose.material3"
 }
 
 project.tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
@@ -97,32 +108,55 @@ metalava {
 
 dependencies {
     api(projects.annotations)
+    api(projects.composeLayout)
     api(projects.images.base)
 
-    implementation(projects.composeLayout)
-    implementation(libs.androidx.wear)
-    api(libs.wearcompose.material)
-    implementation(libs.wearcompose.foundation)
+    api(libs.compose.foundation.foundation)
+    api(libs.compose.foundation.foundation.layout)
+    api(libs.compose.runtime)
+    api(libs.compose.ui)
+    api(libs.compose.ui.graphics)
+
+    implementation(libs.kotlinx.coroutines.core)
+
+    implementation(libs.androidx.annotation)
     implementation(libs.compose.material.iconscore)
-    implementation(libs.compose.material.iconsext)
-    implementation(libs.compose.material.ripple)
+    implementation(libs.compose.ui.text)
+    implementation(libs.compose.ui.unit)
     implementation(libs.compose.ui.util)
-    implementation(libs.androidx.corektx)
 
-    implementation(libs.compose.ui.toolingpreview)
-    implementation(libs.androidx.wear.tooling.preview)
-    debugImplementation(libs.compose.ui.tooling)
-    debugImplementation(libs.compose.ui.test.manifest)
-    debugImplementation(projects.composeTools)
-    debugImplementation(projects.composeMaterial)
+    api(libs.androidx.compose.material3)
+    api(libs.androidx.graphics.shapes)
+    api("androidx.compose.material3:material3:1.4.0-SNAPSHOT")
 
-    testImplementation(libs.junit)
-    testImplementation(libs.truth)
-    testImplementation(projects.composeMaterial)
+    debugApi(projects.composeTools)
+    debugApi(libs.wearcompose.tooling)
+
+    debugImplementation(libs.compose.material.iconsext)
+    debugImplementation(libs.compose.ui.toolingpreview)
+    debugRuntimeOnly(libs.compose.ui.tooling)
+    debugRuntimeOnly(libs.compose.ui.test.manifest)
+
     testImplementation(projects.roboscreenshots)
+    testImplementation(libs.accompanist.testharness)
+    testImplementation(libs.androidx.core)
+    testImplementation(libs.compose.material.iconsext)
+    testImplementation(libs.compose.ui.test)
+    testImplementation(libs.compose.ui.test.junit4)
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.robolectric)
-    testImplementation(libs.androidx.test.runner)
+    testRuntimeOnly(libs.compose.ui.test.manifest)
     testImplementation(projects.images.coil)
+}
+
+dependencyAnalysis {
+    issues {
+        onAny {
+            severity("fail")
+            exclude(":annotations") // bug: reported as unused
+        }
+    }
 }
 
 apply(plugin = "com.vanniktech.maven.publish")
