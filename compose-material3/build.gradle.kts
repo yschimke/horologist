@@ -128,6 +128,7 @@ dependencies {
     api(libs.androidx.compose.material3)
     api(libs.androidx.graphics.shapes)
     api("androidx.compose.material3:material3:1.4.0-SNAPSHOT")
+    api("androidx.compose.ui:ui:1.7.0-SNAPSHOT")
 
     debugApi(projects.composeTools)
     debugApi(libs.wearcompose.tooling)

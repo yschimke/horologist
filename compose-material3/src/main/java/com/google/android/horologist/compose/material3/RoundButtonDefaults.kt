@@ -15,11 +15,12 @@
  */
 
 @file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
 
 package com.google.android.horologist.compose.material3
 
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.MaterialShapes
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Matrix
 import androidx.compose.ui.graphics.Outline
@@ -28,17 +29,24 @@ import androidx.compose.ui.graphics.asComposePath
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.graphics.shapes.CornerRounding
 import androidx.graphics.shapes.Morph
+import androidx.graphics.shapes.RoundedPolygon
+import androidx.graphics.shapes.circle
+import androidx.graphics.shapes.rectangle
 import androidx.graphics.shapes.toPath
+import androidx.wear.compose.material3.tokens.ShapeTokens
 
 object RoundButtonDefaults {
 
     // TODO similar shapes library for Wear
-    val circle = MaterialShapes.Circle
+    val Off = RoundedPolygon.circle().normalized()
 
-    val square = MaterialShapes.Square
+    val On = RoundedPolygon.rectangle(rounding = CornerRounding(radius = 2f / 3f)).normalized()
 
-    val circleSquareMorph: Morph by lazy { Morph(circle, square) }
+    val Pressed = RoundedPolygon.rectangle()
+
+    val circleSquareMorph: Morph by lazy { Morph(Off, On) }
 
     fun Morph.toShape(progress: () -> Float) = object : Shape {
         override fun createOutline(
@@ -53,6 +61,30 @@ object RoundButtonDefaults {
             }
 
             return Outline.Generic(path)
+        }
+    }
+
+    val Off2 = ShapeTokens.CornerFull
+
+    val On2 = RoundedCornerShape(50 * 2f / 3f)
+
+    val Pressed2 = ShapeTokens.CornerSmall
+
+    fun circleSquareShape(progress: () -> Float): Shape {
+        return object : Shape {
+            override fun createOutline(
+                size: Size,
+                layoutDirection: LayoutDirection,
+                density: Density
+            ): Outline {
+                val cornerSize = androidx.compose.ui.util.lerp(
+                    size.width / 2,
+                    On2.topEnd.toPx(size, density),
+                    progress()
+                )
+
+                return RoundedCornerShape(cornerSize).createOutline(size, layoutDirection, density)
+            }
         }
     }
 

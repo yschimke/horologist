@@ -32,43 +32,64 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.graphics.shapes.Morph
-import androidx.wear.compose.material3.Button
-import androidx.wear.compose.material3.ButtonColors
-import androidx.wear.compose.material3.ButtonDefaults
 import androidx.wear.compose.material3.Icon
+import androidx.wear.compose.material3.IconButtonDefaults
+import androidx.wear.compose.material3.IconToggleButton
+import androidx.wear.compose.material3.ToggleButtonColors
 import com.google.android.horologist.compose.material3.RoundButtonDefaults.Standard
 import com.google.android.horologist.compose.material3.RoundButtonDefaults.circleSquareMorph
 import com.google.android.horologist.compose.material3.RoundButtonDefaults.toShape
 
 @Composable
 fun RoundToggleButton(
-    state: Boolean,
-    onClick: () -> Unit,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     shapeMorph: Morph = circleSquareMorph,
-    colors: ButtonColors = ButtonDefaults.buttonColors(),
+    colors: ToggleButtonColors = IconButtonDefaults.iconToggleButtonColors(),
     size: Dp = Standard,
     enabled: Boolean = true,
     content: @Composable () -> Unit,
 ) {
     val progress = animateFloatAsState(
-        targetValue = if (state) 1f else 0f,
+        targetValue = if (checked) 1f else 0f,
         label = "progress"
     )
 
     val shape = remember(shapeMorph) { shapeMorph.toShape { progress.value } }
 
-    Button(
-        onClick = onClick,
+    IconToggleButton(
+        checked = checked,
+        onCheckedChange = onCheckedChange,
         modifier = modifier.size(size),
         enabled = enabled,
         colors = colors,
         shape = shape,
     ) {
-        // TODO avoid this box and implement correctly
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             content()
-        }
+    }
+}
+
+@Composable
+fun RoundToggleButton(
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    colors: ToggleButtonColors = IconButtonDefaults.iconToggleButtonColors(),
+    size: Dp = Standard,
+    enabled: Boolean = true,
+    content: @Composable () -> Unit,
+) {
+
+    IconToggleButton(
+        checked = checked,
+        onCheckedChange = onCheckedChange,
+        modifier = modifier.size(size),
+        enabled = enabled,
+        colors = colors,
+//        shape = shape,
+    ) {
+        content()
     }
 }
 
@@ -76,8 +97,8 @@ fun RoundToggleButton(
 @Composable
 fun RoundTogglePreviewSmall() {
     RoundToggleButton(
-        state = false,
-        onClick = {},
+        checked = false,
+        onCheckedChange = {},
         shapeMorph = circleSquareMorph,
         size = RoundButtonDefaults.Small
     ) {
@@ -88,7 +109,10 @@ fun RoundTogglePreviewSmall() {
 @Preview
 @Composable
 fun RoundTogglePreviewStandard() {
-    RoundToggleButton(state = false, onClick = {}, shapeMorph = circleSquareMorph) {
+    RoundToggleButton(
+        checked = false,
+        onCheckedChange = {}, shapeMorph = circleSquareMorph
+    ) {
         Icon(Icons.Default.Stream, "")
     }
 }
@@ -97,8 +121,8 @@ fun RoundTogglePreviewStandard() {
 @Composable
 fun RoundTogglePreviewL() {
     RoundToggleButton(
-        state = false,
-        onClick = {},
+        checked = false,
+        onCheckedChange = {},
         shapeMorph = circleSquareMorph,
         size = RoundButtonDefaults.Large
     ) {
@@ -110,8 +134,8 @@ fun RoundTogglePreviewL() {
 @Composable
 fun RoundTogglePreviewXl() {
     RoundToggleButton(
-        state = false,
-        onClick = {},
+        checked = false,
+        onCheckedChange = {},
         shapeMorph = circleSquareMorph,
         size = RoundButtonDefaults.ExtraLarge
     ) {
@@ -122,7 +146,10 @@ fun RoundTogglePreviewXl() {
 @Preview
 @Composable
 fun RoundTogglePreviewStandardDisabled() {
-    RoundToggleButton(state = false, onClick = {}, shapeMorph = circleSquareMorph, enabled = false) {
+    RoundToggleButton(
+        checked = false,
+        onCheckedChange = {}, shapeMorph = circleSquareMorph, enabled = false
+    ) {
         Icon(Icons.Default.Stream, "")
     }
 }
@@ -130,7 +157,10 @@ fun RoundTogglePreviewStandardDisabled() {
 @Preview
 @Composable
 fun RoundTogglePreviewStandardOn() {
-    RoundToggleButton(state = true, onClick = {}, shapeMorph = circleSquareMorph) {
+    RoundToggleButton(
+        checked = true,
+        onCheckedChange = {}, shapeMorph = circleSquareMorph
+    ) {
         Icon(Icons.Default.Stream, "")
     }
 }
@@ -139,7 +169,11 @@ fun RoundTogglePreviewStandardOn() {
 @Composable
 fun RoundTogglePreviewInteractive() {
     var state by remember { mutableStateOf(false) }
-    RoundToggleButton(state = state, onClick = { state = !state }, shapeMorph = circleSquareMorph) {
+    RoundToggleButton(
+        checked = state,
+        onCheckedChange = { state = !state },
+        shapeMorph = circleSquareMorph
+    ) {
         Icon(Icons.Default.Stream, "")
     }
 }

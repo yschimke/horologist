@@ -14,57 +14,58 @@
  * limitations under the License.
  */
 
-@file:OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3ExpressiveApi::class)
-
 package com.google.android.horologist.compose.material3
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.interaction.Interaction
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Stream
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.graphics.shapes.Morph
-import androidx.wear.compose.material3.Button
-import androidx.wear.compose.material3.ButtonColors
-import androidx.wear.compose.material3.ButtonDefaults
 import androidx.wear.compose.material3.Icon
+import androidx.wear.compose.material3.IconButton
+import androidx.wear.compose.material3.IconButtonColors
+import androidx.wear.compose.material3.IconButtonDefaults
+import androidx.wear.compose.material3.Text
 import com.google.android.horologist.compose.material3.RoundButtonDefaults.Standard
-import com.google.android.horologist.compose.material3.RoundButtonDefaults.circleSquareMorph
-import com.google.android.horologist.compose.material3.RoundButtonDefaults.toShape
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun RoundButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    shapeMorph: Morph = circleSquareMorph,
-    colors: ButtonColors = ButtonDefaults.buttonColors(),
+    colors: IconButtonColors = IconButtonDefaults.filledIconButtonColors(),
     size: Dp = Standard,
     enabled: Boolean = true,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable () -> Unit,
 ) {
-    val progress = 0f
+    val pressed by interactionSource.collectIsPressedAsState()
 
-    val shape = remember(shapeMorph) { shapeMorph.toShape { progress } }
+    val progress = animateFloatAsState(targetValue = if (pressed) 1f else 0f, label = "Pressed")
 
-    Button(
-        onClick = onClick,
-        modifier = modifier.size(size),
-        enabled = enabled,
-        colors = colors,
-        shape = shape,
-    ) {
-        // TODO avoid this box and implement correctly
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    val shape = remember { RoundButtonDefaults.circleSquareShape { progress.value } }
+
+    Box {
+        IconButton(
+            onClick = onClick,
+            modifier = modifier.size(size),
+            enabled = enabled,
+            colors = colors,
+            shape = shape,
+            interactionSource = interactionSource,
+        ) {
             content()
         }
     }
@@ -75,7 +76,6 @@ fun RoundButton(
 fun RoundButtonPreviewSmall() {
     RoundButton(
         onClick = {},
-        shapeMorph = circleSquareMorph,
         size = RoundButtonDefaults.Small
     ) {
         Icon(Icons.Default.Stream, "")
@@ -85,7 +85,7 @@ fun RoundButtonPreviewSmall() {
 @Preview
 @Composable
 fun RoundButtonPreviewStandard() {
-    RoundButton(onClick = {}, shapeMorph = circleSquareMorph) {
+    RoundButton(onClick = {}) {
         Icon(Icons.Default.Stream, "")
     }
 }
@@ -95,7 +95,6 @@ fun RoundButtonPreviewStandard() {
 fun RoundButtonPreviewL() {
     RoundButton(
         onClick = {},
-        shapeMorph = circleSquareMorph,
         size = RoundButtonDefaults.Large
     ) {
         Icon(Icons.Default.Stream, "")
@@ -107,7 +106,6 @@ fun RoundButtonPreviewL() {
 fun RoundButtonPreviewXl() {
     RoundButton(
         onClick = {},
-        shapeMorph = circleSquareMorph,
         size = RoundButtonDefaults.ExtraLarge
     ) {
         Icon(Icons.Default.Stream, "")
@@ -117,7 +115,25 @@ fun RoundButtonPreviewXl() {
 @Preview
 @Composable
 fun RoundButtonPreviewStandardDisabled() {
-    RoundButton(onClick = {}, shapeMorph = circleSquareMorph, enabled = false) {
+    RoundButton(onClick = {}, enabled = false) {
+        Icon(Icons.Default.Stream, "")
+    }
+}
+
+@Preview
+@Composable
+fun RoundButtonPreviewPressed() {
+    val interactionSource = object : MutableInteractionSource {
+        override val interactions: Flow<Interaction>
+            get() = MutableStateFlow(PressInteraction.Press(Offset(0f, 0f)))
+
+        override suspend fun emit(interaction: Interaction) {
+        }
+
+        override fun tryEmit(interaction: Interaction): Boolean = false
+    }
+
+    RoundButton(onClick = {}, enabled = false, interactionSource = interactionSource) {
         Icon(Icons.Default.Stream, "")
     }
 }
@@ -125,8 +141,7 @@ fun RoundButtonPreviewStandardDisabled() {
 @Preview
 @Composable
 fun RoundButtonPreviewInteractive() {
-    var state by remember { mutableStateOf(false) }
-    RoundButton(onClick = { state = !state }, shapeMorph = circleSquareMorph) {
+    RoundButton(onClick = { }) {
         Icon(Icons.Default.Stream, "")
     }
 }
