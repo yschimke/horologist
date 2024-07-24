@@ -26,7 +26,7 @@ plugins {
 }
 
 android {
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.google.android.horologist.sample"
@@ -127,6 +127,11 @@ dependencies {
     implementation(projects.networkAwareness)
     implementation(projects.tiles)
     implementation(projects.logo)
+
+    //noinspection UseTomlInstead
+    implementation("androidx.wear.compose:compose-material3:1.0.0-SNAPSHOT")
+    //noinspection UseTomlInstead
+    implementation("androidx.graphics:graphics-shapes:1.0.0-beta01")
 
     implementation(libs.compose.ui.util)
 
