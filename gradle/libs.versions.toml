@@ -56,6 +56,7 @@ runtimeTracing = "1.0.0-beta01"
 spotless = "6.25.0"
 tiles-tooling-preview = "1.4.0-rc01"
 truth = "1.4.4"
+uiTextGoogleFontsVersion = "1.7.0-beta06"
 wearcompose = "1.4.0-beta03"
 wearToolingPreview = "1.0.0"
 appcompat = "1.7.0"
@@ -204,6 +205,7 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "app-cash-turbine" }
+ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "uiTextGoogleFontsVersion" }
 wearcompose-foundation = { module = "androidx.wear.compose:compose-foundation", version.ref = "wearcompose" }
 wearcompose-material = { module = "androidx.wear.compose:compose-material", version.ref = "wearcompose" }
 wearcompose-navigation = { module = "androidx.wear.compose:compose-navigation", version.ref = "wearcompose" }

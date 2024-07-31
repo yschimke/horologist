@@ -16,28 +16,49 @@
 
 package com.google.android.horologist.scratch
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.googlefonts.Font
+import androidx.compose.ui.text.googlefonts.GoogleFont
+import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.Typography
 import androidx.wear.compose.ui.tooling.preview.WearPreviewLargeRound
+import com.google.android.horologist.composables.DatePicker
+import com.google.android.horologist.sample.R
 
 class ScratchActivity : ComponentActivity() {
+    @SuppressLint("WrongThread")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val provider = GoogleFont.Provider(
+            providerAuthority = "com.google.android.gms.fonts",
+            providerPackage = "com.google.android.gms",
+            certificates = R.array.com_google_android_gms_fonts_certs
+        )
+
+        val fontName = GoogleFont("Lobster Two")
+
+        val fontFamily = FontFamily(
+            Font(googleFont = fontName, fontProvider = provider)
+        )
+
+        val typography = Typography(defaultFontFamily = fontFamily)
+
         setContent {
-            WearApp()
+            MaterialTheme(typography = typography) {
+                DatePicker(onDateConfirm = {})
+            }
         }
     }
-}
-
-@Composable
-fun WearApp() {
 }
 
 @WearPreviewLargeRound
 @Composable
 fun WearAppPreview() {
-    WearApp()
+    DatePicker(onDateConfirm = {})
 }

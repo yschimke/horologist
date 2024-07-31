@@ -67,6 +67,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.majorVersion
         // Allow for widescale experimental APIs in Alpha libraries we build upon
@@ -148,6 +152,8 @@ dependencies {
     implementation(libs.androidx.wear.tooling.preview)
 
     implementation(libs.kotlinx.serialization.core)
+
+    implementation(libs.ui.text.google.fonts)
 
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(projects.composeTools)
