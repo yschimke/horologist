@@ -21,7 +21,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.createFontFamilyResolver
 import androidx.compose.ui.text.googlefonts.Font
 import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.wear.compose.material.MaterialTheme
@@ -35,24 +42,48 @@ class ScratchActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val provider = GoogleFont.Provider(
-            providerAuthority = "com.google.android.gms.fonts",
-            providerPackage = "com.google.android.gms",
-            certificates = R.array.com_google_android_gms_fonts_certs
-        )
-
-        val fontName = GoogleFont("Lobster Two")
-
-        val fontFamily = FontFamily(
-            Font(googleFont = fontName, fontProvider = provider)
-        )
-
-        val typography = Typography(defaultFontFamily = fontFamily)
-
         setContent {
-            MaterialTheme(typography = typography) {
-                DatePicker(onDateConfirm = {})
+            MyFontAwareDatePicker()
+        }
+    }
+}
+
+val provider = GoogleFont.Provider(
+    providerAuthority = "com.google.android.gms.fonts",
+    providerPackage = "com.google.android.gms",
+    certificates = R.array.com_google_android_gms_fonts_certs
+)
+
+val fontName = GoogleFont("Lobster Two")
+
+val fontFamily = FontFamily(
+    Font(googleFont = fontName, fontProvider = provider)
+)
+
+val typography = Typography(defaultFontFamily = fontFamily)
+
+@Composable
+fun MyFontAwareDatePicker() {
+    MaterialTheme(typography = typography) {
+        var loaded by remember { mutableStateOf(false) }
+
+        val context = LocalContext.current
+        LaunchedEffect(Unit) {
+            val resolver = createFontFamilyResolver(context)
+
+            try {
+                typography.body1.fontFamily?.let {
+                    resolver.preload(it)
+                }
+            } catch (ise: IllegalStateException) {
+                println(ise)
             }
+
+            loaded = true
+        }
+
+        if (loaded) {
+            DatePicker(onDateConfirm = {})
         }
     }
 }
