@@ -127,6 +127,7 @@ dependencies {
 
     implementation(libs.compose.ui.util)
 
+    implementation(libs.compose.animation.animationgraphics)
     implementation(libs.compose.foundation.foundation)
     implementation(libs.compose.material.iconsext)
 
