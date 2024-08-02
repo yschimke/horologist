@@ -82,17 +82,6 @@ fun WearApp() {
                         contentColor = Color.White,
                         contentPadding = firstItemPadding()
                     ) {
-                        val color = Color.Unspecified
-                        val style = LocalTextStyle.current
-                        val localContentColor =
-                            LocalContentColor.current.copy(alpha = LocalContentAlpha.current)
-
-                        val textColor = color.takeOrElse {
-                            style.color.takeOrElse {
-                                localContentColor
-                            }
-                        }
-
                         Text(
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center,
