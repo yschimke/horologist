@@ -23,6 +23,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
@@ -63,12 +65,16 @@ fun WearApp() {
                 first = ItemType.Text,
                 last = ItemType.Text
             )
-        ).copy(
-            scalingParams = scalingParams(
-                edgeScale = 1f,
-                edgeAlpha = 1f,
-            ),
         )
+//            .copy(
+//                scalingParams = scalingParams(
+//                    edgeScale = 1f,
+//                    edgeAlpha = 1f,
+//                ),
+//            )
+
+        val alpha = remember { derivedStateOf { columnState.state.layoutInfo.visibleItemsInfo.getOrNull(0)?.alpha } }
+
         ScreenScaffold(scrollState = columnState) {
             ScalingLazyColumn(columnState = columnState) {
                 item {
@@ -90,7 +96,7 @@ fun WearApp() {
                         Text(
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center,
-                            text = "Header ${textColor.hex}"
+                            text = "Alpha ${alpha.value}"
                         )
                     }
                 }
