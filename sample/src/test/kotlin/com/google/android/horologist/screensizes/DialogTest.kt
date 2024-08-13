@@ -34,6 +34,7 @@ import androidx.wear.compose.material.LocalTextStyle
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.dialog.Alert
+import com.google.android.horologist.audit.M3AlertDialog
 import com.google.android.horologist.compose.material.AlertContent
 import com.google.android.horologist.compose.material.Button
 import com.google.android.horologist.compose.material.ConfirmationContent
@@ -50,7 +51,7 @@ class DialogTest(device: Device) : WearLegacyScreenSizeTest(
     @Composable
     override fun Content() {
         // horologist AlertContent using ResponsiveDialogContent
-        AlertContent(
+        M3AlertDialog(
             title = "Phone app is required",
             onCancel = {},
             onOk = {},
@@ -89,7 +90,7 @@ class DialogTest(device: Device) : WearLegacyScreenSizeTest(
     @Test
     fun longDialogScreen1() {
         runTest {
-            AlertContent(
+            M3AlertDialog(
                 title = "Turn on Bedtime mode?",
                 message = "Watch screen, tilt-to-wake, and touch are turned off. " +
                     "Only calls from starred contacts, repeat callers, " +
@@ -120,7 +121,7 @@ class DialogTest(device: Device) : WearLegacyScreenSizeTest(
     @Test
     fun batterySaverScreen() {
         runTest {
-            AlertContent(
+            M3AlertDialog(
                 icon = {
                     Icon(
                         imageVector = Icons.Outlined.Info,
@@ -170,7 +171,7 @@ class DialogTest(device: Device) : WearLegacyScreenSizeTest(
     @Test
     fun textAlertScreen() {
         runTest {
-            AlertContent(
+            M3AlertDialog(
                 title = "Text only dialogs can use up to 3 lines of text in this layout",
                 onCancel = {},
                 onOk = {},
@@ -181,7 +182,7 @@ class DialogTest(device: Device) : WearLegacyScreenSizeTest(
     @Test
     fun iconAndTextAlertScreen() {
         runTest {
-            AlertContent(
+            M3AlertDialog(
                 icon = {
                     Icon(
                         imageVector = Icons.Outlined.Info,

@@ -18,6 +18,7 @@ package com.google.android.horologist.dialog
 
 import androidx.compose.ui.res.stringResource
 import com.google.android.horologist.audio.ui.R.string.horologist_volume_screen_change_audio_output
+import com.google.android.horologist.audit.M3AlertDialog
 import com.google.android.horologist.compose.material.AlertContent
 import com.google.android.horologist.screenshots.rng.WearDevice
 import com.google.android.horologist.screenshots.rng.WearDeviceScreenshotTest
@@ -35,7 +36,7 @@ class NonScrollableAlertDialogTest(device: WearDevice) : WearDeviceScreenshotTes
 
     @Test
     fun turnOnBluetoothScrollable() = runTest {
-        AlertContent(
+        M3AlertDialog(
             title = "Turn on Bluetooth?",
             onOk = {},
             onCancel = {},
@@ -44,7 +45,7 @@ class NonScrollableAlertDialogTest(device: WearDevice) : WearDeviceScreenshotTes
 
     @Test
     fun turnOnBluetooth() = runTest {
-        NonScrollableAlertContent(
+        M3AlertDialog(
             title = "Turn on Bluetooth?",
             onOk = {},
             onCancel = {},
@@ -53,7 +54,7 @@ class NonScrollableAlertDialogTest(device: WearDevice) : WearDeviceScreenshotTes
 
     @Test
     fun changeAudioOutputEn() = runTest {
-        NonScrollableAlertContent(
+        M3AlertDialog(
             title = stringResource(horologist_volume_screen_change_audio_output),
             onOk = {},
             onCancel = {},
@@ -63,7 +64,7 @@ class NonScrollableAlertDialogTest(device: WearDevice) : WearDeviceScreenshotTes
     @Test
     @Config(qualifiers = "+ka")
     fun changeAudioOutputKa() = runTest {
-        NonScrollableAlertContent(
+        M3AlertDialog(
             title = stringResource(horologist_volume_screen_change_audio_output),
             onOk = {},
             onCancel = {},
@@ -73,7 +74,7 @@ class NonScrollableAlertDialogTest(device: WearDevice) : WearDeviceScreenshotTes
     @Test
     @Config(qualifiers = "+ta")
     fun changeAudioOutputTa() = runTest {
-        NonScrollableAlertContent(
+        M3AlertDialog(
             title = stringResource(horologist_volume_screen_change_audio_output),
             onOk = {},
             onCancel = {},
@@ -83,7 +84,7 @@ class NonScrollableAlertDialogTest(device: WearDevice) : WearDeviceScreenshotTes
     @Test
     @Config(qualifiers = "+ru")
     fun changeAudioOutputRu() = runTest {
-        NonScrollableAlertContent(
+        M3AlertDialog(
             title = stringResource(horologist_volume_screen_change_audio_output),
             onOk = {},
             onCancel = {},
@@ -92,7 +93,7 @@ class NonScrollableAlertDialogTest(device: WearDevice) : WearDeviceScreenshotTes
 
     @Test
     fun tooLong() = runTest {
-        NonScrollableAlertContent(
+        M3AlertDialog(
             title = "Phone app is required",
             onCancel = {},
             onOk = {},
