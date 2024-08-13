@@ -28,6 +28,7 @@ import androidx.wear.compose.foundation.lazy.ScalingLazyListScope
 import androidx.wear.compose.material.ChipDefaults
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.Text
+import androidx.wear.compose.material3.dialog.AlertDialogDefaults
 import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults
 import com.google.android.horologist.compose.layout.ScalingLazyColumnState
 import com.google.android.horologist.compose.layout.rememberColumnState
@@ -110,33 +111,31 @@ fun M3AlertDialog(
         onDismissRequest = { onCancel?.invoke() },
         confirmButton = {
             if (onOk != null) {
-                ResponsiveButton(
-                    icon = Icons.Default.Check,
-                    okButtonContentDescription,
-                    onClick = onOk,
-                    buttonWidth,
-                )
+                AlertDialogDefaults.ConfirmButton(onClick = onOk)
+//                ResponsiveButton(
+//                    icon = Icons.Default.Check,
+//                    okButtonContentDescription,
+//                    onClick = onOk,
+//                    buttonWidth,
+//                )
             }
         },
         dismissButton = {
-            if (onOk != null) {
-                ResponsiveButton(
-                    icon = Icons.Default.Close,
-                    cancelButtonContentDescription,
-                    onClick = onOk,
-                    buttonWidth,
-                    ChipDefaults.secondaryChipColors(),
-                )
+            if (onCancel != null) {
+                AlertDialogDefaults.DismissButton(onClick = onCancel)
+//                ResponsiveButton(
+//                    icon = Icons.Default.Close,
+//                    cancelButtonContentDescription,
+//                    onClick = onCancel,
+//                    buttonWidth,
+//                    ChipDefaults.secondaryChipColors(),
+//                )
             }
         },
         title = { Text(title) },
+        text = if (message != null) {{ Text(message) }} else null,
         icon = icon,
     ) {
-        if (message != null) {
-            item {
-                Text(message)
-            }
-        }
         if (content != null) {
             content()
         }
