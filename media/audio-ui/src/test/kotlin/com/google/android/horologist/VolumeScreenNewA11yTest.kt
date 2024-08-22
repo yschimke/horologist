@@ -19,6 +19,7 @@
 package com.google.android.horologist
 
 import android.view.View
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onRoot
@@ -55,9 +56,6 @@ import org.robolectric.shadows.ShadowBuild
 class VolumeScreenNewA11yTest {
     @Test
     fun volumeScreenA11y() = runComposeUiTest {
-        enableAccessibilityChecks()
-        onRoot().tryPerformAccessibilityChecks()
-
         val volumeState = VolumeState(
             current = 0,
             max = 100,
@@ -71,6 +69,12 @@ class VolumeScreenNewA11yTest {
                 audioOutput = audioOutput,
             )
         }
+
+        ShadowBuild.setFingerprint("test_fingerprint")
+
+        enableAccessibilityChecks()
+
+        onRoot().tryPerformAccessibilityChecks()
     }
 
     @Test
@@ -81,7 +85,6 @@ class VolumeScreenNewA11yTest {
         )
         val audioOutput = AudioOutput.BluetoothHeadset("id", "Pixelbuds")
 
-        lateinit var view: View
         setContent {
             VolumeScreenTestCase(
                 colors = MaterialTheme.colors,
@@ -89,23 +92,27 @@ class VolumeScreenNewA11yTest {
                 audioOutput = audioOutput,
             )
 
-            view = LocalView.current
-        }
+            val view = LocalView.current
 
-        ShadowBuild.setFingerprint("test_fingerprint")
+            SideEffect {
+                ShadowBuild.setFingerprint("test_fingerprint")
 
-        val mapFromElementIdToView: BiMap<Long, View> = HashBiMap.create()
-        val hierarchy = AccessibilityHierarchyAndroid.newBuilder(view)
-            .setViewOriginMap(mapFromElementIdToView)
-            .setObtainCharacterLocations(false)
-            .build()
+                val mapFromElementIdToView: BiMap<Long, View> = HashBiMap.create()
+                val hierarchy = AccessibilityHierarchyAndroid.newBuilder(view)
+                    .setViewOriginMap(mapFromElementIdToView)
+                    .setObtainCharacterLocations(false)
+                    .build()
 
-        println(hierarchy.deviceState)
-        println(hierarchy.activeWindow)
-        println(hierarchy.origin)
+                println(mapFromElementIdToView)
 
-        hierarchy.activeWindow.allViews.forEach {
-            printOutViewAndChildren(it)
+                println(hierarchy.deviceState)
+                println(hierarchy.activeWindow)
+                println(hierarchy.origin)
+
+                hierarchy.activeWindow.allViews.forEach {
+                    printOutViewAndChildren(it)
+                }
+            }
         }
     }
 
