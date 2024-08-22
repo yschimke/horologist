@@ -28,6 +28,7 @@ import androidx.compose.ui.test.tryPerformAccessibilityChecks
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.wear.compose.material.MaterialTheme
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
+import com.google.android.apps.common.testing.accessibility.framework.integrations.espresso.AccessibilityValidator
 import com.google.android.apps.common.testing.accessibility.framework.uielement.AccessibilityHierarchyAndroid
 import com.google.android.apps.common.testing.accessibility.framework.uielement.ViewHierarchyElementAndroid
 import com.google.android.horologist.audio.AudioOutput
@@ -74,6 +75,12 @@ class VolumeScreenNewA11yTest {
 
         enableAccessibilityChecks()
 
+        accessibilityValidator!!.addCheckListener { context, accessibilityViewCheckResults ->
+            accessibilityViewCheckResults.forEach {
+                println(it)
+            }
+        }
+
         onRoot().tryPerformAccessibilityChecks()
     }
 
@@ -100,13 +107,14 @@ class VolumeScreenNewA11yTest {
                 val mapFromElementIdToView: BiMap<Long, View> = HashBiMap.create()
                 val hierarchy = AccessibilityHierarchyAndroid.newBuilder(view)
                     .setViewOriginMap(mapFromElementIdToView)
-                    .setObtainCharacterLocations(false)
+                    .setObtainCharacterLocations(true)
                     .build()
 
                 println(mapFromElementIdToView)
 
                 println(hierarchy.deviceState)
                 println(hierarchy.activeWindow)
+                println(hierarchy.allWindows)
                 println(hierarchy.origin)
 
                 hierarchy.activeWindow.allViews.forEach {
