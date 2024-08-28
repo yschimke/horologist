@@ -55,13 +55,11 @@ import androidx.compose.ui.unit.dp
 import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
 import androidx.wear.compose.foundation.HierarchicalFocusCoordinator
 import androidx.wear.compose.foundation.rememberActiveFocusRequester
-import androidx.wear.compose.foundation.rotary.RotaryBehavior
-import androidx.wear.compose.foundation.rotary.rotary
+import androidx.wear.compose.foundation.rotary.RotaryScrollableBehavior
+import androidx.wear.compose.foundation.rotary.rotaryScrollable
 import androidx.wear.compose.material.Text
 import com.google.android.horologist.compose.material.Button
 import com.google.android.horologist.compose.pager.PagerScreen
-import com.google.android.horologist.compose.tools.TileLayoutPreview
-import com.google.android.horologist.sample.Screen
 import com.google.android.horologist.tiles.render.TileLayoutRenderer
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
@@ -103,7 +101,7 @@ fun WearApp() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .rotary(verticalState, rememberActiveFocusRequester())
+            .rotaryScrollable(verticalState, rememberActiveFocusRequester())
     ) {
         Box(
             modifier = Modifier
@@ -166,17 +164,17 @@ fun WearApp() {
     }
 }
 
-class QssBehaviour(val screenHeightDp: Dp) : RotaryBehavior {
+class QssBehaviour(val screenHeightDp: Dp) : RotaryScrollableBehavior {
     private val state = mutableFloatStateOf(-0.4f)
     private val _isVisible = derivedStateOf { state.value < 0f }
 
-    override suspend fun CoroutineScope.handleScrollEvent(
-        timestamp: Long,
-        deltaInPixels: Float,
-        deviceId: Int,
+    override suspend fun CoroutineScope.performScroll(
+        timestampMillis: Long,
+        delta: Float,
+        inputDeviceId: Int,
         orientation: Orientation
     ) {
-        state.value = (state.value + (deltaInPixels / 150f)).coerceIn(-1f, 1f)
+        state.value = (state.value + (delta / 150f)).coerceIn(-1f, 1f)
     }
 
     fun qssOffset(): Float {
@@ -205,7 +203,6 @@ fun WatchfaceScreen(surfaceRef: MutableState<Surface?>) {
     }
 }
 
-@Suppress("DEPRECATION")
 @Composable
 fun TileScreen(tileRenderer: TileLayoutRenderer<Unit, Unit>) {
     TileLayoutPreview(Unit, Unit, tileRenderer)

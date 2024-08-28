@@ -150,7 +150,8 @@ dependencies {
 
     implementation(libs.kotlinx.serialization.core)
 
-    implementation("dev.chrisbanes.haze:haze:0.9.0-alpha08")
+    implementation(libs.haze)
+    implementation(libs.androidx.wear.tiles.renderer)
 
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(projects.composeTools)
