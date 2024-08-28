@@ -150,7 +150,7 @@ dependencies {
 
     implementation(libs.kotlinx.serialization.core)
 
-    implementation("dev.chrisbanes.haze:haze:0.7.0")
+    implementation("dev.chrisbanes.haze:haze:0.9.0-alpha08")
 
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(projects.composeTools)
