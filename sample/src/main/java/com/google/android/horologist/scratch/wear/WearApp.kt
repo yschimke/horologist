@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@file:OptIn(ExperimentalWearFoundationApi::class)
+@file:OptIn(ExperimentalWearFoundationApi::class, ExperimentalHazeMaterialsApi::class)
 
 package com.google.android.horologist.scratch.wear
 
@@ -45,6 +45,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
@@ -62,8 +63,11 @@ import com.google.android.horologist.compose.material.Button
 import com.google.android.horologist.compose.pager.PagerScreen
 import com.google.android.horologist.tiles.render.TileLayoutRenderer
 import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
+import dev.chrisbanes.haze.materials.HazeMaterials
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import java.time.LocalTime
@@ -97,6 +101,7 @@ fun WearApp() {
     }
 
     val hazeState = remember { HazeState() }
+    val hazeStyle = HazeMaterials.thin()
 
     Box(
         modifier = Modifier
@@ -106,7 +111,7 @@ fun WearApp() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .haze(hazeState)
+                .haze(state = hazeState, style = hazeStyle)
         ) {
             WatchfaceScreen(surfaceRef)
 
@@ -166,7 +171,7 @@ fun WearApp() {
 
 class QssBehaviour(val screenHeightDp: Dp) : RotaryScrollableBehavior {
     private val state = mutableFloatStateOf(-0.4f)
-    private val _isVisible = derivedStateOf { state.value < 0f }
+    private val _isVisible = derivedStateOf { state.floatValue < 0f }
 
     override suspend fun CoroutineScope.performScroll(
         timestampMillis: Long,
@@ -174,11 +179,11 @@ class QssBehaviour(val screenHeightDp: Dp) : RotaryScrollableBehavior {
         inputDeviceId: Int,
         orientation: Orientation
     ) {
-        state.value = (state.value + (delta / 150f)).coerceIn(-1f, 1f)
+        state.floatValue = (state.floatValue + (delta / 150f)).coerceIn(-1f, 1f)
     }
 
     fun qssOffset(): Float {
-        return ((-1f - state.value.coerceIn(-1f, 0f)) * screenHeightDp.value).also {
+        return ((-1f - state.floatValue.coerceIn(-1f, 0f)) * screenHeightDp.value).also {
             println(it)
         }
     }
@@ -209,14 +214,18 @@ fun TileScreen(tileRenderer: TileLayoutRenderer<Unit, Unit>) {
 }
 
 @Composable
-fun Qss(modifier: Modifier = Modifier, hazeState: HazeState, verticalState: QssBehaviour) {
-
+fun Qss(
+    modifier: Modifier = Modifier,
+    hazeState: HazeState,
+    verticalState: QssBehaviour
+) {
     if (verticalState.isVisible) {
         Column(modifier = modifier
             .graphicsLayer {
                 this.translationY = verticalState.qssOffset() * this.density
             }
-            .hazeChild(state = hazeState, shape = CircleShape)
+            .clip(CircleShape)
+            .hazeChild(state = hazeState)
         ) {
             Row(
                 modifier = Modifier

@@ -151,6 +151,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.core)
 
     implementation(libs.haze)
+    implementation(libs.haze.materials)
     implementation(libs.androidx.wear.tiles.renderer)
 
     debugImplementation(libs.compose.ui.tooling)

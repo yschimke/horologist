@@ -165,6 +165,7 @@ dagger-hiltandroidtesting = { module = "com.google.dagger:hilt-android-testing",
 dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
 gradleMavenPublishPlugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "gradlePublishPlugin" }
 haze = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
+haze-materials = { module = "dev.chrisbanes.haze:haze-materials", version.ref = "haze" }
 hilt-ext-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "androidx-hilt" }
 hilt-ext-work = { module = "androidx.hilt:hilt-work", version.ref = "androidx-hilt" }
 hilt-navigationcompose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "androidx-hilt" }

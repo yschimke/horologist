@@ -19,8 +19,7 @@ package com.google.android.horologist.scratch
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import androidx.wear.compose.ui.tooling.preview.WearPreviewLargeRound
+import com.google.android.horologist.scratch.wear.WearApp
 
 class ScratchActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,14 +29,4 @@ class ScratchActivity : ComponentActivity() {
             WearApp()
         }
     }
-}
-
-@Composable
-fun WearApp() {
-}
-
-@WearPreviewLargeRound
-@Composable
-fun WearAppPreview() {
-    WearApp()
 }
