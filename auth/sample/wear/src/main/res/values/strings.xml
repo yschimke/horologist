@@ -37,4 +37,5 @@
     <string name="common_screens_streamline_sign_in_single_account_item">Single account available</string>
     <string name="common_screens_streamline_sign_in_multiple_accounts_item">Multiple accounts available</string>
     <string name="common_screens_streamline_no_accounts_message">Should navigate to add account screen.</string>
+    <string name="horologist_signin_prompt_title">Sign In</string>
 </resources>

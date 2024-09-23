@@ -19,11 +19,13 @@
 package com.google.android.horologist.mediasample.di
 
 import android.content.Context
+import androidx.credentials.CredentialManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.horologist.auth.data.common.repository.AuthUserRepository
 import com.google.android.horologist.auth.data.googlesignin.GoogleSignInEventListener
+import com.google.android.horologist.mediasample.data.auth.CredManAuthUserRepository
 import com.google.android.horologist.mediasample.data.auth.GoogleSignInAuthUserRepository
 import dagger.Module
 import dagger.Provides
@@ -35,6 +37,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AuthModule {
+
+    @Singleton
+    @Provides
+    fun credentialManager(
+        @ApplicationContext application: Context,
+    ): CredentialManager = CredentialManager.create(application)
 
     @Singleton
     @Provides
@@ -50,7 +58,7 @@ object AuthModule {
     @Provides
     fun googleSignInAuthUserRepository(
         @ApplicationContext application: Context,
-        googleSignInClient: GoogleSignInClient,
+        googleSignInClient: GoogleSignInClient
     ): GoogleSignInAuthUserRepository = GoogleSignInAuthUserRepository(
         application,
         googleSignInClient,
@@ -58,13 +66,27 @@ object AuthModule {
 
     @Singleton
     @Provides
+    fun credManAuthUserRepository(
+        @ApplicationContext application: Context,
+        credentialManager: CredentialManager
+    ): CredManAuthUserRepository = CredManAuthUserRepository(
+        application,
+        credentialManager,
+    )
+
+    val credMan = true
+
+    @Singleton
+    @Provides
     fun authUserRepository(
         googleSignInAuthUserRepository: GoogleSignInAuthUserRepository,
-    ): AuthUserRepository = googleSignInAuthUserRepository
+        credManAuthUserRepository: CredManAuthUserRepository,
+    ): AuthUserRepository = if (credMan) credManAuthUserRepository else googleSignInAuthUserRepository
 
     @Singleton
     @Provides
     fun googleSignInEventListener(
         statefulAuthUserRepository: GoogleSignInAuthUserRepository,
-    ): GoogleSignInEventListener = statefulAuthUserRepository
+        credManAuthUserRepository: CredManAuthUserRepository,
+    ): GoogleSignInEventListener = if (credMan) credManAuthUserRepository else statefulAuthUserRepository
 }

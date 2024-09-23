@@ -39,6 +39,8 @@ import com.google.android.horologist.media.ui.navigation.MediaNavController.navi
 import com.google.android.horologist.media.ui.navigation.MediaPlayerScaffold
 import com.google.android.horologist.media.ui.navigation.NavigationScreen
 import com.google.android.horologist.mediasample.BuildConfig
+import com.google.android.horologist.mediasample.di.AuthModule.credMan
+import com.google.android.horologist.mediasample.ui.auth.credman.CredmanSignInPromptSampleScreen
 import com.google.android.horologist.mediasample.ui.auth.prompt.GoogleSignInPromptScreen
 import com.google.android.horologist.mediasample.ui.auth.signin.UampGoogleSignInViewModel
 import com.google.android.horologist.mediasample.ui.auth.signout.GoogleSignOutScreen
@@ -220,10 +222,14 @@ fun UampWearApp(
                 }
 
                 composable<GoogleSignInPromptScreen> {
-                    GoogleSignInPromptScreen(
-                        navController = navController,
-                        viewModel = hiltViewModel(),
-                    )
+                    if (credMan) {
+                        CredmanSignInPromptSampleScreen(navController)
+                    } else {
+                        GoogleSignInPromptScreen(
+                            navController = navController,
+                            viewModel = hiltViewModel(),
+                        )
+                    }
                 }
 
                 composable<GoogleSignInScreen> {

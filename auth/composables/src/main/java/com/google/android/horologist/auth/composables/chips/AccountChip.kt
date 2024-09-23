@@ -45,7 +45,7 @@ public fun AccountChip(
     enabled: Boolean = true,
 ) {
     AccountChip(
-        email = account.email,
+        email = account.email.orEmpty(),
         onClick = onClick,
         modifier = modifier,
         avatar = account.avatar,

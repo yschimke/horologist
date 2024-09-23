@@ -47,6 +47,12 @@ android {
 
         testInstrumentationRunner =
             "com.google.android.horologist.mediasample.runner.MediaAppRunner"
+
+        buildConfigField(
+            "String",
+            "GSI_CLIENT_ID",
+            "\"" + localProperties["gsiclientid"] + "\"",
+        )
     }
 
     testOptions {
@@ -242,6 +248,8 @@ dependencies {
     implementation(projects.auth.ui)
     implementation(libs.playservices.auth)
     implementation(libs.kotlinx.coroutines.playservices)
+    implementation("androidx.credentials:credentials:1.5.0-alpha05")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
 
     add("benchmarkImplementation", libs.androidx.runtime.tracing)
 
