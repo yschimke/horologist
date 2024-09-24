@@ -49,6 +49,7 @@ class GoogleSignOutViewModel(
         ) {
             viewModelScope.launch {
                 try {
+                    TODO("Disabled for testing")
                     googleSignInClient.signOut().await()
                     _uiState.value = GoogleSignOutScreenState.Success
                 } catch (apiException: ApiException) {

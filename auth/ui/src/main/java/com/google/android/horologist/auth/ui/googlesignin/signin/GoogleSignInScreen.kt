@@ -82,6 +82,7 @@ public fun GoogleSignInScreen(
                     viewModel.onAccountSelected(account)
                 }
             } ?: run {
+                TODO("Disabled for testing")
                 val signInRequestLauncher = rememberLauncherForActivityResult(
                     contract = GoogleSignInContract(
                         viewModel.googleSignInClient,
@@ -172,6 +173,7 @@ private class GoogleSignInContract(
     ): Intent = googleSignInClient.signInIntent
 
     override fun parseResult(resultCode: Int, intent: Intent?): Result {
+        TODO("Disabled for testing")
         val task = GoogleSignIn.getSignedInAccountFromIntent(intent)
 
         return when {
