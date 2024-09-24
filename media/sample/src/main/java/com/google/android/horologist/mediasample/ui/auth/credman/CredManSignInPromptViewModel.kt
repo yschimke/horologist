@@ -17,9 +17,9 @@
 package com.google.android.horologist.mediasample.ui.auth.credman
 
 import android.content.Context
-import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.NoCredentialException
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -34,6 +34,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
+    .setServerClientId(BuildConfig.GSI_CLIENT_ID)
+    .build()
+
 @HiltViewModel
 class CredManSignInPromptViewModel
 @Inject
@@ -41,25 +45,38 @@ constructor(
     val credentialManager: CredentialManager,
 ) : ViewModel() {
     fun signIn(context: Context) {
-        val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
-            .setServerClientId(BuildConfig.GSI_CLIENT_ID)
-            .build()
 
         viewModelScope.launch {
-            try {
-                val result = credentialManager.getCredential(
-                    request = GetCredentialRequest(listOf(googleIdOption)),
-                    context = context,
+            val credentials = signInWithGoogle(context)
+            if (credentials != null) {
+                uiState.value = SignInPromptScreenState.SignedIn(
+                    AccountUiModel(
+                        email = credentials.id,
+                        name = credentials.displayName,
+                        avatar = CoilPaintable(credentials.profilePictureUri)
+                    )
                 )
-                val credentials = GoogleIdTokenCredential.createFrom(result.credential.data)
-                uiState.value = SignInPromptScreenState.SignedIn(AccountUiModel(email = null, name = credentials.displayName, avatar = CoilPaintable(credentials.profilePictureUri)))
-            } catch (e: NoCredentialException) {
-                e.printStackTrace()
-            } catch (e: GetCredentialException) {
-                e.printStackTrace()
             }
         }
     }
 
-    val uiState: MutableStateFlow<SignInPromptScreenState> = MutableStateFlow(SignInPromptScreenState.SignedOut)
+    private suspend fun signInWithGoogle(context: Context): GoogleIdTokenCredential? {
+        try {
+            val result = credentialManager.getCredential(
+                request = GetCredentialRequest(listOf(googleIdOption)),
+                context = context,
+            )
+            val credentials = GoogleIdTokenCredential.createFrom(result.credential.data)
+            println(credentials)
+            return credentials
+        } catch (e: NoCredentialException) {
+            e.printStackTrace()
+        } catch (e: GetCredentialException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    val uiState: MutableStateFlow<SignInPromptScreenState> =
+        MutableStateFlow(SignInPromptScreenState.SignedOut)
 }

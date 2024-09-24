@@ -45,7 +45,9 @@ import com.google.android.horologist.compose.material.ListHeaderDefaults.firstIt
 import com.google.android.horologist.compose.material.ResponsiveListHeader
 import com.google.android.horologist.media.ui.navigation.NavigationScreen
 import com.google.android.horologist.mediasample.R
+import com.google.android.horologist.mediasample.di.AuthModule.credMan
 import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.DeveloperOptions
+import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.GoogleSignInPromptScreen
 import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.GoogleSignInScreen
 import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.GoogleSignOutScreen
 
@@ -80,7 +82,11 @@ fun UampSettingsScreen(
                         label = stringResource(id = R.string.login),
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
-                            navController.navigate(GoogleSignInScreen)
+                            if (credMan) {
+                                navController.navigate(GoogleSignInPromptScreen)
+                            } else {
+                                navController.navigate(GoogleSignInScreen)
+                            }
                         },
                         enabled = !screenState.guestMode,
                     )
