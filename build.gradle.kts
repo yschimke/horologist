@@ -99,6 +99,7 @@ allprojects {
         if (composeSnapshot.length > 1) {
             maven(url = uri("https://androidx.dev/snapshots/builds/$composeSnapshot/artifacts/repository/"))
         }
+        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
     }
 
     plugins.withId("com.vanniktech.maven.publish") {
@@ -274,15 +275,15 @@ subprojects {
 
     afterEvaluate {
         var version: String? = null
-        val composeSnapshot = libs.versions.composesnapshot.get()
-        if (composeSnapshot.length > 1) {
-            // We're depending on a Jetpack Compose snapshot, update the library version name
-            // to indicate it's from a Compose snapshot
-            val versionName = project.properties.get("VERSION_NAME") as String
-            if (versionName.contains("SNAPSHOT")) {
-                version = versionName.replace("-SNAPSHOT", ".compose-${composeSnapshot}-SNAPSHOT")
-            }
-        }
+//        val composeSnapshot = libs.versions.composesnapshot.get()
+//        if (composeSnapshot.length > 1) {
+//            // We're depending on a Jetpack Compose snapshot, update the library version name
+//            // to indicate it's from a Compose snapshot
+//            val versionName = project.properties.get("VERSION_NAME") as String
+//            if (versionName.contains("SNAPSHOT")) {
+//                version = versionName.replace("-SNAPSHOT", ".compose-${composeSnapshot}-SNAPSHOT")
+//            }
+//        }
 
         if (version?.endsWith("SNAPSHOT") == false) {
             // If we're not a SNAPSHOT library version, we fail the build if we're relying on

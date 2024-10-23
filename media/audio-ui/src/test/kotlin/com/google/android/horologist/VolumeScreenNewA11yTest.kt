@@ -18,7 +18,9 @@
 
 package com.google.android.horologist
 
+import android.graphics.Rect
 import android.view.View
+import android.view.accessibility.AccessibilityNodeInfo
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -28,7 +30,6 @@ import androidx.compose.ui.test.tryPerformAccessibilityChecks
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.wear.compose.material.MaterialTheme
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
-import com.google.android.apps.common.testing.accessibility.framework.integrations.espresso.AccessibilityValidator
 import com.google.android.apps.common.testing.accessibility.framework.uielement.AccessibilityHierarchyAndroid
 import com.google.android.apps.common.testing.accessibility.framework.uielement.ViewHierarchyElementAndroid
 import com.google.android.horologist.audio.AudioOutput
@@ -37,8 +38,6 @@ import com.google.android.horologist.audio.ui.VolumeScreenTestCase
 import com.google.android.horologist.screenshots.rng.ScreenshotTest
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
-import org.junit.Before
-import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.experimental.categories.Category
 import org.junit.runner.RunWith
@@ -77,6 +76,7 @@ class VolumeScreenNewA11yTest {
 
         accessibilityValidator!!.addCheckListener { context, accessibilityViewCheckResults ->
             accessibilityViewCheckResults.forEach {
+                println(it.accessibilityHierarchyCheckResult.type)
                 println(it)
             }
         }
@@ -136,4 +136,116 @@ class VolumeScreenNewA11yTest {
             printOutViewAndChildren(vhea.getChildView(it))
         }
     }
+
+    @Test
+    fun extractA11yNewWay() = runComposeUiTest {
+        val volumeState = VolumeState(
+            current = 0,
+            max = 100,
+        )
+        val audioOutput = AudioOutput.BluetoothHeadset("id", "Pixelbuds")
+
+        lateinit var view: View
+
+        setContent {
+            VolumeScreenTestCase(
+                colors = MaterialTheme.colors,
+                volumeState = volumeState,
+                audioOutput = audioOutput,
+            )
+
+            view = LocalView.current
+        }
+
+        ShadowBuild.setFingerprint("test_fingerprint")
+
+        val nodeInfo: AccessibilityNodeInfo = view.createAccessibilityNodeInfo()
+        nodeInfo.setQueryFromAppProcessEnabled(view, true)
+        val results = parseChildren(view, nodeInfo, 0, 0)
+
+        results.forEach {
+            println(it)
+        }
+    }
+
+    private fun parseChildren(
+        rootView: View,
+        nodeInfo: AccessibilityNodeInfo,
+        parentX: Int,
+        parentY: Int,
+    ): List<ViewInfo> {
+        val childCount = nodeInfo.childCount
+        val children: MutableList<ViewInfo> = ArrayList(childCount)
+        for (i in 0 until childCount) {
+            val childNodeInfo = nodeInfo.getChild(i)
+            val bounds = Rect().apply {
+                childNodeInfo.getBoundsInScreen(this)
+            }
+
+            if (
+                childNodeInfo.availableExtraData.contains(
+                    AccessibilityNodeInfo.EXTRA_DATA_TEXT_CHARACTER_LOCATION_KEY
+                )
+            ) {
+                val extras = childNodeInfo.extras
+                extras.putInt(AccessibilityNodeInfo.EXTRA_DATA_TEXT_CHARACTER_LOCATION_ARG_START_INDEX, 0)
+                extras.putInt(
+                    AccessibilityNodeInfo.EXTRA_DATA_TEXT_CHARACTER_LOCATION_ARG_LENGTH,
+                    childNodeInfo.text.length,
+                )
+                try {
+                    childNodeInfo.refreshWithExtraData(
+                        AccessibilityNodeInfo.EXTRA_DATA_TEXT_CHARACTER_LOCATION_KEY,
+                        extras,
+                    )
+                } catch (ex: Exception) {
+                    println("AccessibilityViewInfoParser.kt $ex")
+                }
+            }
+
+            // Create a ViewInfo for each AccessibilityNodeInfo.
+            // Use the root view as the viewObject.
+            // Bounds in ViewInfo are with respect to the parent.
+            val result =
+                ViewInfo(
+                    childNodeInfo?.className.toString(),
+                    bounds,
+                    rootView,
+                    childNodeInfo,
+                    parseChildren(rootView, childNodeInfo, bounds.left, bounds.top)
+                )
+
+            children.add(result)
+        }
+        return children
+    }
+
+//    /**
+//     * Returns the text coming from the [AccessibilityNodeInfo] associated with this [ViewInfo], or null
+//     * if there is no [AccessibilityNodeInfo].
+//     */
+//    fun ViewInfo.getAccessibilityText() =
+//        (accessibilityObject as? AccessibilityNodeInfo)?.text?.toString()
+//
+//    /**
+//     * Returns the source id from the [AccessibilityNodeInfo] associated with this [ViewInfo]. If the
+//     * [AccessibilityNodeInfo] does not exist, but viewObject is a [View], this creates an
+//     * [AccessibilityNodeInfo] for that [View] first.
+//     */
+//    fun ViewInfo.getAccessibilitySourceId(): Long {
+//        if (accessibilityObject != null) {
+//            return (accessibilityObject as AccessibilityNodeInfo).sourceNodeId
+//        } else {
+//            val node = (viewObject as? View)?.createAccessibilityNodeInfo() ?: return -1
+//            return node.sourceNodeId
+//        }
+//    }
 }
+
+data class ViewInfo(
+    val name: String,
+    val bounds: Rect,
+    val rootView: View,
+    val childNodeInfo: AccessibilityNodeInfo,
+    val parseChildren: List<ViewInfo>
+)
