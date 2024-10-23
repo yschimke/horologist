@@ -16,8 +16,8 @@
 
 plugins {
     id("com.android.library")
-    id("org.jetbrains.dokka")
-    id("me.tylerbwong.gradle.metalava")
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.metalavaGradle)
     kotlin("android")
 }
 
@@ -92,10 +92,13 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime)
     implementation(libs.kotlinx.coroutines.android)
 
+    testImplementation(platform(libs.compose.bom))
     testImplementation(libs.androidx.lifecycle.testing)
     testImplementation(libs.androidx.test.rules)
     testImplementation(libs.truth)
     testImplementation(libs.compose.ui.test.junit4)
+
+    debugImplementation(platform(libs.compose.bom))
     debugImplementation(libs.compose.ui.test.manifest)
     testImplementation(libs.androidx.test.espressocore)
     testImplementation(libs.junit)

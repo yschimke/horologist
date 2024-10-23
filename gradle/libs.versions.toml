@@ -1,66 +1,70 @@
 [versions]
 accessibilityTestFramework = "4.1.1"
-accompanist = "0.34.0"
-androidx-benchmark = "1.3.0"
+accompanist = "0.36.0"
+androidx-benchmark = "1.3.3"
 androidx-complications-data = "1.2.1"
-androidx-constraintlayout-compose = "1.0.1"
 androidx-concurrent = "1.2.0"
+androidx-constraintlayout-compose = "1.0.1"
 androidx-datastore = "1.1.1"
 androidx-health-services = "1.0.0-rc02"
 androidx-hilt = "1.2.0"
-androidx-media3 = "1.4.0"
+androidx-media3 = "1.4.1"
 androidx-test-espresso = "3.6.1"
 androidx-test-ext = "1.2.1"
 androidx-test-runner = "1.6.2"
 androidx-wear-watchface = "1.2.1"
-androidxActivity = "1.9.1"
+androidxActivity = "1.9.3"
+androidxComposeBom = "2024.09.00-alpha"
 androidxCore = "1.13.1"
-androidxLifecycle = "2.8.4"
-androidxNavigation = "2.8.0-rc01"
+androidxLifecycle = "2.8.6"
+androidxNavigation = "2.8.3"
 androidxPhoneInteractions = "1.1.0-alpha04"
-androidxRemoteInteractions = "1.1.0-beta01"
-androidxStartup = "1.1.1"
+androidxRemoteInteractions = "1.1.0-rc01"
+androidxStartup = "1.2.0"
 androidxTracing = "1.2.0"
 androidxWear = "1.3.0"
 androidxWork = "2.9.1"
-androidxprotolayout = "1.2.0"
-androidxtiles = "1.4.0"
+androidxprotolayout = "1.2.1"
+androidxtiles = "1.4.1"
 annotation = "1.0.1"
-app-cash-turbine = "1.1.0"
+app-cash-turbine = "1.2.0"
+appcompat = "1.7.0"
 com-squareup-okhttp3 = "5.0.0-alpha.14"
 com-squareup-retrofit2 = "2.11.0"
 compose = "1.8.0-SNAPSHOT"
-compose-material3 = "1.3.0-rc01"
-composesnapshot = "12264208"
-dependencyAnalysis = "1.33.0"
+compose-material3 = "1.4.0-alpha02"
+composesnapshot = "12541087"
+dependencyAnalysis = "2.1.4"
 dokka = "1.9.20"
 googledagger = "2.52"
-gradlePlugin = "8.6.0-rc01"
-gradlePublishPlugin = "0.29.0"
+gradlePlugin = "8.7.1"
+gradlePublishPlugin = "0.30.0"
 io-coil-kt = "2.7.0"
 junit = "4.13.2"
-kotlin = "2.0.10"
-kotlinxCoroutine = "1.8.1"
-kotlinxSerialization = "1.7.1"
-ksp = "2.0.10-1.0.24"
+kotlin = "2.0.21"
+kotlinxCoroutine = "1.9.0"
+kotlinxSerialization = "1.7.3"
+ksp = "2.0.21-1.0.25"
 ktlint = "0.50.0"
+material = "1.12.0"
 metalava = "0.3.5"
 moshi = "1.15.1"
-okio = "3.9.0"
+okio = "3.9.1"
 org-robolectric = "4.13"
 playServicesAuth = "21.2.0"
-protobuf = "4.27.3"
-roborazzi = "1.26.0"
+protobuf = "4.28.2"
+protobuf-gen-grpc-java = "1.68.0"
+protobuf-gen-grpc-kotlin = "1.3.0:jdk8@jar"
+protobuf-gen-javalite = "3.0.0"
+roborazzi = "1.29.0"
 room = "2.6.1"
-runtimeTracing = "1.0.0-beta01"
+runtimeTracing = "1.7.4"
 spotless = "6.25.0"
-tiles-tooling-preview = "1.4.0"
+tiles-tooling-preview = "1.4.1"
 truth = "1.4.4"
-wearcompose = "1.4.0-rc01"
-wearToolingPreview = "1.0.0"
-appcompat = "1.7.0"
-material = "1.12.0"
 wearInput = "1.2.0-alpha02"
+wearToolingPreview = "1.0.0"
+wearcompose = "1.5.0-alpha04"
 
 [libraries]
 accessibility-test-framework = { module = "com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework", version.ref = "accessibilityTestFramework" }
@@ -68,16 +72,16 @@ accompanist-testharness = { module = "com.google.accompanist:accompanist-testhar
 android-tools-build-gradle = { module = "com.android.tools.build:gradle", version.ref = "gradlePlugin" }
 androidx-activity = { module = "androidx.activity:activity", version.ref = "androidxActivity" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivity" }
+androidx-annotation = "androidx.annotation:annotation:1.9.0"
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-androidx-annotation = "androidx.annotation:annotation:1.8.2"
 androidx-benchmark-junit4 = { module = "androidx.benchmark:benchmark-junit4", version.ref = "androidx-benchmark" }
 androidx-benchmark-macro-junit4 = { module = "androidx.benchmark:benchmark-macro-junit4", version.ref = "androidx-benchmark" }
 androidx-complications-data = { module = "androidx.wear.watchface:watchface-complications-data", version.ref = "androidx-complications-data" }
 androidx-complications-datasource-ktx = { module = "androidx.wear.watchface:watchface-complications-data-source-ktx", version.ref = "androidx-wear-watchface" }
 androidx-complications-rendering = { module = "androidx.wear.watchface:watchface-complications-rendering", version.ref = "androidx-wear-watchface" }
-androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "androidx-constraintlayout-compose" }
 androidx-concurrent-future = { module = "androidx.concurrent:concurrent-futures", version.ref = "androidx-concurrent" }
 androidx-concurrent-future-ktx = { module = "androidx.concurrent:concurrent-futures-ktx", version.ref = "androidx-concurrent" }
+androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "androidx-constraintlayout-compose" }
 androidx-core = { module = "androidx.core:core", version.ref = "androidxCore" }
 androidx-corektx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "androidx-datastore" }
@@ -106,29 +110,30 @@ androidx-media3-testutils-robolectric = { module = "androidx.media3:media3-test-
 androidx-media3-ui = { module = "androidx.media3:media3-ui", version.ref = "androidx-media3" }
 androidx-mediarouter = "androidx.mediarouter:mediarouter:1.7.0"
 androidx-metrics-performance = "androidx.metrics:metrics-performance:1.0.0-beta01"
-androidx-navigation-runtime = { module = "androidx.navigation:navigation-runtime", version.ref = "androidxNavigation" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidxNavigation" }
+androidx-navigation-runtime = { module = "androidx.navigation:navigation-runtime", version.ref = "androidxNavigation" }
 androidx-navigation-testing = { module = "androidx.navigation:navigation-testing", version.ref = "androidxNavigation" }
 androidx-paging = "androidx.paging:paging-compose:3.3.2"
 androidx-palette-ktx = "androidx.palette:palette-ktx:1.0.0"
 androidx-runtime-tracing = { module = "androidx.compose.runtime:runtime-tracing", version.ref = "runtimeTracing" }
 androidx-startup = { module = "androidx.startup:startup-runtime", version.ref = "androidxStartup" }
-androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" }
 androidx-test-espressocore = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-test-espresso" }
 androidx-test-ext = { module = "androidx.test.ext:junit", version.ref = "androidx-test-ext" }
 androidx-test-ext-ktx = { module = "androidx.test.ext:junit-ktx", version.ref = "androidx-test-ext" }
 androidx-test-rules = "androidx.test:rules:1.6.1"
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" }
 androidx-test-uiautomator = "androidx.test.uiautomator:uiautomator:2.3.0"
 androidx-tracing-ktx = { module = "androidx.tracing:tracing-ktx", version.ref = "androidxTracing" }
 androidx-wear = { module = "androidx.wear:wear", version.ref = "androidxWear" }
+androidx-wear-input = { group = "androidx.wear", name = "wear-input", version.ref = "wearInput" }
 androidx-wear-phone-interactions = { module = "androidx.wear:wear-phone-interactions", version.ref = "androidxPhoneInteractions" }
 androidx-wear-protolayout-material = { module = "androidx.wear.protolayout:protolayout-material", version.ref = "androidxprotolayout" }
 androidx-wear-remote-interactions = { module = "androidx.wear:wear-remote-interactions", version.ref = "androidxRemoteInteractions" }
 androidx-wear-tiles = { module = "androidx.wear.tiles:tiles", version.ref = "androidxtiles" }
 androidx-wear-tiles-renderer = { module = "androidx.wear.tiles:tiles-renderer", version.ref = "androidxtiles" }
 androidx-wear-tiles-testing = { module = "androidx.wear.tiles:tiles-testing", version.ref = "androidxtiles" }
-androidx-wear-tiles-tooling-preview = { module = "androidx.wear.tiles:tiles-tooling-preview", version.ref = "tiles-tooling-preview" }
 androidx-wear-tiles-tooling = { module = "androidx.wear.tiles:tiles-tooling", version.ref = "tiles-tooling-preview" }
+androidx-wear-tiles-tooling-preview = { module = "androidx.wear.tiles:tiles-tooling-preview", version.ref = "tiles-tooling-preview" }
 androidx-wear-tooling-preview = { module = "androidx.wear:wear-tooling-preview", version.ref = "wearToolingPreview" }
 androidx-work-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidxWork" }
 androidx-work-testing = { module = "androidx.work:work-testing", version.ref = "androidxWork" }
@@ -138,41 +143,41 @@ coil-base = { module = "io.coil-kt:coil-compose-base", version.ref = "io-coil-kt
 coil-svg = { module = "io.coil-kt:coil-svg", version.ref = "io-coil-kt" }
 coil-test = { module = "io.coil-kt:coil-test", version.ref = "io-coil-kt" }
 com-squareup-okhttp3-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "com-squareup-okhttp3" }
-com-squareup-okhttp3-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "com-squareup-okhttp3" }
 com-squareup-okhttp3-mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "com-squareup-okhttp3" }
-compose-bom = "androidx.compose:compose-bom:2024.08.00"
-compose-animation-animationgraphics = { module = "androidx.compose.animation:animation-graphics", version.ref = "compose" }
-compose-foundation-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
-compose-foundation-foundation-layout = { module = "androidx.compose.foundation:foundation-layout", version.ref = "compose" }
-compose-material-iconscore = { module = "androidx.compose.material:material-icons-core", version = "1.7.0-rc01" }
-compose-material-iconsext = { module = "androidx.compose.material:material-icons-extended", version = "1.7.0-rc01" }
-compose-material-ripple = { module = "androidx.compose.material:material-ripple", version.ref = "compose" }
+com-squareup-okhttp3-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "com-squareup-okhttp3" }
+compose-animation-animationgraphics = { group = "androidx.compose.animation", name = "animation-graphics" }
+compose-bom = { group = "androidx.compose", name = "compose-bom-alpha", version.ref = "androidxComposeBom" }
+compose-foundation-foundation = { group = "androidx.compose.foundation", name = "foundation" }
+compose-foundation-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout" }
+compose-material-iconscore = { group = "androidx.compose.material", name = "material-icons-core" }
+compose-material-iconsext = { group = "androidx.compose.material", name = "material-icons-extended" }
+compose-material-ripple = { group = "androidx.compose.material", name = "material-ripple" }
 compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" } # version 2023.10.01 from BOM is crashing
-compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
-compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics", version.ref = "compose" }
-compose-ui-test = { module = "androidx.compose.ui:ui-test", version.ref = "compose" }
-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose" }
-compose-ui-text = { module = "androidx.compose.ui:ui-text", version.ref = "compose" }
-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
-compose-ui-toolingpreview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
-compose-ui-unit = { module = "androidx.compose.ui:ui-unit", version.ref = "compose" }
-compose-ui-util = { module = "androidx.compose.ui:ui-util", version.ref = "compose" }
+compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
+compose-ui = { group = "androidx.compose.ui", name = "ui" }
+compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+compose-ui-test = { group = "androidx.compose.ui", name = "ui-test" }
+compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+compose-ui-text = { group = "androidx.compose.ui", name = "ui-text" }
+compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+compose-ui-toolingpreview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+compose-ui-unit = { group = "androidx.compose.ui", name = "ui-unit" }
+compose-ui-util = { group = "androidx.compose.ui", name = "ui-util" }
 dagger-hiltandroid = { module = "com.google.dagger:hilt-android", version.ref = "googledagger" }
 dagger-hiltandroidcompiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "googledagger" }
 dagger-hiltandroidplugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "googledagger" }
 dagger-hiltandroidtesting = { module = "com.google.dagger:hilt-android-testing", version.ref = "googledagger" }
 dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
+google-generativeai = "com.google.ai.client.generativeai:generativeai:0.9.0"
 gradleMavenPublishPlugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "gradlePublishPlugin" }
 hilt-ext-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "androidx-hilt" }
 hilt-ext-work = { module = "androidx.hilt:hilt-work", version.ref = "androidx-hilt" }
 hilt-navigationcompose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "androidx-hilt" }
-io-grpc-protobuf-lite = "io.grpc:grpc-protobuf-lite:1.66.0"
+io-grpc-grpc-android = "io.grpc:grpc-android:1.68.0"
+io-grpc-grpc-binder = "io.grpc:grpc-binder:1.68.0"
 io-grpc-grpc-kotlin = "io.grpc:grpc-kotlin-stub:1.4.1"
-io-grpc-grpc-android = "io.grpc:grpc-android:1.66.0"
-io-grpc-grpc-binder = "io.grpc:grpc-binder:1.66.0"
-google-generativeai = "com.google.ai.client.generativeai:generativeai:0.9.0"
+io-grpc-protobuf-lite = "io.grpc:grpc-protobuf-lite:1.68.0"
 junit = { module = "junit:junit", version.ref = "junit" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
@@ -183,7 +188,8 @@ kotlinx-coroutines-guava = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-
 kotlinx-coroutines-playservices = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutine" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutine" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerialization" }
-lottie-compose = "com.airbnb.android:lottie-compose:6.5.0"
+lottie-compose = "com.airbnb.android:lottie-compose:6.5.2"
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 mikepenz-markdown = "com.mikepenz:multiplatform-markdown-renderer:0.20.0-coil2"
 moshi-adapters = { module = "com.squareup.moshi:moshi-adapters", version.ref = "moshi" }
 moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
@@ -193,6 +199,10 @@ playservices-auth = { module = "com.google.android.gms:play-services-auth", vers
 playservices-base = "com.google.android.gms:play-services-base:18.5.0"
 playservices-wearable = "com.google.android.gms:play-services-wearable:18.2.0"
 protobuf-kotlin-lite = { module = "com.google.protobuf:protobuf-kotlin-lite", version.ref = "protobuf" }
+protobuf-protoc-gen-grpc-java = { module = "io.grpc:protoc-gen-grpc-java", version.ref = "protobuf-gen-grpc-java"}
+protobuf-protoc-gen-grpc-kotlin = { module = "io.grpc:protoc-gen-grpc-kotlin", version.ref = "protobuf-gen-grpc-kotlin"}
+protobuf-protoc-gen-javalite = { module = "com.google.protobuf:protoc-gen-javalite", version.ref = "protobuf-gen-javalite" }
+protobuf-protoc-stnd = { module = "com.google.protobuf:protoc", version.ref = "protobuf" }
 retrofit2-convertermoshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "com-squareup-retrofit2" }
 retrofit2-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "com-squareup-retrofit2" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "org-robolectric" }
@@ -210,17 +220,16 @@ wearcompose-foundation = { module = "androidx.wear.compose:compose-foundation", 
 wearcompose-material = { module = "androidx.wear.compose:compose-material", version.ref = "wearcompose" }
 wearcompose-navigation = { module = "androidx.wear.compose:compose-navigation", version.ref = "wearcompose" }
 wearcompose-tooling = { module = "androidx.wear.compose:compose-ui-tooling", version.ref = "wearcompose" }
-androidx-wear-input = { group = "androidx.wear", name = "wear-input", version.ref = "wearInput" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 gradleMavenPublishPlugin = { id = "com.vanniktech.maven.publish", version.ref = "gradlePublishPlugin" }
 kotlinGradle = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-protobuf = "com.google.protobuf:0.9.4"
-spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
-metalavaGradle = { id = "me.tylerbwong.gradle.metalava", version.ref = "metalava" }
-roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+metalavaGradle = { id = "me.tylerbwong.gradle.metalava", version.ref = "metalava" }
+protobuf = "com.google.protobuf:0.9.4"
+roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

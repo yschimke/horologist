@@ -16,8 +16,8 @@
 
 plugins {
     id("com.android.library")
-    id("org.jetbrains.dokka")
-    id("me.tylerbwong.gradle.metalava")
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.metalavaGradle)
     kotlin("android")
 }
 
@@ -87,6 +87,8 @@ metalava {
 }
 
 dependencies {
+    implementation(platform(libs.compose.bom))
+
     api(projects.annotations)
 
     api(projects.media.audio)

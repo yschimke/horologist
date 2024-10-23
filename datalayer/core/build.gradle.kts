@@ -18,10 +18,10 @@ import com.google.protobuf.gradle.id
 
 plugins {
     id("com.android.library")
-    id("org.jetbrains.dokka")
+    alias(libs.plugins.dokka)
     id("com.google.protobuf")
     kotlin("android")
-    id("me.tylerbwong.gradle.metalava")
+    alias(libs.plugins.metalavaGradle)
 }
 
 android {
@@ -77,11 +77,11 @@ android {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:4.27.3"
+        artifact = libs.protobuf.protoc.stnd.get().toString()
     }
     plugins {
         id("javalite") {
-            artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0"
+            artifact = libs.protobuf.protoc.gen.javalite.get().toString()
         }
     }
     generateProtoTasks {
@@ -125,6 +125,7 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.robolectric)
 
+    androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.test.espressocore)
     androidTestImplementation(libs.junit)

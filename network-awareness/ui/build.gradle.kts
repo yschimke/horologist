@@ -16,9 +16,9 @@
 
 plugins {
     id("com.android.library")
-    id("org.jetbrains.dokka")
+    alias(libs.plugins.dokka)
     id("com.google.devtools.ksp")
-    id("me.tylerbwong.gradle.metalava")
+    alias(libs.plugins.metalavaGradle)
     kotlin("android")
     alias(libs.plugins.compose.compiler)
 }
@@ -92,6 +92,7 @@ dependencies {
     api(projects.networkAwareness.core)
     api(projects.composeLayout)
 
+    implementation(platform(libs.compose.bom))
     implementation(libs.kotlin.stdlib)
     implementation(libs.androidx.wear)
     implementation(libs.wearcompose.material)
@@ -112,6 +113,7 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.robolectric)
 
+    androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.test.espressocore)
     androidTestImplementation(libs.junit)

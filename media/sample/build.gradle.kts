@@ -24,6 +24,7 @@ plugins {
     id("com.google.protobuf")
     kotlin("android")
     kotlin("plugin.serialization")
+    alias(libs.plugins.roborazzi)
     alias(libs.plugins.compose.compiler)
 }
 
@@ -128,11 +129,11 @@ android {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:4.27.3"
+        artifact = libs.protobuf.protoc.stnd.get().toString()
     }
     plugins {
         id("javalite") {
-            artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0"
+            artifact = libs.protobuf.protoc.gen.javalite.get().toString()
         }
     }
     generateProtoTasks {
@@ -178,6 +179,7 @@ dependencies {
         libs.androidx.media3.ui,
     )
 
+    implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui.util)
 
     implementation(libs.compose.foundation.foundation)
@@ -209,6 +211,9 @@ dependencies {
 
     implementation(libs.moshi.adapters)
     implementation(libs.moshi.kotlin)
+    implementation(projects.media.audioUiModel)
+    implementation(projects.media.uiModel)
+    testImplementation(projects.media.audioUiModel)
     ksp(libs.moshi.kotlin.codegen)
     implementation(libs.kotlinx.serialization.core)
 
@@ -251,6 +256,7 @@ dependencies {
     debugImplementation(libs.androidx.wear.tiles.tooling.preview)
     debugImplementation(libs.androidx.wear.tiles.tooling)
 
+    testImplementation(platform(libs.compose.bom))
     testImplementation(libs.junit)
     testImplementation(libs.truth)
     testImplementation(libs.androidx.test.ext.ktx)
@@ -261,7 +267,9 @@ dependencies {
     testImplementation(libs.dagger.hiltandroidtesting)
     kspTest(libs.dagger.hiltandroidcompiler)
     testImplementation(libs.androidx.work.testing)
+    testImplementation(projects.roboscreenshots)
 
+    androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.test.espressocore)
     androidTestImplementation(libs.junit)

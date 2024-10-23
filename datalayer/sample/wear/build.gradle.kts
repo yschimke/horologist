@@ -108,11 +108,11 @@ sourceSets {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:4.27.3"
+        artifact = libs.protobuf.protoc.stnd.get().toString()
     }
     plugins {
         id("javalite") {
-            artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0"
+            artifact = libs.protobuf.protoc.gen.javalite.get().toString()
         }
     }
     generateProtoTasks {
@@ -142,6 +142,7 @@ dependencies {
     implementation(projects.tiles)
     implementation(libs.androidx.wear.protolayout.material)
 
+    implementation(platform(libs.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.complications.data)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -170,6 +171,7 @@ dependencies {
     ksp(libs.dagger.hiltandroidcompiler)
     implementation(libs.hilt.navigationcompose)
 
+    testImplementation(platform(libs.compose.bom))
     testImplementation(libs.androidx.navigation.testing)
     testImplementation(libs.androidx.test.espressocore)
     testImplementation(libs.compose.ui.test)

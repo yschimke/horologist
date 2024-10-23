@@ -16,8 +16,8 @@
 
 plugins {
     id("com.android.library")
-    id("org.jetbrains.dokka")
-    id("me.tylerbwong.gradle.metalava")
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.metalavaGradle)
     kotlin("android")
     alias(libs.plugins.roborazzi)
     alias(libs.plugins.compose.compiler)
@@ -58,9 +58,6 @@ android {
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
-            all {
-                it.systemProperty("screenshot.record", findProperty("screenshot.record") ?: "false")
-            }
         }
         animationsDisabled = true
     }
@@ -100,6 +97,7 @@ dependencies {
     implementation(projects.composeLayout)
     implementation(projects.composeMaterial)
     implementation(project(":composables"))
+    implementation(projects.media.audioUiModel)
     debugImplementation(projects.logo)
 
     api(libs.wearcompose.material)

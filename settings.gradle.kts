@@ -15,7 +15,7 @@
  */
 
 plugins {
-    id("com.gradle.develocity") version "3.18"
+    id("com.gradle.develocity") version "3.18.1"
 }
 
 develocity {
@@ -61,11 +61,13 @@ include(":images:coil")
 include(":logo")
 include(":media:audio")
 include(":media:audio-ui")
+include(":media:audio-ui-model")
 include(":media:core")
 include(":media:backend-media3")
 include(":media:media3-logging")
 include(":media:media3-outputswitcher")
 include(":media:ui")
+include(":media:ui-model")
 include(":media:benchmark")
 include(":media:data")
 include(":media:sample")
@@ -81,3 +83,10 @@ include(":tiles")
 
 // https://docs.gradle.org/7.4/userguide/declaring_dependencies.html#sec:type-safe-project-accessors
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
+val media3Checkout: String by settings
+
+if (media3Checkout.isNotBlank()) {
+    gradle.extra.set("androidxMediaModulePrefix", "media3-")
+    apply(from = file("$media3Checkout/core_settings.gradle"))
+}
