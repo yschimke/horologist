@@ -55,7 +55,8 @@ public fun Text(
     maxLines: Int = LocalTextConfiguration.current.maxLines,
     minLines: Int = 1,
     onTextLayout: (TextLayoutResult) -> Unit = {},
-    style: TextStyle = LocalTextStyle.current
+    style: TextStyle = LocalTextStyle.current,
+    autoSize: AutoSize? = null
 ) {
     Text(
         AnnotatedString(text),
@@ -75,7 +76,8 @@ public fun Text(
         minLines,
         emptyMap(),
         onTextLayout,
-        style
+        style,
+        autoSize
     )
 }
 

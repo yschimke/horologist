@@ -16,8 +16,13 @@
 
 package com.google.android.horologist.compose.material3
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.AutoSize
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.wear.compose.material3.MaterialTheme
-import androidx.wear.compose.material3.Text
 import com.google.android.horologist.screenshots.rng.WearDevice
 import com.google.android.horologist.screenshots.rng.WearDeviceScreenshotTest
 import org.junit.Test
@@ -28,9 +33,13 @@ class AutoSizeTextTest(device: WearDevice) : WearDeviceScreenshotTest(device) {
     fun autoSized() {
         runTest {
             MaterialTheme {
-                Text(
-                    text = "Auto Size Title",
-                )
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Auto Size Title",
+                        autoSize = AutoSize.StepBased(),
+                    )
+                }
             }
         }
     }
