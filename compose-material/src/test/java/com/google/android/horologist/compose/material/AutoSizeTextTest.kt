@@ -17,19 +17,21 @@
 package com.google.android.horologist.compose.material
 
 import androidx.compose.ui.res.stringResource
-import androidx.wear.compose.material.Text
-import com.google.android.horologist.screenshots.rng.WearLegacyComponentTest
-import com.google.android.horologist.screenshots.rng.WearLegacyScreenTest
+import androidx.wear.compose.material3.MaterialTheme
+import androidx.wear.compose.material3.Text
+import com.google.android.horologist.screenshots.rng.WearDeviceScreenshotTest
 import org.junit.Test
 
-class AutoSizeTextTest : WearLegacyScreenTest() {
+class AutoSizeTextTest : WearDeviceScreenshotTest(device) {
 
     @Test
     fun autoSized() {
         runTest {
-            Text(
-                text = stringResource(id = R.string.title),
-            )
+            MaterialTheme {
+                Text(
+                    text = stringResource(id = R.string.title),
+                )
+            }
         }
     }
 }
