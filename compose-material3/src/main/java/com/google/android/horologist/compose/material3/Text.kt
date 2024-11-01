@@ -38,7 +38,7 @@ import androidx.wear.compose.material3.LocalTextConfiguration
 import androidx.wear.compose.material3.LocalTextStyle
 
 @Composable
-fun Text(
+public fun Text(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
@@ -80,7 +80,7 @@ fun Text(
 }
 
 @Composable
-fun Text(
+public fun Text(
     text: AnnotatedString,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
