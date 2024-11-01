@@ -110,6 +110,8 @@ dependencies {
     api(libs.compose.ui)
     api(libs.compose.ui.graphics)
     api("androidx.wear.compose:compose-material3:1.0.0-alpha28")
+    implementation("androidx.compose.ui:ui:1.8.0-alpha05")
+    implementation("androidx.compose.foundation:foundation:1.8.0-alpha05")
     api(libs.wearcompose.foundation)
 
     implementation(libs.kotlinx.coroutines.core)
