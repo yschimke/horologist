@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 The Android Open Source Project
+ * Copyright 2024 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package com.google.android.horologist.compose.material
+package com.google.android.horologist.compose.material3
 
-import androidx.compose.ui.res.stringResource
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
+import com.google.android.horologist.screenshots.rng.WearDevice
 import com.google.android.horologist.screenshots.rng.WearDeviceScreenshotTest
 import org.junit.Test
 
-class AutoSizeTextTest : WearDeviceScreenshotTest(device) {
+class AutoSizeTextTest(device: WearDevice) : WearDeviceScreenshotTest(device) {
 
     @Test
     fun autoSized() {
         runTest {
             MaterialTheme {
                 Text(
-                    text = stringResource(id = R.string.title),
+                    text = "Auto Size Title",
                 )
             }
         }
