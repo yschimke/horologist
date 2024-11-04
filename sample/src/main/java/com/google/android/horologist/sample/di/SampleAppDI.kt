@@ -36,9 +36,9 @@ import com.google.android.horologist.sample.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import okhttp3.Cache
 import okhttp3.Call
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -111,11 +111,7 @@ object SampleAppDI {
 
     fun inject(sampleApplication: SampleApplication) {
         sampleApplication.okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(
-                HttpLoggingInterceptor().also { interceptor ->
-                    interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-                },
-            )
+            .cache(Cache(sampleApplication.cacheDir.resolve("HttpCache"), 10_000_000))
             .build()
         sampleApplication.coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
         sampleApplication.networkLogger = InMemoryStatusLogger()

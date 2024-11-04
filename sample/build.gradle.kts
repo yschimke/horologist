@@ -17,6 +17,8 @@
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter.ofPattern
 import java.util.Locale
+import java.util.Properties
+import kotlin.apply
 
 plugins {
     id("com.android.application")
@@ -24,6 +26,13 @@ plugins {
     alias(libs.plugins.roborazzi)
     kotlin("plugin.serialization")
     alias(libs.plugins.compose.compiler)
+}
+
+val localProperties = Properties().apply {
+    val localPropertiesFile = project.rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        load(localPropertiesFile.inputStream())
+    }
 }
 
 android {
@@ -41,6 +50,12 @@ android {
         versionName = date.toString()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            "String",
+            "MAP_TILER_KEY",
+            "\"" + localProperties["MAP_TILER_KEY"] + "\"",
+        )
     }
 
     buildTypes {
@@ -65,6 +80,10 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     kotlinOptions {
@@ -118,6 +137,11 @@ dependencies {
     implementation(projects.networkAwareness)
     implementation(projects.tiles)
     implementation(projects.logo)
+
+    implementation("org.maplibre.gl:android-sdk:10.3.1")
+    implementation("io.github.rallista:maplibre-compose:0.2.3")
+    implementation("androidx.wear.compose:compose-material3:1.0.0-alpha28")
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 
     implementation(libs.compose.ui.util)
 

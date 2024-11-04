@@ -20,10 +20,19 @@ import android.app.Application
 import com.google.android.horologist.networks.InMemoryStatusLogger
 import com.google.android.horologist.networks.data.DataRequestRepository
 import com.google.android.horologist.networks.status.NetworkRepository
+import com.google.android.horologist.sample.BuildConfig
 import com.google.android.horologist.sample.di.SampleAppDI
+import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.WellKnownTileServer
+import com.mapbox.mapboxsdk.module.http.HttpRequestImpl
+import com.mapbox.mapboxsdk.offline.OfflineManager
 import kotlinx.coroutines.CoroutineScope
+import okhttp3.CacheControl
 import okhttp3.Call
+import okhttp3.EventListener
 import okhttp3.OkHttpClient
+import okhttp3.Response
+import okhttp3.logging.HttpLoggingInterceptor
 
 class SampleApplication : Application() {
     lateinit var okHttpClient: OkHttpClient
@@ -32,6 +41,7 @@ class SampleApplication : Application() {
     lateinit var networkRepository: NetworkRepository
     lateinit var dataRequestRepository: DataRequestRepository
     lateinit var networkAwareCallFactory: Call.Factory
+    lateinit var offlineManager: OfflineManager
 
     override fun onCreate() {
         super.onCreate()
