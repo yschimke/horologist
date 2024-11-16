@@ -1,0 +1,9 @@
+<!-- Same as ic_power_green, but doesn't reference the theme for coloring. Use ColorFilter.tint to set the color in compose -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+    <path android:pathData="M336,864L384,600L192,600L516,96L588,96L552,408L768,408L408,864L336,864Z"
+        android:fillColor="@android:color/white"/>
+</vector>
