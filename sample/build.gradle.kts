@@ -146,6 +146,8 @@ dependencies {
     implementation(libs.compose.ui.toolingpreview)
     implementation(libs.androidx.wear.tooling.preview)
 
+    implementation("androidx.wear.compose:compose-material3:1.0.0-alpha29")
+
     implementation(libs.kotlinx.serialization.core)
     implementation(projects.media.audioUiModel)
     testImplementation(projects.media.audioUiModel)
