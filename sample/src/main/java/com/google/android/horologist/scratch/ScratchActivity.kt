@@ -48,13 +48,16 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastFirstOrNull
 import androidx.compose.ui.util.fastRoundToInt
 import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
@@ -131,15 +134,15 @@ fun rememberScreenOffsetScrollableState(columnState: TransformingLazyColumnState
 }
 
 val icons = mapOf(
-    3 to Icons.Default.SpeakerPhone,
-    4 to Icons.Default.NightlightRound,
-    5 to Icons.Default.FlashlightOn,
-    6 to Icons.Default.Place,
-    7 to Icons.Default.DoDisturbOn,
-    8 to Icons.Default.Bluetooth,
-    9 to Icons.Default.Home,
-    10 to Icons.Default.Battery3Bar,
-    11 to Icons.Default.AirplanemodeActive,
+    -1 to Icons.Default.SpeakerPhone,
+//    4 to Icons.Default.NightlightRound,
+//    5 to Icons.Default.FlashlightOn,
+//    6 to Icons.Default.Place,
+//    7 to Icons.Default.DoDisturbOn,
+//    8 to Icons.Default.Bluetooth,
+//    9 to Icons.Default.Home,
+//    10 to Icons.Default.Battery3Bar,
+//    11 to Icons.Default.AirplanemodeActive,
 )
 
 @Composable
@@ -148,7 +151,9 @@ fun WearApp(useOffsets: Boolean) {
 
     val columnState = rememberTransformingLazyColumnState()
     val screenOffset =
-        if (useOffsets) rememberScreenOffsetScrollableState(columnState) else RotaryScrollableDefaults.behavior(columnState)
+        if (useOffsets) rememberScreenOffsetScrollableState(columnState) else RotaryScrollableDefaults.behavior(
+            columnState
+        )
 
     val contentPadding = if (useOffsets) rememberResponsiveColumnPadding(
         first = ColumnItemType.ButtonRow, last = ColumnItemType.ButtonRow
@@ -230,15 +235,36 @@ fun WearApp(useOffsets: Boolean) {
                             ) {
                                 val scrollProgress =
                                     columnState.layoutInfo.visibleItems.fastFirstOrNull { it.index == row }?.scrollProgress
-                                val s = "%.2f\n%.2f".format(
-                                    scrollProgress?.topOffsetFraction ?: 0f,
-                                    scrollProgress?.bottomOffsetFraction ?: 0f
-                                )
-                                Text(
-                                    text = s,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    maxLines = 2
-                                )
+
+                                Row {
+                                    val s = "Nrml %.2f\n%.2f".format(
+                                        scrollProgress?.topOffsetFraction ?: 0f,
+                                        scrollProgress?.bottomOffsetFraction ?: 0f
+                                    )
+                                    Text(
+                                        text = s,
+                                        style = MaterialTheme.typography.bodyExtraSmall.copy(fontSize = 8.sp),
+                                        textAlign = TextAlign.Center,
+                                        maxLines = 3, modifier = Modifier.weight(1f)
+                                    )
+
+                                    if (useOffsets) {
+                                        val offSetProgress =
+                                            scrollProgress?.withOffset((screenOffset as ScreenOffsetScrollableState).screenOffsetPercent)
+                                        val s2 = "Ofst %.2f\n%.2f".format(
+                                            offSetProgress?.topOffsetFraction ?: 0f,
+                                            offSetProgress?.bottomOffsetFraction ?: 0f
+                                        )
+                                        Text(
+                                            text = s2,
+                                            style = MaterialTheme.typography.bodyExtraSmall.copy(
+                                                fontSize = 8.sp
+                                            ),
+                                            textAlign = TextAlign.Center,
+                                            maxLines = 3, modifier = Modifier.weight(1f)
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
