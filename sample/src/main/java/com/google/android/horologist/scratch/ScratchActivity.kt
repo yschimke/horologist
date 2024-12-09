@@ -26,18 +26,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AirplanemodeActive
-import androidx.compose.material.icons.filled.Battery3Bar
-import androidx.compose.material.icons.filled.Bluetooth
-import androidx.compose.material.icons.filled.DoDisturbOn
-import androidx.compose.material.icons.filled.FlashlightOn
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.NightlightRound
-import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.SpeakerPhone
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -48,7 +42,6 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -69,11 +62,14 @@ import androidx.wear.compose.foundation.rememberActiveFocusRequester
 import androidx.wear.compose.foundation.rotary.RotaryScrollableBehavior
 import androidx.wear.compose.foundation.rotary.RotaryScrollableDefaults
 import androidx.wear.compose.foundation.rotary.rotaryScrollable
+import androidx.wear.compose.material3.ButtonDefaults
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.IconToggleButton
 import androidx.wear.compose.material3.IconToggleButtonDefaults
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
+import androidx.wear.compose.material3.TextButton
+import androidx.wear.compose.material3.TextButtonDefaults
 import androidx.wear.compose.material3.TextToggleButton
 import androidx.wear.compose.material3.TextToggleButtonDefaults
 import androidx.wear.compose.material3.lazy.scrollTransform
@@ -86,9 +82,14 @@ class ScratchActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            WearApp(useOffsets = true)
+            val mode = remember { mutableStateOf(ScrollMode.Spacer) }
+            WearApp(mode = mode.value, onChange = { mode.value = ScrollMode.entries.toList()[(mode.value.ordinal + 1) % 3] })
         }
     }
+}
+
+enum class ScrollMode {
+    Offset, Padding, Spacer
 }
 
 class ScreenOffsetScrollableState(
@@ -111,7 +112,7 @@ class ScreenOffsetScrollableState(
 
 //        println("${if (scrollList) "list" else "offset"} $delta csf: ${columnState.canScrollForward} offset: ${screenOffsetPx.floatValue}")
 
-        println(if (scrollList) "list" else "offset")
+//        println(if (scrollList) "list" else "offset")
 
         if (scrollList) {
             with(columnRotaryBehavior) {
@@ -146,29 +147,38 @@ val icons = mapOf(
 )
 
 @Composable
-fun WearApp(useOffsets: Boolean) {
+fun WearApp(mode: ScrollMode, onChange: () -> Unit = {}) {
     val buttonStates = remember { mutableStateMapOf<Int, Boolean>() }
 
     val columnState = rememberTransformingLazyColumnState()
     val screenOffset =
-        if (useOffsets) rememberScreenOffsetScrollableState(columnState) else RotaryScrollableDefaults.behavior(
+        if (mode == ScrollMode.Offset) rememberScreenOffsetScrollableState(columnState) else RotaryScrollableDefaults.behavior(
             columnState
         )
 
-    val contentPadding = if (useOffsets) rememberResponsiveColumnPadding(
-        first = ColumnItemType.ButtonRow, last = ColumnItemType.ButtonRow
-    ) else {
-        val normal = rememberResponsiveColumnPadding(
+    val contentPadding = when (mode) {
+        ScrollMode.Offset -> rememberResponsiveColumnPadding(
             first = ColumnItemType.ButtonRow, last = ColumnItemType.ButtonRow
         )
-        val layoutDirection = LocalLayoutDirection.current
-        PaddingValues(
-            start = normal.calculateLeftPadding(layoutDirection),
-            top = normal.calculateTopPadding(),
-            end = normal.calculateRightPadding(layoutDirection),
-            bottom = LocalConfiguration.current.screenHeightDp.dp
+
+        ScrollMode.Padding -> {
+            val normal = rememberResponsiveColumnPadding(
+                first = ColumnItemType.ButtonRow, last = ColumnItemType.ButtonRow
+            )
+            val layoutDirection = LocalLayoutDirection.current
+            PaddingValues(
+                start = normal.calculateLeftPadding(layoutDirection),
+                top = normal.calculateTopPadding(),
+                end = normal.calculateRightPadding(layoutDirection),
+                bottom = LocalConfiguration.current.screenHeightDp.dp - 20.dp
+            )
+        }
+
+        ScrollMode.Spacer -> rememberResponsiveColumnPadding(
+            first = ColumnItemType.ButtonRow, last = ColumnItemType.ButtonRow
         )
     }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -182,7 +192,7 @@ fun WearApp(useOffsets: Boolean) {
             modifier = Modifier
                 .fillMaxSize()
                 .graphicsLayer {
-                    if (useOffsets) {
+                    if (mode == ScrollMode.Offset) {
                         translationY =
                             (screenOffset as ScreenOffsetScrollableState).screenOffsetPx.floatValue
                     }
@@ -197,7 +207,7 @@ fun WearApp(useOffsets: Boolean) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .run {
-                            if (useOffsets) {
+                            if (mode == ScrollMode.Offset) {
                                 scrollTransformWithOffset(
                                     this@items,
                                     offset = (screenOffset as ScreenOffsetScrollableState).screenOffsetPercent
@@ -211,6 +221,17 @@ fun WearApp(useOffsets: Boolean) {
                     )
                 ) {
                     repeat(3) { column ->
+                        if (row == 0 && column == 0) {
+                            TextButton(
+                                onClick = onChange,
+                                colors = TextButtonDefaults.outlinedTextButtonColors(),
+                                border = ButtonDefaults.outlinedButtonBorder(enabled = true)
+                            ) {
+                                Text("$mode", style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp))
+                            }
+                            return@repeat
+                        }
+
                         val index = row * 3 + column
                         val buttonState = buttonStates.getOrPut(index) { false }
                         val icon = icons[index]
@@ -243,12 +264,14 @@ fun WearApp(useOffsets: Boolean) {
                                     )
                                     Text(
                                         text = s,
-                                        style = MaterialTheme.typography.bodyExtraSmall.copy(fontSize = 8.sp),
+                                        style = MaterialTheme.typography.bodyExtraSmall.copy(
+                                            fontSize = 8.sp
+                                        ),
                                         textAlign = TextAlign.Center,
                                         maxLines = 3, modifier = Modifier.weight(1f)
                                     )
 
-                                    if (useOffsets) {
+                                    if (mode == ScrollMode.Offset) {
                                         val offSetProgress =
                                             scrollProgress?.withOffset((screenOffset as ScreenOffsetScrollableState).screenOffsetPercent)
                                         val s2 = "Ofst %.2f\n%.2f".format(
@@ -269,6 +292,13 @@ fun WearApp(useOffsets: Boolean) {
                         }
                     }
                 }
+            }
+            item {
+                Spacer(
+                    modifier = Modifier
+                        .height(LocalConfiguration.current.screenHeightDp.dp)
+                        .background(Color.DarkGray)
+                )
             }
         }
     }
