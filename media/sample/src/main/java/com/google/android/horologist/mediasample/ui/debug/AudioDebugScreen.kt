@@ -16,24 +16,28 @@
 
 package com.google.android.horologist.mediasample.ui.debug
 
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
-import androidx.wear.compose.material.MaterialTheme
-import androidx.wear.compose.material.Text
-import com.google.android.horologist.compose.layout.ScalingLazyColumn
-import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults.ItemType
-import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults.padding
-import com.google.android.horologist.compose.layout.ScreenScaffold
-import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
+import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
+import androidx.wear.compose.material3.ListHeader
+import androidx.wear.compose.material3.ListHeaderDefaults
+import androidx.wear.compose.material3.MaterialTheme
+import androidx.wear.compose.material3.SurfaceTransformation
+import androidx.wear.compose.material3.Text
+import androidx.wear.compose.material3.lazy.rememberTransformationSpec
+import androidx.wear.compose.material3.lazy.transformedHeight
+import com.google.android.horologist.compose.layout.ColumnItemType
+import com.google.android.horologist.compose.layout.rememberResponsiveColumnPadding
 import com.google.android.horologist.mediasample.R
+import com.google.android.horologist.mediasample.ui.common.MediaScreenScaffold
 import java.time.Instant
 import java.time.ZoneId
 import kotlin.time.Duration.Companion.seconds
@@ -45,101 +49,119 @@ fun AudioDebugScreen(
 ) {
     val uiState by audioDebugScreenViewModel.uiState.collectAsStateWithLifecycle()
 
-    val columnState = rememberResponsiveColumnState(
-        contentPadding = padding(
-            first = ItemType.Text,
-            last = ItemType.Chip,
-        ),
+    AudioDebugScreen(state = toDebugState(uiState), modifier = modifier)
+}
+
+data class AudioDebugState(
+    val format: String,
+    val trackOffloaded: String,
+    val offloadSupported: String,
+    val sleepingForOffload: String,
+    val offloadScheduled: String,
+    val offloadPercent: String,
+    val events: List<Event>,
+) {
+    data class Event(val time: Long, val message: String)
+}
+
+private fun toDebugState(uiState: com.google.android.horologist.mediasample.ui.debug.AudioDebugScreenViewModel.UiState?): AudioDebugState {
+    val status = uiState?.audioOffloadStatus
+    val format = status?.format?.run { "$sampleMimeType $sampleRate" }.orEmpty()
+    val trackOffloaded = status?.trackOffloadDescription() ?: "N/A"
+    val times = status?.updateToNow()
+    val enabled = times?.run { formatDuration(enabled) }.orEmpty()
+    val disabled = times?.run { formatDuration(disabled) }.orEmpty()
+
+    return AudioDebugState(
+        format = format,
+        trackOffloaded = trackOffloaded,
+        offloadSupported = uiState?.formatSupported?.toString().orEmpty(),
+        sleepingForOffload = status?.sleepingForOffload?.toString().orEmpty(),
+        offloadScheduled = status?.offloadSchedulingEnabled.toString().orEmpty(),
+        offloadPercent = (times?.percent ?: "") + "($enabled/$disabled)",
+        events = status?.errors.orEmpty().reversed().map {
+            AudioDebugState.Event(it.time, it.message)
+        },
+    )
+}
+
+@Composable
+fun AudioDebugScreen(
+    state: AudioDebugState,
+    modifier: Modifier = Modifier,
+) {
+    val transformationSpec = rememberTransformationSpec()
+    val columnState = rememberTransformingLazyColumnState()
+    val contentPadding = rememberResponsiveColumnPadding(
+        first = ColumnItemType.ListHeader,
+        last = ColumnItemType.Button,
     )
 
-    ScreenScaffold(scrollState = columnState) {
-        ScalingLazyColumn(
-            columnState = columnState,
-            modifier = modifier,
-        ) {
+    MediaScreenScaffold(
+        scrollState = columnState,
+        modifier = modifier,
+        contentPadding = contentPadding,
+    ) { padding ->
+        TransformingLazyColumn(state = columnState, contentPadding = padding) {
             item {
-                Text(
-                    text = stringResource(id = R.string.sample_audio_debug),
-                    modifier = Modifier.padding(bottom = 12.dp),
-                    style = MaterialTheme.typography.title3,
-                )
+                ListHeader(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .minimumVerticalContentPadding(ListHeaderDefaults.minimumTopListContentPadding)
+                        .transformedHeight(this, transformationSpec),
+                    transformation = SurfaceTransformation(transformationSpec),
+                ) {
+                    Text(text = stringResource(id = R.string.sample_audio_debug))
+                }
             }
+            item { DebugText(stringResource(id = R.string.sample_debug_format, state.format), transformationSpec) }
+            item { DebugText(stringResource(id = R.string.sample_track_offloaded, state.trackOffloaded), transformationSpec) }
+            item { DebugText(stringResource(id = R.string.sample_offload_supported, state.offloadSupported), transformationSpec) }
+            item { DebugText(stringResource(id = R.string.sample_debug_offload_sleeping, state.sleepingForOffload), transformationSpec) }
+            item { DebugText(stringResource(id = R.string.sample_debug_offload_scheduled, state.offloadScheduled), transformationSpec) }
+            item { DebugText(stringResource(id = R.string.sample_debug_offload_percent, state.offloadPercent), transformationSpec) }
             item {
-                val format = uiState?.audioOffloadStatus?.format?.run {
-                    "$sampleMimeType $sampleRate"
-                }.orEmpty()
-                Text(
-                    text = stringResource(id = R.string.sample_debug_format, format),
-                    style = MaterialTheme.typography.body2,
-                )
+                ListHeader(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .transformedHeight(this, transformationSpec),
+                    transformation = SurfaceTransformation(transformationSpec),
+                ) {
+                    Text(text = stringResource(id = R.string.sample_audio_debug_events))
+                }
             }
-            item {
-                // Currently will always be N/A until support in ExoPlayer
-                val supported = uiState?.audioOffloadStatus?.trackOffloadDescription() ?: "N/A"
-                Text(
-                    text = stringResource(id = R.string.sample_track_offloaded, supported),
-                    style = MaterialTheme.typography.body2,
-                )
-            }
-            item {
-                val supported = uiState?.formatSupported?.toString().orEmpty()
-                Text(
-                    text = stringResource(id = R.string.sample_offload_supported, supported),
-                    style = MaterialTheme.typography.body2,
-                )
-            }
-            item {
-                Text(
-                    text = stringResource(
-                        id = R.string.sample_debug_offload_sleeping,
-                        uiState?.audioOffloadStatus?.sleepingForOffload?.toString().orEmpty(),
-                    ),
-                    style = MaterialTheme.typography.body2,
-                )
-            }
-            item {
-                Text(
-                    text = stringResource(
-                        id = R.string.sample_debug_offload_scheduled,
-                        uiState?.audioOffloadStatus?.offloadSchedulingEnabled.toString().orEmpty(),
-                    ),
-                    style = MaterialTheme.typography.body2,
-                )
-            }
-            item {
-                val times = uiState?.audioOffloadStatus?.updateToNow()
-                val enabled = times?.run { formatDuration(enabled) }.orEmpty()
-                val disabled = times?.run { formatDuration(disabled) }.orEmpty()
-                Text(
-                    text = stringResource(
-                        id = R.string.sample_debug_offload_percent,
-                        times?.percent + "($enabled/$disabled)",
-                    ),
-                    style = MaterialTheme.typography.body2,
-                )
-            }
-            item {
-                Text(
-                    text = stringResource(id = R.string.sample_audio_debug_events),
-                    modifier = Modifier.padding(vertical = 12.dp),
-                    style = MaterialTheme.typography.title3,
-                )
-            }
-            items(uiState?.audioOffloadStatus?.errors.orEmpty().reversed()) {
-                val message = remember(it.time) {
-                    val time = Instant.ofEpochMilli(it.time).atZone(ZoneId.systemDefault())
+            items(state.events, key = { it.time }) { event ->
+                val message = remember(event.time) {
+                    val time = Instant.ofEpochMilli(event.time).atZone(ZoneId.systemDefault())
                         .toLocalTime()
-                    "$time ${it.message}"
+                    "$time ${event.message}"
                 }
                 Text(
                     text = message,
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.caption3,
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .transformedHeight(this, transformationSpec),
                 )
             }
         }
     }
+}
+
+@Composable
+private fun androidx.wear.compose.foundation.lazy.TransformingLazyColumnItemScope.DebugText(
+    text: String,
+    spec: androidx.wear.compose.material3.lazy.TransformationSpec,
+) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodySmall,
+        modifier = Modifier
+            .fillMaxWidth()
+            .transformedHeight(this, spec),
+    )
 }
 
 fun formatDuration(millis: Long): String {
