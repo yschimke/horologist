@@ -35,7 +35,6 @@ import androidx.wear.compose.material3.CheckboxButton
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.ListHeader
 import androidx.wear.compose.material3.ListHeaderDefaults
-import androidx.wear.compose.material3.ScreenScaffold
 import androidx.wear.compose.material3.SurfaceTransformation
 import androidx.wear.compose.material3.Text
 import androidx.wear.compose.material3.lazy.rememberTransformationSpec
@@ -43,6 +42,7 @@ import androidx.wear.compose.material3.lazy.transformedHeight
 import com.google.android.horologist.compose.layout.ColumnItemType
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnPadding
 import com.google.android.horologist.media.ui.navigation.NavigationScreen
+import com.google.android.horologist.mediasample.ui.common.MediaScreenScaffold
 import com.google.android.horologist.mediasample.R
 import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.DeveloperOptions
 import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.GoogleSignInScreen
@@ -96,7 +96,7 @@ fun UampSettingsScreen(
         last = ColumnItemType.Button,
     )
 
-    ScreenScaffold(
+    MediaScreenScaffold(
         scrollState = columnState,
         modifier = modifier,
         contentPadding = contentPadding,

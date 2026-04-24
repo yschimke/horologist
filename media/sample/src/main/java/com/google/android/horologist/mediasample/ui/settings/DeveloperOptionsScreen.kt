@@ -30,7 +30,6 @@ import androidx.wear.compose.material3.ButtonDefaults
 import androidx.wear.compose.material3.CheckboxButton
 import androidx.wear.compose.material3.ListHeader
 import androidx.wear.compose.material3.ListHeaderDefaults
-import androidx.wear.compose.material3.ScreenScaffold
 import androidx.wear.compose.material3.SurfaceTransformation
 import androidx.wear.compose.material3.Text
 import androidx.wear.compose.material3.lazy.rememberTransformationSpec
@@ -38,6 +37,7 @@ import androidx.wear.compose.material3.lazy.transformedHeight
 import com.google.android.horologist.compose.layout.ColumnItemType
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnPadding
 import com.google.android.horologist.mediasample.R
+import com.google.android.horologist.mediasample.ui.common.MediaScreenScaffold
 import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.AudioDebug
 import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.NewHotness
 import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.Samples
@@ -118,7 +118,7 @@ fun DeveloperOptionsScreen(
     )
     val errorMessage = stringResource(id = R.string.sample_error)
 
-    ScreenScaffold(
+    MediaScreenScaffold(
         scrollState = columnState,
         modifier = modifier,
         contentPadding = contentPadding,

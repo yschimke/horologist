@@ -16,25 +16,29 @@
 
 package com.google.android.horologist.mediasample.ui.debug
 
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
-import androidx.wear.compose.material.MaterialTheme
-import androidx.wear.compose.material.Text
-import com.google.android.horologist.compose.layout.ScalingLazyColumn
-import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults.ItemType
-import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults.padding
-import com.google.android.horologist.compose.layout.ScreenScaffold
-import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
+import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
+import androidx.wear.compose.material3.Button
+import androidx.wear.compose.material3.ButtonDefaults
+import androidx.wear.compose.material3.ListHeader
+import androidx.wear.compose.material3.ListHeaderDefaults
+import androidx.wear.compose.material3.SurfaceTransformation
+import androidx.wear.compose.material3.Text
+import androidx.wear.compose.material3.lazy.rememberTransformationSpec
+import androidx.wear.compose.material3.lazy.transformedHeight
+import com.google.android.horologist.compose.layout.ColumnItemType
+import com.google.android.horologist.compose.layout.rememberResponsiveColumnPadding
 import com.google.android.horologist.media.ui.navigation.MediaNavController.navigateToPlayer
 import com.google.android.horologist.mediasample.R
-import com.google.android.horologist.mediasample.ui.settings.ActionSetting
+import com.google.android.horologist.mediasample.ui.common.MediaScreenScaffold
 
 @Composable
 fun SamplesScreen(
@@ -44,30 +48,59 @@ fun SamplesScreen(
 ) {
     val uiState by samplesScreenViewModel.uiState.collectAsStateWithLifecycle()
 
-    val columnState = rememberResponsiveColumnState(
-        contentPadding = padding(
-            first = ItemType.Text,
-            last = ItemType.Chip,
-        ),
+    SamplesScreen(
+        samples = uiState.samples.map { SampleItem(it.id, it.name) },
+        onSampleClick = { id ->
+            samplesScreenViewModel.playSamples(id)
+            navController.navigateToPlayer()
+        },
+        modifier = modifier,
+    )
+}
+
+data class SampleItem(val id: Int, val name: String)
+
+@Composable
+fun SamplesScreen(
+    samples: List<SampleItem>,
+    onSampleClick: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val transformationSpec = rememberTransformationSpec()
+    val columnState = rememberTransformingLazyColumnState()
+    val contentPadding = rememberResponsiveColumnPadding(
+        first = ColumnItemType.ListHeader,
+        last = ColumnItemType.Button,
     )
 
-    ScreenScaffold(scrollState = columnState) {
-        ScalingLazyColumn(
-            columnState = columnState,
-            modifier = modifier,
-        ) {
+    MediaScreenScaffold(
+        scrollState = columnState,
+        modifier = modifier,
+        contentPadding = contentPadding,
+    ) { padding ->
+        TransformingLazyColumn(state = columnState, contentPadding = padding) {
             item {
-                Text(
-                    text = stringResource(id = R.string.sample_samples),
-                    modifier = Modifier.padding(bottom = 12.dp),
-                    style = MaterialTheme.typography.title3,
-                )
-            }
-            items(uiState.samples) {
-                ActionSetting(text = it.name) {
-                    samplesScreenViewModel.playSamples(it.id)
-                    navController.navigateToPlayer()
+                ListHeader(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .minimumVerticalContentPadding(ListHeaderDefaults.minimumTopListContentPadding)
+                        .transformedHeight(this, transformationSpec),
+                    transformation = SurfaceTransformation(transformationSpec),
+                ) {
+                    Text(text = stringResource(id = R.string.sample_samples))
                 }
+            }
+            items(samples, key = { it.id }) { sample ->
+                Button(
+                    onClick = { onSampleClick(sample.id) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .minimumVerticalContentPadding(ButtonDefaults.minimumVerticalListContentPadding)
+                        .transformedHeight(this, transformationSpec),
+                    transformation = SurfaceTransformation(transformationSpec),
+                    colors = ButtonDefaults.filledTonalButtonColors(),
+                    label = { Text(sample.name) },
+                )
             }
         }
     }
