@@ -58,7 +58,40 @@ fun UampSettingsScreen(
     modifier: Modifier = Modifier,
 ) {
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
+    val activity = LocalActivity.current
 
+    UampSettingsScreen(
+        state = screenState,
+        modifier = modifier,
+        onLoginClick = { navController.navigate(GoogleSignInScreen) },
+        onLogoutClick = {
+            navController.navigate(GoogleSignOutScreen) {
+                popUpTo<NavigationScreen.Player>()
+            }
+        },
+        onGuestModeChange = viewModel::setGuestMode,
+        onDeveloperOptionsClick = { navController.navigate(DeveloperOptions) },
+        onShowLicensesClick = {
+            activity?.startActivity(
+                Intent().apply {
+                    setPackage(activity.packageName)
+                    setAction("com.google.wear.ACTION_SHOW_LICENSE")
+                },
+            )
+        },
+    )
+}
+
+@Composable
+fun UampSettingsScreen(
+    state: SettingsScreenState,
+    onLoginClick: () -> Unit,
+    onLogoutClick: () -> Unit,
+    onGuestModeChange: (Boolean) -> Unit,
+    onDeveloperOptionsClick: () -> Unit,
+    onShowLicensesClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val columnState = rememberResponsiveColumnState(
         contentPadding = ScalingLazyColumnDefaults.padding(
             first = ItemType.Text,
@@ -77,63 +110,46 @@ fun UampSettingsScreen(
                 }
             }
             item {
-                if (screenState.authUser == null) {
+                if (state.authUser == null) {
                     Chip(
                         label = stringResource(id = R.string.login),
                         modifier = Modifier.fillMaxWidth(),
-                        onClick = {
-                            navController.navigate(GoogleSignInScreen)
-                        },
-                        enabled = !screenState.guestMode,
+                        onClick = onLoginClick,
+                        enabled = !state.guestMode,
                         colors = ChipDefaults.secondaryChipColors(),
                     )
                 } else {
                     Chip(
                         label = stringResource(id = R.string.logout),
                         modifier = Modifier.fillMaxWidth(),
-                        onClick = {
-                            navController.navigate(GoogleSignOutScreen) {
-                                popUpTo<NavigationScreen.Player>()
-                            }
-                        },
+                        onClick = onLogoutClick,
                         colors = ChipDefaults.secondaryChipColors(),
                     )
                 }
             }
             item {
                 CheckedSetting(
-                    screenState.guestMode,
+                    state.guestMode,
                     stringResource(id = R.string.sample_guest_mode),
-                    enabled = screenState.writable,
-                ) {
-                    viewModel.setGuestMode(it)
-                }
+                    enabled = state.writable,
+                    onCheckedChange = onGuestModeChange,
+                )
             }
-            if (screenState.showDeveloperOptions) {
+            if (state.showDeveloperOptions) {
                 item {
                     ActionSetting(
                         text = stringResource(id = R.string.sample_developer_options),
                         icon = Icons.Default.DataObject,
                         colors = ChipDefaults.secondaryChipColors(),
-                        onClick = {
-                            navController.navigate(DeveloperOptions)
-                        },
+                        onClick = onDeveloperOptionsClick,
                     )
                 }
             }
             item {
-                val activity = LocalActivity.current
                 Chip(
                     label = stringResource(id = R.string.show_licenses),
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        activity?.startActivity(
-                            Intent().apply {
-                                setPackage(activity.packageName)
-                                setAction("com.google.wear.ACTION_SHOW_LICENSE")
-                            },
-                        )
-                    },
+                    onClick = onShowLicensesClick,
                     enabled = true,
                 )
             }
