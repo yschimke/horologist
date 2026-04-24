@@ -17,66 +17,85 @@
 package com.google.android.horologist.mediasample.ui.settings
 
 import androidx.compose.runtime.Composable
+import androidx.wear.compose.material3.AppScaffold
+import androidx.wear.compose.material3.TimeSource
+import androidx.wear.compose.material3.TimeText
 import androidx.wear.compose.ui.tooling.preview.WearPreviewLargeRound
 import androidx.wear.compose.ui.tooling.preview.WearPreviewSmallRound
 import com.google.android.horologist.auth.data.common.model.AuthUser
+
+private object FixedTimeSource : TimeSource {
+    @Composable
+    override fun currentTime(): String = "10:10"
+}
+
+@Composable
+private fun PreviewScaffold(content: @Composable () -> Unit) {
+    AppScaffold(timeText = { TimeText(timeSource = FixedTimeSource) }) { content() }
+}
 
 @WearPreviewSmallRound
 @WearPreviewLargeRound
 @Composable
 fun UampSettingsScreenSignedOutPreview() {
-    UampSettingsScreen(
-        state = SettingsScreenState(
-            authUser = null,
-            guestMode = false,
-            writable = true,
-            showDeveloperOptions = true,
-        ),
-        onLoginClick = {},
-        onLogoutClick = {},
-        onGuestModeChange = {},
-        onDeveloperOptionsClick = {},
-        onShowLicensesClick = {},
-    )
+    PreviewScaffold {
+        UampSettingsScreen(
+            state = SettingsScreenState(
+                authUser = null,
+                guestMode = false,
+                writable = true,
+                showDeveloperOptions = true,
+            ),
+            onLoginClick = {},
+            onLogoutClick = {},
+            onGuestModeChange = {},
+            onDeveloperOptionsClick = {},
+            onShowLicensesClick = {},
+        )
+    }
 }
 
 @WearPreviewSmallRound
 @WearPreviewLargeRound
 @Composable
 fun UampSettingsScreenSignedInPreview() {
-    UampSettingsScreen(
-        state = SettingsScreenState(
-            authUser = AuthUser(
-                displayName = "Jane Smith",
-                email = "jane.smith@example.com",
+    PreviewScaffold {
+        UampSettingsScreen(
+            state = SettingsScreenState(
+                authUser = AuthUser(
+                    displayName = "Jane Smith",
+                    email = "jane.smith@example.com",
+                ),
+                guestMode = false,
+                writable = true,
+                showDeveloperOptions = true,
             ),
-            guestMode = false,
-            writable = true,
-            showDeveloperOptions = true,
-        ),
-        onLoginClick = {},
-        onLogoutClick = {},
-        onGuestModeChange = {},
-        onDeveloperOptionsClick = {},
-        onShowLicensesClick = {},
-    )
+            onLoginClick = {},
+            onLogoutClick = {},
+            onGuestModeChange = {},
+            onDeveloperOptionsClick = {},
+            onShowLicensesClick = {},
+        )
+    }
 }
 
 @WearPreviewSmallRound
 @WearPreviewLargeRound
 @Composable
 fun UampSettingsScreenGuestModePreview() {
-    UampSettingsScreen(
-        state = SettingsScreenState(
-            authUser = null,
-            guestMode = true,
-            writable = true,
-            showDeveloperOptions = false,
-        ),
-        onLoginClick = {},
-        onLogoutClick = {},
-        onGuestModeChange = {},
-        onDeveloperOptionsClick = {},
-        onShowLicensesClick = {},
-    )
+    PreviewScaffold {
+        UampSettingsScreen(
+            state = SettingsScreenState(
+                authUser = null,
+                guestMode = true,
+                writable = true,
+                showDeveloperOptions = false,
+            ),
+            onLoginClick = {},
+            onLogoutClick = {},
+            onGuestModeChange = {},
+            onDeveloperOptionsClick = {},
+            onShowLicensesClick = {},
+        )
+    }
 }

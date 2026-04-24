@@ -18,30 +18,23 @@ package com.google.android.horologist.mediasample.ui.settings
 
 import android.content.Intent
 import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DataObject
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
-import androidx.wear.compose.material.ChipColors
-import androidx.wear.compose.material.ChipDefaults
-import androidx.wear.compose.material.ToggleChip
-import androidx.wear.compose.material.ToggleChipDefaults
 import androidx.wear.compose.material3.Button
 import androidx.wear.compose.material3.ButtonDefaults
 import androidx.wear.compose.material3.CheckboxButton
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.ListHeader
+import androidx.wear.compose.material3.ListHeaderDefaults
 import androidx.wear.compose.material3.ScreenScaffold
 import androidx.wear.compose.material3.SurfaceTransformation
 import androidx.wear.compose.material3.Text
@@ -113,6 +106,7 @@ fun UampSettingsScreen(
                 ListHeader(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .minimumVerticalContentPadding(ListHeaderDefaults.minimumTopListContentPadding)
                         .transformedHeight(this, transformationSpec),
                     transformation = SurfaceTransformation(transformationSpec),
                 ) {
@@ -126,6 +120,7 @@ fun UampSettingsScreen(
                         enabled = !state.guestMode,
                         modifier = Modifier
                             .fillMaxWidth()
+                            .minimumVerticalContentPadding(ButtonDefaults.minimumVerticalListContentPadding)
                             .transformedHeight(this, transformationSpec),
                         transformation = SurfaceTransformation(transformationSpec),
                         colors = ButtonDefaults.filledTonalButtonColors(),
@@ -136,6 +131,7 @@ fun UampSettingsScreen(
                         onClick = onLogoutClick,
                         modifier = Modifier
                             .fillMaxWidth()
+                            .minimumVerticalContentPadding(ButtonDefaults.minimumVerticalListContentPadding)
                             .transformedHeight(this, transformationSpec),
                         transformation = SurfaceTransformation(transformationSpec),
                         colors = ButtonDefaults.filledTonalButtonColors(),
@@ -150,6 +146,7 @@ fun UampSettingsScreen(
                     enabled = state.writable,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .minimumVerticalContentPadding(ButtonDefaults.minimumVerticalListContentPadding)
                         .transformedHeight(this, transformationSpec),
                     transformation = SurfaceTransformation(transformationSpec),
                     label = { Text(stringResource(id = R.string.sample_guest_mode)) },
@@ -161,6 +158,7 @@ fun UampSettingsScreen(
                         onClick = onDeveloperOptionsClick,
                         modifier = Modifier
                             .fillMaxWidth()
+                            .minimumVerticalContentPadding(ButtonDefaults.minimumVerticalListContentPadding)
                             .transformedHeight(this, transformationSpec),
                         transformation = SurfaceTransformation(transformationSpec),
                         colors = ButtonDefaults.filledTonalButtonColors(),
@@ -179,6 +177,7 @@ fun UampSettingsScreen(
                     onClick = onShowLicensesClick,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .minimumVerticalContentPadding(ButtonDefaults.minimumVerticalListContentPadding)
                         .transformedHeight(this, transformationSpec),
                     transformation = SurfaceTransformation(transformationSpec),
                     label = { Text(stringResource(id = R.string.show_licenses)) },
@@ -186,71 +185,4 @@ fun UampSettingsScreen(
             }
         }
     }
-}
-
-// Left here for callers still on M2 (DeveloperOptionsScreen, SamplesScreen). These will be
-// migrated in follow-up commits on this PR and the helpers will move/delete then.
-@Composable
-fun ActionSetting(
-    text: String,
-    modifier: Modifier = Modifier,
-    icon: ImageVector? = null,
-    enabled: Boolean = true,
-    colors: ChipColors = ChipDefaults.primaryChipColors(),
-    onClick: () -> Unit,
-) {
-    val hasIcon = icon != null
-    val labelParam: (@Composable RowScope.() -> Unit) =
-        {
-            androidx.wear.compose.material.Text(
-                text = text,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = if (hasIcon) TextAlign.Left else TextAlign.Center,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 2,
-            )
-        }
-
-    androidx.wear.compose.material.Chip(
-        onClick = onClick,
-        label = labelParam,
-        enabled = enabled,
-        modifier = modifier.fillMaxWidth(),
-        colors = colors,
-        icon = {
-            if (icon != null) {
-                androidx.wear.compose.material.Icon(imageVector = icon, contentDescription = text)
-            }
-        },
-        contentPadding = ChipDefaults.ContentPadding,
-    )
-}
-
-@Composable
-fun CheckedSetting(
-    value: Boolean,
-    text: String,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    onCheckedChange: (Boolean) -> Unit,
-) {
-    ToggleChip(
-        checked = value,
-        toggleControl = {
-            androidx.wear.compose.material.Icon(
-                imageVector = ToggleChipDefaults.checkboxIcon(checked = value),
-                contentDescription = if (value) {
-                    stringResource(id = R.string.on)
-                } else {
-                    stringResource(id = R.string.off)
-                },
-            )
-        },
-        enabled = enabled,
-        onCheckedChange = onCheckedChange,
-        label = {
-            androidx.wear.compose.material.Text(text)
-        },
-        modifier = modifier.fillMaxWidth(),
-    )
 }
