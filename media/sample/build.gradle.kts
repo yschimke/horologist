@@ -149,6 +149,7 @@ dependencies {
   implementation(libs.compose.material.iconsext)
 
   implementation(libs.wearcompose.material)
+  implementation(libs.androidx.wear.compose.material3)
   implementation(libs.wearcompose.foundation)
   implementation(libs.wearcompose.navigation)
 

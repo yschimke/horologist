@@ -31,20 +31,24 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.wear.compose.foundation.lazy.TransformingLazyColumn
+import androidx.wear.compose.foundation.lazy.rememberTransformingLazyColumnState
 import androidx.wear.compose.material.ChipColors
 import androidx.wear.compose.material.ChipDefaults
-import androidx.wear.compose.material.Icon
-import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.ToggleChip
 import androidx.wear.compose.material.ToggleChipDefaults
-import com.google.android.horologist.compose.layout.ScalingLazyColumn
-import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults
-import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults.ItemType
-import com.google.android.horologist.compose.layout.ScreenScaffold
-import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
-import com.google.android.horologist.compose.material.Chip
-import com.google.android.horologist.compose.material.ListHeaderDefaults.firstItemPadding
-import com.google.android.horologist.compose.material.ResponsiveListHeader
+import androidx.wear.compose.material3.Button
+import androidx.wear.compose.material3.ButtonDefaults
+import androidx.wear.compose.material3.CheckboxButton
+import androidx.wear.compose.material3.Icon
+import androidx.wear.compose.material3.ListHeader
+import androidx.wear.compose.material3.ScreenScaffold
+import androidx.wear.compose.material3.SurfaceTransformation
+import androidx.wear.compose.material3.Text
+import androidx.wear.compose.material3.lazy.rememberTransformationSpec
+import androidx.wear.compose.material3.lazy.transformedHeight
+import com.google.android.horologist.compose.layout.ColumnItemType
+import com.google.android.horologist.compose.layout.rememberResponsiveColumnPadding
 import com.google.android.horologist.media.ui.navigation.NavigationScreen
 import com.google.android.horologist.mediasample.R
 import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.DeveloperOptions
@@ -92,71 +96,100 @@ fun UampSettingsScreen(
     onShowLicensesClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val columnState = rememberResponsiveColumnState(
-        contentPadding = ScalingLazyColumnDefaults.padding(
-            first = ItemType.Text,
-            last = ItemType.Chip,
-        ),
+    val transformationSpec = rememberTransformationSpec()
+    val columnState = rememberTransformingLazyColumnState()
+    val contentPadding = rememberResponsiveColumnPadding(
+        first = ColumnItemType.ListHeader,
+        last = ColumnItemType.Button,
     )
 
-    ScreenScaffold(scrollState = columnState) {
-        ScalingLazyColumn(
-            columnState = columnState,
-            modifier = modifier,
-        ) {
+    ScreenScaffold(
+        scrollState = columnState,
+        modifier = modifier,
+        contentPadding = contentPadding,
+    ) { padding ->
+        TransformingLazyColumn(state = columnState, contentPadding = padding) {
             item {
-                ResponsiveListHeader(contentPadding = firstItemPadding()) {
+                ListHeader(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .transformedHeight(this, transformationSpec),
+                    transformation = SurfaceTransformation(transformationSpec),
+                ) {
                     Text(text = stringResource(id = R.string.sample_settings))
                 }
             }
             item {
                 if (state.authUser == null) {
-                    Chip(
-                        label = stringResource(id = R.string.login),
-                        modifier = Modifier.fillMaxWidth(),
+                    Button(
                         onClick = onLoginClick,
                         enabled = !state.guestMode,
-                        colors = ChipDefaults.secondaryChipColors(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .transformedHeight(this, transformationSpec),
+                        transformation = SurfaceTransformation(transformationSpec),
+                        colors = ButtonDefaults.filledTonalButtonColors(),
+                        label = { Text(stringResource(id = R.string.login)) },
                     )
                 } else {
-                    Chip(
-                        label = stringResource(id = R.string.logout),
-                        modifier = Modifier.fillMaxWidth(),
+                    Button(
                         onClick = onLogoutClick,
-                        colors = ChipDefaults.secondaryChipColors(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .transformedHeight(this, transformationSpec),
+                        transformation = SurfaceTransformation(transformationSpec),
+                        colors = ButtonDefaults.filledTonalButtonColors(),
+                        label = { Text(stringResource(id = R.string.logout)) },
                     )
                 }
             }
             item {
-                CheckedSetting(
-                    state.guestMode,
-                    stringResource(id = R.string.sample_guest_mode),
-                    enabled = state.writable,
+                CheckboxButton(
+                    checked = state.guestMode,
                     onCheckedChange = onGuestModeChange,
+                    enabled = state.writable,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .transformedHeight(this, transformationSpec),
+                    transformation = SurfaceTransformation(transformationSpec),
+                    label = { Text(stringResource(id = R.string.sample_guest_mode)) },
                 )
             }
             if (state.showDeveloperOptions) {
                 item {
-                    ActionSetting(
-                        text = stringResource(id = R.string.sample_developer_options),
-                        icon = Icons.Default.DataObject,
-                        colors = ChipDefaults.secondaryChipColors(),
+                    Button(
                         onClick = onDeveloperOptionsClick,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .transformedHeight(this, transformationSpec),
+                        transformation = SurfaceTransformation(transformationSpec),
+                        colors = ButtonDefaults.filledTonalButtonColors(),
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.DataObject,
+                                contentDescription = null,
+                            )
+                        },
+                        label = { Text(stringResource(id = R.string.sample_developer_options)) },
                     )
                 }
             }
             item {
-                Chip(
-                    label = stringResource(id = R.string.show_licenses),
-                    modifier = Modifier.fillMaxWidth(),
+                Button(
                     onClick = onShowLicensesClick,
-                    enabled = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .transformedHeight(this, transformationSpec),
+                    transformation = SurfaceTransformation(transformationSpec),
+                    label = { Text(stringResource(id = R.string.show_licenses)) },
                 )
             }
         }
     }
 }
 
+// Left here for callers still on M2 (DeveloperOptionsScreen, SamplesScreen). These will be
+// migrated in follow-up commits on this PR and the helpers will move/delete then.
 @Composable
 fun ActionSetting(
     text: String,
@@ -169,7 +202,7 @@ fun ActionSetting(
     val hasIcon = icon != null
     val labelParam: (@Composable RowScope.() -> Unit) =
         {
-            Text(
+            androidx.wear.compose.material.Text(
                 text = text,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = if (hasIcon) TextAlign.Left else TextAlign.Center,
@@ -186,7 +219,7 @@ fun ActionSetting(
         colors = colors,
         icon = {
             if (icon != null) {
-                Icon(imageVector = icon, contentDescription = text)
+                androidx.wear.compose.material.Icon(imageVector = icon, contentDescription = text)
             }
         },
         contentPadding = ChipDefaults.ContentPadding,
@@ -204,21 +237,19 @@ fun CheckedSetting(
     ToggleChip(
         checked = value,
         toggleControl = {
-            Icon(
+            androidx.wear.compose.material.Icon(
                 imageVector = ToggleChipDefaults.checkboxIcon(checked = value),
                 contentDescription = if (value) {
                     stringResource(id = R.string.on)
                 } else {
-                    stringResource(
-                        id = R.string.off,
-                    )
+                    stringResource(id = R.string.off)
                 },
             )
         },
         enabled = enabled,
         onCheckedChange = onCheckedChange,
         label = {
-            Text(text)
+            androidx.wear.compose.material.Text(text)
         },
         modifier = modifier.fillMaxWidth(),
     )
