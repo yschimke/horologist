@@ -21,17 +21,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
-import androidx.wear.compose.material.ChipDefaults
-import androidx.wear.compose.material.Text
-import com.google.android.horologist.auth.composables.chips.GuestModeChip
-import com.google.android.horologist.auth.composables.chips.SignInChip
-import com.google.android.horologist.auth.ui.common.screens.prompt.SignInPromptScreen
-import com.google.android.horologist.compose.material.Confirmation
+import androidx.wear.compose.material3.ConfirmationDialog
+import androidx.wear.compose.material3.Text
+import com.google.android.horologist.auth.composables.material3.buttons.GuestModeButton
+import com.google.android.horologist.auth.composables.material3.buttons.SignInButton
+import com.google.android.horologist.auth.ui.material3.common.screens.prompt.SignInPromptScreen
 import com.google.android.horologist.mediasample.R
 import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.GoogleSignInScreen
 
@@ -45,43 +43,41 @@ fun GoogleSignInPromptScreen(
 
     SignInPromptScreen(
         message = stringResource(id = R.string.google_sign_in_prompt_message),
-        onAlreadySignedIn = {
+        onAlreadySignedIn = { _ ->
             showAlreadySignedInDialog = true
         },
         modifier = modifier,
         viewModel = viewModel,
     ) {
         item {
-            SignInChip(
+            SignInButton(
                 onClick = {
                     navController.navigate(GoogleSignInScreen)
                 },
-                colors = ChipDefaults.secondaryChipColors(),
             )
         }
         item {
-            GuestModeChip(
+            GuestModeButton(
                 onClick = {
                     viewModel.selectGuestMode()
                     navController.popBackStack()
                 },
-                colors = ChipDefaults.secondaryChipColors(),
             )
         }
     }
 
-    if (showAlreadySignedInDialog) {
-        Confirmation(
-            onTimeout = {
-                showAlreadySignedInDialog = false
-                navController.popBackStack()
-            },
-        ) {
+    ConfirmationDialog(
+        visible = showAlreadySignedInDialog,
+        onDismissRequest = {
+            showAlreadySignedInDialog = false
+            navController.popBackStack()
+        },
+        text = {
             Text(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                textAlign = TextAlign.Center,
                 text = stringResource(id = R.string.google_sign_in_prompt_already_signed_in_message),
+                textAlign = TextAlign.Center,
             )
-        }
-    }
+        },
+        content = {},
+    )
 }

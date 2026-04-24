@@ -27,9 +27,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import androidx.wear.compose.material.CircularProgressIndicator
-import androidx.wear.compose.material.Text
-import com.google.android.horologist.compose.material.Confirmation
+import androidx.wear.compose.material3.CircularProgressIndicator
+import androidx.wear.compose.material3.ConfirmationDialog
+import androidx.wear.compose.material3.Text
 import com.google.android.horologist.mediasample.R
 
 @Composable
@@ -41,10 +41,7 @@ fun GoogleSignOutScreen(
 
     when (state) {
         GoogleSignOutScreenState.Idle -> {
-            SideEffect {
-                viewModel.onIdleStateObserved()
-            }
-
+            SideEffect { viewModel.onIdleStateObserved() }
             LoadingView()
         }
 
@@ -53,21 +50,21 @@ fun GoogleSignOutScreen(
         }
 
         GoogleSignOutScreenState.Success -> {
-            Confirmation(
-                onTimeout = { navController.popBackStack() },
-            ) {
-                Text(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    textAlign = TextAlign.Center,
-                    text = stringResource(id = R.string.google_sign_out_success_message),
-                )
-            }
+            ConfirmationDialog(
+                visible = true,
+                onDismissRequest = { navController.popBackStack() },
+                text = {
+                    Text(
+                        text = stringResource(id = R.string.google_sign_out_success_message),
+                        textAlign = TextAlign.Center,
+                    )
+                },
+                content = {},
+            )
         }
 
         GoogleSignOutScreenState.Failed -> {
-            SideEffect {
-                navController.popBackStack()
-            }
+            SideEffect { navController.popBackStack() }
         }
     }
 }
