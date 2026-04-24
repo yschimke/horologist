@@ -238,6 +238,7 @@ wearcompose-foundation = { module = "androidx.wear.compose:compose-foundation", 
 wearcompose-material = { module = "androidx.wear.compose:compose-material", version.ref = "wearcompose" }
 wearcompose-navigation = { module = "androidx.wear.compose:compose-navigation", version.ref = "wearcompose" }
 wearcompose-tooling = { module = "androidx.wear.compose:compose-ui-tooling", version.ref = "wearcompose" }
+preview-annotations = { module = "ee.schimke.composeai:preview-annotations", version.ref = "composeAiTools" }
 
 [plugins]
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

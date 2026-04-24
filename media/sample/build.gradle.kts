@@ -216,6 +216,7 @@ dependencies {
   add("benchmarkImplementation", libs.androidx.runtime.tracing)
 
   debugImplementation(libs.compose.ui.tooling)
+  debugImplementation(libs.preview.annotations)
   debugImplementation(projects.composeTools)
   releaseCompileOnly(projects.composeTools)
   add("benchmarkCompileOnly", projects.composeTools)

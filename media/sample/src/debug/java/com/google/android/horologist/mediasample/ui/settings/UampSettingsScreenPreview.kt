@@ -18,20 +18,14 @@ package com.google.android.horologist.mediasample.ui.settings
 
 import androidx.compose.runtime.Composable
 import androidx.wear.compose.material3.AppScaffold
-import androidx.wear.compose.material3.TimeSource
 import androidx.wear.compose.material3.TimeText
 import androidx.wear.compose.ui.tooling.preview.WearPreviewLargeRound
 import androidx.wear.compose.ui.tooling.preview.WearPreviewSmallRound
 import com.google.android.horologist.auth.data.common.model.AuthUser
 
-private object FixedTimeSource : TimeSource {
-    @Composable
-    override fun currentTime(): String = "10:10"
-}
-
 @Composable
 private fun PreviewScaffold(content: @Composable () -> Unit) {
-    AppScaffold(timeText = { TimeText(timeSource = FixedTimeSource) }) { content() }
+    AppScaffold(timeText = { TimeText(timeSource = FixedPreviewTimeSource) }) { content() }
 }
 
 @WearPreviewSmallRound
