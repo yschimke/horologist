@@ -52,9 +52,13 @@ class UampPlayerScreenshotTest(device: WearDevice) : WearDeviceScreenshotTest(de
             playing = true,
             media = MediaUiModel.Ready(
                 id = "",
+                // Long enough to trigger AnimatedMediaInfoDisplay's marquee on small round;
+                // the fixed baseline captures it mid-scroll with a faded right edge.
                 title = "Weather with You",
                 subtitle = "Crowded House",
             ),
+            // 13.3% progress is intentional: it exercises the partial M3 progress arc
+            // around the play button (the small white "smile" above the medallion).
             trackPositionUiModel = TrackPositionUiModel.Actual(
                 percent = 0.133f,
                 position = 30.seconds,
