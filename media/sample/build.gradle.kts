@@ -122,6 +122,7 @@ dependencies {
 
   implementation(projects.media.audio)
   implementation(projects.media.audioUi)
+  implementation(projects.media.audioUiMaterial3)
   implementation(projects.composables)
   implementation(projects.composeLayout)
   implementation(projects.composeMaterial)
