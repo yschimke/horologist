@@ -31,7 +31,7 @@ import com.google.android.horologist.auth.composables.material3.buttons.GuestMod
 import com.google.android.horologist.auth.composables.material3.buttons.SignInButton
 import com.google.android.horologist.auth.ui.material3.common.screens.prompt.SignInPromptScreen
 import com.google.android.horologist.mediasample.R
-import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.GoogleSignInScreen
+import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen
 
 @Composable
 fun GoogleSignInPromptScreen(
@@ -52,7 +52,7 @@ fun GoogleSignInPromptScreen(
         item {
             SignInButton(
                 onClick = {
-                    navController.navigate(GoogleSignInScreen)
+                    navController.navigate(UampNavigationScreen.GoogleSignInScreen.route)
                 },
             )
         }

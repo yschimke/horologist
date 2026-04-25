@@ -19,11 +19,10 @@ package com.google.android.horologist.mediasample.ui.entity
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.google.android.horologist.media.model.PlaylistDownload
 import com.google.android.horologist.media.repository.PlayerRepository
 import com.google.android.horologist.media.repository.PlaylistDownloadRepository
-import com.google.android.horologist.media.ui.navigation.NavigationScreen
+import com.google.android.horologist.media.ui.material3.navigation.NavigationScreens
 import com.google.android.horologist.media.ui.material3.screens.entity.PlaylistDownloadScreenState
 import com.google.android.horologist.media.ui.material3.screens.entity.createPlaylistDownloadScreenStateLoaded
 import com.google.android.horologist.media.ui.state.mapper.DownloadMediaUiModelMapper
@@ -49,10 +48,11 @@ constructor(
     private val playerRepository: PlayerRepository,
     private val settingsRepository: SettingsRepository,
 ) : ViewModel() {
-    private val route = savedStateHandle.toRoute<NavigationScreen.Collection>()
+    private val collectionId: String =
+        checkNotNull(savedStateHandle.get<String>(NavigationScreens.Collection.id))
 
     private val playlistDownload: StateFlow<PlaylistDownload?> =
-        playlistDownloadRepository.get(route.id)
+        playlistDownloadRepository.get(collectionId)
             .stateIn(viewModelScope, started = SharingStarted.Eagerly, initialValue = null)
 
     val uiState: StateFlow<PlaylistDownloadScreenState<PlaylistUiModel, DownloadMediaUiModel>> =
@@ -90,7 +90,7 @@ constructor(
                 .coerceAtLeast(0)
             viewModelScope.launch {
                 settingsRepository.edit {
-                    it.toBuilder().setCurrentMediaListId(route.id).build()
+                    it.toBuilder().setCurrentMediaListId(collectionId).build()
                 }
             }
             playerRepository.setShuffleModeEnabled(shuffled)

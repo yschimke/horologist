@@ -25,11 +25,10 @@ import androidx.wear.tiles.TileBuilders.Tile
 import coil.ImageLoader
 import com.google.android.horologist.media.repository.PlaylistRepository
 import com.google.android.horologist.media.ui.tiles.MediaCollectionsTileRenderer
-import com.google.android.horologist.media.ui.tiles.toTileColors
 import com.google.android.horologist.mediasample.BuildConfig
 import com.google.android.horologist.mediasample.R
 import com.google.android.horologist.mediasample.ui.app.MediaActivity
-import com.google.android.horologist.mediasample.ui.app.UampColors
+import com.google.android.horologist.mediasample.ui.app.UampTileColors
 import com.google.android.horologist.tiles.SuspendingTileService
 import com.google.android.horologist.tiles.images.loadImageResource
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,7 +51,7 @@ class MediaCollectionsTileService : SuspendingTileService() {
 
     private val renderer: MediaCollectionsTileRenderer = MediaCollectionsTileRenderer(
         context = this,
-        materialTheme = UampColors.toTileColors(),
+        materialTheme = UampTileColors,
         debugResourceMode = BuildConfig.DEBUG,
     )
 

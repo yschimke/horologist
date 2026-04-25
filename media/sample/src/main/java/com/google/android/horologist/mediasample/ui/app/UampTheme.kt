@@ -18,23 +18,30 @@ package com.google.android.horologist.mediasample.ui.app
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.wear.compose.material.Colors
-import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material3.MaterialTheme
 
-public val UampColors = Colors(
-    primary = Color(0xFF981F68),
-    primaryVariant = Color(0xFF66003d),
-    secondary = Color(0xFF981F68),
-    error = Color(0xFFE24444),
-    onPrimary = Color.White,
-    onSurfaceVariant = Color(0xFFDADCE0),
-    surface = Color(0xFF303133),
-    onError = Color.Black,
-)
+private val UampPrimary = Color(0xFF981F68)
+private val UampPrimaryContainer = Color(0xFF66003d)
+private val UampSecondary = Color(0xFF981F68)
+private val UampError = Color(0xFFE24444)
+private val UampOnPrimary = Color.White
+private val UampOnSurfaceVariant = Color(0xFFDADCE0)
+private val UampSurface = Color(0xFF303133)
+private val UampOnError = Color.Black
 
 @Composable
-public fun UampTheme(block: @Composable () -> Unit) {
-    MaterialTheme(colors = UampColors) {
-        block()
-    }
+fun UampTheme(content: @Composable () -> Unit) {
+    MaterialTheme(
+        colorScheme = MaterialTheme.colorScheme.copy(
+            primary = UampPrimary,
+            primaryContainer = UampPrimaryContainer,
+            secondary = UampSecondary,
+            error = UampError,
+            onPrimary = UampOnPrimary,
+            onSurfaceVariant = UampOnSurfaceVariant,
+            surfaceContainer = UampSurface,
+            onError = UampOnError,
+        ),
+        content = content,
+    )
 }

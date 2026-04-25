@@ -14,30 +14,12 @@
  * limitations under the License.
  */
 
-package com.google.android.horologist.mediasample.ui.navigation
+package com.google.android.horologist.mediasample.ui.snackbar
 
-object UampNavigationScreen {
-    object AudioDebug {
-        const val route: String = "audioDebug"
-    }
+import java.util.UUID
 
-    object Samples {
-        const val route: String = "samples"
-    }
-
-    object GoogleSignInPromptScreen {
-        const val route: String = "googleSignInPrompt"
-    }
-
-    object GoogleSignInScreen {
-        const val route: String = "googleSignIn"
-    }
-
-    object GoogleSignOutScreen {
-        const val route: String = "googleSignOut"
-    }
-
-    object DeveloperOptions {
-        const val route: String = "developerOptions"
-    }
-}
+data class UiMessage(
+    val message: String,
+    val id: String = UUID.randomUUID().toString(),
+    val error: Boolean = true,
+)

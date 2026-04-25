@@ -41,12 +41,10 @@ import androidx.wear.compose.material3.lazy.rememberTransformationSpec
 import androidx.wear.compose.material3.lazy.transformedHeight
 import com.google.android.horologist.compose.layout.ColumnItemType
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnPadding
-import com.google.android.horologist.media.ui.navigation.NavigationScreen
+import com.google.android.horologist.media.ui.material3.navigation.NavigationScreens
 import com.google.android.horologist.mediasample.ui.common.MediaScreenScaffold
 import com.google.android.horologist.mediasample.R
-import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.DeveloperOptions
-import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.GoogleSignInScreen
-import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.GoogleSignOutScreen
+import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen
 
 @Composable
 fun UampSettingsScreen(
@@ -60,14 +58,14 @@ fun UampSettingsScreen(
     UampSettingsScreen(
         state = screenState,
         modifier = modifier,
-        onLoginClick = { navController.navigate(GoogleSignInScreen) },
+        onLoginClick = { navController.navigate(UampNavigationScreen.GoogleSignInScreen.route) },
         onLogoutClick = {
-            navController.navigate(GoogleSignOutScreen) {
-                popUpTo<NavigationScreen.Player>()
+            navController.navigate(UampNavigationScreen.GoogleSignOutScreen.route) {
+                popUpTo(NavigationScreens.Player.navRoute)
             }
         },
         onGuestModeChange = viewModel::setGuestMode,
-        onDeveloperOptionsClick = { navController.navigate(DeveloperOptions) },
+        onDeveloperOptionsClick = { navController.navigate(UampNavigationScreen.DeveloperOptions.route) },
         onShowLicensesClick = {
             activity?.startActivity(
                 Intent().apply {

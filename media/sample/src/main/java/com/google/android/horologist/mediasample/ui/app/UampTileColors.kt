@@ -14,30 +14,17 @@
  * limitations under the License.
  */
 
-package com.google.android.horologist.mediasample.ui.navigation
+package com.google.android.horologist.mediasample.ui.app
 
-object UampNavigationScreen {
-    object AudioDebug {
-        const val route: String = "audioDebug"
-    }
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.wear.protolayout.material.Colors
 
-    object Samples {
-        const val route: String = "samples"
-    }
-
-    object GoogleSignInPromptScreen {
-        const val route: String = "googleSignInPrompt"
-    }
-
-    object GoogleSignInScreen {
-        const val route: String = "googleSignIn"
-    }
-
-    object GoogleSignOutScreen {
-        const val route: String = "googleSignOut"
-    }
-
-    object DeveloperOptions {
-        const val route: String = "developerOptions"
-    }
-}
+// Standalone tile color palette - tiles use protolayout, not Compose UI, so they
+// keep the original M2 hex values without depending on wear.compose.material.Colors.
+val UampTileColors: Colors = Colors(
+    Color(0xFF981F68).toArgb(),
+    Color.White.toArgb(),
+    Color(0xFF303133).toArgb(),
+    Color.White.toArgb(),
+)

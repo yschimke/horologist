@@ -38,8 +38,7 @@ import com.google.android.horologist.compose.layout.ColumnItemType
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnPadding
 import com.google.android.horologist.mediasample.R
 import com.google.android.horologist.mediasample.ui.common.MediaScreenScaffold
-import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.AudioDebug
-import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.Samples
+import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen
 
 @Composable
 fun DeveloperOptionsScreen(
@@ -62,8 +61,8 @@ fun DeveloperOptionsScreen(
         ),
         modifier = modifier,
         onNetworkRequestToggle = { developerOptionsScreenViewModel.toggleNetworkRequest() },
-        onAudioDebugClick = { navController.navigate(AudioDebug) },
-        onSamplesClick = { navController.navigate(Samples) },
+        onAudioDebugClick = { navController.navigate(UampNavigationScreen.AudioDebug.route) },
+        onSamplesClick = { navController.navigate(UampNavigationScreen.Samples.route) },
         onShowTimeTextInfoChange = developerOptionsScreenViewModel::setShowTimeTextInfo,
         onDebugOffloadChange = developerOptionsScreenViewModel::setDebugOffload,
         onPodcastControlsChange = developerOptionsScreenViewModel::setPodcastControls,

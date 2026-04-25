@@ -36,7 +36,7 @@ import androidx.wear.compose.material3.lazy.rememberTransformationSpec
 import androidx.wear.compose.material3.lazy.transformedHeight
 import com.google.android.horologist.compose.layout.ColumnItemType
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnPadding
-import com.google.android.horologist.media.ui.navigation.MediaNavController.navigateToPlayer
+import com.google.android.horologist.media.ui.material3.navigation.MediaNavController.navigateToPlayer
 import com.google.android.horologist.mediasample.R
 import com.google.android.horologist.mediasample.ui.common.MediaScreenScaffold
 

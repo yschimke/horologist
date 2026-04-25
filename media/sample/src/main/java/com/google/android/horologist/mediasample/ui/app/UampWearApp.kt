@@ -27,14 +27,19 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import androidx.wear.compose.material.Text
+import androidx.wear.compose.material3.Text
+import androidx.wear.compose.navigation.composable
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavHostState
+import com.google.android.horologist.audio.ui.VolumeViewModel
 import com.google.android.horologist.auth.ui.googlesignin.signin.GoogleSignInScreen
-import com.google.android.horologist.compose.nav.composable
-import com.google.android.horologist.media.ui.navigation.MediaNavController.navigateToLibrary
-import com.google.android.horologist.media.ui.navigation.MediaNavController.navigateToPlayer
-import com.google.android.horologist.media.ui.navigation.MediaPlayerScaffold
-import com.google.android.horologist.media.ui.navigation.NavigationScreen
+import com.google.android.horologist.compose.snackbar.DialogSnackbarHost
+import com.google.android.horologist.media.ui.material3.navigation.MediaNavController.navigateToCollection
+import com.google.android.horologist.media.ui.material3.navigation.MediaNavController.navigateToCollections
+import com.google.android.horologist.media.ui.material3.navigation.MediaNavController.navigateToLibrary
+import com.google.android.horologist.media.ui.material3.navigation.MediaNavController.navigateToPlayer
+import com.google.android.horologist.media.ui.material3.navigation.MediaNavController.navigateToSettings
+import com.google.android.horologist.media.ui.material3.navigation.MediaNavController.navigateToVolume
+import com.google.android.horologist.media.ui.material3.navigation.MediaPlayerScaffold
 import com.google.android.horologist.mediasample.BuildConfig
 import com.google.android.horologist.mediasample.ui.auth.prompt.GoogleSignInPromptScreen
 import com.google.android.horologist.mediasample.ui.auth.signin.UampGoogleSignInViewModel
@@ -49,12 +54,7 @@ import com.google.android.horologist.mediasample.ui.entity.UampEntityScreen
 import com.google.android.horologist.mediasample.ui.entity.UampEntityScreenViewModel
 import com.google.android.horologist.mediasample.ui.entity.UampStreamingPlaylistScreen
 import com.google.android.horologist.mediasample.ui.entity.UampStreamingPlaylistScreenViewModel
-import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.AudioDebug
-import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.DeveloperOptions
-import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.GoogleSignInPromptScreen
-import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.GoogleSignInScreen
-import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.GoogleSignOutScreen
-import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.Samples
+import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen
 import com.google.android.horologist.mediasample.ui.player.UampMediaPlayerScreen
 import com.google.android.horologist.mediasample.ui.playlists.UampPlaylistsScreen
 import com.google.android.horologist.mediasample.ui.playlists.UampPlaylistsScreenViewModel
@@ -70,163 +70,152 @@ fun UampWearApp(
     val appViewModel: MediaPlayerAppViewModel = hiltViewModel()
     val volumeViewModel: VolumeViewModel = hiltViewModel()
     val mediaInfoTimeTextViewModel: MediaInfoTimeTextViewModel = hiltViewModel()
+    val snackbarViewModel: SnackbarViewModel = hiltViewModel()
 
     val navHostState = rememberSwipeDismissableNavHostState()
 
     val appState by appViewModel.appState.collectAsStateWithLifecycle()
 
     UampTheme {
-        MediaPlayerScaffold(
-            playerScreen = {
-                UampMediaPlayerScreen(
-                    modifier = Modifier.fillMaxSize(),
-                    mediaPlayerScreenViewModel = hiltViewModel(),
-                    volumeViewModel = volumeViewModel,
-                    onVolumeClick = {
-                        navController.navigate(NavigationScreen.Volume)
-                    },
-                )
-            },
-            libraryScreen = {
-                if (appState.streamingMode == true) {
-                    UampStreamingBrowseScreen(
-                        onPlaylistsClick = {
-                            navController.navigate(NavigationScreen.Collections)
-                        },
-                        onSettingsClick = {
-                            navController.navigate(NavigationScreen.Settings)
-                        },
+        Box(modifier = Modifier.fillMaxSize()) {
+            MediaPlayerScaffold(
+                playerScreen = {
+                    UampMediaPlayerScreen(
+                        modifier = Modifier.fillMaxSize(),
+                        mediaPlayerScreenViewModel = hiltViewModel(),
+                        volumeViewModel = volumeViewModel,
+                        onVolumeClick = { navController.navigateToVolume() },
                     )
-                } else {
-                    UampBrowseScreen(
-                        uampBrowseScreenViewModel = hiltViewModel(),
-                        onDownloadItemClick = {
-                            navController.navigate(
-                                NavigationScreen.Collection(
+                },
+                libraryScreen = {
+                    if (appState.streamingMode == true) {
+                        UampStreamingBrowseScreen(
+                            onPlaylistsClick = { navController.navigateToCollections() },
+                            onSettingsClick = { navController.navigateToSettings() },
+                        )
+                    } else {
+                        UampBrowseScreen(
+                            uampBrowseScreenViewModel = hiltViewModel(),
+                            onDownloadItemClick = {
+                                navController.navigateToCollection(
                                     it.playlistUiModel.id,
                                     it.playlistUiModel.title,
-                                ),
-                            )
-                        },
-                        onPlaylistsClick = {
-                            navController.navigate(NavigationScreen.Collections)
-                        },
-                        onSettingsClick = {
-                            navController.navigate(NavigationScreen.Settings)
-                        },
-                    )
-                }
-            },
-            categoryEntityScreen = { category ->
-                if (appState.streamingMode == true) {
-                    val viewModel: UampStreamingPlaylistScreenViewModel = hiltViewModel()
+                                )
+                            },
+                            onPlaylistsClick = { navController.navigateToCollections() },
+                            onSettingsClick = { navController.navigateToSettings() },
+                        )
+                    }
+                },
+                categoryEntityScreen = { _, name ->
+                    if (appState.streamingMode == true) {
+                        val viewModel: UampStreamingPlaylistScreenViewModel = hiltViewModel()
 
-                    UampStreamingPlaylistScreen(
-                        playlistName = category.name.orEmpty(),
-                        viewModel = viewModel,
-                        onDownloadItemClick = {
-                            navController.navigateToPlayer()
-                        },
-                        onShuffleClick = { navController.navigateToPlayer() },
-                        onPlayClick = { navController.navigateToPlayer() },
-                    )
-                } else {
-                    val uampEntityScreenViewModel: UampEntityScreenViewModel = hiltViewModel()
+                        UampStreamingPlaylistScreen(
+                            playlistName = name,
+                            viewModel = viewModel,
+                            onDownloadItemClick = { navController.navigateToPlayer() },
+                            onShuffleClick = { navController.navigateToPlayer() },
+                            onPlayClick = { navController.navigateToPlayer() },
+                        )
+                    } else {
+                        val uampEntityScreenViewModel: UampEntityScreenViewModel = hiltViewModel()
 
-                    UampEntityScreen(
-                        playlistName = category.name.orEmpty(),
-                        uampEntityScreenViewModel = uampEntityScreenViewModel,
-                        onDownloadItemClick = {
-                            navController.navigateToPlayer()
-                        },
-                        onShuffleClick = { navController.navigateToPlayer() },
-                        onPlayClick = { navController.navigateToPlayer() },
-                        onErrorDialogCancelClick = { navController.popBackStack() },
-                    )
-                }
-            },
-            mediaEntityScreen = {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("Media XXX")
-                }
-            },
-            playlistsScreen = {
-                val uampPlaylistsScreenViewModel: UampPlaylistsScreenViewModel =
-                    hiltViewModel()
+                        UampEntityScreen(
+                            playlistName = name,
+                            uampEntityScreenViewModel = uampEntityScreenViewModel,
+                            onDownloadItemClick = { navController.navigateToPlayer() },
+                            onShuffleClick = { navController.navigateToPlayer() },
+                            onPlayClick = { navController.navigateToPlayer() },
+                            onErrorDialogCancelClick = { navController.popBackStack() },
+                        )
+                    }
+                },
+                mediaEntityScreen = {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text("Media XXX")
+                    }
+                },
+                playlistsScreen = {
+                    val uampPlaylistsScreenViewModel: UampPlaylistsScreenViewModel =
+                        hiltViewModel()
 
-                UampPlaylistsScreen(
-                    uampPlaylistsScreenViewModel = uampPlaylistsScreenViewModel,
-                    onPlaylistItemClick = { playlistUiModel ->
-                        navController.navigate(
-                            NavigationScreen.Collection(
+                    UampPlaylistsScreen(
+                        uampPlaylistsScreenViewModel = uampPlaylistsScreenViewModel,
+                        onPlaylistItemClick = { playlistUiModel ->
+                            navController.navigateToCollection(
                                 playlistUiModel.id,
                                 playlistUiModel.title,
-                            ),
+                            )
+                        },
+                        onErrorDialogCancelClick = { navController.popBackStack() },
+                    )
+                },
+                settingsScreen = {
+                    UampSettingsScreen(
+                        viewModel = hiltViewModel(),
+                        navController = navController,
+                    )
+                },
+                navHostState = navHostState,
+                volumeViewModel = volumeViewModel,
+                timeText = {
+                    MediaInfoTimeText(
+                        mediaInfoTimeTextViewModel = mediaInfoTimeTextViewModel,
+                    )
+                },
+                deepLinkPrefix = appViewModel.deepLinkPrefix,
+                navController = navController,
+                additionalNavRoutes = {
+                    composable(route = UampNavigationScreen.AudioDebug.route) {
+                        AudioDebugScreen(
+                            audioDebugScreenViewModel = hiltViewModel(),
                         )
-                    },
-                    onErrorDialogCancelClick = { navController.popBackStack() },
-                )
-            },
-            settingsScreen = {
-                UampSettingsScreen(
-                    viewModel = hiltViewModel(),
-                    navController = navController,
-                )
-            },
-            navHostState = navHostState,
-            snackbarViewModel = hiltViewModel<SnackbarViewModel>(),
-            volumeViewModel = volumeViewModel,
-            timeText = {
-                MediaInfoTimeText(
-                    mediaInfoTimeTextViewModel = mediaInfoTimeTextViewModel,
-                )
-            },
-            deepLinkPrefix = appViewModel.deepLinkPrefix,
-            navController = navController,
-            additionalNavRoutes = {
-                composable<AudioDebug> {
-                    AudioDebugScreen(
-                        audioDebugScreenViewModel = hiltViewModel(),
-                    )
-                }
+                    }
 
-                composable<Samples> {
-                    SamplesScreen(
-                        samplesScreenViewModel = hiltViewModel(),
-                        navController = navController,
-                    )
-                }
+                    composable(route = UampNavigationScreen.Samples.route) {
+                        SamplesScreen(
+                            samplesScreenViewModel = hiltViewModel(),
+                            navController = navController,
+                        )
+                    }
 
-                composable<DeveloperOptions> {
-                    DeveloperOptionsScreen(
-                        developerOptionsScreenViewModel = hiltViewModel(),
-                        navController = navController,
-                    )
-                }
+                    composable(route = UampNavigationScreen.DeveloperOptions.route) {
+                        DeveloperOptionsScreen(
+                            developerOptionsScreenViewModel = hiltViewModel(),
+                            navController = navController,
+                        )
+                    }
 
-                composable<GoogleSignInPromptScreen> {
-                    GoogleSignInPromptScreen(
-                        navController = navController,
-                        viewModel = hiltViewModel(),
-                    )
-                }
+                    composable(route = UampNavigationScreen.GoogleSignInPromptScreen.route) {
+                        GoogleSignInPromptScreen(
+                            navController = navController,
+                            viewModel = hiltViewModel(),
+                        )
+                    }
 
-                composable<GoogleSignInScreen> {
-                    GoogleSignInScreen(
-                        onAuthCancelled = { navController.popBackStack() },
-                        onAuthSucceed = { navController.navigateToLibrary() },
-                        viewModel = hiltViewModel<UampGoogleSignInViewModel>(),
-                    )
-                }
+                    composable(route = UampNavigationScreen.GoogleSignInScreen.route) {
+                        GoogleSignInScreen(
+                            onAuthCancelled = { navController.popBackStack() },
+                            onAuthSucceed = { navController.navigateToLibrary() },
+                            viewModel = hiltViewModel<UampGoogleSignInViewModel>(),
+                        )
+                    }
 
-                composable<GoogleSignOutScreen> {
-                    GoogleSignOutScreen(
-                        navController = navController,
-                        viewModel = hiltViewModel(),
-                    )
-                }
-            },
-        )
+                    composable(route = UampNavigationScreen.GoogleSignOutScreen.route) {
+                        GoogleSignOutScreen(
+                            navController = navController,
+                            viewModel = hiltViewModel(),
+                        )
+                    }
+                },
+            )
+
+            DialogSnackbarHost(
+                modifier = Modifier.fillMaxSize(),
+                hostState = snackbarViewModel.snackbarHostState,
+            )
+        }
     }
 
     if (BuildConfig.BENCHMARK) {
@@ -273,7 +262,7 @@ private suspend fun startupNavigation(
     if (appViewModel.shouldShowLoginPrompt()) {
         // Allow screen to settle so it feels like a distinct step
         delay(200)
-        navController.navigate(GoogleSignInPromptScreen)
+        navController.navigate(UampNavigationScreen.GoogleSignInPromptScreen.route)
     }
 }
 
