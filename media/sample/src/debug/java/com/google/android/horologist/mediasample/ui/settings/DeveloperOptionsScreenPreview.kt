@@ -40,7 +40,6 @@ private fun Screen(state: DeveloperOptionsState = defaultState) {
     AppScaffold(timeText = { TimeText(timeSource = FixedPreviewTimeSource) }) {
         DeveloperOptionsScreen(
             state = state,
-            onNewHotnessClick = {},
             onNetworkRequestToggle = {},
             onAudioDebugClick = {},
             onSamplesClick = {},

@@ -39,7 +39,6 @@ import com.google.android.horologist.compose.layout.rememberResponsiveColumnPadd
 import com.google.android.horologist.mediasample.R
 import com.google.android.horologist.mediasample.ui.common.MediaScreenScaffold
 import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.AudioDebug
-import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.NewHotness
 import com.google.android.horologist.mediasample.ui.navigation.UampNavigationScreen.Samples
 
 @Composable
@@ -62,7 +61,6 @@ fun DeveloperOptionsScreen(
             streamingMode = uiState.streamingMode,
         ),
         modifier = modifier,
-        onNewHotnessClick = { navController.navigate(NewHotness) },
         onNetworkRequestToggle = { developerOptionsScreenViewModel.toggleNetworkRequest() },
         onAudioDebugClick = { navController.navigate(AudioDebug) },
         onSamplesClick = { navController.navigate(Samples) },
@@ -96,7 +94,6 @@ data class DeveloperOptionsState(
 @Composable
 fun DeveloperOptionsScreen(
     state: DeveloperOptionsState,
-    onNewHotnessClick: () -> Unit,
     onNetworkRequestToggle: () -> Unit,
     onAudioDebugClick: () -> Unit,
     onSamplesClick: () -> Unit,
@@ -135,7 +132,6 @@ fun DeveloperOptionsScreen(
                     Text(text = stringResource(id = R.string.sample_developer_options))
                 }
             }
-            item { DevActionButton(transformationSpec, "New Hotness Player", onNewHotnessClick) }
             item {
                 DevCheckboxItem(
                     transformationSpec,
