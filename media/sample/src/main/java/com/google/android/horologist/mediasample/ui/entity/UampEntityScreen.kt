@@ -23,9 +23,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.android.horologist.compose.material.AlertDialog
-import com.google.android.horologist.media.ui.screens.entity.PlaylistDownloadScreen
-import com.google.android.horologist.media.ui.screens.entity.PlaylistDownloadScreenState
+import androidx.compose.ui.text.style.TextAlign
+import androidx.wear.compose.material3.AlertDialog
+import androidx.wear.compose.material3.AlertDialogDefaults
+import androidx.wear.compose.material3.Text
+import com.google.android.horologist.media.ui.material3.screens.entity.PlaylistDownloadScreen
+import com.google.android.horologist.media.ui.material3.screens.entity.PlaylistDownloadScreenState
 import com.google.android.horologist.media.ui.state.model.DownloadMediaUiModel
 import com.google.android.horologist.media.ui.state.model.PlaylistUiModel
 import com.google.android.horologist.mediasample.R
@@ -81,54 +84,65 @@ fun UampEntityScreen(
     )
 
     // b/243381431 - it should stop listening to uiState emissions while dialog is presented
-    if (uiState == PlaylistDownloadScreenState.Failed) {
-        AlertDialog(
-            message = stringResource(R.string.entity_no_playlists),
-            onDismiss = onErrorDialogCancelClick,
-            showDialog = true,
-        )
-    }
-
     AlertDialog(
+        visible = uiState == PlaylistDownloadScreenState.Failed,
+        onDismissRequest = onErrorDialogCancelClick,
+        title = {
+            Text(
+                text = stringResource(R.string.entity_no_playlists),
+                textAlign = TextAlign.Center,
+            )
+        },
+    )
+
+    ConfirmDialog(
+        visible = showCancelDownloadsDialog,
         message = stringResource(R.string.entity_dialog_cancel_downloads),
-        onCancel = {
-            showCancelDownloadsDialog = false
-        },
+        onCancel = { showCancelDownloadsDialog = false },
         onOk = {
             showCancelDownloadsDialog = false
             uampEntityScreenViewModel.remove()
         },
-        showDialog = showCancelDownloadsDialog,
-        okButtonContentDescription = stringResource(id = R.string.entity_dialog_proceed_button_content_description),
-        cancelButtonContentDescription = stringResource(id = R.string.entity_dialog_cancel_button_content_description),
     )
 
-    AlertDialog(
+    ConfirmDialog(
+        visible = showRemoveDownloadsDialog,
         message = stringResource(R.string.entity_dialog_remove_downloads, playlistName),
-        onCancel = {
-            showRemoveDownloadsDialog = false
-        },
+        onCancel = { showRemoveDownloadsDialog = false },
         onOk = {
             showRemoveDownloadsDialog = false
             uampEntityScreenViewModel.remove()
         },
-        showDialog = showRemoveDownloadsDialog,
-        okButtonContentDescription = stringResource(id = R.string.entity_dialog_proceed_button_content_description),
-        cancelButtonContentDescription = stringResource(id = R.string.entity_dialog_cancel_button_content_description),
     )
 
-    AlertDialog(
+    ConfirmDialog(
+        visible = showRemoveSingleMediaDownloadDialog,
         message = stringResource(R.string.entity_dialog_remove_downloads, mediaTitleToDelete),
-        onCancel = {
-            showRemoveSingleMediaDownloadDialog = false
-        },
+        onCancel = { showRemoveSingleMediaDownloadDialog = false },
         onOk = {
             showRemoveSingleMediaDownloadDialog = false
             mediaIdToDelete?.let { uampEntityScreenViewModel.removeMediaItem(it) }
         },
-        showDialog = showRemoveSingleMediaDownloadDialog,
-        okButtonContentDescription = stringResource(id = R.string.entity_dialog_proceed_button_content_description),
-        cancelButtonContentDescription = stringResource(id = R.string.entity_dialog_cancel_button_content_description),
+    )
+}
 
+@Composable
+private fun ConfirmDialog(
+    visible: Boolean,
+    message: String,
+    onCancel: () -> Unit,
+    onOk: () -> Unit,
+) {
+    AlertDialog(
+        visible = visible,
+        onDismissRequest = onCancel,
+        confirmButton = { AlertDialogDefaults.ConfirmButton(onClick = onOk) },
+        dismissButton = { AlertDialogDefaults.DismissButton(onClick = onCancel) },
+        title = {
+            Text(
+                text = message,
+                textAlign = TextAlign.Center,
+            )
+        },
     )
 }
