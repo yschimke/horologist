@@ -18,14 +18,13 @@ package com.google.android.horologist
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
-import androidx.wear.compose.material.MaterialTheme
 import com.google.android.horologist.audio.AudioOutput
 import com.google.android.horologist.audio.ui.VolumeUiState
-import com.google.android.horologist.audio.ui.components.toAudioOutputUi
-import com.google.android.horologist.media.ui.components.animated.AnimatedMediaControlButtons
-import com.google.android.horologist.media.ui.components.animated.AnimatedMediaInfoDisplay
-import com.google.android.horologist.media.ui.components.background.ArtworkColorBackground
-import com.google.android.horologist.media.ui.screens.player.PlayerScreen
+import com.google.android.horologist.audio.ui.material3.components.toAudioOutputUi
+import com.google.android.horologist.media.ui.material3.components.animated.AnimatedMediaControlButtons
+import com.google.android.horologist.media.ui.material3.components.animated.AnimatedMediaInfoDisplay
+import com.google.android.horologist.media.ui.material3.components.background.ArtworkImageBackground
+import com.google.android.horologist.media.ui.material3.screens.player.PlayerScreen
 import com.google.android.horologist.media.ui.state.PlayerUiState
 import com.google.android.horologist.media.ui.state.model.MediaUiModel
 import com.google.android.horologist.media.ui.state.model.TrackPositionUiModel
@@ -100,9 +99,8 @@ class UampPlayerScreenshotTest(device: WearDevice) : WearDeviceScreenshotTest(de
                     )
                 },
                 background = {
-                    ArtworkColorBackground(
-                        paintable = null,
-                        defaultColor = MaterialTheme.colors.primary,
+                    ArtworkImageBackground(
+                        artwork = null,
                         modifier = Modifier.fillMaxSize(),
                     )
                 },
