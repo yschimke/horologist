@@ -3,7 +3,7 @@
 Auto-generated from `main`. Browse inline or compare against PR branches.
 
 > [!WARNING]
-> 3 preview(s) failed to render in the latest update (3 with no prior baseline to retain). See **Render Failures** below.
+> 2 preview(s) failed to render in the latest update (2 with no prior baseline to retain). See **Render Failures** below.
 
 ## Render Failures
 
@@ -11,9 +11,14 @@ The render task completed but no PNG was produced for these previews. Entries wi
 
 | Preview | Module | Function | Source | Baseline |
 |---------|--------|----------|--------|----------|
-| `ai:sample:wear-gemini/com.google.android.horologist.ai.sample.wear.gemini.activity.WearAppKt.DefaultPreview_Devices - Small Round` | ai:sample:wear-gemini | `DefaultPreview` | `src/main/java/com/google/android/horologist/ai/sample/wear/gemini/activity/WearApp.kt` | none |
 | `ai:sample:wear-prompt-app/com.google.android.horologist.ai.sample.wear.prompt.WearAppKt.DefaultPreview_Devices - Large Round` | ai:sample:wear-prompt-app | `DefaultPreview` | `src/main/java/com/google/android/horologist/ai/sample/wear/prompt/WearApp.kt` | none |
 | `ai:sample:wear-prompt-app/com.google.android.horologist.ai.sample.wear.prompt.WearAppKt.DefaultPreview_Devices - Small Round` | ai:sample:wear-prompt-app | `DefaultPreview` | `src/main/java/com/google/android/horologist/ai/sample/wear/prompt/WearApp.kt` | none |
+
+## ai:sample:wear-gemini
+
+| Preview | Image |
+|---------|-------|
+| `DeviceStatusScreenLoadingPreview` | <img src="https://raw.githubusercontent.com/yschimke/horologist/compose-preview/main/renders/ai:sample:wear-gemini/DeviceStatusScreenLoadingPreview_Devices_Small_Round.png" width="150" /> |
 
 ## ai:sample:wear-prompt-app
 
