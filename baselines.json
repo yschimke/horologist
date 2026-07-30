@@ -508,7 +508,7 @@
     "functionName": "DefaultPreview",
     "module": "auth:sample:wear",
     "renderBasename": "DefaultPreview_Devices_Small_Round.png",
-    "sha256": "de25999fc78dd766007cd5c5edff23d25b2892036875d2caa133ae668d4a1bba",
+    "sha256": "5971646d1436fffa34f3ae9f806d0d866c15465ba5b54c2900aab492d114ed19",
     "sourceFile": "src/main/java/com/google/android/horologist/auth/sample/WearApp.kt"
   },
   "auth:sample:wear/com.google.android.horologist.auth.sample.screens.MainScreenKt.AuthMenuScreenPreview_Devices - Large Round": {
@@ -2572,7 +2572,7 @@
     "functionName": "DefaultPreview",
     "module": "datalayer:sample:wear",
     "renderBasename": "DefaultPreview_Devices_Small_Round.png",
-    "sha256": "8ba90e8e3df6c3e7fafdb46394bd82e911525b6bf84d44e790b02f440289e051",
+    "sha256": "b4e0f3118c2bd32cd2e73e1aa1a0c2073cdfeb4c57659f6982dc3d00ce62ef38",
     "sourceFile": "src/main/java/com/google/android/horologist/datalayer/sample/WearApp.kt"
   },
   "datalayer:sample:wear/com.google.android.horologist.datalayer.sample.screens.MainScreenKt.MainScreenPreview_Devices - Large Round": {
@@ -4132,7 +4132,7 @@
     "functionName": "PlayerScreenPreviewCustomBackground",
     "module": "media:ui",
     "renderBasename": "PlayerScreenPreviewCustomBackground_Devices_Large_Round.png",
-    "sha256": "6edc282c9e9ba805d577a72abde6b5dff0e5d53dc2eb1a52e39f606fc8697b98",
+    "sha256": "8688ba32e448a668f9cee0f5d1168f9c7376e7bcd31a76bf28b758ef36c6cdd3",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.PlayerScreenPreviewCustomBackground_Devices - Small Round": {
@@ -4140,7 +4140,7 @@
     "functionName": "PlayerScreenPreviewCustomBackground",
     "module": "media:ui",
     "renderBasename": "PlayerScreenPreviewCustomBackground_Devices_Small_Round.png",
-    "sha256": "adb32a6ba640f34d05d254d67e8a986c9b9f37d0dd1e7390fcd8b03bfe14f842",
+    "sha256": "e1c70c77832c76c497f6e1b9834ad22c4a24714fbf30f6f8a2628fdbbe5a275b",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.PlayerScreenPreviewCustomMediaDisplay_Devices - Large Round": {
@@ -4148,7 +4148,7 @@
     "functionName": "PlayerScreenPreviewCustomMediaDisplay",
     "module": "media:ui",
     "renderBasename": "PlayerScreenPreviewCustomMediaDisplay_Devices_Large_Round.png",
-    "sha256": "7c5cdfcd84440714fb86ba087b62540e10d06d8faa8be317a7ccf21cdef2a3e9",
+    "sha256": "e27280c297d1295cb1e70ffaa24776f4b4417816c7ff46df5bc0e0dc9c678b17",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.PlayerScreenPreviewCustomMediaDisplay_Devices - Small Round": {
@@ -4156,7 +4156,7 @@
     "functionName": "PlayerScreenPreviewCustomMediaDisplay",
     "module": "media:ui",
     "renderBasename": "PlayerScreenPreviewCustomMediaDisplay_Devices_Small_Round.png",
-    "sha256": "3c2b5ab9024cd291578ed1630a05ba85773606ebc4e3d4d6900ee297ef103de0",
+    "sha256": "869f7a30d93d06b686f3ae66c8a9b8bb5c886b184e84ff75451bd1b4ccecb1bd",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.PlayerScreenPreviewDevices_Devices - Large Round": {
@@ -4164,7 +4164,7 @@
     "functionName": "PlayerScreenPreviewDevices",
     "module": "media:ui",
     "renderBasename": "PlayerScreenPreviewDevices_Devices_Large_Round.png",
-    "sha256": "357b0f3f9dbebe6356a731b6c27608a799f085144c6970f04956ee908bc9479f",
+    "sha256": "6f467a56377af3f5901b2af6331a7cb4947acad633b7bd50031b835351db9fd0",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.PlayerScreenPreviewDevices_Devices - Small Round": {
@@ -4172,7 +4172,7 @@
     "functionName": "PlayerScreenPreviewDevices",
     "module": "media:ui",
     "renderBasename": "PlayerScreenPreviewDevices_Devices_Small_Round.png",
-    "sha256": "b590aa10e0c739860ecc7c3e5719651bb53c9b05afa1a3afd23876792a8aa4a9",
+    "sha256": "66c3591bac033b4e23ad9222879aef90dee4e68e14235b58f06b42a8dfa0def5",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.PlayerScreenPreviewDevices_Fonts - Large": {
@@ -4180,7 +4180,7 @@
     "functionName": "PlayerScreenPreviewDevices",
     "module": "media:ui",
     "renderBasename": "PlayerScreenPreviewDevices_Fonts_Large.png",
-    "sha256": "0d87ceb871d7a8470a053826322159ce5454cf4d371c8d5c961769eb19e73fd6",
+    "sha256": "8a1245050a8f85618836fd4cee03f48c642bfedc1487b294dace74d070f33fea",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.PlayerScreenPreviewDevices_Fonts - Larger": {
@@ -4188,7 +4188,7 @@
     "functionName": "PlayerScreenPreviewDevices",
     "module": "media:ui",
     "renderBasename": "PlayerScreenPreviewDevices_Fonts_Larger.png",
-    "sha256": "f171cf58a87bb5d94bbd314ebda581ed0827b06dcbb5545f9f246282da4d10f8",
+    "sha256": "4a5013b4115cb760839bc6229bc722ff43e1944734f1c453db672f9908567a86",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.PlayerScreenPreviewDevices_Fonts - Largest": {
@@ -4196,7 +4196,7 @@
     "functionName": "PlayerScreenPreviewDevices",
     "module": "media:ui",
     "renderBasename": "PlayerScreenPreviewDevices_Fonts_Largest.png",
-    "sha256": "6a364e3e5a9504a571ad5a4f5d057ff159ecb06d221fc3c8e6254ca9cf54ab46",
+    "sha256": "ad27c6f72446dea2823d65bcabaf8e6f701d0f705de3725200fc9718bcd034be",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.PlayerScreenPreviewDevices_Fonts - Medium": {
@@ -4204,7 +4204,7 @@
     "functionName": "PlayerScreenPreviewDevices",
     "module": "media:ui",
     "renderBasename": "PlayerScreenPreviewDevices_Fonts_Medium.png",
-    "sha256": "f3c46785397e878fce1f2e01c193e77631c27820d7fad3e6e6add1f17a845914",
+    "sha256": "e27a34b8d71cc4fb2e329e7b7d32244e36337f320881435db5acd91ca6ba0e79",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.PlayerScreenPreviewDevices_Fonts - Normal": {
@@ -4212,7 +4212,7 @@
     "functionName": "PlayerScreenPreviewDevices",
     "module": "media:ui",
     "renderBasename": "PlayerScreenPreviewDevices_Fonts_Normal.png",
-    "sha256": "b590aa10e0c739860ecc7c3e5719651bb53c9b05afa1a3afd23876792a8aa4a9",
+    "sha256": "66c3591bac033b4e23ad9222879aef90dee4e68e14235b58f06b42a8dfa0def5",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.PlayerScreenPreviewDevices_Fonts - Small": {
@@ -4220,7 +4220,7 @@
     "functionName": "PlayerScreenPreviewDevices",
     "module": "media:ui",
     "renderBasename": "PlayerScreenPreviewDevices_Fonts_Small.png",
-    "sha256": "ea0c6010b623484eaf498909f8c0e7a7b8ae6b6b0a8ca6e00760e6c2eee62500",
+    "sha256": "1670fa3e4dcfe9e52a774604fc8ad174b3701f95c978b9f59725f8b77730b130",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.PlayerScreenPreviewNotingPlayingDisplay_Devices - Large Round": {
@@ -4228,7 +4228,7 @@
     "functionName": "PlayerScreenPreviewNotingPlayingDisplay",
     "module": "media:ui",
     "renderBasename": "PlayerScreenPreviewNotingPlayingDisplay_Devices_Large_Round.png",
-    "sha256": "3bb9fb35f904c97023a5eda64b1084fcc51d1987f3b1dd45513b6ac67e81dfe4",
+    "sha256": "5c6584cd022853c8260b7996869a63983feb97ed61e216342746030b2bb9f64c",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.PlayerScreenPreviewNotingPlayingDisplay_Devices - Small Round": {
@@ -4236,7 +4236,7 @@
     "functionName": "PlayerScreenPreviewNotingPlayingDisplay",
     "module": "media:ui",
     "renderBasename": "PlayerScreenPreviewNotingPlayingDisplay_Devices_Small_Round.png",
-    "sha256": "1a19685b67ebdf980454b81928c14bfc816898f245afadc37771e7a09bf957e3",
+    "sha256": "620345120c64b5314a957ab8aef3e027358659dbd35008ebad6bd43f0ab1df67",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.PlayerScreenPreview_Devices - Large Round": {
@@ -4244,7 +4244,7 @@
     "functionName": "PlayerScreenPreview",
     "module": "media:ui",
     "renderBasename": "PlayerScreenPreview_Devices_Large_Round.png",
-    "sha256": "c05ddfae53fa2c613beb99e9c66b76e472a3f3359ee387a73eb3b01b527d9652",
+    "sha256": "291ce33fbff8cb9ca4451f155f6b781a407f4c77c9764e68bc9c984055bcf71f",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.PlayerScreenPreview_Devices - Small Round": {
@@ -4252,7 +4252,7 @@
     "functionName": "PlayerScreenPreview",
     "module": "media:ui",
     "renderBasename": "PlayerScreenPreview_Devices_Small_Round.png",
-    "sha256": "7da9fe305a42fc5ad8daf4bffeef61766f484f0d934bfdc33b9ededb6b7e6f41",
+    "sha256": "30e1dc1ad806a47824454d96a80c095eac44e18eb8279aa1b0397db47996c506",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.VolumeScreenTheme_Devices - Large Round": {
@@ -4260,7 +4260,7 @@
     "functionName": "VolumeScreenTheme",
     "module": "media:ui",
     "renderBasename": "VolumeScreenTheme_Devices_Large_Round_Blue_7FCFFF.png",
-    "sha256": "b9b635cfff57e29b525b94aff4622193546aec13c395ea0991a6011851580beb",
+    "sha256": "2f6fc7c63175f1fe7760506cf02c91124f09608b18b3ded7afacd67915703da4",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.VolumeScreenTheme_Devices - Large Round#1": {
@@ -4268,7 +4268,7 @@
     "functionName": "VolumeScreenTheme",
     "module": "media:ui",
     "renderBasename": "VolumeScreenTheme_Devices_Large_Round_Blue_Default_-_AECBFA.png",
-    "sha256": "1c81e7dde7406e7ad244233176922dd46d7bcd53afafc14e65beceed7908582b",
+    "sha256": "277c134ceed64f852cc54220b2b2cf71372597802ffa738ddb5f88df32563726",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.VolumeScreenTheme_Devices - Large Round#2": {
@@ -4276,7 +4276,7 @@
     "functionName": "VolumeScreenTheme",
     "module": "media:ui",
     "renderBasename": "VolumeScreenTheme_Devices_Large_Round_Blue_with_Text_7FCFFF.png",
-    "sha256": "0f6512f6926ac703b376b4b3ae114d09a4bb4ad2f636ec75ef173d9df0b7c63f",
+    "sha256": "077afdde690b1fbb7cbe3757f0921b5113e7505de277715f339ec1c7491ee3af",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.VolumeScreenTheme_Devices - Large Round#3": {
@@ -4284,7 +4284,7 @@
     "functionName": "VolumeScreenTheme",
     "module": "media:ui",
     "renderBasename": "VolumeScreenTheme_Devices_Large_Round_Green_6DD58C.png",
-    "sha256": "024a10624d3fa33d9610952122fffcfc3447ddde8ffb779ee1f3d8fd3187b8f9",
+    "sha256": "d9f4435bfe4fd5cefa37c40943db242a3da55f08f57eb4aada2bb58e54581a4e",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.VolumeScreenTheme_Devices - Large Round#4": {
@@ -4292,7 +4292,7 @@
     "functionName": "VolumeScreenTheme",
     "module": "media:ui",
     "renderBasename": "VolumeScreenTheme_Devices_Large_Round_Lilac_D0BCFF.png",
-    "sha256": "89de31f82d6310ccb6cde10744755e25b084dfed85be98ecc2c16dc2e39fc569",
+    "sha256": "d514a9b13ba76b23a91e3540032cda43bbfc34eab4e873d2d5932b5e0103d404",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.VolumeScreenTheme_Devices - Large Round#5": {
@@ -4300,7 +4300,7 @@
     "functionName": "VolumeScreenTheme",
     "module": "media:ui",
     "renderBasename": "VolumeScreenTheme_Devices_Large_Round_Orange-y.png",
-    "sha256": "ac95967ff4a5c01476ac3484c96d4a8c638cab0ac0df823100e1af00b55ed579",
+    "sha256": "f6ace1a505f1fd216bbd766f3f54732adfef22ced05bddc2edd0fcaea0cd0eb0",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewKt.VolumeScreenTheme_Devices - Large Round#6": {
@@ -4308,7 +4308,7 @@
     "functionName": "VolumeScreenTheme",
     "module": "media:ui",
     "renderBasename": "VolumeScreenTheme_Devices_Large_Round_Uamp.png",
-    "sha256": "357b0f3f9dbebe6356a731b6c27608a799f085144c6970f04956ee908bc9479f",
+    "sha256": "6f467a56377af3f5901b2af6331a7cb4947acad633b7bd50031b835351db9fd0",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreview.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.player.PlayerScreenPreviewUampKt.PlayerScreenPreviewUamp_Devices - Large Round": {
@@ -4316,7 +4316,7 @@
     "functionName": "PlayerScreenPreviewUamp",
     "module": "media:ui",
     "renderBasename": "PlayerScreenPreviewUamp_Devices_Large_Round.png",
-    "sha256": "357b0f3f9dbebe6356a731b6c27608a799f085144c6970f04956ee908bc9479f",
+    "sha256": "6f467a56377af3f5901b2af6331a7cb4947acad633b7bd50031b835351db9fd0",
     "sourceFile": "src/debug/java/com/google/android/horologist/media/ui/screens/player/PlayerScreenPreviewUamp.kt"
   },
   "media:ui/com.google.android.horologist.media.ui.screens.playlists.PlaylistsScreenPreviewKt.PlaylistsScreenPreviewCustomLayout_Devices - Large Round": {
@@ -4388,7 +4388,7 @@
     "functionName": "WearAppPreview",
     "module": "sample",
     "renderBasename": "AmbientAwareActivityKt.WearAppPreview_Devices_Large_Round.png",
-    "sha256": "ee41229397361966cbe6891423635495f40a5298cb067da6578d788a235c800d",
+    "sha256": "516dfbd16bfac6a5ebadb1cf1eebfc8f1a48fa0043b1a76bb9de57ce7399ba53",
     "sourceFile": "src/main/java/com/google/android/horologist/ambient/AmbientAwareActivity.kt"
   },
   "sample/com.google.android.horologist.audit.AuditMenuScreenKt.AuditMenuScreenPreview_Devices - Large Round": {
@@ -4396,7 +4396,7 @@
     "functionName": "AuditMenuScreenPreview",
     "module": "sample",
     "renderBasename": "AuditMenuScreenPreview_Devices_Large_Round.png",
-    "sha256": "e8a7352d322978befb03d5657f7ed81706555f2d07df557e0a4f9f2dc31fbbea",
+    "sha256": "78d00e9b290aa5a4b9053cdbca8872aaaea759639ebe5b84a9df5e63cccaed56",
     "sourceFile": "src/main/java/com/google/android/horologist/audit/AuditMenuScreen.kt"
   },
   "sample/com.google.android.horologist.audit.AuditMenuScreenKt.AuditMenuScreenPreview_Devices - Small Round": {
@@ -4404,7 +4404,7 @@
     "functionName": "AuditMenuScreenPreview",
     "module": "sample",
     "renderBasename": "AuditMenuScreenPreview_Devices_Small_Round.png",
-    "sha256": "d8efe139c68b4b4d8ff4ff3924f15b2fdd921405f8b30f81a63f65638c39be33",
+    "sha256": "ee36a0fb1ef2d7855f464da83652524fa7d63f1692112611b9bd34da2f58790f",
     "sourceFile": "src/main/java/com/google/android/horologist/audit/AuditMenuScreen.kt"
   },
   "sample/com.google.android.horologist.audit.CardsAuditKt.CardsAuditPreview_Devices - Large Round": {
@@ -4412,7 +4412,7 @@
     "functionName": "CardsAuditPreview",
     "module": "sample",
     "renderBasename": "CardsAuditPreview_Devices_Large_Round.png",
-    "sha256": "abb70457d171140f247964fa72dcb0b2636806df11dfde49b1765de6d5c7cb8b",
+    "sha256": "1794372686c2c7330327fb4eed579377e5d74850478b523bd016570ebf7da605",
     "sourceFile": "src/main/java/com/google/android/horologist/audit/CardsAudit.kt"
   },
   "sample/com.google.android.horologist.audit.CardsAuditKt.CardsAuditPreview_Devices - Small Round": {
@@ -4420,7 +4420,7 @@
     "functionName": "CardsAuditPreview",
     "module": "sample",
     "renderBasename": "CardsAuditPreview_Devices_Small_Round.png",
-    "sha256": "dd9ec3a4b991e1917cd2b76001e3ae10c36dda6838906234094429225e4924b6",
+    "sha256": "c7aa85c5e6cbf45e0adee80d349420c9fef3b08034231ce4152582ed898040a7",
     "sourceFile": "src/main/java/com/google/android/horologist/audit/CardsAudit.kt"
   },
   "sample/com.google.android.horologist.audit.CurvedTimeTextAuditKt.CurvedTimeTextAuditPreview_Devices - Large Round": {
@@ -4444,7 +4444,7 @@
     "functionName": "PageIndicatorLeft5PlusAuditPreview",
     "module": "sample",
     "renderBasename": "PageIndicatorLeft5PlusAuditPreview_Devices_Large_Round.png",
-    "sha256": "6e9220e267d91f2f82253d6e4a3a8eb6e05ad974940ff86d5e97865c8cc6d9a2",
+    "sha256": "134a645a93622b3d9a99b7e71ab6106050869577e295c564c4c3a843d911bc98",
     "sourceFile": "src/main/java/com/google/android/horologist/audit/PageIndicatorAudit.kt"
   },
   "sample/com.google.android.horologist.audit.PageIndicatorAuditKt.PageIndicatorLeft5PlusAuditPreview_Devices - Small Round": {
@@ -4452,7 +4452,7 @@
     "functionName": "PageIndicatorLeft5PlusAuditPreview",
     "module": "sample",
     "renderBasename": "PageIndicatorLeft5PlusAuditPreview_Devices_Small_Round.png",
-    "sha256": "e42b079e56265d66d994b40ea4a7aef0226128825c052ded0a41704268206ec4",
+    "sha256": "afb5580e97baaf6f9f65aad28bac1bc1c3e8cd3f486e104bcddbc41fb9af2fd5",
     "sourceFile": "src/main/java/com/google/android/horologist/audit/PageIndicatorAudit.kt"
   },
   "sample/com.google.android.horologist.audit.PageIndicatorAuditKt.PageIndicatorRight5PlusAuditPreview_Devices - Large Round": {
@@ -4460,7 +4460,7 @@
     "functionName": "PageIndicatorRight5PlusAuditPreview",
     "module": "sample",
     "renderBasename": "PageIndicatorRight5PlusAuditPreview_Devices_Large_Round.png",
-    "sha256": "d55b07e7e0fb812d9af260e429e3acb2badc9efccf3a6256057357fa03b2ab31",
+    "sha256": "aca455e4e1d42e7e9e75856d69d30c511797349b97d97b828b9916b46b9dbd91",
     "sourceFile": "src/main/java/com/google/android/horologist/audit/PageIndicatorAudit.kt"
   },
   "sample/com.google.android.horologist.audit.PageIndicatorAuditKt.PageIndicatorRight5PlusAuditPreview_Devices - Small Round": {
@@ -4468,7 +4468,7 @@
     "functionName": "PageIndicatorRight5PlusAuditPreview",
     "module": "sample",
     "renderBasename": "PageIndicatorRight5PlusAuditPreview_Devices_Small_Round.png",
-    "sha256": "bb2382c088bd5f077d37ca0fa55ff7064a8fc8f5575229e03bc5ea76ec6ddde5",
+    "sha256": "bc8adc02ccf5419924bd58dd81ef359bfafc21ca0c16e14b6695e5839f5933c7",
     "sourceFile": "src/main/java/com/google/android/horologist/audit/PageIndicatorAudit.kt"
   },
   "sample/com.google.android.horologist.lottie.GeometryPreviewKt.GeometryPreview_Devices - Large Round": {
@@ -4476,7 +4476,7 @@
     "functionName": "GeometryPreview",
     "module": "sample",
     "renderBasename": "GeometryPreview_Devices_Large_Round.png",
-    "sha256": "95927d3a199ac014a7421b8e0809e6a00909ab643d5363d58a359468d4161fab",
+    "sha256": "fda6d0b86fc33682fd491d69ef7d62c5674cd5dc70db5e0f8efd11a7ca8c58ac",
     "sourceFile": "src/main/java/com/google/android/horologist/lottie/GeometryPreview.kt"
   },
   "sample/com.google.android.horologist.lottie.GeometryPreviewKt.GeometryPreview_Devices - Small Round": {
@@ -4532,7 +4532,7 @@
     "functionName": "PagingItemCardPreviewWithInitialContent",
     "module": "sample",
     "renderBasename": "PagingItemCardPreviewWithInitialContent_Devices_Small_Square.png",
-    "sha256": "b0492eadf4dd5a03462b779491ed6fbc6430ab9510a6d7e4b0ce9a18fb82a1da",
+    "sha256": "f0755aa333b213f0df79e4a945baff7096ce65c6cf0f6d6dd6f3c5281bbf2111",
     "sourceFile": "src/main/java/com/google/android/horologist/paging/PagingScreen.kt"
   },
   "sample/com.google.android.horologist.sample.FillMaxRectangleScreenKt.FillMaxRectanglePreview_Devices - Large Round": {
