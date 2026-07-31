@@ -2,18 +2,6 @@
 
 Auto-generated from `main`. Browse inline or compare against PR branches.
 
-> [!WARNING]
-> 2 preview(s) failed to render in the latest update (2 with no prior baseline to retain). See **Render Failures** below.
-
-## Render Failures
-
-The render task completed but no PNG was produced for these previews. Entries with a prior baseline keep their previous image; the rest are absent from the gallery until a successful render lands.
-
-| Preview | Module | Function | Source | Baseline |
-|---------|--------|----------|--------|----------|
-| `ai:sample:wear-prompt-app/com.google.android.horologist.ai.sample.wear.prompt.WearAppKt.DefaultPreview_Devices - Large Round` | ai:sample:wear-prompt-app | `DefaultPreview` | `src/main/java/com/google/android/horologist/ai/sample/wear/prompt/WearApp.kt` | none |
-| `ai:sample:wear-prompt-app/com.google.android.horologist.ai.sample.wear.prompt.WearAppKt.DefaultPreview_Devices - Small Round` | ai:sample:wear-prompt-app | `DefaultPreview` | `src/main/java/com/google/android/horologist/ai/sample/wear/prompt/WearApp.kt` | none |
-
 ## ai:sample:wear-gemini
 
 | Preview | Image |
@@ -202,9 +190,12 @@ The render task completed but no PNG was produced for these previews. Entries wi
 | `MaterialToggleButton` | <img src="https://raw.githubusercontent.com/yschimke/horologist/compose-preview/main/renders/catalog/MaterialToggleButton_Material.png" width="150" /> |
 | `MaterialToggleChipRadio` | <img src="https://raw.githubusercontent.com/yschimke/horologist/compose-preview/main/renders/catalog/MaterialToggleChipRadio_Material.png" width="150" /> |
 | `MaterialToggleChipSwitch` | <img src="https://raw.githubusercontent.com/yschimke/horologist/compose-preview/main/renders/catalog/MaterialToggleChipSwitch_Material.png" width="150" /> |
+| `MediaArtwork` | <img src="https://raw.githubusercontent.com/yschimke/horologist/compose-preview/main/renders/catalog/MediaArtwork_Media.png" width="150" /> |
 | `MediaControlButtonsPausedAtQueueEnd` | <img src="https://raw.githubusercontent.com/yschimke/horologist/compose-preview/main/renders/catalog/MediaControlButtonsPausedAtQueueEnd_Media.png" width="150" /> |
 | `MediaControlButtonsPlaying` | <img src="https://raw.githubusercontent.com/yschimke/horologist/compose-preview/main/renders/catalog/MediaControlButtonsPlaying_Media.png" width="150" /> |
+| `MediaDetailsButtonWithArtwork` | <img src="https://raw.githubusercontent.com/yschimke/horologist/compose-preview/main/renders/catalog/MediaDetailsButtonWithArtwork_Media.png" width="150" /> |
 | `MediaDetailsButton` | <img src="https://raw.githubusercontent.com/yschimke/horologist/compose-preview/main/renders/catalog/MediaDetailsButton_Media.png" width="150" /> |
+| `MediaEntityScreenWithArtwork` | <img src="https://raw.githubusercontent.com/yschimke/horologist/compose-preview/main/renders/catalog/MediaEntityScreenWithArtwork_Media.png" width="150" /> |
 | `MediaEntityScreen` | <img src="https://raw.githubusercontent.com/yschimke/horologist/compose-preview/main/renders/catalog/MediaEntityScreen_Media.png" width="150" /> |
 | `MediaLoadingMediaDisplay` | <img src="https://raw.githubusercontent.com/yschimke/horologist/compose-preview/main/renders/catalog/MediaLoadingMediaDisplay_Media.png" width="150" /> |
 | `MediaMarqueeTextMediaDisplayLongTitle` | <img src="https://raw.githubusercontent.com/yschimke/horologist/compose-preview/main/renders/catalog/MediaMarqueeTextMediaDisplayLongTitle_Media.png" width="150" /> |
