@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="486" height="486" viewBox="0 0 486 486" text-rendering="geometricPrecision" font-family="sans-serif">
+<clipPath id="deviceRound"><circle cx="227" cy="227" r="227"/></clipPath>
+<g transform="translate(16, 16)" clip-path="url(#deviceRound)">
+  <circle cx="227" cy="227" r="227" fill="#000000"/>
+  <g id="Root">
+    <g id="ReusableComposeNode">
+      <image href="audiovolumelevelindicator.figma-raster/48.png" x="0" y="0" width="454" height="454"/>
+    </g>
+  </g>
+</g>
+</svg>

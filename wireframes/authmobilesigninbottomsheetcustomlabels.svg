@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1076 3163" width="1076" height="3163" role="img" aria-label="AuthMobileSignInBottomSheetCustomLabels layout wireframe">
+  <title>AuthMobileSignInBottomSheetCustomLabels — layout wireframe (slots + tokens)</title>
+  <rect width="1076" height="3163" fill="#ffffff"/>
+  <g>
+    <rect x="0" y="0" width="1076" height="2396" fill="none" fill-opacity="0" stroke="#5B6470" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="0" y="0" width="1076" height="2396" fill="none" fill-opacity="0" stroke="#2E7D6B" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="0" y="0" width="1076" height="2396" fill="none" fill-opacity="0" stroke="#8E6BA8" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="0" y="0" width="1076" height="2396" fill="none" fill-opacity="0" stroke="#B0813B" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <path d="M73.5,2396 H1002.5 A73.5,73.5 0 0 1 1076,2469.5 V3163 A0,0 0 0 1 1076,3163 H0 A0,0 0 0 1 0,3163 V2469.5 A73.5,73.5 0 0 1 73.5,2396 Z" fill="#F7F2FA" fill-opacity="1" stroke="#B0813B" stroke-width="1.5" stroke-opacity="1"/>
+    <text x="3" y="2408" font-family="system-ui, sans-serif" font-size="9" fill="#B0813B">#FFF7F2FA</text>
+  </g>
+  <g>
+    <rect x="0" y="2396" width="1076" height="767" fill="none" fill-opacity="0" stroke="#3B72A8" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="42" y="2438" width="992" height="683" fill="none" fill-opacity="0" stroke="#A85B6B" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="475" y="2501" width="126" height="126" fill="none" fill-opacity="0" stroke="#4F8A4A" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="475" y="2501" width="126" height="126" fill="none" fill-opacity="0" stroke="#7A7A33" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="42" y="2690" width="992" height="74" fill="none" fill-opacity="0" stroke="#4F8A4A" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="42" y="2806" width="992" height="126" fill="none" fill-opacity="0" stroke="#4F8A4A" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="84" y="2995" width="908" height="126" fill="none" fill-opacity="0" stroke="#4F8A4A" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <path d="M571.5,3006 H669.5 A52.5,52.5 0 0 1 722,3058.5 V3058.5 A52.5,52.5 0 0 1 669.5,3111 H571.5 A52.5,52.5 0 0 1 519,3058.5 V3058.5 A52.5,52.5 0 0 1 571.5,3006 Z" fill="none" fill-opacity="0" stroke="#7A7A33" stroke-width="1.5" stroke-opacity="1"/>
+    <text x="522" y="3018" font-family="system-ui, sans-serif" font-size="9" fill="#7A7A33">pad ·</text>
+  </g>
+  <g>
+    <rect x="551" y="3027" width="139" height="63" fill="none" fill-opacity="0" stroke="#5B6470" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="551" y="3032" width="139" height="53" fill="none" fill-opacity="0" stroke="#2E7D6B" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <path d="M806.5,3006 H939.5 A52.5,52.5 0 0 1 992,3058.5 V3058.5 A52.5,52.5 0 0 1 939.5,3111 H806.5 A52.5,52.5 0 0 1 754,3058.5 V3058.5 A52.5,52.5 0 0 1 806.5,3006 Z" fill="#6750A4" fill-opacity="1" stroke="#7A7A33" stroke-width="1.5" stroke-opacity="1"/>
+    <text x="757" y="3018" font-family="system-ui, sans-serif" font-size="9" fill="#7A7A33">#FF6750A4</text>
+  </g>
+  <g>
+    <rect x="817" y="3027" width="112" height="63" fill="none" fill-opacity="0" stroke="#5B6470" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="817" y="3032" width="112" height="53" fill="none" fill-opacity="0" stroke="#2E7D6B" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+</svg>

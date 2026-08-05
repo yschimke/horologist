@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="486" height="486" viewBox="0 0 486 486" text-rendering="geometricPrecision" font-family="sans-serif">
+<clipPath id="deviceRound"><circle cx="227" cy="227" r="227"/></clipPath>
+<g transform="translate(16, 16)" clip-path="url(#deviceRound)">
+  <circle cx="227" cy="227" r="227" fill="#000000"/>
+  <g id="Root">
+    <g id="ReusableComposeNode">
+      <rect x="166" y="175" width="122" height="104" rx="52" ry="52" fill="#FFFFFF" fill-opacity="0.12"/>
+      <g id="ReusableComposeNode Placeholder">
+        <rect x="194" y="201" width="52" height="52" rx="26" ry="26" fill="#454648"/>
+      </g>
+      <g id="ReusableComposeNode">
+      </g>
+      <g id="ReusableComposeNode">
+        <g id="ReusableComposeNode Placeholder">
+          <rect x="258" y="202" width="2" height="24" rx="1" ry="1" fill="#454648"/>
+        </g>
+        <g id="ReusableComposeNode">
+        </g>
+        <g id="ReusableComposeNode Placeholder">
+          <rect x="258" y="228" width="2" height="24" rx="1" ry="1" fill="#454648"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</g>
+</svg>

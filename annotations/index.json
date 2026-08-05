@@ -1,0 +1,5299 @@
+{
+  "schema": "compose-preview-annotations/v1",
+  "previews": {
+    "materialbutton__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 175,
+          "y": 175,
+          "width": 104,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      }
+    ],
+    "materialbuttonlarge__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 167,
+          "y": 167,
+          "width": 120,
+          "height": 120
+        },
+        "label": "r 30dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "30"
+        }
+      }
+    ],
+    "materialchip__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 32,
+          "y": 175,
+          "width": 390,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 60,
+          "y": 210,
+          "width": 334,
+          "height": 35
+        },
+        "label": "text 15sp/19",
+        "role": "Downloads",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "19",
+          "fontWeight": "700"
+        }
+      }
+    ],
+    "materialchipdisabled__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 32,
+          "y": 175,
+          "width": 390,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 60,
+          "y": 210,
+          "width": 334,
+          "height": 35
+        },
+        "label": "text 15sp/19",
+        "role": "Not available offline",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "19",
+          "fontWeight": "700"
+        }
+      }
+    ],
+    "materialchiptruncated__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 32,
+          "y": 175,
+          "width": 390,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 60,
+          "y": 196,
+          "width": 334,
+          "height": 35
+        },
+        "label": "text 15sp/19",
+        "role": "A label long enough to wrap onto a third line on a small round watch",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "19",
+          "fontWeight": "700"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 60,
+          "y": 231,
+          "width": 334,
+          "height": 28
+        },
+        "label": "text 12sp/16",
+        "role": "And a secondary label that is also rather long",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "12",
+          "lineHeight": "16",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "materialchipwithsecondarylabel__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 32,
+          "y": 175,
+          "width": 390,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 60,
+          "y": 196,
+          "width": 334,
+          "height": 35
+        },
+        "label": "text 15sp/19",
+        "role": "Weather with You",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "19",
+          "fontWeight": "700"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 60,
+          "y": 231,
+          "width": 175,
+          "height": 28
+        },
+        "label": "text 12sp/16",
+        "role": "Crowded House",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "12",
+          "lineHeight": "16",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "materialcompactchip__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 32,
+          "y": 195,
+          "width": 193,
+          "height": 64
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 56,
+          "y": 211,
+          "width": 145,
+          "height": 33
+        },
+        "label": "text 14sp/18",
+        "role": "Show more",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "18",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "materialoutlinedchip__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 32,
+          "y": 175,
+          "width": 390,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 60,
+          "y": 210,
+          "width": 334,
+          "height": 35
+        },
+        "label": "text 15sp/19",
+        "role": "Manage storage",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "19",
+          "fontWeight": "700"
+        }
+      }
+    ],
+    "materialoutlinedcompactchip__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 32,
+          "y": 195,
+          "width": 193,
+          "height": 64
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 56,
+          "y": 211,
+          "width": 145,
+          "height": 33
+        },
+        "label": "text 14sp/18",
+        "role": "Show more",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "18",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "materialresponsivelistheader__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 122,
+          "y": 206,
+          "width": 210,
+          "height": 35
+        },
+        "label": "pad 0dp/11.8dp",
+        "role": "Downloads",
+        "detail": {
+          "padding.start": "11.804",
+          "padding.top": "0",
+          "padding.end": "11.804",
+          "padding.bottom": "0"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 122,
+          "y": 206,
+          "width": 210,
+          "height": 35
+        },
+        "label": "text 15sp/19",
+        "role": "Downloads",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "19",
+          "fontWeight": "700"
+        }
+      }
+    ],
+    "materialsecondarytitle__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 89,
+          "y": 215,
+          "width": 276,
+          "height": 33
+        },
+        "label": "pad 0dp/11.8dp",
+        "role": "Playback",
+        "detail": {
+          "padding.start": "11.804",
+          "padding.top": "0",
+          "padding.end": "11.804",
+          "padding.bottom": "0"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 89,
+          "y": 215,
+          "width": 276,
+          "height": 33
+        },
+        "label": "text 14sp/18",
+        "role": "Playback",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "18",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "materialsplittogglechip__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 32,
+          "y": 175,
+          "width": 390,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 32,
+          "y": 175,
+          "width": 286,
+          "height": 104
+        },
+        "label": "pad t 6dp e 0dp b 6dp s 14dp",
+        "role": "Button",
+        "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "0",
+          "padding.bottom": "6"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 318,
+          "y": 175,
+          "width": 104,
+          "height": 104
+        },
+        "label": "pad t 6dp e 14dp b 6dp s 0dp",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 60,
+          "y": 210,
+          "width": 250,
+          "height": 35
+        },
+        "label": "text 15sp/19",
+        "role": "Podcasts",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "19",
+          "fontWeight": "700"
+        }
+      }
+    ],
+    "materialtitle__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 89,
+          "y": 202,
+          "width": 276,
+          "height": 35
+        },
+        "label": "pad 0dp/11.8dp",
+        "role": "Settings",
+        "detail": {
+          "padding.start": "11.804",
+          "padding.top": "0",
+          "padding.end": "11.804",
+          "padding.bottom": "0"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 89,
+          "y": 202,
+          "width": 276,
+          "height": 35
+        },
+        "label": "text 15sp/19",
+        "role": "Settings",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "19",
+          "fontWeight": "700"
+        }
+      }
+    ],
+    "materialtogglebutton__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 175,
+          "y": 175,
+          "width": 104,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Checkbox",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 208,
+          "y": 210,
+          "width": 38,
+          "height": 35
+        },
+        "label": "text 15sp/19",
+        "role": "Aa",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "19",
+          "fontWeight": "700"
+        }
+      }
+    ],
+    "materialtogglechipradio__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 32,
+          "y": 175,
+          "width": 390,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 60,
+          "y": 196,
+          "width": 278,
+          "height": 35
+        },
+        "label": "text 15sp/19",
+        "role": "High quality",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "19",
+          "fontWeight": "700"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 60,
+          "y": 231,
+          "width": 173,
+          "height": 28
+        },
+        "label": "text 12sp/16",
+        "role": "Uses more data",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "12",
+          "lineHeight": "16",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "materialtogglechipswitch__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 32,
+          "y": 175,
+          "width": 390,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 60,
+          "y": 191,
+          "width": 278,
+          "height": 73
+        },
+        "label": "text 15sp/19",
+        "role": "Download over Wi-Fi",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "19",
+          "fontWeight": "700"
+        }
+      }
+    ],
+    "mediacontrolbuttonspausedatqueueend__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 34,
+          "y": 24,
+          "width": 99,
+          "height": 406
+        },
+        "label": "r 24.8dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "24.75"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 147,
+          "y": 147,
+          "width": 160,
+          "height": 160
+        },
+        "label": "r 40dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "40"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 321,
+          "y": 24,
+          "width": 99,
+          "height": 406
+        },
+        "label": "r 24.8dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "24.75"
+        }
+      }
+    ],
+    "mediacontrolbuttonsplaying__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 34,
+          "y": 24,
+          "width": 99,
+          "height": 406
+        },
+        "label": "r 24.8dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "24.75"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 147,
+          "y": 147,
+          "width": 160,
+          "height": 160
+        },
+        "label": "r 40dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "40"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 321,
+          "y": 24,
+          "width": 99,
+          "height": 406
+        },
+        "label": "r 24.8dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "24.75"
+        }
+      }
+    ],
+    "mediadetailsbutton__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 0,
+          "y": 175,
+          "width": 454,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 100,
+          "y": 209,
+          "width": 244,
+          "height": 36
+        },
+        "label": "text 15sp/18",
+        "role": "Weather with You",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "18",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "mediadetailsbuttonwithartwork__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 0,
+          "y": 175,
+          "width": 454,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 100,
+          "y": 209,
+          "width": 244,
+          "height": 36
+        },
+        "label": "text 15sp/18",
+        "role": "Weather with You",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "18",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "mediaentityscreen__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 20,
+          "y": 175,
+          "width": 414,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 20,
+          "y": 287,
+          "width": 414,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 65,
+          "y": 398,
+          "width": 323,
+          "height": 56
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 93,
+          "y": 104,
+          "width": 269,
+          "height": 38
+        },
+        "label": "text 16sp/18",
+        "role": "Songs to test with",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "18",
+          "fontWeight": "550"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 120,
+          "y": 209,
+          "width": 96,
+          "height": 36
+        },
+        "label": "text 15sp/18",
+        "role": "Track 1",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "18",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 120,
+          "y": 321,
+          "width": 100,
+          "height": 36
+        },
+        "label": "text 15sp/18",
+        "role": "Track 2",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "18",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 143,
+          "y": 425,
+          "width": 79,
+          "height": 28
+        },
+        "label": "text 15sp/18",
+        "role": "Track 3",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "18",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "mediaentityscreenwithartwork__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 20,
+          "y": 175,
+          "width": 414,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 20,
+          "y": 287,
+          "width": 414,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 65,
+          "y": 398,
+          "width": 323,
+          "height": 56
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 93,
+          "y": 104,
+          "width": 269,
+          "height": 38
+        },
+        "label": "text 16sp/18",
+        "role": "Songs to test with",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "18",
+          "fontWeight": "550"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 120,
+          "y": 209,
+          "width": 96,
+          "height": 36
+        },
+        "label": "text 15sp/18",
+        "role": "Track 1",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "18",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 120,
+          "y": 321,
+          "width": 100,
+          "height": 36
+        },
+        "label": "text 15sp/18",
+        "role": "Track 2",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "18",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 143,
+          "y": 425,
+          "width": 79,
+          "height": 28
+        },
+        "label": "text 15sp/18",
+        "role": "Track 3",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "18",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "mediamarqueetextmediadisplay__ideal__default__compact": [
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 98,
+          "y": 190,
+          "width": 260,
+          "height": 38
+        },
+        "label": "text 16sp/18",
+        "role": "Weather with You",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "18",
+          "fontWeight": "550"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 122,
+          "y": 231,
+          "width": 210,
+          "height": 33
+        },
+        "label": "text 14sp/16",
+        "role": "Crowded House",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "16",
+          "fontWeight": "450"
+        }
+      }
+    ],
+    "mediamarqueetextmediadisplaylongtitle__ideal__default__compact": [
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 76,
+          "y": 190,
+          "width": 303,
+          "height": 38
+        },
+        "label": "text 16sp/18",
+        "role": "Everywhere I Go (I See Your Face) — Extended Remaster",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "18",
+          "fontWeight": "550"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 66,
+          "y": 231,
+          "width": 322,
+          "height": 33
+        },
+        "label": "text 14sp/16",
+        "role": "The Very Long Band Name Orchestra",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "16",
+          "fontWeight": "450"
+        }
+      }
+    ],
+    "mediamessagemediadisplay__ideal__default__compact": [
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 66,
+          "y": 208,
+          "width": 322,
+          "height": 38
+        },
+        "label": "text 16sp/18",
+        "role": "Connect to Wi-Fi to download",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "18",
+          "fontWeight": "550"
+        }
+      }
+    ],
+    "medianothingplayingdisplay__ideal__default__compact": [
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 66,
+          "y": 208,
+          "width": 322,
+          "height": 38
+        },
+        "label": "text 16sp/18",
+        "role": "Nothing playing",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "18",
+          "fontWeight": "550"
+        }
+      }
+    ],
+    "mediaplaceholderbutton__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 166,
+          "y": 175,
+          "width": 122,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Loading",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 194,
+          "y": 201,
+          "width": 52,
+          "height": 52
+        },
+        "label": "r 13dp",
+        "detail": {
+          "cornerRadius": "13"
+        }
+      }
+    ],
+    "mediaplaypausebuttondisabled__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 175,
+          "y": 175,
+          "width": 104,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      }
+    ],
+    "mediaplaypausebuttonpaused__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 175,
+          "y": 175,
+          "width": 104,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      }
+    ],
+    "mediaplaypausebuttonplaying__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 175,
+          "y": 175,
+          "width": 104,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      }
+    ],
+    "authwearguestmodebutton__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 55,
+          "y": 175,
+          "width": 344,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 83,
+          "y": 209,
+          "width": 288,
+          "height": 36
+        },
+        "label": "text 15sp/18",
+        "role": "Use without account",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "18",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "authwearselectaccountscreen__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 24,
+          "y": 151,
+          "width": 406,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 25,
+          "y": 263,
+          "width": 403,
+          "height": 126
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 104,
+          "y": 77,
+          "width": 246,
+          "height": 42
+        },
+        "label": "text 18sp/20",
+        "role": "Select Account",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "18",
+          "lineHeight": "20",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 116,
+          "y": 167,
+          "width": 142,
+          "height": 38
+        },
+        "label": "text 16sp/18",
+        "role": "John Doe",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "18",
+          "fontWeight": "550"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 116,
+          "y": 207,
+          "width": 246,
+          "height": 32
+        },
+        "label": "text 13sp/16",
+        "role": "john@example.com",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "13",
+          "lineHeight": "16",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 116,
+          "y": 274,
+          "width": 194,
+          "height": 38
+        },
+        "label": "text 16sp/18",
+        "role": "Tim Andrews",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "18",
+          "fontWeight": "550"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 116,
+          "y": 314,
+          "width": 284,
+          "height": 64
+        },
+        "label": "text 13sp/16",
+        "role": "timandrews123@example.com",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "13",
+          "lineHeight": "16",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "authwearselectaccountscreenemailonly__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 24,
+          "y": 151,
+          "width": 406,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 24,
+          "y": 263,
+          "width": 405,
+          "height": 103
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 104,
+          "y": 77,
+          "width": 246,
+          "height": 42
+        },
+        "label": "text 18sp/20",
+        "role": "Select Account",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "18",
+          "lineHeight": "20",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 116,
+          "y": 188,
+          "width": 284,
+          "height": 32
+        },
+        "label": "text 13sp/16",
+        "role": "maggie@example.com",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "13",
+          "lineHeight": "16",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 116,
+          "y": 278,
+          "width": 141,
+          "height": 38
+        },
+        "label": "text 16sp/18",
+        "role": "John Doe",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "18",
+          "fontWeight": "550"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 116,
+          "y": 318,
+          "width": 245,
+          "height": 32
+        },
+        "label": "text 13sp/16",
+        "role": "john@example.com",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "13",
+          "lineHeight": "16",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "authwearselectaccountscreenlongemail__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 24,
+          "y": 151,
+          "width": 406,
+          "height": 164
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 104,
+          "y": 77,
+          "width": 246,
+          "height": 42
+        },
+        "label": "text 18sp/20",
+        "role": "Select Account",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "18",
+          "lineHeight": "20",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 116,
+          "y": 163,
+          "width": 286,
+          "height": 74
+        },
+        "label": "text 16sp/18",
+        "role": "Wolfeschlegelsteinhausenbergerdorff",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "18",
+          "fontWeight": "550"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 116,
+          "y": 239,
+          "width": 286,
+          "height": 64
+        },
+        "label": "text 13sp/16",
+        "role": "wolfeschlegelsteinhausenbergerdorff@example.com",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "13",
+          "lineHeight": "16",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "authwearselectaccountscreensingle__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 24,
+          "y": 151,
+          "width": 406,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 104,
+          "y": 77,
+          "width": 246,
+          "height": 42
+        },
+        "label": "text 18sp/20",
+        "role": "Select Account",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "18",
+          "lineHeight": "20",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 116,
+          "y": 167,
+          "width": 142,
+          "height": 38
+        },
+        "label": "text 16sp/18",
+        "role": "John Doe",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "18",
+          "fontWeight": "550"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 116,
+          "y": 207,
+          "width": 246,
+          "height": 32
+        },
+        "label": "text 13sp/16",
+        "role": "john@example.com",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "13",
+          "lineHeight": "16",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "authwearsigninbutton__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 119,
+          "y": 175,
+          "width": 217,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 211,
+          "y": 209,
+          "width": 97,
+          "height": 36
+        },
+        "label": "text 15sp/18",
+        "role": "Sign in",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "18",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "authwearsigninbuttondisabled__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 119,
+          "y": 175,
+          "width": 217,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 211,
+          "y": 209,
+          "width": 97,
+          "height": 36
+        },
+        "label": "text 15sp/18",
+        "role": "Sign in",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "18",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "authwearsigninplaceholderscreen__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 167,
+          "y": 119,
+          "width": 120,
+          "height": 120
+        },
+        "label": "r 30dp",
+        "detail": {
+          "cornerRadius": "30"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 43,
+          "y": 255,
+          "width": 368,
+          "height": 38
+        },
+        "label": "pad t 8dp e 0dp b 0dp s 0dp",
+        "role": "Signing in…",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "8",
+          "padding.end": "0",
+          "padding.bottom": "0"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 43,
+          "y": 255,
+          "width": 368,
+          "height": 38
+        },
+        "label": "text 16sp/20",
+        "role": "Signing in…",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "20",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "authwearsigninpromptscreen__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 119,
+          "y": 233,
+          "width": 217,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 55,
+          "y": 345,
+          "width": 344,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 171,
+          "y": 46,
+          "width": 111,
+          "height": 41
+        },
+        "label": "text 18sp/20",
+        "role": "Sign in",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "18",
+          "lineHeight": "20",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 44,
+          "y": 104,
+          "width": 366,
+          "height": 97
+        },
+        "label": "text 14sp/16",
+        "role": "Send messages and create chat groups with your friends",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "16",
+          "fontWeight": "450"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 211,
+          "y": 267,
+          "width": 97,
+          "height": 36
+        },
+        "label": "text 15sp/18",
+        "role": "Sign in",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "18",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 83,
+          "y": 379,
+          "width": 288,
+          "height": 36
+        },
+        "label": "text 15sp/18",
+        "role": "Use without account",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "18",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "authwearsigninpromptscreenloading__ideal__default__compact": [
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 153,
+          "y": 208,
+          "width": 149,
+          "height": 38
+        },
+        "label": "text 16sp/18",
+        "role": "Loading…",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "18",
+          "fontWeight": "450"
+        }
+      }
+    ],
+    "authwearsignedinconfirmationdialog__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 107,
+          "y": 13,
+          "width": 240,
+          "height": 240
+        },
+        "label": "pad 4dp",
+        "detail": {
+          "padding.start": "4",
+          "padding.top": "4",
+          "padding.end": "4",
+          "padding.bottom": "4"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 25,
+          "y": 363,
+          "width": 403,
+          "height": 41
+        },
+        "label": "pad t 4dp e 20.9dp b 0dp s 20.9dp",
+        "role": "john@example.com",
+        "detail": {
+          "padding.start": "20.884",
+          "padding.top": "4",
+          "padding.end": "20.884",
+          "padding.bottom": "0"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": -26,
+          "y": 263,
+          "width": 506,
+          "height": 90
+        },
+        "label": "text 30sp/34",
+        "role": "Hi, John",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "30",
+          "lineHeight": "34",
+          "fontWeight": "520"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 25,
+          "y": 363,
+          "width": 403,
+          "height": 41
+        },
+        "label": "text 14sp/16",
+        "role": "john@example.com",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "16",
+          "fontWeight": "450"
+        }
+      }
+    ],
+    "authwearsignedinconfirmationdialogemailonly__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 107,
+          "y": 13,
+          "width": 240,
+          "height": 240
+        },
+        "label": "pad 4dp",
+        "detail": {
+          "padding.start": "4",
+          "padding.top": "4",
+          "padding.end": "4",
+          "padding.bottom": "4"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 25,
+          "y": 363,
+          "width": 403,
+          "height": 41
+        },
+        "label": "pad t 4dp e 20.9dp b 0dp s 20.9dp",
+        "role": "maggie@example.com",
+        "detail": {
+          "padding.start": "20.884",
+          "padding.top": "4",
+          "padding.end": "20.884",
+          "padding.bottom": "0"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": -26,
+          "y": 263,
+          "width": 506,
+          "height": 90
+        },
+        "label": "text 30sp/34",
+        "role": "Hi!",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "30",
+          "lineHeight": "34",
+          "fontWeight": "520"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 25,
+          "y": 363,
+          "width": 403,
+          "height": 41
+        },
+        "label": "text 14sp/16",
+        "role": "maggie@example.com",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "16",
+          "fontWeight": "450"
+        }
+      }
+    ],
+    "authwearsignedinconfirmationdialogtruncated__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 107,
+          "y": -6,
+          "width": 240,
+          "height": 239
+        },
+        "label": "pad 4dp",
+        "detail": {
+          "padding.start": "4",
+          "padding.top": "4",
+          "padding.end": "4",
+          "padding.bottom": "4"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 25,
+          "y": 343,
+          "width": 403,
+          "height": 81
+        },
+        "label": "pad t 4dp e 20.9dp b 0dp s 20.9dp",
+        "role": "wolfeschlegelsteinhausenbergerdorff@example.com",
+        "detail": {
+          "padding.start": "20.884",
+          "padding.top": "4",
+          "padding.end": "20.884",
+          "padding.bottom": "0"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": -26,
+          "y": 243,
+          "width": 506,
+          "height": 90
+        },
+        "label": "text 30sp/34",
+        "role": "Hi, Wolfeschlegelsteinhausenbergerdorff",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "30",
+          "lineHeight": "34",
+          "fontWeight": "520"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 25,
+          "y": 343,
+          "width": 403,
+          "height": 81
+        },
+        "label": "text 14sp/16",
+        "role": "wolfeschlegelsteinhausenbergerdorff@example.com",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "16",
+          "fontWeight": "450"
+        }
+      }
+    ],
+    "authmobilesigninbottomsheet__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 0,
+          "y": 2396,
+          "width": 1076,
+          "height": 767
+        },
+        "label": "r 28dp",
+        "detail": {
+          "cornerRadius": "28"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 42,
+          "y": 2438,
+          "width": 992,
+          "height": 683
+        },
+        "label": "pad 16dp",
+        "detail": {
+          "padding.start": "16",
+          "padding.top": "16",
+          "padding.end": "16",
+          "padding.bottom": "16"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 42,
+          "y": 2690,
+          "width": 992,
+          "height": 74
+        },
+        "label": "pad t 24dp e 0dp b 0dp s 0dp",
+        "role": "Sign in to Horologist Chat",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "24",
+          "padding.end": "0",
+          "padding.bottom": "0"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 42,
+          "y": 2806,
+          "width": 992,
+          "height": 126
+        },
+        "label": "pad t 16dp e 0dp b 0dp s 0dp",
+        "role": "Signing in on your phone signs you in on your watch too.",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "16",
+          "padding.end": "0",
+          "padding.bottom": "0"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 357,
+          "y": 3006,
+          "width": 203,
+          "height": 105
+        },
+        "label": "pad t 0dp e 12dp b 0dp s 0dp · r 20dp",
+        "role": "Button",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "0",
+          "padding.end": "12",
+          "padding.bottom": "0",
+          "cornerRadius": "20"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 592,
+          "y": 3006,
+          "width": 400,
+          "height": 105
+        },
+        "label": "r 20dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "20"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 42,
+          "y": 2690,
+          "width": 992,
+          "height": 74
+        },
+        "label": "text 22sp/28",
+        "role": "Sign in to Horologist Chat",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "22",
+          "lineHeight": "28",
+          "fontWeight": "400",
+          "fontFamily": "sans-serif"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 42,
+          "y": 2806,
+          "width": 992,
+          "height": 126
+        },
+        "label": "text 16sp/24",
+        "role": "Signing in on your phone signs you in on your watch too.",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "24",
+          "fontWeight": "400",
+          "fontFamily": "sans-serif"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 389,
+          "y": 3032,
+          "width": 139,
+          "height": 53
+        },
+        "label": "text 14sp/20",
+        "role": "Not now",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "20",
+          "fontWeight": "500",
+          "fontFamily": "sans-serif"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 655,
+          "y": 3032,
+          "width": 274,
+          "height": 53
+        },
+        "label": "text 14sp/20",
+        "role": "Sign-in on watch",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "20",
+          "fontWeight": "500",
+          "fontFamily": "sans-serif"
+        }
+      }
+    ],
+    "authmobilesigninbottomsheetcustomlabels__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 0,
+          "y": 2396,
+          "width": 1076,
+          "height": 767
+        },
+        "label": "r 28dp",
+        "detail": {
+          "cornerRadius": "28"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 42,
+          "y": 2438,
+          "width": 992,
+          "height": 683
+        },
+        "label": "pad 16dp",
+        "detail": {
+          "padding.start": "16",
+          "padding.top": "16",
+          "padding.end": "16",
+          "padding.bottom": "16"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 42,
+          "y": 2690,
+          "width": 992,
+          "height": 74
+        },
+        "label": "pad t 24dp e 0dp b 0dp s 0dp",
+        "role": "Sign in to Horologist Chat",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "24",
+          "padding.end": "0",
+          "padding.bottom": "0"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 42,
+          "y": 2806,
+          "width": 992,
+          "height": 126
+        },
+        "label": "pad t 16dp e 0dp b 0dp s 0dp",
+        "role": "Signing in on your phone signs you in on your watch too.",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "16",
+          "padding.end": "0",
+          "padding.bottom": "0"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 519,
+          "y": 3006,
+          "width": 203,
+          "height": 105
+        },
+        "label": "pad t 0dp e 12dp b 0dp s 0dp · r 20dp",
+        "role": "Button",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "0",
+          "padding.end": "12",
+          "padding.bottom": "0",
+          "cornerRadius": "20"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 754,
+          "y": 3006,
+          "width": 238,
+          "height": 105
+        },
+        "label": "r 20dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "20"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 42,
+          "y": 2690,
+          "width": 992,
+          "height": 74
+        },
+        "label": "text 22sp/28",
+        "role": "Sign in to Horologist Chat",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "22",
+          "lineHeight": "28",
+          "fontWeight": "400",
+          "fontFamily": "sans-serif"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 42,
+          "y": 2806,
+          "width": 992,
+          "height": 126
+        },
+        "label": "text 16sp/24",
+        "role": "Signing in on your phone signs you in on your watch too.",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "24",
+          "fontWeight": "400",
+          "fontFamily": "sans-serif"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 551,
+          "y": 3032,
+          "width": 139,
+          "height": 53
+        },
+        "label": "text 14sp/20",
+        "role": "Not now",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "20",
+          "fontWeight": "500",
+          "fontFamily": "sans-serif"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 817,
+          "y": 3032,
+          "width": 112,
+          "height": 53
+        },
+        "label": "text 14sp/20",
+        "role": "Sign in",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "20",
+          "fontWeight": "500",
+          "fontFamily": "sans-serif"
+        }
+      }
+    ],
+    "datalayermobileinstallappbottomsheet__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 0,
+          "y": 2396,
+          "width": 1076,
+          "height": 767
+        },
+        "label": "r 28dp",
+        "detail": {
+          "cornerRadius": "28"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 42,
+          "y": 2438,
+          "width": 992,
+          "height": 683
+        },
+        "label": "pad 16dp",
+        "detail": {
+          "padding.start": "16",
+          "padding.top": "16",
+          "padding.end": "16",
+          "padding.bottom": "16"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 42,
+          "y": 2690,
+          "width": 992,
+          "height": 74
+        },
+        "label": "pad t 24dp e 0dp b 0dp s 0dp",
+        "role": "Get Horologist Chat on your watch",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "24",
+          "padding.end": "0",
+          "padding.bottom": "0"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 42,
+          "y": 2806,
+          "width": 992,
+          "height": 126
+        },
+        "label": "pad t 16dp e 0dp b 0dp s 0dp",
+        "role": "Reply to messages without reaching for your phone.",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "16",
+          "padding.end": "0",
+          "padding.bottom": "0"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 529,
+          "y": 3006,
+          "width": 203,
+          "height": 105
+        },
+        "label": "pad t 0dp e 12dp b 0dp s 0dp · r 20dp",
+        "role": "Button",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "0",
+          "padding.end": "12",
+          "padding.bottom": "0",
+          "cornerRadius": "20"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 764,
+          "y": 3006,
+          "width": 228,
+          "height": 105
+        },
+        "label": "r 20dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "20"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 42,
+          "y": 2690,
+          "width": 992,
+          "height": 74
+        },
+        "label": "text 22sp/28",
+        "role": "Get Horologist Chat on your watch",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "22",
+          "lineHeight": "28",
+          "fontWeight": "400",
+          "fontFamily": "sans-serif"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 42,
+          "y": 2806,
+          "width": 992,
+          "height": 126
+        },
+        "label": "text 16sp/24",
+        "role": "Reply to messages without reaching for your phone.",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "24",
+          "fontWeight": "400",
+          "fontFamily": "sans-serif"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 561,
+          "y": 3032,
+          "width": 139,
+          "height": 53
+        },
+        "label": "text 14sp/20",
+        "role": "Not now",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "20",
+          "fontWeight": "500",
+          "fontFamily": "sans-serif"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 827,
+          "y": 3032,
+          "width": 102,
+          "height": 53
+        },
+        "label": "text 14sp/20",
+        "role": "Install",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "20",
+          "fontWeight": "500",
+          "fontFamily": "sans-serif"
+        }
+      }
+    ],
+    "datalayermobileinstalltilebottomsheet__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 0,
+          "y": 2396,
+          "width": 1076,
+          "height": 767
+        },
+        "label": "r 28dp",
+        "detail": {
+          "cornerRadius": "28"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 42,
+          "y": 2438,
+          "width": 992,
+          "height": 683
+        },
+        "label": "pad 16dp",
+        "detail": {
+          "padding.start": "16",
+          "padding.top": "16",
+          "padding.end": "16",
+          "padding.bottom": "16"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 42,
+          "y": 2690,
+          "width": 992,
+          "height": 74
+        },
+        "label": "pad t 24dp e 0dp b 0dp s 0dp",
+        "role": "Add the Horologist tile",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "24",
+          "padding.end": "0",
+          "padding.bottom": "0"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 42,
+          "y": 2806,
+          "width": 992,
+          "height": 126
+        },
+        "label": "pad t 16dp e 0dp b 0dp s 0dp",
+        "role": "Swipe to your latest conversation straight from the watch face.",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "16",
+          "padding.end": "0",
+          "padding.bottom": "0"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 300,
+          "y": 3006,
+          "width": 203,
+          "height": 105
+        },
+        "label": "pad t 0dp e 12dp b 0dp s 0dp · r 20dp",
+        "role": "Button",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "0",
+          "padding.end": "12",
+          "padding.bottom": "0",
+          "cornerRadius": "20"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 535,
+          "y": 3006,
+          "width": 457,
+          "height": 105
+        },
+        "label": "r 20dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "20"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 42,
+          "y": 2690,
+          "width": 992,
+          "height": 74
+        },
+        "label": "text 22sp/28",
+        "role": "Add the Horologist tile",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "22",
+          "lineHeight": "28",
+          "fontWeight": "400",
+          "fontFamily": "sans-serif"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 42,
+          "y": 2806,
+          "width": 992,
+          "height": 126
+        },
+        "label": "text 16sp/24",
+        "role": "Swipe to your latest conversation straight from the watch face.",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "24",
+          "fontWeight": "400",
+          "fontFamily": "sans-serif"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 332,
+          "y": 3032,
+          "width": 139,
+          "height": 53
+        },
+        "label": "text 14sp/20",
+        "role": "Not now",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "20",
+          "fontWeight": "500",
+          "fontFamily": "sans-serif"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 598,
+          "y": 3032,
+          "width": 331,
+          "height": 53
+        },
+        "label": "text 14sp/20",
+        "role": "Install Tile on watch",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "20",
+          "fontWeight": "500",
+          "fontFamily": "sans-serif"
+        }
+      }
+    ],
+    "datalayermobilereengagebottomsheet__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 0,
+          "y": 2396,
+          "width": 1076,
+          "height": 778
+        },
+        "label": "r 28dp",
+        "detail": {
+          "cornerRadius": "28"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 42,
+          "y": 2438,
+          "width": 992,
+          "height": 694
+        },
+        "label": "pad 16dp",
+        "detail": {
+          "padding.start": "16",
+          "padding.top": "16",
+          "padding.end": "16",
+          "padding.bottom": "16"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 42,
+          "y": 2690,
+          "width": 992,
+          "height": 148
+        },
+        "label": "pad t 24dp e 0dp b 0dp s 0dp",
+        "role": "You have unread messages on your watch",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "24",
+          "padding.end": "0",
+          "padding.bottom": "0"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 42,
+          "y": 2880,
+          "width": 992,
+          "height": 63
+        },
+        "label": "pad t 16dp e 0dp b 0dp s 0dp",
+        "role": "Open Horologist Chat to catch up.",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "16",
+          "padding.end": "0",
+          "padding.bottom": "0"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 417,
+          "y": 3017,
+          "width": 203,
+          "height": 105
+        },
+        "label": "pad t 0dp e 12dp b 0dp s 0dp · r 20dp",
+        "role": "Button",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "0",
+          "padding.end": "12",
+          "padding.bottom": "0",
+          "cornerRadius": "20"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 652,
+          "y": 3017,
+          "width": 340,
+          "height": 105
+        },
+        "label": "r 20dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "20"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 42,
+          "y": 2690,
+          "width": 992,
+          "height": 148
+        },
+        "label": "text 22sp/28",
+        "role": "You have unread messages on your watch",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "22",
+          "lineHeight": "28",
+          "fontWeight": "400",
+          "fontFamily": "sans-serif"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 42,
+          "y": 2880,
+          "width": 992,
+          "height": 63
+        },
+        "label": "text 16sp/24",
+        "role": "Open Horologist Chat to catch up.",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "24",
+          "fontWeight": "400",
+          "fontFamily": "sans-serif"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 449,
+          "y": 3043,
+          "width": 139,
+          "height": 53
+        },
+        "label": "text 14sp/20",
+        "role": "Not now",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "20",
+          "fontWeight": "500",
+          "fontFamily": "sans-serif"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 715,
+          "y": 3043,
+          "width": 214,
+          "height": 53
+        },
+        "label": "text 14sp/20",
+        "role": "Try on watch",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "20",
+          "fontWeight": "500",
+          "fontFamily": "sans-serif"
+        }
+      }
+    ],
+    "composablesdatepicker__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 174,
+          "y": 75,
+          "width": 106,
+          "height": 247
+        },
+        "label": "pad 1dp/0dp",
+        "role": "Day, 29",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "1",
+          "padding.end": "0",
+          "padding.bottom": "1"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 280,
+          "y": 75,
+          "width": 158,
+          "height": 247
+        },
+        "label": "pad 1dp/0dp",
+        "role": "July",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "1",
+          "padding.end": "0",
+          "padding.bottom": "1"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 438,
+          "y": 75,
+          "width": 188,
+          "height": 247
+        },
+        "label": "pad 1dp/0dp",
+        "role": "Year, 2026",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "1",
+          "padding.end": "0",
+          "padding.bottom": "1"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 175,
+          "y": 334,
+          "width": 104,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 200,
+          "y": 28,
+          "width": 54,
+          "height": 35
+        },
+        "label": "text 15sp/19",
+        "role": "Day",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "19",
+          "fontWeight": "700"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 208,
+          "y": 77,
+          "width": 38,
+          "height": 8
+        },
+        "label": "text 34sp/40",
+        "role": "27",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 191,
+          "y": 86,
+          "width": 72,
+          "height": 71
+        },
+        "label": "text 34sp/40",
+        "role": "28",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 187,
+          "y": 158,
+          "width": 81,
+          "height": 80
+        },
+        "label": "text 34sp/40",
+        "role": "29",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 191,
+          "y": 238,
+          "width": 72,
+          "height": 71
+        },
+        "label": "text 34sp/40",
+        "role": "30",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 208,
+          "y": 309,
+          "width": 38,
+          "height": 11
+        },
+        "label": "text 34sp/40",
+        "role": "31",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 327,
+          "y": 77,
+          "width": 63,
+          "height": 8
+        },
+        "label": "text 34sp/40",
+        "role": "May",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 306,
+          "y": 86,
+          "width": 106,
+          "height": 71
+        },
+        "label": "text 34sp/40",
+        "role": "Jun",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 310,
+          "y": 158,
+          "width": 98,
+          "height": 80
+        },
+        "label": "text 34sp/40",
+        "role": "Jul",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 302,
+          "y": 238,
+          "width": 114,
+          "height": 71
+        },
+        "label": "text 34sp/40",
+        "role": "Aug",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 330,
+          "y": 309,
+          "width": 57,
+          "height": 11
+        },
+        "label": "text 34sp/40",
+        "role": "Sep",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 494,
+          "y": 77,
+          "width": 76,
+          "height": 8
+        },
+        "label": "text 34sp/40",
+        "role": "2024",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 459,
+          "y": 86,
+          "width": 146,
+          "height": 71
+        },
+        "label": "text 34sp/40",
+        "role": "2025",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 451,
+          "y": 158,
+          "width": 163,
+          "height": 80
+        },
+        "label": "text 34sp/40",
+        "role": "2026",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 459,
+          "y": 238,
+          "width": 146,
+          "height": 71
+        },
+        "label": "text 34sp/40",
+        "role": "2027",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 494,
+          "y": 309,
+          "width": 76,
+          "height": 11
+        },
+        "label": "text 34sp/40",
+        "role": "2028",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "composablesmarqueetext__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 24,
+          "y": 208,
+          "width": 406,
+          "height": 38
+        },
+        "label": "pad 0dp/12dp",
+        "role": "A title long enough that it has to scroll to be read on a watch",
+        "detail": {
+          "padding.start": "12",
+          "padding.top": "0",
+          "padding.end": "12",
+          "padding.bottom": "0"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 24,
+          "y": 208,
+          "width": 406,
+          "height": 38
+        },
+        "label": "text 16sp/20",
+        "role": "A title long enough that it has to scroll to be read on a watch",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "20",
+          "fontWeight": "400"
+        }
+      }
+    ],
+    "composablesplaceholderchip__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 32,
+          "y": 175,
+          "width": 390,
+          "height": 104
+        },
+        "label": "pad 0dp/16dp · r 26dp",
+        "role": "Loading",
+        "detail": {
+          "padding.start": "16",
+          "padding.top": "0",
+          "padding.end": "16",
+          "padding.bottom": "0",
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 60,
+          "y": 195,
+          "width": 64,
+          "height": 64
+        },
+        "label": "r 16dp",
+        "detail": {
+          "cornerRadius": "16"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 136,
+          "y": 195,
+          "width": 238,
+          "height": 24
+        },
+        "label": "pad t 0dp e 10dp b 0dp s 0dp · r 12dp",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "0",
+          "padding.end": "10",
+          "padding.bottom": "0",
+          "cornerRadius": "12"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 136,
+          "y": 235,
+          "width": 198,
+          "height": 24
+        },
+        "label": "pad t 0dp e 30dp b 0dp s 0dp · r 12dp",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "0",
+          "padding.end": "30",
+          "padding.bottom": "0",
+          "cornerRadius": "12"
+        }
+      }
+    ],
+    "composablessegmentedprogressindicator__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 8,
+          "y": 8,
+          "width": 438,
+          "height": 438
+        },
+        "label": "pad 4dp",
+        "detail": {
+          "padding.start": "4",
+          "padding.top": "4",
+          "padding.end": "4",
+          "padding.bottom": "4"
+        }
+      }
+    ],
+    "composablessegmentedprogressindicatorcomplete__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 8,
+          "y": 8,
+          "width": 438,
+          "height": 438
+        },
+        "label": "pad 4dp",
+        "detail": {
+          "padding.start": "4",
+          "padding.top": "4",
+          "padding.end": "4",
+          "padding.bottom": "4"
+        }
+      }
+    ],
+    "composablessegmentedprogressindicatorempty__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 8,
+          "y": 8,
+          "width": 438,
+          "height": 438
+        },
+        "label": "pad 4dp",
+        "detail": {
+          "padding.start": "4",
+          "padding.top": "4",
+          "padding.end": "4",
+          "padding.bottom": "4"
+        }
+      }
+    ],
+    "composablessquaresegmentedprogressindicator__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 40,
+          "y": 40,
+          "width": 374,
+          "height": 374
+        },
+        "label": "pad 12dp",
+        "detail": {
+          "padding.start": "12",
+          "padding.top": "12",
+          "padding.end": "12",
+          "padding.bottom": "12"
+        }
+      }
+    ],
+    "composablestimepicker__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 68,
+          "y": 75,
+          "width": 94,
+          "height": 247
+        },
+        "label": "pad 1dp/0dp",
+        "role": "9 Hours",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "1",
+          "padding.end": "0",
+          "padding.bottom": "1"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 181,
+          "y": 75,
+          "width": 94,
+          "height": 247
+        },
+        "label": "pad 1dp/0dp",
+        "role": "41 Minutes",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "1",
+          "padding.end": "0",
+          "padding.bottom": "1"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 294,
+          "y": 75,
+          "width": 94,
+          "height": 247
+        },
+        "label": "pad 1dp/0dp",
+        "role": "0 Seconds",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "1",
+          "padding.end": "0",
+          "padding.bottom": "1"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 175,
+          "y": 334,
+          "width": 104,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 192,
+          "y": 28,
+          "width": 70,
+          "height": 35
+        },
+        "label": "text 15sp/19",
+        "role": "Hour",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "19",
+          "fontWeight": "700"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 96,
+          "y": 77,
+          "width": 38,
+          "height": 8
+        },
+        "label": "text 34sp/40",
+        "role": "07",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 79,
+          "y": 86,
+          "width": 72,
+          "height": 71
+        },
+        "label": "text 34sp/40",
+        "role": "08",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 75,
+          "y": 158,
+          "width": 81,
+          "height": 80
+        },
+        "label": "text 34sp/40",
+        "role": "09",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 79,
+          "y": 238,
+          "width": 72,
+          "height": 71
+        },
+        "label": "text 34sp/40",
+        "role": "10",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 96,
+          "y": 309,
+          "width": 38,
+          "height": 11
+        },
+        "label": "text 34sp/40",
+        "role": "11",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 209,
+          "y": 77,
+          "width": 38,
+          "height": 8
+        },
+        "label": "text 34sp/40",
+        "role": "39",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 192,
+          "y": 86,
+          "width": 72,
+          "height": 71
+        },
+        "label": "text 34sp/40",
+        "role": "40",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 188,
+          "y": 158,
+          "width": 81,
+          "height": 80
+        },
+        "label": "text 34sp/40",
+        "role": "41",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 192,
+          "y": 238,
+          "width": 72,
+          "height": 71
+        },
+        "label": "text 34sp/40",
+        "role": "42",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 209,
+          "y": 309,
+          "width": 38,
+          "height": 11
+        },
+        "label": "text 34sp/40",
+        "role": "43",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 322,
+          "y": 77,
+          "width": 38,
+          "height": 8
+        },
+        "label": "text 34sp/40",
+        "role": "58",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 305,
+          "y": 86,
+          "width": 72,
+          "height": 71
+        },
+        "label": "text 34sp/40",
+        "role": "59",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 301,
+          "y": 158,
+          "width": 81,
+          "height": 80
+        },
+        "label": "text 34sp/40",
+        "role": "00",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 305,
+          "y": 238,
+          "width": 72,
+          "height": 71
+        },
+        "label": "text 34sp/40",
+        "role": "01",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 322,
+          "y": 309,
+          "width": 38,
+          "height": 11
+        },
+        "label": "text 34sp/40",
+        "role": "02",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "composablestimepickernoseconds__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 111,
+          "y": 75,
+          "width": 106,
+          "height": 247
+        },
+        "label": "pad 1dp/0dp",
+        "role": "9 Hours",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "1",
+          "padding.end": "0",
+          "padding.bottom": "1"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 239,
+          "y": 75,
+          "width": 106,
+          "height": 247
+        },
+        "label": "pad 1dp/0dp",
+        "role": "41 Minutes",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "1",
+          "padding.end": "0",
+          "padding.bottom": "1"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 175,
+          "y": 334,
+          "width": 104,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 192,
+          "y": 28,
+          "width": 70,
+          "height": 35
+        },
+        "label": "text 15sp/19",
+        "role": "Hour",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "19",
+          "fontWeight": "700"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "label": "text 40sp/46",
+        "role": "07",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "40",
+          "lineHeight": "46",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 124,
+          "y": 77,
+          "width": 80,
+          "height": 74
+        },
+        "label": "text 40sp/46",
+        "role": "08",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "40",
+          "lineHeight": "46",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 118,
+          "y": 151,
+          "width": 92,
+          "height": 94
+        },
+        "label": "text 40sp/46",
+        "role": "09",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "40",
+          "lineHeight": "46",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 124,
+          "y": 244,
+          "width": 79,
+          "height": 76
+        },
+        "label": "text 40sp/46",
+        "role": "10",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "40",
+          "lineHeight": "46",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "label": "text 40sp/46",
+        "role": "11",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "40",
+          "lineHeight": "46",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "label": "text 40sp/46",
+        "role": "39",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "40",
+          "lineHeight": "46",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 252,
+          "y": 77,
+          "width": 79,
+          "height": 74
+        },
+        "label": "text 40sp/46",
+        "role": "40",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "40",
+          "lineHeight": "46",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 246,
+          "y": 151,
+          "width": 92,
+          "height": 94
+        },
+        "label": "text 40sp/46",
+        "role": "41",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "40",
+          "lineHeight": "46",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 252,
+          "y": 244,
+          "width": 79,
+          "height": 76
+        },
+        "label": "text 40sp/46",
+        "role": "42",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "40",
+          "lineHeight": "46",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "label": "text 40sp/46",
+        "role": "43",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "40",
+          "lineHeight": "46",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "composablestimepickerwith12hourclock__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 65,
+          "y": 75,
+          "width": 94,
+          "height": 247
+        },
+        "label": "pad 1dp/0dp",
+        "role": "9 Hours",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "1",
+          "padding.end": "0",
+          "padding.bottom": "1"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 178,
+          "y": 75,
+          "width": 94,
+          "height": 247
+        },
+        "label": "pad 1dp/0dp",
+        "role": "41 Minutes",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "1",
+          "padding.end": "0",
+          "padding.bottom": "1"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 272,
+          "y": 75,
+          "width": 119,
+          "height": 247
+        },
+        "label": "pad 1dp/0dp",
+        "role": "PM",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "1",
+          "padding.end": "0",
+          "padding.bottom": "1"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 175,
+          "y": 334,
+          "width": 104,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 192,
+          "y": 28,
+          "width": 70,
+          "height": 35
+        },
+        "label": "text 15sp/19",
+        "role": "Hour",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "19",
+          "fontWeight": "700"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 93,
+          "y": 77,
+          "width": 38,
+          "height": 8
+        },
+        "label": "text 34sp/40",
+        "role": "07",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 76,
+          "y": 86,
+          "width": 72,
+          "height": 71
+        },
+        "label": "text 34sp/40",
+        "role": "08",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 72,
+          "y": 158,
+          "width": 81,
+          "height": 80
+        },
+        "label": "text 34sp/40",
+        "role": "09",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 76,
+          "y": 238,
+          "width": 72,
+          "height": 71
+        },
+        "label": "text 34sp/40",
+        "role": "10",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 93,
+          "y": 309,
+          "width": 38,
+          "height": 11
+        },
+        "label": "text 34sp/40",
+        "role": "11",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 206,
+          "y": 77,
+          "width": 38,
+          "height": 8
+        },
+        "label": "text 34sp/40",
+        "role": "39",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 189,
+          "y": 86,
+          "width": 72,
+          "height": 71
+        },
+        "label": "text 34sp/40",
+        "role": "40",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 185,
+          "y": 158,
+          "width": 81,
+          "height": 80
+        },
+        "label": "text 34sp/40",
+        "role": "41",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 189,
+          "y": 238,
+          "width": 72,
+          "height": 71
+        },
+        "label": "text 34sp/40",
+        "role": "42",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 206,
+          "y": 309,
+          "width": 38,
+          "height": 11
+        },
+        "label": "text 34sp/40",
+        "role": "43",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 283,
+          "y": 86,
+          "width": 97,
+          "height": 71
+        },
+        "label": "text 34sp/40",
+        "role": "AM",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 278,
+          "y": 158,
+          "width": 107,
+          "height": 80
+        },
+        "label": "text 34sp/40",
+        "role": "PM",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "34",
+          "lineHeight": "40",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "healthformatteddurationtext__ideal__default__compact": [
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 163,
+          "y": 208,
+          "width": 128,
+          "height": 38
+        },
+        "label": "text 16sp/20",
+        "role": "01:33:00",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "20",
+          "fontWeight": "400"
+        }
+      }
+    ],
+    "healthformatteddurationtextsubminute__ideal__default__compact": [
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 163,
+          "y": 208,
+          "width": 128,
+          "height": 38
+        },
+        "label": "text 16sp/20",
+        "role": "00:00:42",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "20",
+          "fontWeight": "400"
+        }
+      }
+    ],
+    "healthmetricdisplay__ideal__default__compact": [
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 140,
+          "y": 192,
+          "width": 107,
+          "height": 71
+        },
+        "label": "text 30sp/36",
+        "role": "142",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "30",
+          "lineHeight": "36",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 255,
+          "y": 222,
+          "width": 59,
+          "height": 33
+        },
+        "label": "text 14sp/18",
+        "role": "bpm",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "18",
+          "fontWeight": "400"
+        }
+      }
+    ],
+    "healthmetricsscreenfour__ideal__default__compact": [
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 80,
+          "y": 85,
+          "width": 160,
+          "height": 71
+        },
+        "label": "text 30sp/36",
+        "role": "12:34",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "30",
+          "lineHeight": "36",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 248,
+          "y": 115,
+          "width": 102,
+          "height": 33
+        },
+        "label": "text 14sp/18",
+        "role": "min/km",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "18",
+          "fontWeight": "400"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 80,
+          "y": 156,
+          "width": 107,
+          "height": 71
+        },
+        "label": "text 30sp/36",
+        "role": "142",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "30",
+          "lineHeight": "36",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 195,
+          "y": 186,
+          "width": 59,
+          "height": 33
+        },
+        "label": "text 14sp/18",
+        "role": "bpm",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "18",
+          "fontWeight": "400"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 80,
+          "y": 227,
+          "width": 125,
+          "height": 71
+        },
+        "label": "text 30sp/36",
+        "role": "5.21",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "30",
+          "lineHeight": "36",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 213,
+          "y": 257,
+          "width": 41,
+          "height": 33
+        },
+        "label": "text 14sp/18",
+        "role": "km",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "18",
+          "fontWeight": "400"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 80,
+          "y": 298,
+          "width": 107,
+          "height": 71
+        },
+        "label": "text 30sp/36",
+        "role": "412",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "30",
+          "lineHeight": "36",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 195,
+          "y": 328,
+          "width": 53,
+          "height": 33
+        },
+        "label": "text 14sp/18",
+        "role": "kcal",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "18",
+          "fontWeight": "400"
+        }
+      }
+    ],
+    "healthmetricsscreensingle__ideal__default__compact": [
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 80,
+          "y": 192,
+          "width": 107,
+          "height": 71
+        },
+        "label": "text 30sp/36",
+        "role": "142",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "30",
+          "lineHeight": "36",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 195,
+          "y": 222,
+          "width": 59,
+          "height": 33
+        },
+        "label": "text 14sp/18",
+        "role": "bpm",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "18",
+          "fontWeight": "400"
+        }
+      }
+    ],
+    "healthmetricsscreentwo__ideal__default__compact": [
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 80,
+          "y": 156,
+          "width": 160,
+          "height": 71
+        },
+        "label": "text 30sp/36",
+        "role": "12:34",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "30",
+          "lineHeight": "36",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 248,
+          "y": 186,
+          "width": 102,
+          "height": 33
+        },
+        "label": "text 14sp/18",
+        "role": "min/km",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "18",
+          "fontWeight": "400"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 80,
+          "y": 227,
+          "width": 107,
+          "height": 71
+        },
+        "label": "text 30sp/36",
+        "role": "142",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "30",
+          "lineHeight": "36",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 195,
+          "y": 257,
+          "width": 59,
+          "height": 33
+        },
+        "label": "text 14sp/18",
+        "role": "bpm",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "18",
+          "fontWeight": "400"
+        }
+      }
+    ],
+    "healthmetricsscreenwidevalues__ideal__default__compact": [
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 80,
+          "y": 156,
+          "width": 178,
+          "height": 71
+        },
+        "label": "text 30sp/36",
+        "role": "12345",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "30",
+          "lineHeight": "36",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 266,
+          "y": 186,
+          "width": 71,
+          "height": 33
+        },
+        "label": "text 14sp/18",
+        "role": "steps",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "18",
+          "fontWeight": "400"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 80,
+          "y": 227,
+          "width": 213,
+          "height": 71
+        },
+        "label": "text 30sp/36",
+        "role": "1:23:45",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "30",
+          "lineHeight": "36",
+          "fontWeight": "500"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 301,
+          "y": 257,
+          "width": 102,
+          "height": 33
+        },
+        "label": "text 14sp/18",
+        "role": "elapsed",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "18",
+          "fontWeight": "400"
+        }
+      }
+    ],
+    "audiovolumescreen__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 454,
+          "height": 454
+        },
+        "label": "gap 8dp",
+        "role": "Volume set to 50%",
+        "detail": {
+          "gap": "8"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 69,
+          "y": 175,
+          "width": 316,
+          "height": 104
+        },
+        "label": "pad 0dp/18dp · r 26dp",
+        "role": "Button",
+        "detail": {
+          "padding.start": "18",
+          "padding.top": "0",
+          "padding.end": "18",
+          "padding.bottom": "0",
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 157,
+          "y": 209,
+          "width": 200,
+          "height": 36
+        },
+        "label": "text 15sp/18",
+        "role": "Pixel Buds Pro",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "18",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "audiovolumescreenmax__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 454,
+          "height": 454
+        },
+        "label": "gap 8dp",
+        "role": "Volume set to 100%",
+        "detail": {
+          "gap": "8"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 69,
+          "y": 175,
+          "width": 316,
+          "height": 104
+        },
+        "label": "pad 0dp/18dp · r 26dp",
+        "role": "Button",
+        "detail": {
+          "padding.start": "18",
+          "padding.top": "0",
+          "padding.end": "18",
+          "padding.bottom": "0",
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 157,
+          "y": 209,
+          "width": 200,
+          "height": 36
+        },
+        "label": "text 15sp/18",
+        "role": "Pixel Buds Pro",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "18",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "audiovolumescreenmuted__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 454,
+          "height": 454
+        },
+        "label": "gap 8dp",
+        "role": "Volume muted",
+        "detail": {
+          "gap": "8"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 69,
+          "y": 175,
+          "width": 316,
+          "height": 104
+        },
+        "label": "pad 0dp/18dp · r 26dp",
+        "role": "Button",
+        "detail": {
+          "padding.start": "18",
+          "padding.top": "0",
+          "padding.end": "18",
+          "padding.bottom": "0",
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 157,
+          "y": 209,
+          "width": 200,
+          "height": 36
+        },
+        "label": "text 15sp/18",
+        "role": "Pixel Buds Pro",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "18",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "audiovolumescreennotconnected__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 454,
+          "height": 454
+        },
+        "label": "gap 8dp",
+        "role": "Volume set to 50%",
+        "detail": {
+          "gap": "8"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 65,
+          "y": 175,
+          "width": 324,
+          "height": 104
+        },
+        "label": "pad 0dp/18dp · r 26dp",
+        "role": "Button",
+        "detail": {
+          "padding.start": "18",
+          "padding.top": "0",
+          "padding.end": "18",
+          "padding.bottom": "0",
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 153,
+          "y": 209,
+          "width": 208,
+          "height": 36
+        },
+        "label": "text 15sp/18",
+        "role": "Watch speaker",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "18",
+          "fontWeight": "500"
+        }
+      }
+    ],
+    "aifailedresponsechip__ideal__default__compact": [
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 24,
+          "y": 190,
+          "width": 406,
+          "height": 74
+        },
+        "label": "text 16sp/18",
+        "role": "No connection to the model",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "18",
+          "fontWeight": "450"
+        }
+      }
+    ],
+    "aitextpromptdisplay__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 24,
+          "y": 163,
+          "width": 406,
+          "height": 128
+        },
+        "label": "r 26dp",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 48,
+          "y": 187,
+          "width": 358,
+          "height": 74
+        },
+        "label": "text 16sp/18",
+        "role": "How long is my next run?",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "18",
+          "fontWeight": "550"
+        }
+      }
+    ],
+    "aitextresponsecard__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 24,
+          "y": 163,
+          "width": 406,
+          "height": 128
+        },
+        "label": "r 26dp",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 48,
+          "y": 187,
+          "width": 358,
+          "height": 65
+        },
+        "label": "text 14sp/16",
+        "role": "Your next run is 8 km, starting at 18:00.",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "16",
+          "fontWeight": "450"
+        }
+      }
+    ],
+    "aitextresponsecardlong__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 24,
+          "y": 91,
+          "width": 406,
+          "height": 273
+        },
+        "label": "r 26dp",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 48,
+          "y": 115,
+          "width": 358,
+          "height": 225
+        },
+        "label": "text 14sp/16",
+        "role": "Your next run is 8 km, starting at 18:00. The forecast is 14°C and light rain, so a shell layer is worth taking. Based on last week you should hold about 5:30/km.",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "14",
+          "lineHeight": "16",
+          "fontWeight": "450"
+        }
+      }
+    ],
+    "layoutfillmaxrectangle__ideal__default__compact": [
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 105,
+          "y": 208,
+          "width": 244,
+          "height": 38
+        },
+        "label": "text 16sp/20",
+        "role": "fillMaxRectangle",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "20",
+          "fontWeight": "400"
+        }
+      }
+    ],
+    "layoutpagerscreen__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 199,
+          "y": 428,
+          "width": 13,
+          "height": 13
+        },
+        "label": "r 3dp",
+        "detail": {
+          "cornerRadius": "3"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 221,
+          "y": 430,
+          "width": 12,
+          "height": 12
+        },
+        "label": "r 3dp",
+        "detail": {
+          "cornerRadius": "3"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 241,
+          "y": 428,
+          "width": 13,
+          "height": 13
+        },
+        "label": "r 3dp",
+        "detail": {
+          "cornerRadius": "3"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "label": "r 3dp",
+        "detail": {
+          "cornerRadius": "3"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 177,
+          "y": 208,
+          "width": 101,
+          "height": 38
+        },
+        "label": "text 16sp/20",
+        "role": "Page 1",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "16",
+          "lineHeight": "20",
+          "fontWeight": "400"
+        }
+      }
+    ],
+    "layoutscalinglazycolumn__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 83,
+          "y": 88,
+          "width": 287,
+          "height": 34
+        },
+        "label": "pad 0dp/11.8dp",
+        "role": "Library",
+        "detail": {
+          "padding.start": "11.804",
+          "padding.top": "0",
+          "padding.end": "11.804",
+          "padding.bottom": "0"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 24,
+          "y": 146,
+          "width": 406,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 24,
+          "y": 258,
+          "width": 406,
+          "height": 104
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 56,
+          "y": 370,
+          "width": 341,
+          "height": 84
+        },
+        "label": "r 26dp",
+        "role": "Button",
+        "detail": {
+          "cornerRadius": "26"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 83,
+          "y": 88,
+          "width": 287,
+          "height": 34
+        },
+        "label": "text 15sp/19",
+        "role": "Library",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "19",
+          "fontWeight": "700"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 52,
+          "y": 181,
+          "width": 350,
+          "height": 35
+        },
+        "label": "text 15sp/19",
+        "role": "Playlist 1",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "19",
+          "fontWeight": "700"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 52,
+          "y": 293,
+          "width": 350,
+          "height": 35
+        },
+        "label": "text 15sp/19",
+        "role": "Playlist 2",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "19",
+          "fontWeight": "700"
+        }
+      },
+      {
+        "kind": "typography",
+        "bounds": {
+          "x": 80,
+          "y": 399,
+          "width": 293,
+          "height": 29
+        },
+        "label": "text 15sp/19",
+        "role": "Playlist 3",
+        "detail": {
+          "token": "text",
+          "unit": "sp",
+          "fontSize": "15",
+          "lineHeight": "19",
+          "fontWeight": "700"
+        }
+      }
+    ]
+  },
+  "references": {}
+}

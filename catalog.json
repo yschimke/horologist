@@ -1,0 +1,4841 @@
+{
+  "schema": "design-parity-catalog/v1",
+  "system": "horologist",
+  "title": "Horologist",
+  "components": [
+    {
+      "componentId": "MaterialButton",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/materialbutton/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/materialbutton__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialButton_Material"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 175,
+              "y": 175,
+              "width": 104,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 175,
+            "y": 175,
+            "width": 104,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 175,
+            "y": 175,
+            "width": 104,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Core UI",
+      "group": "Material",
+      "caption": "Button",
+      "wireframe": "wireframes/materialbutton.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+    },
+    {
+      "componentId": "MaterialButtonLarge",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/materialbuttonlarge/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/materialbuttonlarge__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialButtonLarge_Material"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 167,
+              "y": 167,
+              "width": 120,
+              "height": 120
+            }
+          },
+          "bounds": {
+            "x": 167,
+            "y": 167,
+            "width": 120,
+            "height": 120
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 167,
+            "y": 167,
+            "width": 120,
+            "height": 120
+          },
+          "role": "Button",
+          "cornerRadius": 30
+        }
+      ],
+      "section": "Core UI",
+      "group": "Material",
+      "caption": "Button Large",
+      "wireframe": "wireframes/materialbuttonlarge.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+    },
+    {
+      "componentId": "MaterialChip",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/materialchip/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/materialchip__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialChip_Material"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 32,
+              "y": 175,
+              "width": 390,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 32,
+            "y": 175,
+            "width": 390,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 32,
+            "y": 175,
+            "width": 390,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Core UI",
+      "group": "Material",
+      "caption": "Chip",
+      "wireframe": "wireframes/materialchip.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+    },
+    {
+      "componentId": "MaterialChipDisabled",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/materialchipdisabled/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/materialchipdisabled__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialChipDisabled_Material"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 32,
+              "y": 175,
+              "width": 390,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 32,
+            "y": 175,
+            "width": 390,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 32,
+            "y": 175,
+            "width": 390,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Core UI",
+      "group": "Material",
+      "caption": "Chip Disabled",
+      "wireframe": "wireframes/materialchipdisabled.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+    },
+    {
+      "componentId": "MaterialChipTruncated",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/materialchiptruncated/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/materialchiptruncated__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialChipTruncated_Material"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 32,
+              "y": 175,
+              "width": 390,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 32,
+            "y": 175,
+            "width": 390,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 32,
+            "y": 175,
+            "width": 390,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Core UI",
+      "group": "Material",
+      "caption": "Chip Truncated",
+      "wireframe": "wireframes/materialchiptruncated.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+    },
+    {
+      "componentId": "MaterialChipWithSecondaryLabel",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/materialchipwithsecondarylabel/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/materialchipwithsecondarylabel__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialChipWithSecondaryLabel_Material"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 32,
+              "y": 175,
+              "width": 390,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 32,
+            "y": 175,
+            "width": 390,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 32,
+            "y": 175,
+            "width": 390,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Core UI",
+      "group": "Material",
+      "caption": "Chip With Secondary Label",
+      "wireframe": "wireframes/materialchipwithsecondarylabel.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+    },
+    {
+      "componentId": "MaterialCompactChip",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/materialcompactchip/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/materialcompactchip__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialCompactChip_Material"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 32,
+              "y": 195,
+              "width": 193,
+              "height": 64
+            }
+          },
+          "bounds": {
+            "x": 32,
+            "y": 195,
+            "width": 193,
+            "height": 64
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 32,
+            "y": 195,
+            "width": 193,
+            "height": 64
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Core UI",
+      "group": "Material",
+      "caption": "Compact Chip",
+      "wireframe": "wireframes/materialcompactchip.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+    },
+    {
+      "componentId": "MaterialOutlinedChip",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/materialoutlinedchip/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/materialoutlinedchip__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialOutlinedChip_Material"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 32,
+              "y": 175,
+              "width": 390,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 32,
+            "y": 175,
+            "width": 390,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 32,
+            "y": 175,
+            "width": 390,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Core UI",
+      "group": "Material",
+      "caption": "Outlined Chip",
+      "wireframe": "wireframes/materialoutlinedchip.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+    },
+    {
+      "componentId": "MaterialOutlinedCompactChip",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/materialoutlinedcompactchip/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/materialoutlinedcompactchip__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialOutlinedCompactChip_Material"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 32,
+              "y": 195,
+              "width": 193,
+              "height": 64
+            }
+          },
+          "bounds": {
+            "x": 32,
+            "y": 195,
+            "width": 193,
+            "height": 64
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 32,
+            "y": 195,
+            "width": 193,
+            "height": 64
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Core UI",
+      "group": "Material",
+      "caption": "Outlined Compact Chip",
+      "wireframe": "wireframes/materialoutlinedcompactchip.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+    },
+    {
+      "componentId": "MaterialResponsiveListHeader",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/materialresponsivelistheader/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/materialresponsivelistheader__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialResponsiveListHeader_Material"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 122,
+            "y": 206,
+            "width": 210,
+            "height": 35
+          },
+          "label": "Downloads",
+          "padding": {
+            "start": 11.804,
+            "top": 0,
+            "end": 11.804,
+            "bottom": 0
+          }
+        }
+      ],
+      "section": "Core UI",
+      "group": "Material",
+      "caption": "Responsive List Header",
+      "wireframe": "wireframes/materialresponsivelistheader.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+    },
+    {
+      "componentId": "MaterialSecondaryTitle",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/materialsecondarytitle/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/materialsecondarytitle__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialSecondaryTitle_Material"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 89,
+            "y": 215,
+            "width": 276,
+            "height": 33
+          },
+          "label": "Playback",
+          "padding": {
+            "start": 11.804,
+            "top": 0,
+            "end": 11.804,
+            "bottom": 0
+          }
+        }
+      ],
+      "section": "Core UI",
+      "group": "Material",
+      "caption": "Secondary Title",
+      "wireframe": "wireframes/materialsecondarytitle.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+    },
+    {
+      "componentId": "MaterialSplitToggleChip",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/materialsplittogglechip/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/materialsplittogglechip__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialSplitToggleChip_Material"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 32,
+              "y": 175,
+              "width": 286,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 32,
+            "y": 175,
+            "width": 286,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 32,
+            "y": 175,
+            "width": 390,
+            "height": 104
+          },
+          "cornerRadius": 26
+        },
+        {
+          "bounds": {
+            "x": 32,
+            "y": 175,
+            "width": 286,
+            "height": 104
+          },
+          "role": "Button",
+          "padding": {
+            "start": 14,
+            "top": 6,
+            "end": 0,
+            "bottom": 6
+          }
+        },
+        {
+          "bounds": {
+            "x": 318,
+            "y": 175,
+            "width": 104,
+            "height": 104
+          },
+          "padding": {
+            "start": 0,
+            "top": 6,
+            "end": 14,
+            "bottom": 6
+          }
+        }
+      ],
+      "section": "Core UI",
+      "group": "Material",
+      "caption": "Split Toggle Chip",
+      "wireframe": "wireframes/materialsplittogglechip.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+    },
+    {
+      "componentId": "MaterialTitle",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/materialtitle/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/materialtitle__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialTitle_Material"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 89,
+            "y": 202,
+            "width": 276,
+            "height": 35
+          },
+          "label": "Settings",
+          "padding": {
+            "start": 11.804,
+            "top": 0,
+            "end": 11.804,
+            "bottom": 0
+          }
+        }
+      ],
+      "section": "Core UI",
+      "group": "Material",
+      "caption": "Title",
+      "wireframe": "wireframes/materialtitle.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+    },
+    {
+      "componentId": "MaterialToggleButton",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/materialtogglebutton/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/materialtogglebutton__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialToggleButton_Material"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "checkbox",
+          "detail": {
+            "role": "checkbox",
+            "bounds": {
+              "x": 175,
+              "y": 175,
+              "width": 104,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 175,
+            "y": 175,
+            "width": 104,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 175,
+            "y": 175,
+            "width": 104,
+            "height": 104
+          },
+          "role": "Checkbox",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Core UI",
+      "group": "Material",
+      "caption": "Toggle Button",
+      "wireframe": "wireframes/materialtogglebutton.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+    },
+    {
+      "componentId": "MaterialToggleChipRadio",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/materialtogglechipradio/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/materialtogglechipradio__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialToggleChipRadio_Material"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 32,
+            "y": 175,
+            "width": 390,
+            "height": 104
+          },
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Core UI",
+      "group": "Material",
+      "caption": "Toggle Chip Radio",
+      "wireframe": "wireframes/materialtogglechipradio.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+    },
+    {
+      "componentId": "MaterialToggleChipSwitch",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/materialtogglechipswitch/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/materialtogglechipswitch__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialToggleChipSwitch_Material"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 32,
+            "y": 175,
+            "width": 390,
+            "height": 104
+          },
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Core UI",
+      "group": "Material",
+      "caption": "Toggle Chip Switch",
+      "wireframe": "wireframes/materialtogglechipswitch.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+    },
+    {
+      "componentId": "MediaArtwork",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/mediaartwork/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/mediaartwork__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaArtwork_Media"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [],
+      "section": "Media",
+      "group": "Media",
+      "caption": "Artwork",
+      "wireframe": "wireframes/mediaartwork.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+    },
+    {
+      "componentId": "MediaControlButtonsPausedAtQueueEnd",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/mediacontrolbuttonspausedatqueueend/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/mediacontrolbuttonspausedatqueueend__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaControlButtonsPausedAtQueueEnd_Media"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 34,
+              "y": 24,
+              "width": 99,
+              "height": 406
+            }
+          },
+          "bounds": {
+            "x": 34,
+            "y": 24,
+            "width": 99,
+            "height": 406
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 147,
+              "y": 147,
+              "width": 160,
+              "height": 160
+            }
+          },
+          "bounds": {
+            "x": 147,
+            "y": 147,
+            "width": 160,
+            "height": 160
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 321,
+              "y": 24,
+              "width": 99,
+              "height": 406
+            }
+          },
+          "bounds": {
+            "x": 321,
+            "y": 24,
+            "width": 99,
+            "height": 406
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 34,
+            "y": 24,
+            "width": 99,
+            "height": 406
+          },
+          "role": "Button",
+          "cornerRadius": 24.75
+        },
+        {
+          "bounds": {
+            "x": 147,
+            "y": 147,
+            "width": 160,
+            "height": 160
+          },
+          "role": "Button",
+          "cornerRadius": 40
+        },
+        {
+          "bounds": {
+            "x": 321,
+            "y": 24,
+            "width": 99,
+            "height": 406
+          },
+          "role": "Button",
+          "cornerRadius": 24.75
+        }
+      ],
+      "section": "Media",
+      "group": "Media",
+      "caption": "Control Buttons Paused At Queue End",
+      "wireframe": "wireframes/mediacontrolbuttonspausedatqueueend.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+    },
+    {
+      "componentId": "MediaControlButtonsPlaying",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/mediacontrolbuttonsplaying/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/mediacontrolbuttonsplaying__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaControlButtonsPlaying_Media"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 34,
+              "y": 24,
+              "width": 99,
+              "height": 406
+            }
+          },
+          "bounds": {
+            "x": 34,
+            "y": 24,
+            "width": 99,
+            "height": 406
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 147,
+              "y": 147,
+              "width": 160,
+              "height": 160
+            }
+          },
+          "bounds": {
+            "x": 147,
+            "y": 147,
+            "width": 160,
+            "height": 160
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 321,
+              "y": 24,
+              "width": 99,
+              "height": 406
+            }
+          },
+          "bounds": {
+            "x": 321,
+            "y": 24,
+            "width": 99,
+            "height": 406
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 34,
+            "y": 24,
+            "width": 99,
+            "height": 406
+          },
+          "role": "Button",
+          "cornerRadius": 24.75
+        },
+        {
+          "bounds": {
+            "x": 147,
+            "y": 147,
+            "width": 160,
+            "height": 160
+          },
+          "role": "Button",
+          "cornerRadius": 40
+        },
+        {
+          "bounds": {
+            "x": 321,
+            "y": 24,
+            "width": 99,
+            "height": 406
+          },
+          "role": "Button",
+          "cornerRadius": 24.75
+        }
+      ],
+      "section": "Media",
+      "group": "Media",
+      "caption": "Control Buttons Playing",
+      "wireframe": "wireframes/mediacontrolbuttonsplaying.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+    },
+    {
+      "componentId": "MediaDetailsButton",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/mediadetailsbutton/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/mediadetailsbutton__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaDetailsButton_Media"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 0,
+              "y": 175,
+              "width": 454,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 0,
+            "y": 175,
+            "width": 454,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 0,
+            "y": 175,
+            "width": 454,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Media",
+      "group": "Media",
+      "caption": "Details Button",
+      "wireframe": "wireframes/mediadetailsbutton.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+    },
+    {
+      "componentId": "MediaDetailsButtonWithArtwork",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/mediadetailsbuttonwithartwork/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/mediadetailsbuttonwithartwork__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaDetailsButtonWithArtwork_Media"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 0,
+              "y": 175,
+              "width": 454,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 0,
+            "y": 175,
+            "width": 454,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 0,
+            "y": 175,
+            "width": 454,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Media",
+      "group": "Media",
+      "caption": "Details Button With Artwork",
+      "wireframe": "wireframes/mediadetailsbuttonwithartwork.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+    },
+    {
+      "componentId": "MediaEntityScreen",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/mediaentityscreen/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/mediaentityscreen__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaEntityScreen_Media"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 20,
+              "y": 175,
+              "width": 414,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 20,
+            "y": 175,
+            "width": 414,
+            "height": 104
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 20,
+              "y": 287,
+              "width": 414,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 20,
+            "y": 287,
+            "width": 414,
+            "height": 104
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 65,
+              "y": 398,
+              "width": 323,
+              "height": 56
+            }
+          },
+          "bounds": {
+            "x": 65,
+            "y": 398,
+            "width": 323,
+            "height": 56
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 20,
+            "y": 175,
+            "width": 414,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        },
+        {
+          "bounds": {
+            "x": 20,
+            "y": 287,
+            "width": 414,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        },
+        {
+          "bounds": {
+            "x": 65,
+            "y": 398,
+            "width": 323,
+            "height": 56
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Media",
+      "group": "Media",
+      "caption": "Entity Screen",
+      "wireframe": "wireframes/mediaentityscreen.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+    },
+    {
+      "componentId": "MediaEntityScreenWithArtwork",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/mediaentityscreenwithartwork/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/mediaentityscreenwithartwork__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaEntityScreenWithArtwork_Media"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 20,
+              "y": 175,
+              "width": 414,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 20,
+            "y": 175,
+            "width": 414,
+            "height": 104
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 20,
+              "y": 287,
+              "width": 414,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 20,
+            "y": 287,
+            "width": 414,
+            "height": 104
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 65,
+              "y": 398,
+              "width": 323,
+              "height": 56
+            }
+          },
+          "bounds": {
+            "x": 65,
+            "y": 398,
+            "width": 323,
+            "height": 56
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 20,
+            "y": 175,
+            "width": 414,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        },
+        {
+          "bounds": {
+            "x": 20,
+            "y": 287,
+            "width": 414,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        },
+        {
+          "bounds": {
+            "x": 65,
+            "y": 398,
+            "width": 323,
+            "height": 56
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Media",
+      "group": "Media",
+      "caption": "Entity Screen With Artwork",
+      "wireframe": "wireframes/mediaentityscreenwithartwork.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+    },
+    {
+      "componentId": "MediaLoadingMediaDisplay",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/medialoadingmediadisplay/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/medialoadingmediadisplay__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaLoadingMediaDisplay_Media"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [],
+      "section": "Media",
+      "group": "Media",
+      "caption": "Loading Media Display",
+      "wireframe": "wireframes/medialoadingmediadisplay.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+    },
+    {
+      "componentId": "MediaMarqueeTextMediaDisplay",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/mediamarqueetextmediadisplay/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/mediamarqueetextmediadisplay__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaMarqueeTextMediaDisplay_Media"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [],
+      "section": "Media",
+      "group": "Media",
+      "caption": "Marquee Text Media Display",
+      "wireframe": "wireframes/mediamarqueetextmediadisplay.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+    },
+    {
+      "componentId": "MediaMarqueeTextMediaDisplayLongTitle",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/mediamarqueetextmediadisplaylongtitle/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/mediamarqueetextmediadisplaylongtitle__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaMarqueeTextMediaDisplayLongTitle_Media"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [],
+      "section": "Media",
+      "group": "Media",
+      "caption": "Marquee Text Media Display Long Title",
+      "wireframe": "wireframes/mediamarqueetextmediadisplaylongtitle.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+    },
+    {
+      "componentId": "MediaMessageMediaDisplay",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/mediamessagemediadisplay/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/mediamessagemediadisplay__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaMessageMediaDisplay_Media"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [],
+      "section": "Media",
+      "group": "Media",
+      "caption": "Message Media Display",
+      "wireframe": "wireframes/mediamessagemediadisplay.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+    },
+    {
+      "componentId": "MediaNothingPlayingDisplay",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/medianothingplayingdisplay/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/medianothingplayingdisplay__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaNothingPlayingDisplay_Media"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [],
+      "section": "Media",
+      "group": "Media",
+      "caption": "Nothing Playing Display",
+      "wireframe": "wireframes/medianothingplayingdisplay.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+    },
+    {
+      "componentId": "MediaPlaceholderButton",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/mediaplaceholderbutton/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/mediaplaceholderbutton__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaPlaceholderButton_Media"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button \"Loading\"",
+          "detail": {
+            "role": "button",
+            "label": "Loading",
+            "bounds": {
+              "x": 166,
+              "y": 175,
+              "width": 122,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 166,
+            "y": 175,
+            "width": 122,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 166,
+            "y": 175,
+            "width": 122,
+            "height": 104
+          },
+          "role": "Button",
+          "label": "Loading",
+          "cornerRadius": 26
+        },
+        {
+          "bounds": {
+            "x": 194,
+            "y": 201,
+            "width": 52,
+            "height": 52
+          },
+          "cornerRadius": 13
+        }
+      ],
+      "section": "Media",
+      "group": "Media",
+      "caption": "Placeholder Button",
+      "wireframe": "wireframes/mediaplaceholderbutton.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+    },
+    {
+      "componentId": "MediaPlayPauseButtonDisabled",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/mediaplaypausebuttondisabled/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/mediaplaypausebuttondisabled__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaPlayPauseButtonDisabled_Media"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 175,
+              "y": 175,
+              "width": 104,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 175,
+            "y": 175,
+            "width": 104,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 175,
+            "y": 175,
+            "width": 104,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Media",
+      "group": "Media",
+      "caption": "Play Pause Button Disabled",
+      "wireframe": "wireframes/mediaplaypausebuttondisabled.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+    },
+    {
+      "componentId": "MediaPlayPauseButtonPaused",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/mediaplaypausebuttonpaused/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/mediaplaypausebuttonpaused__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaPlayPauseButtonPaused_Media"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 175,
+              "y": 175,
+              "width": 104,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 175,
+            "y": 175,
+            "width": 104,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 175,
+            "y": 175,
+            "width": 104,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Media",
+      "group": "Media",
+      "caption": "Play Pause Button Paused",
+      "wireframe": "wireframes/mediaplaypausebuttonpaused.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+    },
+    {
+      "componentId": "MediaPlayPauseButtonPlaying",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/mediaplaypausebuttonplaying/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/mediaplaypausebuttonplaying__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaPlayPauseButtonPlaying_Media"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 175,
+              "y": 175,
+              "width": 104,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 175,
+            "y": 175,
+            "width": 104,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 175,
+            "y": 175,
+            "width": 104,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Media",
+      "group": "Media",
+      "caption": "Play Pause Button Playing",
+      "wireframe": "wireframes/mediaplaypausebuttonplaying.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+    },
+    {
+      "componentId": "AuthWearGuestModeButton",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/authwearguestmodebutton/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/authwearguestmodebutton__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearGuestModeButton_Auth_Wear"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 55,
+              "y": 175,
+              "width": 344,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 55,
+            "y": 175,
+            "width": 344,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 55,
+            "y": 175,
+            "width": 344,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Auth",
+      "group": "Auth Wear",
+      "caption": "Guest Mode Button",
+      "wireframe": "wireframes/authwearguestmodebutton.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+    },
+    {
+      "componentId": "AuthWearSelectAccountScreen",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/authwearselectaccountscreen/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/authwearselectaccountscreen__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSelectAccountScreen_Auth_Wear"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 24,
+              "y": 151,
+              "width": 406,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 24,
+            "y": 151,
+            "width": 406,
+            "height": 104
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 25,
+              "y": 263,
+              "width": 403,
+              "height": 126
+            }
+          },
+          "bounds": {
+            "x": 25,
+            "y": 263,
+            "width": 403,
+            "height": 126
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 24,
+            "y": 151,
+            "width": 406,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        },
+        {
+          "bounds": {
+            "x": 25,
+            "y": 263,
+            "width": 403,
+            "height": 126
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Auth",
+      "group": "Auth Wear",
+      "caption": "Select Account Screen",
+      "wireframe": "wireframes/authwearselectaccountscreen.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+    },
+    {
+      "componentId": "AuthWearSelectAccountScreenEmailOnly",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/authwearselectaccountscreenemailonly/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/authwearselectaccountscreenemailonly__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSelectAccountScreenEmailOnly_Auth_Wear"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 24,
+              "y": 151,
+              "width": 406,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 24,
+            "y": 151,
+            "width": 406,
+            "height": 104
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 24,
+              "y": 263,
+              "width": 405,
+              "height": 103
+            }
+          },
+          "bounds": {
+            "x": 24,
+            "y": 263,
+            "width": 405,
+            "height": 103
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 24,
+            "y": 151,
+            "width": 406,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        },
+        {
+          "bounds": {
+            "x": 24,
+            "y": 263,
+            "width": 405,
+            "height": 103
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Auth",
+      "group": "Auth Wear",
+      "caption": "Select Account Screen Email Only",
+      "wireframe": "wireframes/authwearselectaccountscreenemailonly.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+    },
+    {
+      "componentId": "AuthWearSelectAccountScreenLongEmail",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/authwearselectaccountscreenlongemail/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/authwearselectaccountscreenlongemail__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSelectAccountScreenLongEmail_Auth_Wear"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 24,
+              "y": 151,
+              "width": 406,
+              "height": 164
+            }
+          },
+          "bounds": {
+            "x": 24,
+            "y": 151,
+            "width": 406,
+            "height": 164
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 24,
+            "y": 151,
+            "width": 406,
+            "height": 164
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Auth",
+      "group": "Auth Wear",
+      "caption": "Select Account Screen Long Email",
+      "wireframe": "wireframes/authwearselectaccountscreenlongemail.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+    },
+    {
+      "componentId": "AuthWearSelectAccountScreenSingle",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/authwearselectaccountscreensingle/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/authwearselectaccountscreensingle__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSelectAccountScreenSingle_Auth_Wear"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 24,
+              "y": 151,
+              "width": 406,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 24,
+            "y": 151,
+            "width": 406,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 24,
+            "y": 151,
+            "width": 406,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Auth",
+      "group": "Auth Wear",
+      "caption": "Select Account Screen Single",
+      "wireframe": "wireframes/authwearselectaccountscreensingle.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+    },
+    {
+      "componentId": "AuthWearSignInButton",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/authwearsigninbutton/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/authwearsigninbutton__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignInButton_Auth_Wear"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 119,
+              "y": 175,
+              "width": 217,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 119,
+            "y": 175,
+            "width": 217,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 119,
+            "y": 175,
+            "width": 217,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Auth",
+      "group": "Auth Wear",
+      "caption": "Sign In Button",
+      "wireframe": "wireframes/authwearsigninbutton.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+    },
+    {
+      "componentId": "AuthWearSignInButtonDisabled",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/authwearsigninbuttondisabled/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/authwearsigninbuttondisabled__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignInButtonDisabled_Auth_Wear"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 119,
+              "y": 175,
+              "width": 217,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 119,
+            "y": 175,
+            "width": 217,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 119,
+            "y": 175,
+            "width": 217,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Auth",
+      "group": "Auth Wear",
+      "caption": "Sign In Button Disabled",
+      "wireframe": "wireframes/authwearsigninbuttondisabled.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+    },
+    {
+      "componentId": "AuthWearSignInPlaceholderScreen",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/authwearsigninplaceholderscreen/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/authwearsigninplaceholderscreen__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignInPlaceholderScreen_Auth_Wear"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 167,
+            "y": 119,
+            "width": 120,
+            "height": 120
+          },
+          "cornerRadius": 30
+        },
+        {
+          "bounds": {
+            "x": 43,
+            "y": 255,
+            "width": 368,
+            "height": 38
+          },
+          "label": "Signing in…",
+          "padding": {
+            "start": 0,
+            "top": 8,
+            "end": 0,
+            "bottom": 0
+          }
+        }
+      ],
+      "section": "Auth",
+      "group": "Auth Wear",
+      "caption": "Sign In Placeholder Screen",
+      "wireframe": "wireframes/authwearsigninplaceholderscreen.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+    },
+    {
+      "componentId": "AuthWearSignInPromptScreen",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/authwearsigninpromptscreen/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/authwearsigninpromptscreen__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignInPromptScreen_Auth_Wear"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 119,
+              "y": 233,
+              "width": 217,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 119,
+            "y": 233,
+            "width": 217,
+            "height": 104
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 55,
+              "y": 345,
+              "width": 344,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 55,
+            "y": 345,
+            "width": 344,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 119,
+            "y": 233,
+            "width": 217,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        },
+        {
+          "bounds": {
+            "x": 55,
+            "y": 345,
+            "width": 344,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Auth",
+      "group": "Auth Wear",
+      "caption": "Sign In Prompt Screen",
+      "wireframe": "wireframes/authwearsigninpromptscreen.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+    },
+    {
+      "componentId": "AuthWearSignInPromptScreenLoading",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/authwearsigninpromptscreenloading/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/authwearsigninpromptscreenloading__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignInPromptScreenLoading_Auth_Wear"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [],
+      "section": "Auth",
+      "group": "Auth Wear",
+      "caption": "Sign In Prompt Screen Loading",
+      "wireframe": "wireframes/authwearsigninpromptscreenloading.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+    },
+    {
+      "componentId": "AuthWearSignedInConfirmationDialog",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/authwearsignedinconfirmationdialog/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/authwearsignedinconfirmationdialog__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignedInConfirmationDialog_Auth_Wear"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 107,
+            "y": 13,
+            "width": 240,
+            "height": 240
+          },
+          "padding": {
+            "start": 4,
+            "top": 4,
+            "end": 4,
+            "bottom": 4
+          }
+        },
+        {
+          "bounds": {
+            "x": 25,
+            "y": 363,
+            "width": 403,
+            "height": 41
+          },
+          "label": "john@example.com",
+          "padding": {
+            "start": 20.884,
+            "top": 4,
+            "end": 20.884,
+            "bottom": 0
+          }
+        }
+      ],
+      "section": "Auth",
+      "group": "Auth Wear",
+      "caption": "Signed In Confirmation Dialog",
+      "wireframe": "wireframes/authwearsignedinconfirmationdialog.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+    },
+    {
+      "componentId": "AuthWearSignedInConfirmationDialogEmailOnly",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/authwearsignedinconfirmationdialogemailonly/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/authwearsignedinconfirmationdialogemailonly__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignedInConfirmationDialogEmailOnly_Auth_Wear"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 107,
+            "y": 13,
+            "width": 240,
+            "height": 240
+          },
+          "padding": {
+            "start": 4,
+            "top": 4,
+            "end": 4,
+            "bottom": 4
+          }
+        },
+        {
+          "bounds": {
+            "x": 25,
+            "y": 363,
+            "width": 403,
+            "height": 41
+          },
+          "label": "maggie@example.com",
+          "padding": {
+            "start": 20.884,
+            "top": 4,
+            "end": 20.884,
+            "bottom": 0
+          }
+        }
+      ],
+      "section": "Auth",
+      "group": "Auth Wear",
+      "caption": "Signed In Confirmation Dialog Email Only",
+      "wireframe": "wireframes/authwearsignedinconfirmationdialogemailonly.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+    },
+    {
+      "componentId": "AuthWearSignedInConfirmationDialogTruncated",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/authwearsignedinconfirmationdialogtruncated/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/authwearsignedinconfirmationdialogtruncated__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignedInConfirmationDialogTruncated_Auth_Wear"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 107,
+            "y": -6,
+            "width": 240,
+            "height": 239
+          },
+          "padding": {
+            "start": 4,
+            "top": 4,
+            "end": 4,
+            "bottom": 4
+          }
+        },
+        {
+          "bounds": {
+            "x": 25,
+            "y": 343,
+            "width": 403,
+            "height": 81
+          },
+          "label": "wolfeschlegelsteinhausenbergerdorff@example.com",
+          "padding": {
+            "start": 20.884,
+            "top": 4,
+            "end": 20.884,
+            "bottom": 0
+          }
+        }
+      ],
+      "section": "Auth",
+      "group": "Auth Wear",
+      "caption": "Signed In Confirmation Dialog Truncated",
+      "wireframe": "wireframes/authwearsignedinconfirmationdialogtruncated.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+    },
+    {
+      "componentId": "AuthMobileSignInBottomSheet",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/authmobilesigninbottomsheet/ideal__default__compact.png",
+          "state": "default",
+          "width": 1078,
+          "height": 2399,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/authmobilesigninbottomsheet__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AuthMobileCatalogKt.AuthMobileSignInBottomSheet_Auth_Mobile"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 357,
+              "y": 3006,
+              "width": 203,
+              "height": 105
+            }
+          },
+          "bounds": {
+            "x": 357,
+            "y": 3006,
+            "width": 203,
+            "height": 105
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 592,
+              "y": 3006,
+              "width": 400,
+              "height": 105
+            }
+          },
+          "bounds": {
+            "x": 592,
+            "y": 3006,
+            "width": 400,
+            "height": 105
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 0,
+            "y": 2396,
+            "width": 1076,
+            "height": 767
+          },
+          "cornerRadius": 28
+        },
+        {
+          "bounds": {
+            "x": 42,
+            "y": 2438,
+            "width": 992,
+            "height": 683
+          },
+          "padding": {
+            "start": 16,
+            "top": 16,
+            "end": 16,
+            "bottom": 16
+          }
+        },
+        {
+          "bounds": {
+            "x": 42,
+            "y": 2690,
+            "width": 992,
+            "height": 74
+          },
+          "label": "Sign in to Horologist Chat",
+          "padding": {
+            "start": 0,
+            "top": 24,
+            "end": 0,
+            "bottom": 0
+          }
+        },
+        {
+          "bounds": {
+            "x": 42,
+            "y": 2806,
+            "width": 992,
+            "height": 126
+          },
+          "label": "Signing in on your phone signs you in on your watch too.",
+          "padding": {
+            "start": 0,
+            "top": 16,
+            "end": 0,
+            "bottom": 0
+          }
+        },
+        {
+          "bounds": {
+            "x": 357,
+            "y": 3006,
+            "width": 203,
+            "height": 105
+          },
+          "role": "Button",
+          "padding": {
+            "start": 0,
+            "top": 0,
+            "end": 12,
+            "bottom": 0
+          },
+          "cornerRadius": 20
+        },
+        {
+          "bounds": {
+            "x": 592,
+            "y": 3006,
+            "width": 400,
+            "height": 105
+          },
+          "role": "Button",
+          "cornerRadius": 20
+        }
+      ],
+      "section": "Auth",
+      "group": "Auth Mobile",
+      "caption": "Sign In Bottom Sheet",
+      "wireframe": "wireframes/authmobilesigninbottomsheet.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthMobileCatalog.kt"
+    },
+    {
+      "componentId": "AuthMobileSignInBottomSheetCustomLabels",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/authmobilesigninbottomsheetcustomlabels/ideal__default__compact.png",
+          "state": "default",
+          "width": 1078,
+          "height": 2399,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/authmobilesigninbottomsheetcustomlabels__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AuthMobileCatalogKt.AuthMobileSignInBottomSheetCustomLabels_Auth_Mobile"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 519,
+              "y": 3006,
+              "width": 203,
+              "height": 105
+            }
+          },
+          "bounds": {
+            "x": 519,
+            "y": 3006,
+            "width": 203,
+            "height": 105
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 754,
+              "y": 3006,
+              "width": 238,
+              "height": 105
+            }
+          },
+          "bounds": {
+            "x": 754,
+            "y": 3006,
+            "width": 238,
+            "height": 105
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 0,
+            "y": 2396,
+            "width": 1076,
+            "height": 767
+          },
+          "cornerRadius": 28
+        },
+        {
+          "bounds": {
+            "x": 42,
+            "y": 2438,
+            "width": 992,
+            "height": 683
+          },
+          "padding": {
+            "start": 16,
+            "top": 16,
+            "end": 16,
+            "bottom": 16
+          }
+        },
+        {
+          "bounds": {
+            "x": 42,
+            "y": 2690,
+            "width": 992,
+            "height": 74
+          },
+          "label": "Sign in to Horologist Chat",
+          "padding": {
+            "start": 0,
+            "top": 24,
+            "end": 0,
+            "bottom": 0
+          }
+        },
+        {
+          "bounds": {
+            "x": 42,
+            "y": 2806,
+            "width": 992,
+            "height": 126
+          },
+          "label": "Signing in on your phone signs you in on your watch too.",
+          "padding": {
+            "start": 0,
+            "top": 16,
+            "end": 0,
+            "bottom": 0
+          }
+        },
+        {
+          "bounds": {
+            "x": 519,
+            "y": 3006,
+            "width": 203,
+            "height": 105
+          },
+          "role": "Button",
+          "padding": {
+            "start": 0,
+            "top": 0,
+            "end": 12,
+            "bottom": 0
+          },
+          "cornerRadius": 20
+        },
+        {
+          "bounds": {
+            "x": 754,
+            "y": 3006,
+            "width": 238,
+            "height": 105
+          },
+          "role": "Button",
+          "cornerRadius": 20
+        }
+      ],
+      "section": "Auth",
+      "group": "Auth Mobile",
+      "caption": "Sign In Bottom Sheet Custom Labels",
+      "wireframe": "wireframes/authmobilesigninbottomsheetcustomlabels.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthMobileCatalog.kt"
+    },
+    {
+      "componentId": "DataLayerMobileInstallAppBottomSheet",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/datalayermobileinstallappbottomsheet/ideal__default__compact.png",
+          "state": "default",
+          "width": 1078,
+          "height": 2399,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/datalayermobileinstallappbottomsheet__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.DataLayerMobileCatalogKt.DataLayerMobileInstallAppBottomSheet_DataLayer_Mobile"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 529,
+              "y": 3006,
+              "width": 203,
+              "height": 105
+            }
+          },
+          "bounds": {
+            "x": 529,
+            "y": 3006,
+            "width": 203,
+            "height": 105
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 764,
+              "y": 3006,
+              "width": 228,
+              "height": 105
+            }
+          },
+          "bounds": {
+            "x": 764,
+            "y": 3006,
+            "width": 228,
+            "height": 105
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 0,
+            "y": 2396,
+            "width": 1076,
+            "height": 767
+          },
+          "cornerRadius": 28
+        },
+        {
+          "bounds": {
+            "x": 42,
+            "y": 2438,
+            "width": 992,
+            "height": 683
+          },
+          "padding": {
+            "start": 16,
+            "top": 16,
+            "end": 16,
+            "bottom": 16
+          }
+        },
+        {
+          "bounds": {
+            "x": 42,
+            "y": 2690,
+            "width": 992,
+            "height": 74
+          },
+          "label": "Get Horologist Chat on your watch",
+          "padding": {
+            "start": 0,
+            "top": 24,
+            "end": 0,
+            "bottom": 0
+          }
+        },
+        {
+          "bounds": {
+            "x": 42,
+            "y": 2806,
+            "width": 992,
+            "height": 126
+          },
+          "label": "Reply to messages without reaching for your phone.",
+          "padding": {
+            "start": 0,
+            "top": 16,
+            "end": 0,
+            "bottom": 0
+          }
+        },
+        {
+          "bounds": {
+            "x": 529,
+            "y": 3006,
+            "width": 203,
+            "height": 105
+          },
+          "role": "Button",
+          "padding": {
+            "start": 0,
+            "top": 0,
+            "end": 12,
+            "bottom": 0
+          },
+          "cornerRadius": 20
+        },
+        {
+          "bounds": {
+            "x": 764,
+            "y": 3006,
+            "width": 228,
+            "height": 105
+          },
+          "role": "Button",
+          "cornerRadius": 20
+        }
+      ],
+      "section": "Data Layer",
+      "group": "DataLayer Mobile",
+      "caption": "Install App Bottom Sheet",
+      "wireframe": "wireframes/datalayermobileinstallappbottomsheet.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/DataLayerMobileCatalog.kt"
+    },
+    {
+      "componentId": "DataLayerMobileInstallTileBottomSheet",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/datalayermobileinstalltilebottomsheet/ideal__default__compact.png",
+          "state": "default",
+          "width": 1078,
+          "height": 2399,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/datalayermobileinstalltilebottomsheet__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.DataLayerMobileCatalogKt.DataLayerMobileInstallTileBottomSheet_DataLayer_Mobile"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 300,
+              "y": 3006,
+              "width": 203,
+              "height": 105
+            }
+          },
+          "bounds": {
+            "x": 300,
+            "y": 3006,
+            "width": 203,
+            "height": 105
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 535,
+              "y": 3006,
+              "width": 457,
+              "height": 105
+            }
+          },
+          "bounds": {
+            "x": 535,
+            "y": 3006,
+            "width": 457,
+            "height": 105
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 0,
+            "y": 2396,
+            "width": 1076,
+            "height": 767
+          },
+          "cornerRadius": 28
+        },
+        {
+          "bounds": {
+            "x": 42,
+            "y": 2438,
+            "width": 992,
+            "height": 683
+          },
+          "padding": {
+            "start": 16,
+            "top": 16,
+            "end": 16,
+            "bottom": 16
+          }
+        },
+        {
+          "bounds": {
+            "x": 42,
+            "y": 2690,
+            "width": 992,
+            "height": 74
+          },
+          "label": "Add the Horologist tile",
+          "padding": {
+            "start": 0,
+            "top": 24,
+            "end": 0,
+            "bottom": 0
+          }
+        },
+        {
+          "bounds": {
+            "x": 42,
+            "y": 2806,
+            "width": 992,
+            "height": 126
+          },
+          "label": "Swipe to your latest conversation straight from the watch face.",
+          "padding": {
+            "start": 0,
+            "top": 16,
+            "end": 0,
+            "bottom": 0
+          }
+        },
+        {
+          "bounds": {
+            "x": 300,
+            "y": 3006,
+            "width": 203,
+            "height": 105
+          },
+          "role": "Button",
+          "padding": {
+            "start": 0,
+            "top": 0,
+            "end": 12,
+            "bottom": 0
+          },
+          "cornerRadius": 20
+        },
+        {
+          "bounds": {
+            "x": 535,
+            "y": 3006,
+            "width": 457,
+            "height": 105
+          },
+          "role": "Button",
+          "cornerRadius": 20
+        }
+      ],
+      "section": "Data Layer",
+      "group": "DataLayer Mobile",
+      "caption": "Install Tile Bottom Sheet",
+      "wireframe": "wireframes/datalayermobileinstalltilebottomsheet.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/DataLayerMobileCatalog.kt"
+    },
+    {
+      "componentId": "DataLayerMobileReEngageBottomSheet",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/datalayermobilereengagebottomsheet/ideal__default__compact.png",
+          "state": "default",
+          "width": 1078,
+          "height": 2399,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/datalayermobilereengagebottomsheet__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.DataLayerMobileCatalogKt.DataLayerMobileReEngageBottomSheet_DataLayer_Mobile"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 417,
+              "y": 3017,
+              "width": 203,
+              "height": 105
+            }
+          },
+          "bounds": {
+            "x": 417,
+            "y": 3017,
+            "width": 203,
+            "height": 105
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 652,
+              "y": 3017,
+              "width": 340,
+              "height": 105
+            }
+          },
+          "bounds": {
+            "x": 652,
+            "y": 3017,
+            "width": 340,
+            "height": 105
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 0,
+            "y": 2396,
+            "width": 1076,
+            "height": 778
+          },
+          "cornerRadius": 28
+        },
+        {
+          "bounds": {
+            "x": 42,
+            "y": 2438,
+            "width": 992,
+            "height": 694
+          },
+          "padding": {
+            "start": 16,
+            "top": 16,
+            "end": 16,
+            "bottom": 16
+          }
+        },
+        {
+          "bounds": {
+            "x": 42,
+            "y": 2690,
+            "width": 992,
+            "height": 148
+          },
+          "label": "You have unread messages on your watch",
+          "padding": {
+            "start": 0,
+            "top": 24,
+            "end": 0,
+            "bottom": 0
+          }
+        },
+        {
+          "bounds": {
+            "x": 42,
+            "y": 2880,
+            "width": 992,
+            "height": 63
+          },
+          "label": "Open Horologist Chat to catch up.",
+          "padding": {
+            "start": 0,
+            "top": 16,
+            "end": 0,
+            "bottom": 0
+          }
+        },
+        {
+          "bounds": {
+            "x": 417,
+            "y": 3017,
+            "width": 203,
+            "height": 105
+          },
+          "role": "Button",
+          "padding": {
+            "start": 0,
+            "top": 0,
+            "end": 12,
+            "bottom": 0
+          },
+          "cornerRadius": 20
+        },
+        {
+          "bounds": {
+            "x": 652,
+            "y": 3017,
+            "width": 340,
+            "height": 105
+          },
+          "role": "Button",
+          "cornerRadius": 20
+        }
+      ],
+      "section": "Data Layer",
+      "group": "DataLayer Mobile",
+      "caption": "Re Engage Bottom Sheet",
+      "wireframe": "wireframes/datalayermobilereengagebottomsheet.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/DataLayerMobileCatalog.kt"
+    },
+    {
+      "componentId": "ComposablesDatePicker",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/composablesdatepicker/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/composablesdatepicker__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesDatePicker_Composables"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 175,
+              "y": 334,
+              "width": 104,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 175,
+            "y": 334,
+            "width": 104,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 174,
+            "y": 75,
+            "width": 106,
+            "height": 247
+          },
+          "label": "Day, 29",
+          "padding": {
+            "start": 0,
+            "top": 1,
+            "end": 0,
+            "bottom": 1
+          }
+        },
+        {
+          "bounds": {
+            "x": 280,
+            "y": 75,
+            "width": 158,
+            "height": 247
+          },
+          "label": "July",
+          "padding": {
+            "start": 0,
+            "top": 1,
+            "end": 0,
+            "bottom": 1
+          }
+        },
+        {
+          "bounds": {
+            "x": 438,
+            "y": 75,
+            "width": 188,
+            "height": 247
+          },
+          "label": "Year, 2026",
+          "padding": {
+            "start": 0,
+            "top": 1,
+            "end": 0,
+            "bottom": 1
+          }
+        },
+        {
+          "bounds": {
+            "x": 175,
+            "y": 334,
+            "width": 104,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Core UI",
+      "group": "Composables",
+      "caption": "Date Picker",
+      "wireframe": "wireframes/composablesdatepicker.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt"
+    },
+    {
+      "componentId": "ComposablesMarqueeText",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/composablesmarqueetext/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/composablesmarqueetext__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesMarqueeText_Composables"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 24,
+            "y": 208,
+            "width": 406,
+            "height": 38
+          },
+          "label": "A title long enough that it has to scroll to be read on a watch",
+          "padding": {
+            "start": 12,
+            "top": 0,
+            "end": 12,
+            "bottom": 0
+          }
+        }
+      ],
+      "section": "Core UI",
+      "group": "Composables",
+      "caption": "Marquee Text",
+      "wireframe": "wireframes/composablesmarqueetext.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt"
+    },
+    {
+      "componentId": "ComposablesPlaceholderChip",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/composablesplaceholderchip/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/composablesplaceholderchip__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesPlaceholderChip_Composables"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button \"Loading\"",
+          "detail": {
+            "role": "button",
+            "label": "Loading",
+            "bounds": {
+              "x": 32,
+              "y": 175,
+              "width": 390,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 32,
+            "y": 175,
+            "width": 390,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 32,
+            "y": 175,
+            "width": 390,
+            "height": 104
+          },
+          "role": "Button",
+          "label": "Loading",
+          "padding": {
+            "start": 16,
+            "top": 0,
+            "end": 16,
+            "bottom": 0
+          },
+          "cornerRadius": 26
+        },
+        {
+          "bounds": {
+            "x": 60,
+            "y": 195,
+            "width": 64,
+            "height": 64
+          },
+          "cornerRadius": 16
+        },
+        {
+          "bounds": {
+            "x": 136,
+            "y": 195,
+            "width": 238,
+            "height": 24
+          },
+          "padding": {
+            "start": 0,
+            "top": 0,
+            "end": 10,
+            "bottom": 0
+          },
+          "cornerRadius": 12
+        },
+        {
+          "bounds": {
+            "x": 136,
+            "y": 235,
+            "width": 198,
+            "height": 24
+          },
+          "padding": {
+            "start": 0,
+            "top": 0,
+            "end": 30,
+            "bottom": 0
+          },
+          "cornerRadius": 12
+        }
+      ],
+      "section": "Core UI",
+      "group": "Composables",
+      "caption": "Placeholder Chip",
+      "wireframe": "wireframes/composablesplaceholderchip.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt"
+    },
+    {
+      "componentId": "ComposablesSegmentedProgressIndicator",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/composablessegmentedprogressindicator/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/composablessegmentedprogressindicator__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesSegmentedProgressIndicator_Composables"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 8,
+            "y": 8,
+            "width": 438,
+            "height": 438
+          },
+          "padding": {
+            "start": 4,
+            "top": 4,
+            "end": 4,
+            "bottom": 4
+          }
+        }
+      ],
+      "section": "Core UI",
+      "group": "Composables",
+      "caption": "Segmented Progress Indicator",
+      "wireframe": "wireframes/composablessegmentedprogressindicator.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt"
+    },
+    {
+      "componentId": "ComposablesSegmentedProgressIndicatorComplete",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/composablessegmentedprogressindicatorcomplete/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/composablessegmentedprogressindicatorcomplete__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesSegmentedProgressIndicatorComplete_Composables"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 8,
+            "y": 8,
+            "width": 438,
+            "height": 438
+          },
+          "padding": {
+            "start": 4,
+            "top": 4,
+            "end": 4,
+            "bottom": 4
+          }
+        }
+      ],
+      "section": "Core UI",
+      "group": "Composables",
+      "caption": "Segmented Progress Indicator Complete",
+      "wireframe": "wireframes/composablessegmentedprogressindicatorcomplete.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt"
+    },
+    {
+      "componentId": "ComposablesSegmentedProgressIndicatorEmpty",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/composablessegmentedprogressindicatorempty/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/composablessegmentedprogressindicatorempty__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesSegmentedProgressIndicatorEmpty_Composables"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 8,
+            "y": 8,
+            "width": 438,
+            "height": 438
+          },
+          "padding": {
+            "start": 4,
+            "top": 4,
+            "end": 4,
+            "bottom": 4
+          }
+        }
+      ],
+      "section": "Core UI",
+      "group": "Composables",
+      "caption": "Segmented Progress Indicator Empty",
+      "wireframe": "wireframes/composablessegmentedprogressindicatorempty.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt"
+    },
+    {
+      "componentId": "ComposablesSquareSegmentedProgressIndicator",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/composablessquaresegmentedprogressindicator/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/composablessquaresegmentedprogressindicator__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesSquareSegmentedProgressIndicator_Composables"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 40,
+            "y": 40,
+            "width": 374,
+            "height": 374
+          },
+          "padding": {
+            "start": 12,
+            "top": 12,
+            "end": 12,
+            "bottom": 12
+          }
+        }
+      ],
+      "section": "Core UI",
+      "group": "Composables",
+      "caption": "Square Segmented Progress Indicator",
+      "wireframe": "wireframes/composablessquaresegmentedprogressindicator.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt"
+    },
+    {
+      "componentId": "ComposablesTimePicker",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/composablestimepicker/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/composablestimepicker__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesTimePicker_Composables"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 175,
+              "y": 334,
+              "width": 104,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 175,
+            "y": 334,
+            "width": 104,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 68,
+            "y": 75,
+            "width": 94,
+            "height": 247
+          },
+          "label": "9 Hours",
+          "padding": {
+            "start": 0,
+            "top": 1,
+            "end": 0,
+            "bottom": 1
+          }
+        },
+        {
+          "bounds": {
+            "x": 181,
+            "y": 75,
+            "width": 94,
+            "height": 247
+          },
+          "label": "41 Minutes",
+          "padding": {
+            "start": 0,
+            "top": 1,
+            "end": 0,
+            "bottom": 1
+          }
+        },
+        {
+          "bounds": {
+            "x": 294,
+            "y": 75,
+            "width": 94,
+            "height": 247
+          },
+          "label": "0 Seconds",
+          "padding": {
+            "start": 0,
+            "top": 1,
+            "end": 0,
+            "bottom": 1
+          }
+        },
+        {
+          "bounds": {
+            "x": 175,
+            "y": 334,
+            "width": 104,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Core UI",
+      "group": "Composables",
+      "caption": "Time Picker",
+      "wireframe": "wireframes/composablestimepicker.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt"
+    },
+    {
+      "componentId": "ComposablesTimePickerNoSeconds",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/composablestimepickernoseconds/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/composablestimepickernoseconds__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesTimePickerNoSeconds_Composables"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 175,
+              "y": 334,
+              "width": 104,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 175,
+            "y": 334,
+            "width": 104,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 111,
+            "y": 75,
+            "width": 106,
+            "height": 247
+          },
+          "label": "9 Hours",
+          "padding": {
+            "start": 0,
+            "top": 1,
+            "end": 0,
+            "bottom": 1
+          }
+        },
+        {
+          "bounds": {
+            "x": 239,
+            "y": 75,
+            "width": 106,
+            "height": 247
+          },
+          "label": "41 Minutes",
+          "padding": {
+            "start": 0,
+            "top": 1,
+            "end": 0,
+            "bottom": 1
+          }
+        },
+        {
+          "bounds": {
+            "x": 175,
+            "y": 334,
+            "width": 104,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Core UI",
+      "group": "Composables",
+      "caption": "Time Picker No Seconds",
+      "wireframe": "wireframes/composablestimepickernoseconds.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt"
+    },
+    {
+      "componentId": "ComposablesTimePickerWith12HourClock",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/composablestimepickerwith12hourclock/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/composablestimepickerwith12hourclock__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesTimePickerWith12HourClock_Composables"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 175,
+              "y": 334,
+              "width": 104,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 175,
+            "y": 334,
+            "width": 104,
+            "height": 104
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 65,
+            "y": 75,
+            "width": 94,
+            "height": 247
+          },
+          "label": "9 Hours",
+          "padding": {
+            "start": 0,
+            "top": 1,
+            "end": 0,
+            "bottom": 1
+          }
+        },
+        {
+          "bounds": {
+            "x": 178,
+            "y": 75,
+            "width": 94,
+            "height": 247
+          },
+          "label": "41 Minutes",
+          "padding": {
+            "start": 0,
+            "top": 1,
+            "end": 0,
+            "bottom": 1
+          }
+        },
+        {
+          "bounds": {
+            "x": 272,
+            "y": 75,
+            "width": 119,
+            "height": 247
+          },
+          "label": "PM",
+          "padding": {
+            "start": 0,
+            "top": 1,
+            "end": 0,
+            "bottom": 1
+          }
+        },
+        {
+          "bounds": {
+            "x": 175,
+            "y": 334,
+            "width": 104,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Core UI",
+      "group": "Composables",
+      "caption": "Time Picker With12 Hour Clock",
+      "wireframe": "wireframes/composablestimepickerwith12hourclock.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt"
+    },
+    {
+      "componentId": "HealthFormattedDurationText",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/healthformatteddurationtext/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/healthformatteddurationtext__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthFormattedDurationText_Health"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [],
+      "section": "Health",
+      "group": "Health",
+      "caption": "Formatted Duration Text",
+      "wireframe": "wireframes/healthformatteddurationtext.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt"
+    },
+    {
+      "componentId": "HealthFormattedDurationTextSubMinute",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/healthformatteddurationtextsubminute/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/healthformatteddurationtextsubminute__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthFormattedDurationTextSubMinute_Health"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [],
+      "section": "Health",
+      "group": "Health",
+      "caption": "Formatted Duration Text Sub Minute",
+      "wireframe": "wireframes/healthformatteddurationtextsubminute.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt"
+    },
+    {
+      "componentId": "HealthMetricDisplay",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/healthmetricdisplay/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/healthmetricdisplay__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthMetricDisplay_Health"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [],
+      "section": "Health",
+      "group": "Health",
+      "caption": "Metric Display",
+      "wireframe": "wireframes/healthmetricdisplay.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt"
+    },
+    {
+      "componentId": "HealthMetricsScreenFour",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/healthmetricsscreenfour/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/healthmetricsscreenfour__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthMetricsScreenFour_Health"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [],
+      "section": "Health",
+      "group": "Health",
+      "caption": "Metrics Screen Four",
+      "wireframe": "wireframes/healthmetricsscreenfour.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt"
+    },
+    {
+      "componentId": "HealthMetricsScreenSingle",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/healthmetricsscreensingle/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/healthmetricsscreensingle__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthMetricsScreenSingle_Health"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [],
+      "section": "Health",
+      "group": "Health",
+      "caption": "Metrics Screen Single",
+      "wireframe": "wireframes/healthmetricsscreensingle.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt"
+    },
+    {
+      "componentId": "HealthMetricsScreenTwo",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/healthmetricsscreentwo/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/healthmetricsscreentwo__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthMetricsScreenTwo_Health"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [],
+      "section": "Health",
+      "group": "Health",
+      "caption": "Metrics Screen Two",
+      "wireframe": "wireframes/healthmetricsscreentwo.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt"
+    },
+    {
+      "componentId": "HealthMetricsScreenWideValues",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/healthmetricsscreenwidevalues/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/healthmetricsscreenwidevalues__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthMetricsScreenWideValues_Health"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [],
+      "section": "Health",
+      "group": "Health",
+      "caption": "Metrics Screen Wide Values",
+      "wireframe": "wireframes/healthmetricsscreenwidevalues.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt"
+    },
+    {
+      "componentId": "AudioVolumeLevelIndicator",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/audiovolumelevelindicator/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/audiovolumelevelindicator__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AudioCatalogKt.AudioVolumeLevelIndicator_Audio"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [],
+      "section": "Audio",
+      "group": "Audio",
+      "caption": "Volume Level Indicator",
+      "wireframe": "wireframes/audiovolumelevelindicator.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AudioCatalog.kt"
+    },
+    {
+      "componentId": "AudioVolumeScreen",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/audiovolumescreen/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/audiovolumescreen__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AudioCatalogKt.AudioVolumeScreen_Audio"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 167,
+              "y": 24,
+              "width": 120,
+              "height": 96
+            }
+          },
+          "bounds": {
+            "x": 167,
+            "y": 24,
+            "width": 120,
+            "height": 96
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 69,
+              "y": 175,
+              "width": 316,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 69,
+            "y": 175,
+            "width": 316,
+            "height": 104
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 167,
+              "y": 334,
+              "width": 120,
+              "height": 96
+            }
+          },
+          "bounds": {
+            "x": 167,
+            "y": 334,
+            "width": 120,
+            "height": 96
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 0,
+            "y": 0,
+            "width": 454,
+            "height": 454
+          },
+          "label": "Volume set to 50%",
+          "gap": 8
+        },
+        {
+          "bounds": {
+            "x": 69,
+            "y": 175,
+            "width": 316,
+            "height": 104
+          },
+          "role": "Button",
+          "padding": {
+            "start": 18,
+            "top": 0,
+            "end": 18,
+            "bottom": 0
+          },
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Audio",
+      "group": "Audio",
+      "caption": "Volume Screen",
+      "wireframe": "wireframes/audiovolumescreen.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AudioCatalog.kt"
+    },
+    {
+      "componentId": "AudioVolumeScreenMax",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/audiovolumescreenmax/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/audiovolumescreenmax__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AudioCatalogKt.AudioVolumeScreenMax_Audio"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 167,
+              "y": 24,
+              "width": 120,
+              "height": 96
+            }
+          },
+          "bounds": {
+            "x": 167,
+            "y": 24,
+            "width": 120,
+            "height": 96
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 69,
+              "y": 175,
+              "width": 316,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 69,
+            "y": 175,
+            "width": 316,
+            "height": 104
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 167,
+              "y": 334,
+              "width": 120,
+              "height": 96
+            }
+          },
+          "bounds": {
+            "x": 167,
+            "y": 334,
+            "width": 120,
+            "height": 96
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 0,
+            "y": 0,
+            "width": 454,
+            "height": 454
+          },
+          "label": "Volume set to 100%",
+          "gap": 8
+        },
+        {
+          "bounds": {
+            "x": 69,
+            "y": 175,
+            "width": 316,
+            "height": 104
+          },
+          "role": "Button",
+          "padding": {
+            "start": 18,
+            "top": 0,
+            "end": 18,
+            "bottom": 0
+          },
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Audio",
+      "group": "Audio",
+      "caption": "Volume Screen Max",
+      "wireframe": "wireframes/audiovolumescreenmax.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AudioCatalog.kt"
+    },
+    {
+      "componentId": "AudioVolumeScreenMuted",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/audiovolumescreenmuted/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/audiovolumescreenmuted__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AudioCatalogKt.AudioVolumeScreenMuted_Audio"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 167,
+              "y": 24,
+              "width": 120,
+              "height": 96
+            }
+          },
+          "bounds": {
+            "x": 167,
+            "y": 24,
+            "width": 120,
+            "height": 96
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 69,
+              "y": 175,
+              "width": 316,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 69,
+            "y": 175,
+            "width": 316,
+            "height": 104
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 167,
+              "y": 334,
+              "width": 120,
+              "height": 96
+            }
+          },
+          "bounds": {
+            "x": 167,
+            "y": 334,
+            "width": 120,
+            "height": 96
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 0,
+            "y": 0,
+            "width": 454,
+            "height": 454
+          },
+          "label": "Volume muted",
+          "gap": 8
+        },
+        {
+          "bounds": {
+            "x": 69,
+            "y": 175,
+            "width": 316,
+            "height": 104
+          },
+          "role": "Button",
+          "padding": {
+            "start": 18,
+            "top": 0,
+            "end": 18,
+            "bottom": 0
+          },
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Audio",
+      "group": "Audio",
+      "caption": "Volume Screen Muted",
+      "wireframe": "wireframes/audiovolumescreenmuted.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AudioCatalog.kt"
+    },
+    {
+      "componentId": "AudioVolumeScreenNotConnected",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/audiovolumescreennotconnected/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/audiovolumescreennotconnected__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AudioCatalogKt.AudioVolumeScreenNotConnected_Audio"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 167,
+              "y": 24,
+              "width": 120,
+              "height": 96
+            }
+          },
+          "bounds": {
+            "x": 167,
+            "y": 24,
+            "width": 120,
+            "height": 96
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 65,
+              "y": 175,
+              "width": 324,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 65,
+            "y": 175,
+            "width": 324,
+            "height": 104
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 167,
+              "y": 334,
+              "width": 120,
+              "height": 96
+            }
+          },
+          "bounds": {
+            "x": 167,
+            "y": 334,
+            "width": 120,
+            "height": 96
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 0,
+            "y": 0,
+            "width": 454,
+            "height": 454
+          },
+          "label": "Volume set to 50%",
+          "gap": 8
+        },
+        {
+          "bounds": {
+            "x": 65,
+            "y": 175,
+            "width": 324,
+            "height": 104
+          },
+          "role": "Button",
+          "padding": {
+            "start": 18,
+            "top": 0,
+            "end": 18,
+            "bottom": 0
+          },
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Audio",
+      "group": "Audio",
+      "caption": "Volume Screen Not Connected",
+      "wireframe": "wireframes/audiovolumescreennotconnected.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AudioCatalog.kt"
+    },
+    {
+      "componentId": "AiFailedResponseChip",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/aifailedresponsechip/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/aifailedresponsechip__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AiCatalogKt.AiFailedResponseChip_AI"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [],
+      "section": "AI",
+      "group": "AI",
+      "caption": "Failed Response Chip",
+      "wireframe": "wireframes/aifailedresponsechip.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AiCatalog.kt"
+    },
+    {
+      "componentId": "AiResponseInProgressCard",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/airesponseinprogresscard/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/airesponseinprogresscard__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AiCatalogKt.AiResponseInProgressCard_AI"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [],
+      "section": "AI",
+      "group": "AI",
+      "caption": "Response In Progress Card",
+      "wireframe": "wireframes/airesponseinprogresscard.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AiCatalog.kt"
+    },
+    {
+      "componentId": "AiTextPromptDisplay",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/aitextpromptdisplay/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/aitextpromptdisplay__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AiCatalogKt.AiTextPromptDisplay_AI"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 24,
+            "y": 163,
+            "width": 406,
+            "height": 128
+          },
+          "cornerRadius": 26
+        }
+      ],
+      "section": "AI",
+      "group": "AI",
+      "caption": "Text Prompt Display",
+      "wireframe": "wireframes/aitextpromptdisplay.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AiCatalog.kt"
+    },
+    {
+      "componentId": "AiTextResponseCard",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/aitextresponsecard/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/aitextresponsecard__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AiCatalogKt.AiTextResponseCard_AI"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 24,
+            "y": 163,
+            "width": 406,
+            "height": 128
+          },
+          "cornerRadius": 26
+        }
+      ],
+      "section": "AI",
+      "group": "AI",
+      "caption": "Text Response Card",
+      "wireframe": "wireframes/aitextresponsecard.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AiCatalog.kt"
+    },
+    {
+      "componentId": "AiTextResponseCardLong",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/aitextresponsecardlong/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/aitextresponsecardlong__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.AiCatalogKt.AiTextResponseCardLong_AI"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 24,
+            "y": 91,
+            "width": 406,
+            "height": 273
+          },
+          "cornerRadius": 26
+        }
+      ],
+      "section": "AI",
+      "group": "AI",
+      "caption": "Text Response Card Long",
+      "wireframe": "wireframes/aitextresponsecardlong.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AiCatalog.kt"
+    },
+    {
+      "componentId": "LayoutFillMaxRectangle",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/layoutfillmaxrectangle/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/layoutfillmaxrectangle__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.LayoutCatalogKt.LayoutFillMaxRectangle_Layout"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [],
+      "section": "Core UI",
+      "group": "Layout",
+      "caption": "Fill Max Rectangle",
+      "wireframe": "wireframes/layoutfillmaxrectangle.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/LayoutCatalog.kt"
+    },
+    {
+      "componentId": "LayoutPagerScreen",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/layoutpagerscreen/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/layoutpagerscreen__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.LayoutCatalogKt.LayoutPagerScreen_Layout"
+        }
+      ],
+      "greenlines": [],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 199,
+            "y": 428,
+            "width": 13,
+            "height": 13
+          },
+          "cornerRadius": 3
+        },
+        {
+          "bounds": {
+            "x": 221,
+            "y": 430,
+            "width": 12,
+            "height": 12
+          },
+          "cornerRadius": 3
+        },
+        {
+          "bounds": {
+            "x": 241,
+            "y": 428,
+            "width": 13,
+            "height": 13
+          },
+          "cornerRadius": 3
+        },
+        {
+          "bounds": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "cornerRadius": 3
+        }
+      ],
+      "section": "Core UI",
+      "group": "Layout",
+      "caption": "Pager Screen",
+      "wireframe": "wireframes/layoutpagerscreen.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/LayoutCatalog.kt"
+    },
+    {
+      "componentId": "LayoutScalingLazyColumn",
+      "images": [
+        {
+          "variant": "ideal",
+          "path": "images/layoutscalinglazycolumn/ideal__default__compact.png",
+          "state": "default",
+          "width": 454,
+          "height": 454,
+          "size": "compact",
+          "livePreview": "https://preview.coo.ee/horologist/p/layoutscalinglazycolumn__ideal__default__compact",
+          "previewId": "com.google.android.horologist.catalog.LayoutCatalogKt.LayoutScalingLazyColumn_Layout"
+        }
+      ],
+      "greenlines": [
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 24,
+              "y": 146,
+              "width": 406,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 24,
+            "y": 146,
+            "width": 406,
+            "height": 104
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 24,
+              "y": 258,
+              "width": 406,
+              "height": 104
+            }
+          },
+          "bounds": {
+            "x": 24,
+            "y": 258,
+            "width": 406,
+            "height": 104
+          }
+        },
+        {
+          "kind": "a11y",
+          "severity": "info",
+          "message": "button",
+          "detail": {
+            "role": "button",
+            "bounds": {
+              "x": 56,
+              "y": 370,
+              "width": 341,
+              "height": 84
+            }
+          },
+          "bounds": {
+            "x": 56,
+            "y": 370,
+            "width": 341,
+            "height": 84
+          }
+        }
+      ],
+      "redlines": [
+        {
+          "bounds": {
+            "x": 83,
+            "y": 88,
+            "width": 287,
+            "height": 34
+          },
+          "label": "Library",
+          "padding": {
+            "start": 11.804,
+            "top": 0,
+            "end": 11.804,
+            "bottom": 0
+          }
+        },
+        {
+          "bounds": {
+            "x": 24,
+            "y": 146,
+            "width": 406,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        },
+        {
+          "bounds": {
+            "x": 24,
+            "y": 258,
+            "width": 406,
+            "height": 104
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        },
+        {
+          "bounds": {
+            "x": 56,
+            "y": 370,
+            "width": 341,
+            "height": 84
+          },
+          "role": "Button",
+          "cornerRadius": 26
+        }
+      ],
+      "section": "Core UI",
+      "group": "Layout",
+      "caption": "Scaling Lazy Column",
+      "wireframe": "wireframes/layoutscalinglazycolumn.svg",
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/LayoutCatalog.kt"
+    }
+  ],
+  "renderer": "compose-preview 0.19.38",
+  "generatedAt": "2026-08-05T23:07:24.523Z",
+  "display": {
+    "surface": "dark"
+  },
+  "tokensFile": "tokens.dtcg.json",
+  "liveBundle": {
+    "path": "bundle/",
+    "file": "bundle.png"
+  },
+  "source": {
+    "repo": "yschimke/horologist",
+    "ref": "previews",
+    "module": ":catalog"
+  }
+}

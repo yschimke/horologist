@@ -1,0 +1,1574 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Horologist — design catalog</title>
+<style>
+  :root { color-scheme: light dark; --bg:#0f0f10; --panel:#1b1b1d; --fg:#e8e8ea; --muted:#9b9ba1; --line:#2a2a2d; --accent:#7dd87d; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:var(--bg); color:var(--fg); }
+  header.top { padding:24px clamp(16px,4vw,40px); border-bottom:1px solid var(--line); }
+  header.top h1 { margin:0 0 6px; font-size:22px; }
+  header.top .subtitle { color:var(--muted); font-size:13px; }
+  header.top code { background:var(--panel); padding:1px 6px; border-radius:5px; }
+  header.top .pagelink { color:var(--accent); text-decoration:none; font-size:13px; }
+  header.top .pagelink:hover { text-decoration:underline; }
+  .layout { display:grid; grid-template-columns:240px 1fr; align-items:start; }
+  nav.index { position:sticky; top:0; align-self:start; max-height:100vh; overflow:auto; padding:20px 12px; border-right:1px solid var(--line); }
+  nav.index .nav-head { display:flex; justify-content:space-between; font-weight:600; text-decoration:none; color:var(--fg); padding:6px 8px; border-radius:6px; }
+  nav.index .nav-head span { color:var(--muted); font-weight:400; }
+  nav.index .nav-head:hover { background:var(--panel); }
+  nav.index ul { list-style:none; margin:2px 0 14px; padding:0 0 0 8px; }
+  nav.index li a { display:block; color:var(--muted); text-decoration:none; padding:3px 8px; border-radius:5px; font-size:13px; }
+  nav.index li a:hover { color:var(--fg); background:var(--panel); }
+  main { padding:8px clamp(16px,4vw,40px) 64px; min-width:0; }
+  .group { padding-top:24px; }
+  .group h2 { font-size:16px; border-bottom:1px solid var(--line); padding-bottom:8px; position:sticky; top:0; background:var(--bg); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px,1fr)); gap:16px; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  /* Theme-aware checkerboard so a transparent component sticker reads on the backing that matches
+     its baked theme — a light-theme component (dark strokes/text) on a LIGHT check, a dark-theme (or
+     theme-less) one on the default dark check — instead of light-mode content washing out on a fixed
+     dark backing. --ck-a / --ck-b are the two check colours; [data-bg=light] swaps them. Full-screen
+     stickers carry their own round and just sit on top. Shared by the grid hero and zoom variants. */
+  .shot, .state-shot { --ck-a:#161617; --ck-b:#202022;
+    background-color:var(--ck-a);
+    background-image:
+      linear-gradient(45deg,var(--ck-b) 25%,transparent 25%),
+      linear-gradient(-45deg,var(--ck-b) 25%,transparent 25%),
+      linear-gradient(45deg,transparent 75%,var(--ck-b) 75%),
+      linear-gradient(-45deg,transparent 75%,var(--ck-b) 75%);
+    background-size:16px 16px; background-position:0 0,0 8px,8px -8px,-8px 0; }
+  .shot[data-bg="light"], .state-shot[data-bg="light"] { --ck-a:#e9e9ef; --ck-b:#ffffff; }
+  .shot { margin:0; display:grid; place-items:center; min-height:120px; padding:12px; }
+  .shot img { max-width:100%; max-height:240px; height:auto; display:block; }
+  a.shot { cursor:zoom-in; text-decoration:none; }
+  /* Framed mode (set by the crop script below): the hero is sized to the component's content bbox
+     — read from the figma-svg's translate + viewBox — and the PNG is absolutely-positioned so only
+     the component shows. A wear sticker rendered on a 454² device canvas is displayed cropped to
+     the component instead of floating in an empty frame; a no-op for close-cropped (phone) renders
+     where the bbox already fills the frame. */
+  .shot--framed { overflow:hidden; padding:0; min-height:0; position:relative; place-items:stretch;
+    margin:16px auto; border-radius:8px; max-width:100%; }
+  .shot--framed img { position:absolute; max-width:none; max-height:none; }
+  .shot--missing { color:var(--muted); font-style:italic; }
+  .meta { padding:10px 12px 12px; border-top:1px solid var(--line); }
+  .meta h3 { margin:0; font-size:13px; font-weight:600; word-break:break-word; }
+  .meta h3 a.ctitle { color:inherit; text-decoration:none; }
+  .meta h3 a.ctitle:hover { text-decoration:underline; }
+  .meta .sub { color:var(--muted); font-size:12px; margin-top:2px; display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; }
+  .meta .sub .wf { color:#7dd87d; text-decoration:none; white-space:nowrap; }
+  .meta .sub .wf:hover { text-decoration:underline; }
+  .statechip { font-size:11px; padding:1px 7px; border-radius:999px; border:1px solid var(--line); color:var(--muted); text-decoration:none; white-space:nowrap; }
+  .statechip:hover { color:var(--fg); border-color:var(--muted); }
+  .greenlines { margin-top:8px; display:flex; flex-wrap:wrap; gap:4px; }
+  .chip { font-size:11px; padding:1px 7px; border-radius:999px; border:1px solid var(--accent); color:var(--accent); }
+  .chip--warn { border-color:#e0c060; color:#e0c060; }
+  .chip--error { border-color:#e08080; color:#e08080; }
+  /* Single-component zoom view — a pure-CSS :target overlay, one per component. */
+  .detail { display:none; }
+  .detail:target { display:flex; position:fixed; inset:0; z-index:50; align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); }
+  .detail-scrim { position:absolute; inset:0; background:rgba(0,0,0,0.72); }
+  .detail-panel { position:relative; z-index:1; background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    max-width:min(960px,94vw); max-height:88vh; overflow:auto; padding:20px 24px; }
+  .detail-panel h3 { margin:0 0 4px; font-size:15px; word-break:break-word; }
+  .detail-caption { color:var(--muted); font-size:13px; margin-bottom:14px; }
+  .detail-x { position:absolute; top:8px; right:14px; color:var(--muted); text-decoration:none; font-size:24px; line-height:1; }
+  .detail-x:hover { color:var(--fg); }
+  .detail-states { display:flex; flex-wrap:wrap; gap:18px; }
+  figure.state { margin:0; }
+  figure.state figcaption { font-size:12px; color:var(--muted); margin-bottom:6px; text-transform:capitalize; }
+  .state-shots { display:flex; flex-wrap:wrap; gap:10px; }
+  .state-shot { display:flex; flex-direction:column; align-items:center; gap:5px;
+    border:1px solid var(--line); border-radius:10px; padding:12px; }
+  .state-shot img { max-width:220px; max-height:220px; height:auto; display:block; }
+  .state-shot span { font-size:11px; color:var(--muted); text-transform:capitalize; }
+  @media (max-width:720px){ .layout{ grid-template-columns:1fr; } nav.index{ position:static; max-height:none; border-right:0; border-bottom:1px solid var(--line);} }
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Horologist</h1>
+  <div class="subtitle">system <code>horologist</code> · rendered by compose-preview 0.19.38 · 2026-08-05T23:07:24.523Z · 80 components</div>
+  <div class="subtitle"><a class="pagelink" href="compare.html">PNG vs SVG compare ↗</a></div>
+</header>
+<div class="layout">
+  <nav class="index"><section class="nav-group">
+      <a class="nav-head" href="#g-material">Material <span>16</span></a>
+      <ul><li><a href="#c-materialbutton">MaterialButton</a></li><li><a href="#c-materialbuttonlarge">MaterialButtonLarge</a></li><li><a href="#c-materialchip">MaterialChip</a></li><li><a href="#c-materialchipdisabled">MaterialChipDisabled</a></li><li><a href="#c-materialchiptruncated">MaterialChipTruncated</a></li><li><a href="#c-materialchipwithsecondarylabel">MaterialChipWithSecondaryLabel</a></li><li><a href="#c-materialcompactchip">MaterialCompactChip</a></li><li><a href="#c-materialoutlinedchip">MaterialOutlinedChip</a></li><li><a href="#c-materialoutlinedcompactchip">MaterialOutlinedCompactChip</a></li><li><a href="#c-materialresponsivelistheader">MaterialResponsiveListHeader</a></li><li><a href="#c-materialsecondarytitle">MaterialSecondaryTitle</a></li><li><a href="#c-materialsplittogglechip">MaterialSplitToggleChip</a></li><li><a href="#c-materialtitle">MaterialTitle</a></li><li><a href="#c-materialtogglebutton">MaterialToggleButton</a></li><li><a href="#c-materialtogglechipradio">MaterialToggleChipRadio</a></li><li><a href="#c-materialtogglechipswitch">MaterialToggleChipSwitch</a></li></ul>
+    </section><section class="nav-group">
+      <a class="nav-head" href="#g-media">Media <span>16</span></a>
+      <ul><li><a href="#c-mediaartwork">MediaArtwork</a></li><li><a href="#c-mediacontrolbuttonspausedatqueueend">MediaControlButtonsPausedAtQueueEnd</a></li><li><a href="#c-mediacontrolbuttonsplaying">MediaControlButtonsPlaying</a></li><li><a href="#c-mediadetailsbutton">MediaDetailsButton</a></li><li><a href="#c-mediadetailsbuttonwithartwork">MediaDetailsButtonWithArtwork</a></li><li><a href="#c-mediaentityscreen">MediaEntityScreen</a></li><li><a href="#c-mediaentityscreenwithartwork">MediaEntityScreenWithArtwork</a></li><li><a href="#c-medialoadingmediadisplay">MediaLoadingMediaDisplay</a></li><li><a href="#c-mediamarqueetextmediadisplay">MediaMarqueeTextMediaDisplay</a></li><li><a href="#c-mediamarqueetextmediadisplaylongtitle">MediaMarqueeTextMediaDisplayLongTitle</a></li><li><a href="#c-mediamessagemediadisplay">MediaMessageMediaDisplay</a></li><li><a href="#c-medianothingplayingdisplay">MediaNothingPlayingDisplay</a></li><li><a href="#c-mediaplaceholderbutton">MediaPlaceholderButton</a></li><li><a href="#c-mediaplaypausebuttondisabled">MediaPlayPauseButtonDisabled</a></li><li><a href="#c-mediaplaypausebuttonpaused">MediaPlayPauseButtonPaused</a></li><li><a href="#c-mediaplaypausebuttonplaying">MediaPlayPauseButtonPlaying</a></li></ul>
+    </section><section class="nav-group">
+      <a class="nav-head" href="#g-auth-wear">Auth Wear <span>13</span></a>
+      <ul><li><a href="#c-authwearguestmodebutton">AuthWearGuestModeButton</a></li><li><a href="#c-authwearselectaccountscreen">AuthWearSelectAccountScreen</a></li><li><a href="#c-authwearselectaccountscreenemailonly">AuthWearSelectAccountScreenEmailOnly</a></li><li><a href="#c-authwearselectaccountscreenlongemail">AuthWearSelectAccountScreenLongEmail</a></li><li><a href="#c-authwearselectaccountscreensingle">AuthWearSelectAccountScreenSingle</a></li><li><a href="#c-authwearsigninbutton">AuthWearSignInButton</a></li><li><a href="#c-authwearsigninbuttondisabled">AuthWearSignInButtonDisabled</a></li><li><a href="#c-authwearsigninplaceholderscreen">AuthWearSignInPlaceholderScreen</a></li><li><a href="#c-authwearsigninpromptscreen">AuthWearSignInPromptScreen</a></li><li><a href="#c-authwearsigninpromptscreenloading">AuthWearSignInPromptScreenLoading</a></li><li><a href="#c-authwearsignedinconfirmationdialog">AuthWearSignedInConfirmationDialog</a></li><li><a href="#c-authwearsignedinconfirmationdialogemailonly">AuthWearSignedInConfirmationDialogEmailOnly</a></li><li><a href="#c-authwearsignedinconfirmationdialogtruncated">AuthWearSignedInConfirmationDialogTruncated</a></li></ul>
+    </section><section class="nav-group">
+      <a class="nav-head" href="#g-auth-mobile">Auth Mobile <span>2</span></a>
+      <ul><li><a href="#c-authmobilesigninbottomsheet">AuthMobileSignInBottomSheet</a></li><li><a href="#c-authmobilesigninbottomsheetcustomlabels">AuthMobileSignInBottomSheetCustomLabels</a></li></ul>
+    </section><section class="nav-group">
+      <a class="nav-head" href="#g-datalayer-mobile">DataLayer Mobile <span>3</span></a>
+      <ul><li><a href="#c-datalayermobileinstallappbottomsheet">DataLayerMobileInstallAppBottomSheet</a></li><li><a href="#c-datalayermobileinstalltilebottomsheet">DataLayerMobileInstallTileBottomSheet</a></li><li><a href="#c-datalayermobilereengagebottomsheet">DataLayerMobileReEngageBottomSheet</a></li></ul>
+    </section><section class="nav-group">
+      <a class="nav-head" href="#g-composables">Composables <span>10</span></a>
+      <ul><li><a href="#c-composablesdatepicker">ComposablesDatePicker</a></li><li><a href="#c-composablesmarqueetext">ComposablesMarqueeText</a></li><li><a href="#c-composablesplaceholderchip">ComposablesPlaceholderChip</a></li><li><a href="#c-composablessegmentedprogressindicator">ComposablesSegmentedProgressIndicator</a></li><li><a href="#c-composablessegmentedprogressindicatorcomplete">ComposablesSegmentedProgressIndicatorComplete</a></li><li><a href="#c-composablessegmentedprogressindicatorempty">ComposablesSegmentedProgressIndicatorEmpty</a></li><li><a href="#c-composablessquaresegmentedprogressindicator">ComposablesSquareSegmentedProgressIndicator</a></li><li><a href="#c-composablestimepicker">ComposablesTimePicker</a></li><li><a href="#c-composablestimepickernoseconds">ComposablesTimePickerNoSeconds</a></li><li><a href="#c-composablestimepickerwith12hourclock">ComposablesTimePickerWith12HourClock</a></li></ul>
+    </section><section class="nav-group">
+      <a class="nav-head" href="#g-health">Health <span>7</span></a>
+      <ul><li><a href="#c-healthformatteddurationtext">HealthFormattedDurationText</a></li><li><a href="#c-healthformatteddurationtextsubminute">HealthFormattedDurationTextSubMinute</a></li><li><a href="#c-healthmetricdisplay">HealthMetricDisplay</a></li><li><a href="#c-healthmetricsscreenfour">HealthMetricsScreenFour</a></li><li><a href="#c-healthmetricsscreensingle">HealthMetricsScreenSingle</a></li><li><a href="#c-healthmetricsscreentwo">HealthMetricsScreenTwo</a></li><li><a href="#c-healthmetricsscreenwidevalues">HealthMetricsScreenWideValues</a></li></ul>
+    </section><section class="nav-group">
+      <a class="nav-head" href="#g-audio">Audio <span>5</span></a>
+      <ul><li><a href="#c-audiovolumelevelindicator">AudioVolumeLevelIndicator</a></li><li><a href="#c-audiovolumescreen">AudioVolumeScreen</a></li><li><a href="#c-audiovolumescreenmax">AudioVolumeScreenMax</a></li><li><a href="#c-audiovolumescreenmuted">AudioVolumeScreenMuted</a></li><li><a href="#c-audiovolumescreennotconnected">AudioVolumeScreenNotConnected</a></li></ul>
+    </section><section class="nav-group">
+      <a class="nav-head" href="#g-ai">AI <span>5</span></a>
+      <ul><li><a href="#c-aifailedresponsechip">AiFailedResponseChip</a></li><li><a href="#c-airesponseinprogresscard">AiResponseInProgressCard</a></li><li><a href="#c-aitextpromptdisplay">AiTextPromptDisplay</a></li><li><a href="#c-aitextresponsecard">AiTextResponseCard</a></li><li><a href="#c-aitextresponsecardlong">AiTextResponseCardLong</a></li></ul>
+    </section><section class="nav-group">
+      <a class="nav-head" href="#g-layout">Layout <span>3</span></a>
+      <ul><li><a href="#c-layoutfillmaxrectangle">LayoutFillMaxRectangle</a></li><li><a href="#c-layoutpagerscreen">LayoutPagerScreen</a></li><li><a href="#c-layoutscalinglazycolumn">LayoutScalingLazyColumn</a></li></ul>
+    </section></nav>
+  <main><section class="group" id="g-material">
+      <h2>Material</h2>
+      <div class="grid"><article class="card" id="c-materialbutton">
+  <a class="shot" href="#d-materialbutton" aria-label="Zoom MaterialButton"><img loading="lazy" src="images/materialbutton/ideal__default__compact.png" alt="MaterialButton" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-materialbutton">MaterialButton</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/materialbutton.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/materialbutton.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-materialbuttonlarge">
+  <a class="shot" href="#d-materialbuttonlarge" aria-label="Zoom MaterialButtonLarge"><img loading="lazy" src="images/materialbuttonlarge/ideal__default__compact.png" alt="MaterialButtonLarge" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-materialbuttonlarge">MaterialButtonLarge</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/materialbuttonlarge.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/materialbuttonlarge.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-materialchip">
+  <a class="shot" href="#d-materialchip" aria-label="Zoom MaterialChip"><img loading="lazy" src="images/materialchip/ideal__default__compact.png" alt="MaterialChip" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-materialchip">MaterialChip</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/materialchip.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/materialchip.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-materialchipdisabled">
+  <a class="shot" href="#d-materialchipdisabled" aria-label="Zoom MaterialChipDisabled"><img loading="lazy" src="images/materialchipdisabled/ideal__default__compact.png" alt="MaterialChipDisabled" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-materialchipdisabled">MaterialChipDisabled</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/materialchipdisabled.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/materialchipdisabled.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-materialchiptruncated">
+  <a class="shot" href="#d-materialchiptruncated" aria-label="Zoom MaterialChipTruncated"><img loading="lazy" src="images/materialchiptruncated/ideal__default__compact.png" alt="MaterialChipTruncated" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-materialchiptruncated">MaterialChipTruncated</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/materialchiptruncated.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/materialchiptruncated.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-materialchipwithsecondarylabel">
+  <a class="shot" href="#d-materialchipwithsecondarylabel" aria-label="Zoom MaterialChipWithSecondaryLabel"><img loading="lazy" src="images/materialchipwithsecondarylabel/ideal__default__compact.png" alt="MaterialChipWithSecondaryLabel" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-materialchipwithsecondarylabel">MaterialChipWithSecondaryLabel</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/materialchipwithsecondarylabel.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/materialchipwithsecondarylabel.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-materialcompactchip">
+  <a class="shot" href="#d-materialcompactchip" aria-label="Zoom MaterialCompactChip"><img loading="lazy" src="images/materialcompactchip/ideal__default__compact.png" alt="MaterialCompactChip" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-materialcompactchip">MaterialCompactChip</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/materialcompactchip.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/materialcompactchip.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-materialoutlinedchip">
+  <a class="shot" href="#d-materialoutlinedchip" aria-label="Zoom MaterialOutlinedChip"><img loading="lazy" src="images/materialoutlinedchip/ideal__default__compact.png" alt="MaterialOutlinedChip" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-materialoutlinedchip">MaterialOutlinedChip</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/materialoutlinedchip.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/materialoutlinedchip.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-materialoutlinedcompactchip">
+  <a class="shot" href="#d-materialoutlinedcompactchip" aria-label="Zoom MaterialOutlinedCompactChip"><img loading="lazy" src="images/materialoutlinedcompactchip/ideal__default__compact.png" alt="MaterialOutlinedCompactChip" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-materialoutlinedcompactchip">MaterialOutlinedCompactChip</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/materialoutlinedcompactchip.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/materialoutlinedcompactchip.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-materialresponsivelistheader">
+  <a class="shot" href="#d-materialresponsivelistheader" aria-label="Zoom MaterialResponsiveListHeader"><img loading="lazy" src="images/materialresponsivelistheader/ideal__default__compact.png" alt="MaterialResponsiveListHeader" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-materialresponsivelistheader">MaterialResponsiveListHeader</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/materialresponsivelistheader.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/materialresponsivelistheader.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-materialsecondarytitle">
+  <a class="shot" href="#d-materialsecondarytitle" aria-label="Zoom MaterialSecondaryTitle"><img loading="lazy" src="images/materialsecondarytitle/ideal__default__compact.png" alt="MaterialSecondaryTitle" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-materialsecondarytitle">MaterialSecondaryTitle</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/materialsecondarytitle.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/materialsecondarytitle.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-materialsplittogglechip">
+  <a class="shot" href="#d-materialsplittogglechip" aria-label="Zoom MaterialSplitToggleChip"><img loading="lazy" src="images/materialsplittogglechip/ideal__default__compact.png" alt="MaterialSplitToggleChip" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-materialsplittogglechip">MaterialSplitToggleChip</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/materialsplittogglechip.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/materialsplittogglechip.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-materialtitle">
+  <a class="shot" href="#d-materialtitle" aria-label="Zoom MaterialTitle"><img loading="lazy" src="images/materialtitle/ideal__default__compact.png" alt="MaterialTitle" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-materialtitle">MaterialTitle</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/materialtitle.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/materialtitle.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-materialtogglebutton">
+  <a class="shot" href="#d-materialtogglebutton" aria-label="Zoom MaterialToggleButton"><img loading="lazy" src="images/materialtogglebutton/ideal__default__compact.png" alt="MaterialToggleButton" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-materialtogglebutton">MaterialToggleButton</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/materialtogglebutton.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/materialtogglebutton.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">checkbox</span></div>
+  </div>
+</article>
+<article class="card" id="c-materialtogglechipradio">
+  <a class="shot" href="#d-materialtogglechipradio" aria-label="Zoom MaterialToggleChipRadio"><img loading="lazy" src="images/materialtogglechipradio/ideal__default__compact.png" alt="MaterialToggleChipRadio" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-materialtogglechipradio">MaterialToggleChipRadio</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/materialtogglechipradio.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/materialtogglechipradio.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-materialtogglechipswitch">
+  <a class="shot" href="#d-materialtogglechipswitch" aria-label="Zoom MaterialToggleChipSwitch"><img loading="lazy" src="images/materialtogglechipswitch/ideal__default__compact.png" alt="MaterialToggleChipSwitch" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-materialtogglechipswitch">MaterialToggleChipSwitch</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/materialtogglechipswitch.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/materialtogglechipswitch.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article></div>
+    </section>
+<section class="group" id="g-media">
+      <h2>Media</h2>
+      <div class="grid"><article class="card" id="c-mediaartwork">
+  <a class="shot" href="#d-mediaartwork" aria-label="Zoom MediaArtwork"><img loading="lazy" src="images/mediaartwork/ideal__default__compact.png" alt="MediaArtwork" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-mediaartwork">MediaArtwork</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/mediaartwork.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/mediaartwork.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-mediacontrolbuttonspausedatqueueend">
+  <a class="shot" href="#d-mediacontrolbuttonspausedatqueueend" aria-label="Zoom MediaControlButtonsPausedAtQueueEnd"><img loading="lazy" src="images/mediacontrolbuttonspausedatqueueend/ideal__default__compact.png" alt="MediaControlButtonsPausedAtQueueEnd" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-mediacontrolbuttonspausedatqueueend">MediaControlButtonsPausedAtQueueEnd</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/mediacontrolbuttonspausedatqueueend.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/mediacontrolbuttonspausedatqueueend.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span><span class="chip chip--info">button</span><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-mediacontrolbuttonsplaying">
+  <a class="shot" href="#d-mediacontrolbuttonsplaying" aria-label="Zoom MediaControlButtonsPlaying"><img loading="lazy" src="images/mediacontrolbuttonsplaying/ideal__default__compact.png" alt="MediaControlButtonsPlaying" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-mediacontrolbuttonsplaying">MediaControlButtonsPlaying</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/mediacontrolbuttonsplaying.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/mediacontrolbuttonsplaying.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span><span class="chip chip--info">button</span><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-mediadetailsbutton">
+  <a class="shot" href="#d-mediadetailsbutton" aria-label="Zoom MediaDetailsButton"><img loading="lazy" src="images/mediadetailsbutton/ideal__default__compact.png" alt="MediaDetailsButton" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-mediadetailsbutton">MediaDetailsButton</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/mediadetailsbutton.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/mediadetailsbutton.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-mediadetailsbuttonwithartwork">
+  <a class="shot" href="#d-mediadetailsbuttonwithartwork" aria-label="Zoom MediaDetailsButtonWithArtwork"><img loading="lazy" src="images/mediadetailsbuttonwithartwork/ideal__default__compact.png" alt="MediaDetailsButtonWithArtwork" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-mediadetailsbuttonwithartwork">MediaDetailsButtonWithArtwork</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/mediadetailsbuttonwithartwork.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/mediadetailsbuttonwithartwork.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-mediaentityscreen">
+  <a class="shot" href="#d-mediaentityscreen" aria-label="Zoom MediaEntityScreen"><img loading="lazy" src="images/mediaentityscreen/ideal__default__compact.png" alt="MediaEntityScreen" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-mediaentityscreen">MediaEntityScreen</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/mediaentityscreen.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/mediaentityscreen.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span><span class="chip chip--info">button</span><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-mediaentityscreenwithartwork">
+  <a class="shot" href="#d-mediaentityscreenwithartwork" aria-label="Zoom MediaEntityScreenWithArtwork"><img loading="lazy" src="images/mediaentityscreenwithartwork/ideal__default__compact.png" alt="MediaEntityScreenWithArtwork" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-mediaentityscreenwithartwork">MediaEntityScreenWithArtwork</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/mediaentityscreenwithartwork.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/mediaentityscreenwithartwork.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span><span class="chip chip--info">button</span><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-medialoadingmediadisplay">
+  <a class="shot" href="#d-medialoadingmediadisplay" aria-label="Zoom MediaLoadingMediaDisplay"><img loading="lazy" src="images/medialoadingmediadisplay/ideal__default__compact.png" alt="MediaLoadingMediaDisplay" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-medialoadingmediadisplay">MediaLoadingMediaDisplay</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/medialoadingmediadisplay.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/medialoadingmediadisplay.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-mediamarqueetextmediadisplay">
+  <a class="shot" href="#d-mediamarqueetextmediadisplay" aria-label="Zoom MediaMarqueeTextMediaDisplay"><img loading="lazy" src="images/mediamarqueetextmediadisplay/ideal__default__compact.png" alt="MediaMarqueeTextMediaDisplay" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-mediamarqueetextmediadisplay">MediaMarqueeTextMediaDisplay</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/mediamarqueetextmediadisplay.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/mediamarqueetextmediadisplay.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-mediamarqueetextmediadisplaylongtitle">
+  <a class="shot" href="#d-mediamarqueetextmediadisplaylongtitle" aria-label="Zoom MediaMarqueeTextMediaDisplayLongTitle"><img loading="lazy" src="images/mediamarqueetextmediadisplaylongtitle/ideal__default__compact.png" alt="MediaMarqueeTextMediaDisplayLongTitle" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-mediamarqueetextmediadisplaylongtitle">MediaMarqueeTextMediaDisplayLongTitle</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/mediamarqueetextmediadisplaylongtitle.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/mediamarqueetextmediadisplaylongtitle.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-mediamessagemediadisplay">
+  <a class="shot" href="#d-mediamessagemediadisplay" aria-label="Zoom MediaMessageMediaDisplay"><img loading="lazy" src="images/mediamessagemediadisplay/ideal__default__compact.png" alt="MediaMessageMediaDisplay" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-mediamessagemediadisplay">MediaMessageMediaDisplay</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/mediamessagemediadisplay.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/mediamessagemediadisplay.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-medianothingplayingdisplay">
+  <a class="shot" href="#d-medianothingplayingdisplay" aria-label="Zoom MediaNothingPlayingDisplay"><img loading="lazy" src="images/medianothingplayingdisplay/ideal__default__compact.png" alt="MediaNothingPlayingDisplay" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-medianothingplayingdisplay">MediaNothingPlayingDisplay</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/medianothingplayingdisplay.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/medianothingplayingdisplay.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-mediaplaceholderbutton">
+  <a class="shot" href="#d-mediaplaceholderbutton" aria-label="Zoom MediaPlaceholderButton"><img loading="lazy" src="images/mediaplaceholderbutton/ideal__default__compact.png" alt="MediaPlaceholderButton" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-mediaplaceholderbutton">MediaPlaceholderButton</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/mediaplaceholderbutton.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/mediaplaceholderbutton.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-mediaplaypausebuttondisabled">
+  <a class="shot" href="#d-mediaplaypausebuttondisabled" aria-label="Zoom MediaPlayPauseButtonDisabled"><img loading="lazy" src="images/mediaplaypausebuttondisabled/ideal__default__compact.png" alt="MediaPlayPauseButtonDisabled" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-mediaplaypausebuttondisabled">MediaPlayPauseButtonDisabled</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/mediaplaypausebuttondisabled.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/mediaplaypausebuttondisabled.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-mediaplaypausebuttonpaused">
+  <a class="shot" href="#d-mediaplaypausebuttonpaused" aria-label="Zoom MediaPlayPauseButtonPaused"><img loading="lazy" src="images/mediaplaypausebuttonpaused/ideal__default__compact.png" alt="MediaPlayPauseButtonPaused" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-mediaplaypausebuttonpaused">MediaPlayPauseButtonPaused</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/mediaplaypausebuttonpaused.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/mediaplaypausebuttonpaused.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-mediaplaypausebuttonplaying">
+  <a class="shot" href="#d-mediaplaypausebuttonplaying" aria-label="Zoom MediaPlayPauseButtonPlaying"><img loading="lazy" src="images/mediaplaypausebuttonplaying/ideal__default__compact.png" alt="MediaPlayPauseButtonPlaying" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-mediaplaypausebuttonplaying">MediaPlayPauseButtonPlaying</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/mediaplaypausebuttonplaying.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/mediaplaypausebuttonplaying.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article></div>
+    </section>
+<section class="group" id="g-auth-wear">
+      <h2>Auth Wear</h2>
+      <div class="grid"><article class="card" id="c-authwearguestmodebutton">
+  <a class="shot" href="#d-authwearguestmodebutton" aria-label="Zoom AuthWearGuestModeButton"><img loading="lazy" src="images/authwearguestmodebutton/ideal__default__compact.png" alt="AuthWearGuestModeButton" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-authwearguestmodebutton">AuthWearGuestModeButton</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/authwearguestmodebutton.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/authwearguestmodebutton.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-authwearselectaccountscreen">
+  <a class="shot" href="#d-authwearselectaccountscreen" aria-label="Zoom AuthWearSelectAccountScreen"><img loading="lazy" src="images/authwearselectaccountscreen/ideal__default__compact.png" alt="AuthWearSelectAccountScreen" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-authwearselectaccountscreen">AuthWearSelectAccountScreen</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/authwearselectaccountscreen.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/authwearselectaccountscreen.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-authwearselectaccountscreenemailonly">
+  <a class="shot" href="#d-authwearselectaccountscreenemailonly" aria-label="Zoom AuthWearSelectAccountScreenEmailOnly"><img loading="lazy" src="images/authwearselectaccountscreenemailonly/ideal__default__compact.png" alt="AuthWearSelectAccountScreenEmailOnly" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-authwearselectaccountscreenemailonly">AuthWearSelectAccountScreenEmailOnly</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/authwearselectaccountscreenemailonly.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/authwearselectaccountscreenemailonly.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-authwearselectaccountscreenlongemail">
+  <a class="shot" href="#d-authwearselectaccountscreenlongemail" aria-label="Zoom AuthWearSelectAccountScreenLongEmail"><img loading="lazy" src="images/authwearselectaccountscreenlongemail/ideal__default__compact.png" alt="AuthWearSelectAccountScreenLongEmail" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-authwearselectaccountscreenlongemail">AuthWearSelectAccountScreenLongEmail</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/authwearselectaccountscreenlongemail.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/authwearselectaccountscreenlongemail.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-authwearselectaccountscreensingle">
+  <a class="shot" href="#d-authwearselectaccountscreensingle" aria-label="Zoom AuthWearSelectAccountScreenSingle"><img loading="lazy" src="images/authwearselectaccountscreensingle/ideal__default__compact.png" alt="AuthWearSelectAccountScreenSingle" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-authwearselectaccountscreensingle">AuthWearSelectAccountScreenSingle</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/authwearselectaccountscreensingle.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/authwearselectaccountscreensingle.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-authwearsigninbutton">
+  <a class="shot" href="#d-authwearsigninbutton" aria-label="Zoom AuthWearSignInButton"><img loading="lazy" src="images/authwearsigninbutton/ideal__default__compact.png" alt="AuthWearSignInButton" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-authwearsigninbutton">AuthWearSignInButton</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/authwearsigninbutton.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/authwearsigninbutton.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-authwearsigninbuttondisabled">
+  <a class="shot" href="#d-authwearsigninbuttondisabled" aria-label="Zoom AuthWearSignInButtonDisabled"><img loading="lazy" src="images/authwearsigninbuttondisabled/ideal__default__compact.png" alt="AuthWearSignInButtonDisabled" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-authwearsigninbuttondisabled">AuthWearSignInButtonDisabled</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/authwearsigninbuttondisabled.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/authwearsigninbuttondisabled.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-authwearsigninplaceholderscreen">
+  <a class="shot" href="#d-authwearsigninplaceholderscreen" aria-label="Zoom AuthWearSignInPlaceholderScreen"><img loading="lazy" src="images/authwearsigninplaceholderscreen/ideal__default__compact.png" alt="AuthWearSignInPlaceholderScreen" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-authwearsigninplaceholderscreen">AuthWearSignInPlaceholderScreen</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/authwearsigninplaceholderscreen.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/authwearsigninplaceholderscreen.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-authwearsigninpromptscreen">
+  <a class="shot" href="#d-authwearsigninpromptscreen" aria-label="Zoom AuthWearSignInPromptScreen"><img loading="lazy" src="images/authwearsigninpromptscreen/ideal__default__compact.png" alt="AuthWearSignInPromptScreen" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-authwearsigninpromptscreen">AuthWearSignInPromptScreen</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/authwearsigninpromptscreen.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/authwearsigninpromptscreen.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-authwearsigninpromptscreenloading">
+  <a class="shot" href="#d-authwearsigninpromptscreenloading" aria-label="Zoom AuthWearSignInPromptScreenLoading"><img loading="lazy" src="images/authwearsigninpromptscreenloading/ideal__default__compact.png" alt="AuthWearSignInPromptScreenLoading" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-authwearsigninpromptscreenloading">AuthWearSignInPromptScreenLoading</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/authwearsigninpromptscreenloading.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/authwearsigninpromptscreenloading.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-authwearsignedinconfirmationdialog">
+  <a class="shot" href="#d-authwearsignedinconfirmationdialog" aria-label="Zoom AuthWearSignedInConfirmationDialog"><img loading="lazy" src="images/authwearsignedinconfirmationdialog/ideal__default__compact.png" alt="AuthWearSignedInConfirmationDialog" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-authwearsignedinconfirmationdialog">AuthWearSignedInConfirmationDialog</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/authwearsignedinconfirmationdialog.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/authwearsignedinconfirmationdialog.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-authwearsignedinconfirmationdialogemailonly">
+  <a class="shot" href="#d-authwearsignedinconfirmationdialogemailonly" aria-label="Zoom AuthWearSignedInConfirmationDialogEmailOnly"><img loading="lazy" src="images/authwearsignedinconfirmationdialogemailonly/ideal__default__compact.png" alt="AuthWearSignedInConfirmationDialogEmailOnly" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-authwearsignedinconfirmationdialogemailonly">AuthWearSignedInConfirmationDialogEmailOnly</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/authwearsignedinconfirmationdialogemailonly.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/authwearsignedinconfirmationdialogemailonly.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-authwearsignedinconfirmationdialogtruncated">
+  <a class="shot" href="#d-authwearsignedinconfirmationdialogtruncated" aria-label="Zoom AuthWearSignedInConfirmationDialogTruncated"><img loading="lazy" src="images/authwearsignedinconfirmationdialogtruncated/ideal__default__compact.png" alt="AuthWearSignedInConfirmationDialogTruncated" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-authwearsignedinconfirmationdialogtruncated">AuthWearSignedInConfirmationDialogTruncated</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/authwearsignedinconfirmationdialogtruncated.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/authwearsignedinconfirmationdialogtruncated.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article></div>
+    </section>
+<section class="group" id="g-auth-mobile">
+      <h2>Auth Mobile</h2>
+      <div class="grid"><article class="card" id="c-authmobilesigninbottomsheet">
+  <a class="shot" href="#d-authmobilesigninbottomsheet" aria-label="Zoom AuthMobileSignInBottomSheet"><img loading="lazy" src="images/authmobilesigninbottomsheet/ideal__default__compact.png" alt="AuthMobileSignInBottomSheet" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-authmobilesigninbottomsheet">AuthMobileSignInBottomSheet</a></h3>
+    <div class="sub">1078×2399<a class="wf" href="wireframes/authmobilesigninbottomsheet.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/authmobilesigninbottomsheet.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-authmobilesigninbottomsheetcustomlabels">
+  <a class="shot" href="#d-authmobilesigninbottomsheetcustomlabels" aria-label="Zoom AuthMobileSignInBottomSheetCustomLabels"><img loading="lazy" src="images/authmobilesigninbottomsheetcustomlabels/ideal__default__compact.png" alt="AuthMobileSignInBottomSheetCustomLabels" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-authmobilesigninbottomsheetcustomlabels">AuthMobileSignInBottomSheetCustomLabels</a></h3>
+    <div class="sub">1078×2399<a class="wf" href="wireframes/authmobilesigninbottomsheetcustomlabels.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/authmobilesigninbottomsheetcustomlabels.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span><span class="chip chip--info">button</span></div>
+  </div>
+</article></div>
+    </section>
+<section class="group" id="g-datalayer-mobile">
+      <h2>DataLayer Mobile</h2>
+      <div class="grid"><article class="card" id="c-datalayermobileinstallappbottomsheet">
+  <a class="shot" href="#d-datalayermobileinstallappbottomsheet" aria-label="Zoom DataLayerMobileInstallAppBottomSheet"><img loading="lazy" src="images/datalayermobileinstallappbottomsheet/ideal__default__compact.png" alt="DataLayerMobileInstallAppBottomSheet" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-datalayermobileinstallappbottomsheet">DataLayerMobileInstallAppBottomSheet</a></h3>
+    <div class="sub">1078×2399<a class="wf" href="wireframes/datalayermobileinstallappbottomsheet.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/datalayermobileinstallappbottomsheet.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-datalayermobileinstalltilebottomsheet">
+  <a class="shot" href="#d-datalayermobileinstalltilebottomsheet" aria-label="Zoom DataLayerMobileInstallTileBottomSheet"><img loading="lazy" src="images/datalayermobileinstalltilebottomsheet/ideal__default__compact.png" alt="DataLayerMobileInstallTileBottomSheet" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-datalayermobileinstalltilebottomsheet">DataLayerMobileInstallTileBottomSheet</a></h3>
+    <div class="sub">1078×2399<a class="wf" href="wireframes/datalayermobileinstalltilebottomsheet.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/datalayermobileinstalltilebottomsheet.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-datalayermobilereengagebottomsheet">
+  <a class="shot" href="#d-datalayermobilereengagebottomsheet" aria-label="Zoom DataLayerMobileReEngageBottomSheet"><img loading="lazy" src="images/datalayermobilereengagebottomsheet/ideal__default__compact.png" alt="DataLayerMobileReEngageBottomSheet" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-datalayermobilereengagebottomsheet">DataLayerMobileReEngageBottomSheet</a></h3>
+    <div class="sub">1078×2399<a class="wf" href="wireframes/datalayermobilereengagebottomsheet.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/datalayermobilereengagebottomsheet.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span><span class="chip chip--info">button</span></div>
+  </div>
+</article></div>
+    </section>
+<section class="group" id="g-composables">
+      <h2>Composables</h2>
+      <div class="grid"><article class="card" id="c-composablesdatepicker">
+  <a class="shot" href="#d-composablesdatepicker" aria-label="Zoom ComposablesDatePicker"><img loading="lazy" src="images/composablesdatepicker/ideal__default__compact.png" alt="ComposablesDatePicker" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-composablesdatepicker">ComposablesDatePicker</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/composablesdatepicker.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/composablesdatepicker.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-composablesmarqueetext">
+  <a class="shot" href="#d-composablesmarqueetext" aria-label="Zoom ComposablesMarqueeText"><img loading="lazy" src="images/composablesmarqueetext/ideal__default__compact.png" alt="ComposablesMarqueeText" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-composablesmarqueetext">ComposablesMarqueeText</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/composablesmarqueetext.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/composablesmarqueetext.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-composablesplaceholderchip">
+  <a class="shot" href="#d-composablesplaceholderchip" aria-label="Zoom ComposablesPlaceholderChip"><img loading="lazy" src="images/composablesplaceholderchip/ideal__default__compact.png" alt="ComposablesPlaceholderChip" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-composablesplaceholderchip">ComposablesPlaceholderChip</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/composablesplaceholderchip.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/composablesplaceholderchip.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-composablessegmentedprogressindicator">
+  <a class="shot" href="#d-composablessegmentedprogressindicator" aria-label="Zoom ComposablesSegmentedProgressIndicator"><img loading="lazy" src="images/composablessegmentedprogressindicator/ideal__default__compact.png" alt="ComposablesSegmentedProgressIndicator" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-composablessegmentedprogressindicator">ComposablesSegmentedProgressIndicator</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/composablessegmentedprogressindicator.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/composablessegmentedprogressindicator.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-composablessegmentedprogressindicatorcomplete">
+  <a class="shot" href="#d-composablessegmentedprogressindicatorcomplete" aria-label="Zoom ComposablesSegmentedProgressIndicatorComplete"><img loading="lazy" src="images/composablessegmentedprogressindicatorcomplete/ideal__default__compact.png" alt="ComposablesSegmentedProgressIndicatorComplete" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-composablessegmentedprogressindicatorcomplete">ComposablesSegmentedProgressIndicatorComplete</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/composablessegmentedprogressindicatorcomplete.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/composablessegmentedprogressindicatorcomplete.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-composablessegmentedprogressindicatorempty">
+  <a class="shot" href="#d-composablessegmentedprogressindicatorempty" aria-label="Zoom ComposablesSegmentedProgressIndicatorEmpty"><img loading="lazy" src="images/composablessegmentedprogressindicatorempty/ideal__default__compact.png" alt="ComposablesSegmentedProgressIndicatorEmpty" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-composablessegmentedprogressindicatorempty">ComposablesSegmentedProgressIndicatorEmpty</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/composablessegmentedprogressindicatorempty.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/composablessegmentedprogressindicatorempty.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-composablessquaresegmentedprogressindicator">
+  <a class="shot" href="#d-composablessquaresegmentedprogressindicator" aria-label="Zoom ComposablesSquareSegmentedProgressIndicator"><img loading="lazy" src="images/composablessquaresegmentedprogressindicator/ideal__default__compact.png" alt="ComposablesSquareSegmentedProgressIndicator" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-composablessquaresegmentedprogressindicator">ComposablesSquareSegmentedProgressIndicator</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/composablessquaresegmentedprogressindicator.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/composablessquaresegmentedprogressindicator.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-composablestimepicker">
+  <a class="shot" href="#d-composablestimepicker" aria-label="Zoom ComposablesTimePicker"><img loading="lazy" src="images/composablestimepicker/ideal__default__compact.png" alt="ComposablesTimePicker" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-composablestimepicker">ComposablesTimePicker</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/composablestimepicker.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/composablestimepicker.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-composablestimepickernoseconds">
+  <a class="shot" href="#d-composablestimepickernoseconds" aria-label="Zoom ComposablesTimePickerNoSeconds"><img loading="lazy" src="images/composablestimepickernoseconds/ideal__default__compact.png" alt="ComposablesTimePickerNoSeconds" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-composablestimepickernoseconds">ComposablesTimePickerNoSeconds</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/composablestimepickernoseconds.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/composablestimepickernoseconds.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-composablestimepickerwith12hourclock">
+  <a class="shot" href="#d-composablestimepickerwith12hourclock" aria-label="Zoom ComposablesTimePickerWith12HourClock"><img loading="lazy" src="images/composablestimepickerwith12hourclock/ideal__default__compact.png" alt="ComposablesTimePickerWith12HourClock" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-composablestimepickerwith12hourclock">ComposablesTimePickerWith12HourClock</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/composablestimepickerwith12hourclock.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/composablestimepickerwith12hourclock.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span></div>
+  </div>
+</article></div>
+    </section>
+<section class="group" id="g-health">
+      <h2>Health</h2>
+      <div class="grid"><article class="card" id="c-healthformatteddurationtext">
+  <a class="shot" href="#d-healthformatteddurationtext" aria-label="Zoom HealthFormattedDurationText"><img loading="lazy" src="images/healthformatteddurationtext/ideal__default__compact.png" alt="HealthFormattedDurationText" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-healthformatteddurationtext">HealthFormattedDurationText</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/healthformatteddurationtext.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/healthformatteddurationtext.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-healthformatteddurationtextsubminute">
+  <a class="shot" href="#d-healthformatteddurationtextsubminute" aria-label="Zoom HealthFormattedDurationTextSubMinute"><img loading="lazy" src="images/healthformatteddurationtextsubminute/ideal__default__compact.png" alt="HealthFormattedDurationTextSubMinute" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-healthformatteddurationtextsubminute">HealthFormattedDurationTextSubMinute</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/healthformatteddurationtextsubminute.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/healthformatteddurationtextsubminute.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-healthmetricdisplay">
+  <a class="shot" href="#d-healthmetricdisplay" aria-label="Zoom HealthMetricDisplay"><img loading="lazy" src="images/healthmetricdisplay/ideal__default__compact.png" alt="HealthMetricDisplay" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-healthmetricdisplay">HealthMetricDisplay</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/healthmetricdisplay.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/healthmetricdisplay.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-healthmetricsscreenfour">
+  <a class="shot" href="#d-healthmetricsscreenfour" aria-label="Zoom HealthMetricsScreenFour"><img loading="lazy" src="images/healthmetricsscreenfour/ideal__default__compact.png" alt="HealthMetricsScreenFour" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-healthmetricsscreenfour">HealthMetricsScreenFour</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/healthmetricsscreenfour.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/healthmetricsscreenfour.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-healthmetricsscreensingle">
+  <a class="shot" href="#d-healthmetricsscreensingle" aria-label="Zoom HealthMetricsScreenSingle"><img loading="lazy" src="images/healthmetricsscreensingle/ideal__default__compact.png" alt="HealthMetricsScreenSingle" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-healthmetricsscreensingle">HealthMetricsScreenSingle</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/healthmetricsscreensingle.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/healthmetricsscreensingle.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-healthmetricsscreentwo">
+  <a class="shot" href="#d-healthmetricsscreentwo" aria-label="Zoom HealthMetricsScreenTwo"><img loading="lazy" src="images/healthmetricsscreentwo/ideal__default__compact.png" alt="HealthMetricsScreenTwo" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-healthmetricsscreentwo">HealthMetricsScreenTwo</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/healthmetricsscreentwo.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/healthmetricsscreentwo.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-healthmetricsscreenwidevalues">
+  <a class="shot" href="#d-healthmetricsscreenwidevalues" aria-label="Zoom HealthMetricsScreenWideValues"><img loading="lazy" src="images/healthmetricsscreenwidevalues/ideal__default__compact.png" alt="HealthMetricsScreenWideValues" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-healthmetricsscreenwidevalues">HealthMetricsScreenWideValues</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/healthmetricsscreenwidevalues.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/healthmetricsscreenwidevalues.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article></div>
+    </section>
+<section class="group" id="g-audio">
+      <h2>Audio</h2>
+      <div class="grid"><article class="card" id="c-audiovolumelevelindicator">
+  <a class="shot" href="#d-audiovolumelevelindicator" aria-label="Zoom AudioVolumeLevelIndicator"><img loading="lazy" src="images/audiovolumelevelindicator/ideal__default__compact.png" alt="AudioVolumeLevelIndicator" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-audiovolumelevelindicator">AudioVolumeLevelIndicator</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/audiovolumelevelindicator.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/audiovolumelevelindicator.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-audiovolumescreen">
+  <a class="shot" href="#d-audiovolumescreen" aria-label="Zoom AudioVolumeScreen"><img loading="lazy" src="images/audiovolumescreen/ideal__default__compact.png" alt="AudioVolumeScreen" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-audiovolumescreen">AudioVolumeScreen</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/audiovolumescreen.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/audiovolumescreen.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span><span class="chip chip--info">button</span><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-audiovolumescreenmax">
+  <a class="shot" href="#d-audiovolumescreenmax" aria-label="Zoom AudioVolumeScreenMax"><img loading="lazy" src="images/audiovolumescreenmax/ideal__default__compact.png" alt="AudioVolumeScreenMax" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-audiovolumescreenmax">AudioVolumeScreenMax</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/audiovolumescreenmax.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/audiovolumescreenmax.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span><span class="chip chip--info">button</span><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-audiovolumescreenmuted">
+  <a class="shot" href="#d-audiovolumescreenmuted" aria-label="Zoom AudioVolumeScreenMuted"><img loading="lazy" src="images/audiovolumescreenmuted/ideal__default__compact.png" alt="AudioVolumeScreenMuted" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-audiovolumescreenmuted">AudioVolumeScreenMuted</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/audiovolumescreenmuted.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/audiovolumescreenmuted.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span><span class="chip chip--info">button</span><span class="chip chip--info">button</span></div>
+  </div>
+</article>
+<article class="card" id="c-audiovolumescreennotconnected">
+  <a class="shot" href="#d-audiovolumescreennotconnected" aria-label="Zoom AudioVolumeScreenNotConnected"><img loading="lazy" src="images/audiovolumescreennotconnected/ideal__default__compact.png" alt="AudioVolumeScreenNotConnected" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-audiovolumescreennotconnected">AudioVolumeScreenNotConnected</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/audiovolumescreennotconnected.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/audiovolumescreennotconnected.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span><span class="chip chip--info">button</span><span class="chip chip--info">button</span></div>
+  </div>
+</article></div>
+    </section>
+<section class="group" id="g-ai">
+      <h2>AI</h2>
+      <div class="grid"><article class="card" id="c-aifailedresponsechip">
+  <a class="shot" href="#d-aifailedresponsechip" aria-label="Zoom AiFailedResponseChip"><img loading="lazy" src="images/aifailedresponsechip/ideal__default__compact.png" alt="AiFailedResponseChip" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-aifailedresponsechip">AiFailedResponseChip</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/aifailedresponsechip.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/aifailedresponsechip.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-airesponseinprogresscard">
+  <a class="shot" href="#d-airesponseinprogresscard" aria-label="Zoom AiResponseInProgressCard"><img loading="lazy" src="images/airesponseinprogresscard/ideal__default__compact.png" alt="AiResponseInProgressCard" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-airesponseinprogresscard">AiResponseInProgressCard</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/airesponseinprogresscard.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/airesponseinprogresscard.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-aitextpromptdisplay">
+  <a class="shot" href="#d-aitextpromptdisplay" aria-label="Zoom AiTextPromptDisplay"><img loading="lazy" src="images/aitextpromptdisplay/ideal__default__compact.png" alt="AiTextPromptDisplay" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-aitextpromptdisplay">AiTextPromptDisplay</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/aitextpromptdisplay.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/aitextpromptdisplay.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-aitextresponsecard">
+  <a class="shot" href="#d-aitextresponsecard" aria-label="Zoom AiTextResponseCard"><img loading="lazy" src="images/aitextresponsecard/ideal__default__compact.png" alt="AiTextResponseCard" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-aitextresponsecard">AiTextResponseCard</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/aitextresponsecard.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/aitextresponsecard.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-aitextresponsecardlong">
+  <a class="shot" href="#d-aitextresponsecardlong" aria-label="Zoom AiTextResponseCardLong"><img loading="lazy" src="images/aitextresponsecardlong/ideal__default__compact.png" alt="AiTextResponseCardLong" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-aitextresponsecardlong">AiTextResponseCardLong</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/aitextresponsecardlong.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/aitextresponsecardlong.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article></div>
+    </section>
+<section class="group" id="g-layout">
+      <h2>Layout</h2>
+      <div class="grid"><article class="card" id="c-layoutfillmaxrectangle">
+  <a class="shot" href="#d-layoutfillmaxrectangle" aria-label="Zoom LayoutFillMaxRectangle"><img loading="lazy" src="images/layoutfillmaxrectangle/ideal__default__compact.png" alt="LayoutFillMaxRectangle" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-layoutfillmaxrectangle">LayoutFillMaxRectangle</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/layoutfillmaxrectangle.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/layoutfillmaxrectangle.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-layoutpagerscreen">
+  <a class="shot" href="#d-layoutpagerscreen" aria-label="Zoom LayoutPagerScreen"><img loading="lazy" src="images/layoutpagerscreen/ideal__default__compact.png" alt="LayoutPagerScreen" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-layoutpagerscreen">LayoutPagerScreen</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/layoutpagerscreen.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/layoutpagerscreen.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    
+  </div>
+</article>
+<article class="card" id="c-layoutscalinglazycolumn">
+  <a class="shot" href="#d-layoutscalinglazycolumn" aria-label="Zoom LayoutScalingLazyColumn"><img loading="lazy" src="images/layoutscalinglazycolumn/ideal__default__compact.png" alt="LayoutScalingLazyColumn" /></a>
+  <div class="meta">
+    <h3><a class="ctitle" href="#d-layoutscalinglazycolumn">LayoutScalingLazyColumn</a></h3>
+    <div class="sub">454×454<a class="wf" href="wireframes/layoutscalinglazycolumn.svg" target="_blank" rel="noopener">wireframe ↗</a><a class="wf" href="figma/layoutscalinglazycolumn.svg" target="_blank" rel="noopener">figma svg ↗</a></div>
+    <div class="greenlines" title="accessibility greenlines"><span class="chip chip--info">button</span><span class="chip chip--info">button</span><span class="chip chip--info">button</span></div>
+  </div>
+</article></div>
+    </section></main>
+</div>
+<div class="detail" id="d-materialbutton" role="dialog" aria-label="MaterialButton">
+  <a class="detail-scrim" href="#c-materialbutton" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-materialbutton" aria-label="Close">×</a>
+    <h3>MaterialButton</h3>
+    <div class="detail-caption">Button</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/materialbutton/ideal__default__compact.png" alt="MaterialButton default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-materialbuttonlarge" role="dialog" aria-label="MaterialButtonLarge">
+  <a class="detail-scrim" href="#c-materialbuttonlarge" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-materialbuttonlarge" aria-label="Close">×</a>
+    <h3>MaterialButtonLarge</h3>
+    <div class="detail-caption">Button Large</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/materialbuttonlarge/ideal__default__compact.png" alt="MaterialButtonLarge default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-materialchip" role="dialog" aria-label="MaterialChip">
+  <a class="detail-scrim" href="#c-materialchip" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-materialchip" aria-label="Close">×</a>
+    <h3>MaterialChip</h3>
+    <div class="detail-caption">Chip</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/materialchip/ideal__default__compact.png" alt="MaterialChip default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-materialchipdisabled" role="dialog" aria-label="MaterialChipDisabled">
+  <a class="detail-scrim" href="#c-materialchipdisabled" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-materialchipdisabled" aria-label="Close">×</a>
+    <h3>MaterialChipDisabled</h3>
+    <div class="detail-caption">Chip Disabled</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/materialchipdisabled/ideal__default__compact.png" alt="MaterialChipDisabled default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-materialchiptruncated" role="dialog" aria-label="MaterialChipTruncated">
+  <a class="detail-scrim" href="#c-materialchiptruncated" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-materialchiptruncated" aria-label="Close">×</a>
+    <h3>MaterialChipTruncated</h3>
+    <div class="detail-caption">Chip Truncated</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/materialchiptruncated/ideal__default__compact.png" alt="MaterialChipTruncated default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-materialchipwithsecondarylabel" role="dialog" aria-label="MaterialChipWithSecondaryLabel">
+  <a class="detail-scrim" href="#c-materialchipwithsecondarylabel" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-materialchipwithsecondarylabel" aria-label="Close">×</a>
+    <h3>MaterialChipWithSecondaryLabel</h3>
+    <div class="detail-caption">Chip With Secondary Label</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/materialchipwithsecondarylabel/ideal__default__compact.png" alt="MaterialChipWithSecondaryLabel default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-materialcompactchip" role="dialog" aria-label="MaterialCompactChip">
+  <a class="detail-scrim" href="#c-materialcompactchip" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-materialcompactchip" aria-label="Close">×</a>
+    <h3>MaterialCompactChip</h3>
+    <div class="detail-caption">Compact Chip</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/materialcompactchip/ideal__default__compact.png" alt="MaterialCompactChip default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-materialoutlinedchip" role="dialog" aria-label="MaterialOutlinedChip">
+  <a class="detail-scrim" href="#c-materialoutlinedchip" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-materialoutlinedchip" aria-label="Close">×</a>
+    <h3>MaterialOutlinedChip</h3>
+    <div class="detail-caption">Outlined Chip</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/materialoutlinedchip/ideal__default__compact.png" alt="MaterialOutlinedChip default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-materialoutlinedcompactchip" role="dialog" aria-label="MaterialOutlinedCompactChip">
+  <a class="detail-scrim" href="#c-materialoutlinedcompactchip" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-materialoutlinedcompactchip" aria-label="Close">×</a>
+    <h3>MaterialOutlinedCompactChip</h3>
+    <div class="detail-caption">Outlined Compact Chip</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/materialoutlinedcompactchip/ideal__default__compact.png" alt="MaterialOutlinedCompactChip default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-materialresponsivelistheader" role="dialog" aria-label="MaterialResponsiveListHeader">
+  <a class="detail-scrim" href="#c-materialresponsivelistheader" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-materialresponsivelistheader" aria-label="Close">×</a>
+    <h3>MaterialResponsiveListHeader</h3>
+    <div class="detail-caption">Responsive List Header</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/materialresponsivelistheader/ideal__default__compact.png" alt="MaterialResponsiveListHeader default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-materialsecondarytitle" role="dialog" aria-label="MaterialSecondaryTitle">
+  <a class="detail-scrim" href="#c-materialsecondarytitle" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-materialsecondarytitle" aria-label="Close">×</a>
+    <h3>MaterialSecondaryTitle</h3>
+    <div class="detail-caption">Secondary Title</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/materialsecondarytitle/ideal__default__compact.png" alt="MaterialSecondaryTitle default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-materialsplittogglechip" role="dialog" aria-label="MaterialSplitToggleChip">
+  <a class="detail-scrim" href="#c-materialsplittogglechip" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-materialsplittogglechip" aria-label="Close">×</a>
+    <h3>MaterialSplitToggleChip</h3>
+    <div class="detail-caption">Split Toggle Chip</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/materialsplittogglechip/ideal__default__compact.png" alt="MaterialSplitToggleChip default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-materialtitle" role="dialog" aria-label="MaterialTitle">
+  <a class="detail-scrim" href="#c-materialtitle" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-materialtitle" aria-label="Close">×</a>
+    <h3>MaterialTitle</h3>
+    <div class="detail-caption">Title</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/materialtitle/ideal__default__compact.png" alt="MaterialTitle default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-materialtogglebutton" role="dialog" aria-label="MaterialToggleButton">
+  <a class="detail-scrim" href="#c-materialtogglebutton" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-materialtogglebutton" aria-label="Close">×</a>
+    <h3>MaterialToggleButton</h3>
+    <div class="detail-caption">Toggle Button</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/materialtogglebutton/ideal__default__compact.png" alt="MaterialToggleButton default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-materialtogglechipradio" role="dialog" aria-label="MaterialToggleChipRadio">
+  <a class="detail-scrim" href="#c-materialtogglechipradio" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-materialtogglechipradio" aria-label="Close">×</a>
+    <h3>MaterialToggleChipRadio</h3>
+    <div class="detail-caption">Toggle Chip Radio</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/materialtogglechipradio/ideal__default__compact.png" alt="MaterialToggleChipRadio default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-materialtogglechipswitch" role="dialog" aria-label="MaterialToggleChipSwitch">
+  <a class="detail-scrim" href="#c-materialtogglechipswitch" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-materialtogglechipswitch" aria-label="Close">×</a>
+    <h3>MaterialToggleChipSwitch</h3>
+    <div class="detail-caption">Toggle Chip Switch</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/materialtogglechipswitch/ideal__default__compact.png" alt="MaterialToggleChipSwitch default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-mediaartwork" role="dialog" aria-label="MediaArtwork">
+  <a class="detail-scrim" href="#c-mediaartwork" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-mediaartwork" aria-label="Close">×</a>
+    <h3>MediaArtwork</h3>
+    <div class="detail-caption">Artwork</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/mediaartwork/ideal__default__compact.png" alt="MediaArtwork default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-mediacontrolbuttonspausedatqueueend" role="dialog" aria-label="MediaControlButtonsPausedAtQueueEnd">
+  <a class="detail-scrim" href="#c-mediacontrolbuttonspausedatqueueend" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-mediacontrolbuttonspausedatqueueend" aria-label="Close">×</a>
+    <h3>MediaControlButtonsPausedAtQueueEnd</h3>
+    <div class="detail-caption">Control Buttons Paused At Queue End</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/mediacontrolbuttonspausedatqueueend/ideal__default__compact.png" alt="MediaControlButtonsPausedAtQueueEnd default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-mediacontrolbuttonsplaying" role="dialog" aria-label="MediaControlButtonsPlaying">
+  <a class="detail-scrim" href="#c-mediacontrolbuttonsplaying" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-mediacontrolbuttonsplaying" aria-label="Close">×</a>
+    <h3>MediaControlButtonsPlaying</h3>
+    <div class="detail-caption">Control Buttons Playing</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/mediacontrolbuttonsplaying/ideal__default__compact.png" alt="MediaControlButtonsPlaying default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-mediadetailsbutton" role="dialog" aria-label="MediaDetailsButton">
+  <a class="detail-scrim" href="#c-mediadetailsbutton" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-mediadetailsbutton" aria-label="Close">×</a>
+    <h3>MediaDetailsButton</h3>
+    <div class="detail-caption">Details Button</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/mediadetailsbutton/ideal__default__compact.png" alt="MediaDetailsButton default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-mediadetailsbuttonwithartwork" role="dialog" aria-label="MediaDetailsButtonWithArtwork">
+  <a class="detail-scrim" href="#c-mediadetailsbuttonwithartwork" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-mediadetailsbuttonwithartwork" aria-label="Close">×</a>
+    <h3>MediaDetailsButtonWithArtwork</h3>
+    <div class="detail-caption">Details Button With Artwork</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/mediadetailsbuttonwithartwork/ideal__default__compact.png" alt="MediaDetailsButtonWithArtwork default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-mediaentityscreen" role="dialog" aria-label="MediaEntityScreen">
+  <a class="detail-scrim" href="#c-mediaentityscreen" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-mediaentityscreen" aria-label="Close">×</a>
+    <h3>MediaEntityScreen</h3>
+    <div class="detail-caption">Entity Screen</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/mediaentityscreen/ideal__default__compact.png" alt="MediaEntityScreen default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-mediaentityscreenwithartwork" role="dialog" aria-label="MediaEntityScreenWithArtwork">
+  <a class="detail-scrim" href="#c-mediaentityscreenwithartwork" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-mediaentityscreenwithartwork" aria-label="Close">×</a>
+    <h3>MediaEntityScreenWithArtwork</h3>
+    <div class="detail-caption">Entity Screen With Artwork</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/mediaentityscreenwithartwork/ideal__default__compact.png" alt="MediaEntityScreenWithArtwork default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-medialoadingmediadisplay" role="dialog" aria-label="MediaLoadingMediaDisplay">
+  <a class="detail-scrim" href="#c-medialoadingmediadisplay" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-medialoadingmediadisplay" aria-label="Close">×</a>
+    <h3>MediaLoadingMediaDisplay</h3>
+    <div class="detail-caption">Loading Media Display</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/medialoadingmediadisplay/ideal__default__compact.png" alt="MediaLoadingMediaDisplay default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-mediamarqueetextmediadisplay" role="dialog" aria-label="MediaMarqueeTextMediaDisplay">
+  <a class="detail-scrim" href="#c-mediamarqueetextmediadisplay" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-mediamarqueetextmediadisplay" aria-label="Close">×</a>
+    <h3>MediaMarqueeTextMediaDisplay</h3>
+    <div class="detail-caption">Marquee Text Media Display</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/mediamarqueetextmediadisplay/ideal__default__compact.png" alt="MediaMarqueeTextMediaDisplay default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-mediamarqueetextmediadisplaylongtitle" role="dialog" aria-label="MediaMarqueeTextMediaDisplayLongTitle">
+  <a class="detail-scrim" href="#c-mediamarqueetextmediadisplaylongtitle" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-mediamarqueetextmediadisplaylongtitle" aria-label="Close">×</a>
+    <h3>MediaMarqueeTextMediaDisplayLongTitle</h3>
+    <div class="detail-caption">Marquee Text Media Display Long Title</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/mediamarqueetextmediadisplaylongtitle/ideal__default__compact.png" alt="MediaMarqueeTextMediaDisplayLongTitle default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-mediamessagemediadisplay" role="dialog" aria-label="MediaMessageMediaDisplay">
+  <a class="detail-scrim" href="#c-mediamessagemediadisplay" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-mediamessagemediadisplay" aria-label="Close">×</a>
+    <h3>MediaMessageMediaDisplay</h3>
+    <div class="detail-caption">Message Media Display</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/mediamessagemediadisplay/ideal__default__compact.png" alt="MediaMessageMediaDisplay default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-medianothingplayingdisplay" role="dialog" aria-label="MediaNothingPlayingDisplay">
+  <a class="detail-scrim" href="#c-medianothingplayingdisplay" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-medianothingplayingdisplay" aria-label="Close">×</a>
+    <h3>MediaNothingPlayingDisplay</h3>
+    <div class="detail-caption">Nothing Playing Display</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/medianothingplayingdisplay/ideal__default__compact.png" alt="MediaNothingPlayingDisplay default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-mediaplaceholderbutton" role="dialog" aria-label="MediaPlaceholderButton">
+  <a class="detail-scrim" href="#c-mediaplaceholderbutton" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-mediaplaceholderbutton" aria-label="Close">×</a>
+    <h3>MediaPlaceholderButton</h3>
+    <div class="detail-caption">Placeholder Button</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/mediaplaceholderbutton/ideal__default__compact.png" alt="MediaPlaceholderButton default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-mediaplaypausebuttondisabled" role="dialog" aria-label="MediaPlayPauseButtonDisabled">
+  <a class="detail-scrim" href="#c-mediaplaypausebuttondisabled" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-mediaplaypausebuttondisabled" aria-label="Close">×</a>
+    <h3>MediaPlayPauseButtonDisabled</h3>
+    <div class="detail-caption">Play Pause Button Disabled</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/mediaplaypausebuttondisabled/ideal__default__compact.png" alt="MediaPlayPauseButtonDisabled default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-mediaplaypausebuttonpaused" role="dialog" aria-label="MediaPlayPauseButtonPaused">
+  <a class="detail-scrim" href="#c-mediaplaypausebuttonpaused" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-mediaplaypausebuttonpaused" aria-label="Close">×</a>
+    <h3>MediaPlayPauseButtonPaused</h3>
+    <div class="detail-caption">Play Pause Button Paused</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/mediaplaypausebuttonpaused/ideal__default__compact.png" alt="MediaPlayPauseButtonPaused default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-mediaplaypausebuttonplaying" role="dialog" aria-label="MediaPlayPauseButtonPlaying">
+  <a class="detail-scrim" href="#c-mediaplaypausebuttonplaying" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-mediaplaypausebuttonplaying" aria-label="Close">×</a>
+    <h3>MediaPlayPauseButtonPlaying</h3>
+    <div class="detail-caption">Play Pause Button Playing</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/mediaplaypausebuttonplaying/ideal__default__compact.png" alt="MediaPlayPauseButtonPlaying default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-authwearguestmodebutton" role="dialog" aria-label="AuthWearGuestModeButton">
+  <a class="detail-scrim" href="#c-authwearguestmodebutton" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-authwearguestmodebutton" aria-label="Close">×</a>
+    <h3>AuthWearGuestModeButton</h3>
+    <div class="detail-caption">Guest Mode Button</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/authwearguestmodebutton/ideal__default__compact.png" alt="AuthWearGuestModeButton default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-authwearselectaccountscreen" role="dialog" aria-label="AuthWearSelectAccountScreen">
+  <a class="detail-scrim" href="#c-authwearselectaccountscreen" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-authwearselectaccountscreen" aria-label="Close">×</a>
+    <h3>AuthWearSelectAccountScreen</h3>
+    <div class="detail-caption">Select Account Screen</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/authwearselectaccountscreen/ideal__default__compact.png" alt="AuthWearSelectAccountScreen default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-authwearselectaccountscreenemailonly" role="dialog" aria-label="AuthWearSelectAccountScreenEmailOnly">
+  <a class="detail-scrim" href="#c-authwearselectaccountscreenemailonly" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-authwearselectaccountscreenemailonly" aria-label="Close">×</a>
+    <h3>AuthWearSelectAccountScreenEmailOnly</h3>
+    <div class="detail-caption">Select Account Screen Email Only</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/authwearselectaccountscreenemailonly/ideal__default__compact.png" alt="AuthWearSelectAccountScreenEmailOnly default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-authwearselectaccountscreenlongemail" role="dialog" aria-label="AuthWearSelectAccountScreenLongEmail">
+  <a class="detail-scrim" href="#c-authwearselectaccountscreenlongemail" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-authwearselectaccountscreenlongemail" aria-label="Close">×</a>
+    <h3>AuthWearSelectAccountScreenLongEmail</h3>
+    <div class="detail-caption">Select Account Screen Long Email</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/authwearselectaccountscreenlongemail/ideal__default__compact.png" alt="AuthWearSelectAccountScreenLongEmail default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-authwearselectaccountscreensingle" role="dialog" aria-label="AuthWearSelectAccountScreenSingle">
+  <a class="detail-scrim" href="#c-authwearselectaccountscreensingle" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-authwearselectaccountscreensingle" aria-label="Close">×</a>
+    <h3>AuthWearSelectAccountScreenSingle</h3>
+    <div class="detail-caption">Select Account Screen Single</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/authwearselectaccountscreensingle/ideal__default__compact.png" alt="AuthWearSelectAccountScreenSingle default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-authwearsigninbutton" role="dialog" aria-label="AuthWearSignInButton">
+  <a class="detail-scrim" href="#c-authwearsigninbutton" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-authwearsigninbutton" aria-label="Close">×</a>
+    <h3>AuthWearSignInButton</h3>
+    <div class="detail-caption">Sign In Button</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/authwearsigninbutton/ideal__default__compact.png" alt="AuthWearSignInButton default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-authwearsigninbuttondisabled" role="dialog" aria-label="AuthWearSignInButtonDisabled">
+  <a class="detail-scrim" href="#c-authwearsigninbuttondisabled" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-authwearsigninbuttondisabled" aria-label="Close">×</a>
+    <h3>AuthWearSignInButtonDisabled</h3>
+    <div class="detail-caption">Sign In Button Disabled</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/authwearsigninbuttondisabled/ideal__default__compact.png" alt="AuthWearSignInButtonDisabled default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-authwearsigninplaceholderscreen" role="dialog" aria-label="AuthWearSignInPlaceholderScreen">
+  <a class="detail-scrim" href="#c-authwearsigninplaceholderscreen" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-authwearsigninplaceholderscreen" aria-label="Close">×</a>
+    <h3>AuthWearSignInPlaceholderScreen</h3>
+    <div class="detail-caption">Sign In Placeholder Screen</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/authwearsigninplaceholderscreen/ideal__default__compact.png" alt="AuthWearSignInPlaceholderScreen default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-authwearsigninpromptscreen" role="dialog" aria-label="AuthWearSignInPromptScreen">
+  <a class="detail-scrim" href="#c-authwearsigninpromptscreen" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-authwearsigninpromptscreen" aria-label="Close">×</a>
+    <h3>AuthWearSignInPromptScreen</h3>
+    <div class="detail-caption">Sign In Prompt Screen</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/authwearsigninpromptscreen/ideal__default__compact.png" alt="AuthWearSignInPromptScreen default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-authwearsigninpromptscreenloading" role="dialog" aria-label="AuthWearSignInPromptScreenLoading">
+  <a class="detail-scrim" href="#c-authwearsigninpromptscreenloading" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-authwearsigninpromptscreenloading" aria-label="Close">×</a>
+    <h3>AuthWearSignInPromptScreenLoading</h3>
+    <div class="detail-caption">Sign In Prompt Screen Loading</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/authwearsigninpromptscreenloading/ideal__default__compact.png" alt="AuthWearSignInPromptScreenLoading default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-authwearsignedinconfirmationdialog" role="dialog" aria-label="AuthWearSignedInConfirmationDialog">
+  <a class="detail-scrim" href="#c-authwearsignedinconfirmationdialog" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-authwearsignedinconfirmationdialog" aria-label="Close">×</a>
+    <h3>AuthWearSignedInConfirmationDialog</h3>
+    <div class="detail-caption">Signed In Confirmation Dialog</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/authwearsignedinconfirmationdialog/ideal__default__compact.png" alt="AuthWearSignedInConfirmationDialog default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-authwearsignedinconfirmationdialogemailonly" role="dialog" aria-label="AuthWearSignedInConfirmationDialogEmailOnly">
+  <a class="detail-scrim" href="#c-authwearsignedinconfirmationdialogemailonly" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-authwearsignedinconfirmationdialogemailonly" aria-label="Close">×</a>
+    <h3>AuthWearSignedInConfirmationDialogEmailOnly</h3>
+    <div class="detail-caption">Signed In Confirmation Dialog Email Only</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/authwearsignedinconfirmationdialogemailonly/ideal__default__compact.png" alt="AuthWearSignedInConfirmationDialogEmailOnly default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-authwearsignedinconfirmationdialogtruncated" role="dialog" aria-label="AuthWearSignedInConfirmationDialogTruncated">
+  <a class="detail-scrim" href="#c-authwearsignedinconfirmationdialogtruncated" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-authwearsignedinconfirmationdialogtruncated" aria-label="Close">×</a>
+    <h3>AuthWearSignedInConfirmationDialogTruncated</h3>
+    <div class="detail-caption">Signed In Confirmation Dialog Truncated</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/authwearsignedinconfirmationdialogtruncated/ideal__default__compact.png" alt="AuthWearSignedInConfirmationDialogTruncated default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-authmobilesigninbottomsheet" role="dialog" aria-label="AuthMobileSignInBottomSheet">
+  <a class="detail-scrim" href="#c-authmobilesigninbottomsheet" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-authmobilesigninbottomsheet" aria-label="Close">×</a>
+    <h3>AuthMobileSignInBottomSheet</h3>
+    <div class="detail-caption">Sign In Bottom Sheet</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/authmobilesigninbottomsheet/ideal__default__compact.png" alt="AuthMobileSignInBottomSheet default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-authmobilesigninbottomsheetcustomlabels" role="dialog" aria-label="AuthMobileSignInBottomSheetCustomLabels">
+  <a class="detail-scrim" href="#c-authmobilesigninbottomsheetcustomlabels" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-authmobilesigninbottomsheetcustomlabels" aria-label="Close">×</a>
+    <h3>AuthMobileSignInBottomSheetCustomLabels</h3>
+    <div class="detail-caption">Sign In Bottom Sheet Custom Labels</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/authmobilesigninbottomsheetcustomlabels/ideal__default__compact.png" alt="AuthMobileSignInBottomSheetCustomLabels default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-datalayermobileinstallappbottomsheet" role="dialog" aria-label="DataLayerMobileInstallAppBottomSheet">
+  <a class="detail-scrim" href="#c-datalayermobileinstallappbottomsheet" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-datalayermobileinstallappbottomsheet" aria-label="Close">×</a>
+    <h3>DataLayerMobileInstallAppBottomSheet</h3>
+    <div class="detail-caption">Install App Bottom Sheet</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/datalayermobileinstallappbottomsheet/ideal__default__compact.png" alt="DataLayerMobileInstallAppBottomSheet default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-datalayermobileinstalltilebottomsheet" role="dialog" aria-label="DataLayerMobileInstallTileBottomSheet">
+  <a class="detail-scrim" href="#c-datalayermobileinstalltilebottomsheet" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-datalayermobileinstalltilebottomsheet" aria-label="Close">×</a>
+    <h3>DataLayerMobileInstallTileBottomSheet</h3>
+    <div class="detail-caption">Install Tile Bottom Sheet</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/datalayermobileinstalltilebottomsheet/ideal__default__compact.png" alt="DataLayerMobileInstallTileBottomSheet default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-datalayermobilereengagebottomsheet" role="dialog" aria-label="DataLayerMobileReEngageBottomSheet">
+  <a class="detail-scrim" href="#c-datalayermobilereengagebottomsheet" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-datalayermobilereengagebottomsheet" aria-label="Close">×</a>
+    <h3>DataLayerMobileReEngageBottomSheet</h3>
+    <div class="detail-caption">Re Engage Bottom Sheet</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/datalayermobilereengagebottomsheet/ideal__default__compact.png" alt="DataLayerMobileReEngageBottomSheet default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-composablesdatepicker" role="dialog" aria-label="ComposablesDatePicker">
+  <a class="detail-scrim" href="#c-composablesdatepicker" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-composablesdatepicker" aria-label="Close">×</a>
+    <h3>ComposablesDatePicker</h3>
+    <div class="detail-caption">Date Picker</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/composablesdatepicker/ideal__default__compact.png" alt="ComposablesDatePicker default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-composablesmarqueetext" role="dialog" aria-label="ComposablesMarqueeText">
+  <a class="detail-scrim" href="#c-composablesmarqueetext" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-composablesmarqueetext" aria-label="Close">×</a>
+    <h3>ComposablesMarqueeText</h3>
+    <div class="detail-caption">Marquee Text</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/composablesmarqueetext/ideal__default__compact.png" alt="ComposablesMarqueeText default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-composablesplaceholderchip" role="dialog" aria-label="ComposablesPlaceholderChip">
+  <a class="detail-scrim" href="#c-composablesplaceholderchip" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-composablesplaceholderchip" aria-label="Close">×</a>
+    <h3>ComposablesPlaceholderChip</h3>
+    <div class="detail-caption">Placeholder Chip</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/composablesplaceholderchip/ideal__default__compact.png" alt="ComposablesPlaceholderChip default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-composablessegmentedprogressindicator" role="dialog" aria-label="ComposablesSegmentedProgressIndicator">
+  <a class="detail-scrim" href="#c-composablessegmentedprogressindicator" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-composablessegmentedprogressindicator" aria-label="Close">×</a>
+    <h3>ComposablesSegmentedProgressIndicator</h3>
+    <div class="detail-caption">Segmented Progress Indicator</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/composablessegmentedprogressindicator/ideal__default__compact.png" alt="ComposablesSegmentedProgressIndicator default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-composablessegmentedprogressindicatorcomplete" role="dialog" aria-label="ComposablesSegmentedProgressIndicatorComplete">
+  <a class="detail-scrim" href="#c-composablessegmentedprogressindicatorcomplete" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-composablessegmentedprogressindicatorcomplete" aria-label="Close">×</a>
+    <h3>ComposablesSegmentedProgressIndicatorComplete</h3>
+    <div class="detail-caption">Segmented Progress Indicator Complete</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/composablessegmentedprogressindicatorcomplete/ideal__default__compact.png" alt="ComposablesSegmentedProgressIndicatorComplete default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-composablessegmentedprogressindicatorempty" role="dialog" aria-label="ComposablesSegmentedProgressIndicatorEmpty">
+  <a class="detail-scrim" href="#c-composablessegmentedprogressindicatorempty" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-composablessegmentedprogressindicatorempty" aria-label="Close">×</a>
+    <h3>ComposablesSegmentedProgressIndicatorEmpty</h3>
+    <div class="detail-caption">Segmented Progress Indicator Empty</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/composablessegmentedprogressindicatorempty/ideal__default__compact.png" alt="ComposablesSegmentedProgressIndicatorEmpty default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-composablessquaresegmentedprogressindicator" role="dialog" aria-label="ComposablesSquareSegmentedProgressIndicator">
+  <a class="detail-scrim" href="#c-composablessquaresegmentedprogressindicator" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-composablessquaresegmentedprogressindicator" aria-label="Close">×</a>
+    <h3>ComposablesSquareSegmentedProgressIndicator</h3>
+    <div class="detail-caption">Square Segmented Progress Indicator</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/composablessquaresegmentedprogressindicator/ideal__default__compact.png" alt="ComposablesSquareSegmentedProgressIndicator default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-composablestimepicker" role="dialog" aria-label="ComposablesTimePicker">
+  <a class="detail-scrim" href="#c-composablestimepicker" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-composablestimepicker" aria-label="Close">×</a>
+    <h3>ComposablesTimePicker</h3>
+    <div class="detail-caption">Time Picker</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/composablestimepicker/ideal__default__compact.png" alt="ComposablesTimePicker default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-composablestimepickernoseconds" role="dialog" aria-label="ComposablesTimePickerNoSeconds">
+  <a class="detail-scrim" href="#c-composablestimepickernoseconds" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-composablestimepickernoseconds" aria-label="Close">×</a>
+    <h3>ComposablesTimePickerNoSeconds</h3>
+    <div class="detail-caption">Time Picker No Seconds</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/composablestimepickernoseconds/ideal__default__compact.png" alt="ComposablesTimePickerNoSeconds default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-composablestimepickerwith12hourclock" role="dialog" aria-label="ComposablesTimePickerWith12HourClock">
+  <a class="detail-scrim" href="#c-composablestimepickerwith12hourclock" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-composablestimepickerwith12hourclock" aria-label="Close">×</a>
+    <h3>ComposablesTimePickerWith12HourClock</h3>
+    <div class="detail-caption">Time Picker With12 Hour Clock</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/composablestimepickerwith12hourclock/ideal__default__compact.png" alt="ComposablesTimePickerWith12HourClock default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-healthformatteddurationtext" role="dialog" aria-label="HealthFormattedDurationText">
+  <a class="detail-scrim" href="#c-healthformatteddurationtext" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-healthformatteddurationtext" aria-label="Close">×</a>
+    <h3>HealthFormattedDurationText</h3>
+    <div class="detail-caption">Formatted Duration Text</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/healthformatteddurationtext/ideal__default__compact.png" alt="HealthFormattedDurationText default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-healthformatteddurationtextsubminute" role="dialog" aria-label="HealthFormattedDurationTextSubMinute">
+  <a class="detail-scrim" href="#c-healthformatteddurationtextsubminute" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-healthformatteddurationtextsubminute" aria-label="Close">×</a>
+    <h3>HealthFormattedDurationTextSubMinute</h3>
+    <div class="detail-caption">Formatted Duration Text Sub Minute</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/healthformatteddurationtextsubminute/ideal__default__compact.png" alt="HealthFormattedDurationTextSubMinute default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-healthmetricdisplay" role="dialog" aria-label="HealthMetricDisplay">
+  <a class="detail-scrim" href="#c-healthmetricdisplay" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-healthmetricdisplay" aria-label="Close">×</a>
+    <h3>HealthMetricDisplay</h3>
+    <div class="detail-caption">Metric Display</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/healthmetricdisplay/ideal__default__compact.png" alt="HealthMetricDisplay default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-healthmetricsscreenfour" role="dialog" aria-label="HealthMetricsScreenFour">
+  <a class="detail-scrim" href="#c-healthmetricsscreenfour" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-healthmetricsscreenfour" aria-label="Close">×</a>
+    <h3>HealthMetricsScreenFour</h3>
+    <div class="detail-caption">Metrics Screen Four</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/healthmetricsscreenfour/ideal__default__compact.png" alt="HealthMetricsScreenFour default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-healthmetricsscreensingle" role="dialog" aria-label="HealthMetricsScreenSingle">
+  <a class="detail-scrim" href="#c-healthmetricsscreensingle" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-healthmetricsscreensingle" aria-label="Close">×</a>
+    <h3>HealthMetricsScreenSingle</h3>
+    <div class="detail-caption">Metrics Screen Single</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/healthmetricsscreensingle/ideal__default__compact.png" alt="HealthMetricsScreenSingle default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-healthmetricsscreentwo" role="dialog" aria-label="HealthMetricsScreenTwo">
+  <a class="detail-scrim" href="#c-healthmetricsscreentwo" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-healthmetricsscreentwo" aria-label="Close">×</a>
+    <h3>HealthMetricsScreenTwo</h3>
+    <div class="detail-caption">Metrics Screen Two</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/healthmetricsscreentwo/ideal__default__compact.png" alt="HealthMetricsScreenTwo default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-healthmetricsscreenwidevalues" role="dialog" aria-label="HealthMetricsScreenWideValues">
+  <a class="detail-scrim" href="#c-healthmetricsscreenwidevalues" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-healthmetricsscreenwidevalues" aria-label="Close">×</a>
+    <h3>HealthMetricsScreenWideValues</h3>
+    <div class="detail-caption">Metrics Screen Wide Values</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/healthmetricsscreenwidevalues/ideal__default__compact.png" alt="HealthMetricsScreenWideValues default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-audiovolumelevelindicator" role="dialog" aria-label="AudioVolumeLevelIndicator">
+  <a class="detail-scrim" href="#c-audiovolumelevelindicator" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-audiovolumelevelindicator" aria-label="Close">×</a>
+    <h3>AudioVolumeLevelIndicator</h3>
+    <div class="detail-caption">Volume Level Indicator</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/audiovolumelevelindicator/ideal__default__compact.png" alt="AudioVolumeLevelIndicator default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-audiovolumescreen" role="dialog" aria-label="AudioVolumeScreen">
+  <a class="detail-scrim" href="#c-audiovolumescreen" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-audiovolumescreen" aria-label="Close">×</a>
+    <h3>AudioVolumeScreen</h3>
+    <div class="detail-caption">Volume Screen</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/audiovolumescreen/ideal__default__compact.png" alt="AudioVolumeScreen default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-audiovolumescreenmax" role="dialog" aria-label="AudioVolumeScreenMax">
+  <a class="detail-scrim" href="#c-audiovolumescreenmax" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-audiovolumescreenmax" aria-label="Close">×</a>
+    <h3>AudioVolumeScreenMax</h3>
+    <div class="detail-caption">Volume Screen Max</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/audiovolumescreenmax/ideal__default__compact.png" alt="AudioVolumeScreenMax default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-audiovolumescreenmuted" role="dialog" aria-label="AudioVolumeScreenMuted">
+  <a class="detail-scrim" href="#c-audiovolumescreenmuted" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-audiovolumescreenmuted" aria-label="Close">×</a>
+    <h3>AudioVolumeScreenMuted</h3>
+    <div class="detail-caption">Volume Screen Muted</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/audiovolumescreenmuted/ideal__default__compact.png" alt="AudioVolumeScreenMuted default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-audiovolumescreennotconnected" role="dialog" aria-label="AudioVolumeScreenNotConnected">
+  <a class="detail-scrim" href="#c-audiovolumescreennotconnected" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-audiovolumescreennotconnected" aria-label="Close">×</a>
+    <h3>AudioVolumeScreenNotConnected</h3>
+    <div class="detail-caption">Volume Screen Not Connected</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/audiovolumescreennotconnected/ideal__default__compact.png" alt="AudioVolumeScreenNotConnected default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-aifailedresponsechip" role="dialog" aria-label="AiFailedResponseChip">
+  <a class="detail-scrim" href="#c-aifailedresponsechip" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-aifailedresponsechip" aria-label="Close">×</a>
+    <h3>AiFailedResponseChip</h3>
+    <div class="detail-caption">Failed Response Chip</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/aifailedresponsechip/ideal__default__compact.png" alt="AiFailedResponseChip default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-airesponseinprogresscard" role="dialog" aria-label="AiResponseInProgressCard">
+  <a class="detail-scrim" href="#c-airesponseinprogresscard" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-airesponseinprogresscard" aria-label="Close">×</a>
+    <h3>AiResponseInProgressCard</h3>
+    <div class="detail-caption">Response In Progress Card</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/airesponseinprogresscard/ideal__default__compact.png" alt="AiResponseInProgressCard default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-aitextpromptdisplay" role="dialog" aria-label="AiTextPromptDisplay">
+  <a class="detail-scrim" href="#c-aitextpromptdisplay" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-aitextpromptdisplay" aria-label="Close">×</a>
+    <h3>AiTextPromptDisplay</h3>
+    <div class="detail-caption">Text Prompt Display</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/aitextpromptdisplay/ideal__default__compact.png" alt="AiTextPromptDisplay default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-aitextresponsecard" role="dialog" aria-label="AiTextResponseCard">
+  <a class="detail-scrim" href="#c-aitextresponsecard" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-aitextresponsecard" aria-label="Close">×</a>
+    <h3>AiTextResponseCard</h3>
+    <div class="detail-caption">Text Response Card</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/aitextresponsecard/ideal__default__compact.png" alt="AiTextResponseCard default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-aitextresponsecardlong" role="dialog" aria-label="AiTextResponseCardLong">
+  <a class="detail-scrim" href="#c-aitextresponsecardlong" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-aitextresponsecardlong" aria-label="Close">×</a>
+    <h3>AiTextResponseCardLong</h3>
+    <div class="detail-caption">Text Response Card Long</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/aitextresponsecardlong/ideal__default__compact.png" alt="AiTextResponseCardLong default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-layoutfillmaxrectangle" role="dialog" aria-label="LayoutFillMaxRectangle">
+  <a class="detail-scrim" href="#c-layoutfillmaxrectangle" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-layoutfillmaxrectangle" aria-label="Close">×</a>
+    <h3>LayoutFillMaxRectangle</h3>
+    <div class="detail-caption">Fill Max Rectangle</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/layoutfillmaxrectangle/ideal__default__compact.png" alt="LayoutFillMaxRectangle default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-layoutpagerscreen" role="dialog" aria-label="LayoutPagerScreen">
+  <a class="detail-scrim" href="#c-layoutpagerscreen" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-layoutpagerscreen" aria-label="Close">×</a>
+    <h3>LayoutPagerScreen</h3>
+    <div class="detail-caption">Pager Screen</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/layoutpagerscreen/ideal__default__compact.png" alt="LayoutPagerScreen default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<div class="detail" id="d-layoutscalinglazycolumn" role="dialog" aria-label="LayoutScalingLazyColumn">
+  <a class="detail-scrim" href="#c-layoutscalinglazycolumn" aria-label="Close"></a>
+  <div class="detail-panel">
+    <a class="detail-x" href="#c-layoutscalinglazycolumn" aria-label="Close">×</a>
+    <h3>LayoutScalingLazyColumn</h3>
+    <div class="detail-caption">Scaling Lazy Column</div>
+    <div class="detail-states"><figure class="state"><figcaption>default</figcaption><div class="state-shots"><div class="state-shot"><img loading="lazy" src="images/layoutscalinglazycolumn/ideal__default__compact.png" alt="LayoutScalingLazyColumn default" /><span>compact</span></div></div></figure></div>
+  </div>
+</div>
+<script>
+// Crop each component's hero (and its zoom-view default capture) to the component's content bbox,
+// read from its figma-svg's root translate + viewBox. A wear sticker rendered on a 454² device
+// canvas then displays cropped to the component instead of floating in an empty frame. A no-op for
+// close-cropped renders (the bbox already fills the frame) and for components with no figma-svg.
+(function () {
+  function parseBox(svgText) {
+    var t = /translate\(\s*(-?\d+)\s*,\s*(-?\d+)\s*\)/.exec(svgText);
+    var v = /viewBox="0 0 (\d+(?:\.\d+)?) (\d+(?:\.\d+)?)"/.exec(svgText);
+    if (!v) return null;
+    return { tx: t ? +t[1] : 0, ty: t ? +t[2] : 0, vw: +v[1], vh: +v[2] };
+  }
+  function frame(shot, box) {
+    var img = shot.querySelector("img");
+    if (!img) return;
+    function apply() {
+      var rw = img.naturalWidth || img.width, rh = img.naturalHeight || img.height;
+      if (!(rw > 0 && rh > 0)) return;
+      if (box.vw >= rw * 0.9 && box.vh >= rh * 0.9) return; // already close-cropped
+      var cap = 240, scale = Math.min(1, cap / Math.max(box.vw, box.vh));
+      var dw = Math.max(1, Math.round(box.vw * scale));
+      shot.classList.add("shot--framed");
+      // Size the window by aspect-ratio at its natural (capped) width, with max-width:100% so it
+      // shrinks to a narrow grid card instead of overflowing it; frame the render in PERCENTAGES of
+      // the box so the whole thing scales as one. (A fixed-px window overflowed the card and clipped
+      // wide components.) Height stays auto — the img keeps the render's aspect.
+      var pct = function (n, d) { return +(n / d * 100).toFixed(4); };
+      shot.style.width = dw + "px";
+      shot.style.aspectRatio = box.vw + " / " + box.vh;
+      img.style.width = pct(rw, box.vw) + "%";
+      // (tx,ty) is negative for a centred component, so it shifts the render to bring the component's
+      // top-left to the clip origin; as a % of the box axis it scales with the shrunk window.
+      img.style.left = pct(box.tx, box.vw) + "%";
+      img.style.top = pct(box.ty, box.vh) + "%";
+    }
+    if (img.complete) apply();
+    else img.addEventListener("load", apply);
+  }
+  document.querySelectorAll(".card").forEach(function (card) {
+    var link = card.querySelector('a.wf[href^="figma/"]');
+    if (!link) return;
+    var hero = card.querySelector("a.shot");
+    if (!hero) return;
+    fetch(link.getAttribute("href"))
+      .then(function (r) { return r.ok ? r.text() : null; })
+      .then(function (txt) {
+        if (!txt) return;
+        var box = parseBox(txt);
+        if (box) frame(hero, box);
+      })
+      .catch(function () {});
+  });
+})();
+</script>
+</body>
+</html>

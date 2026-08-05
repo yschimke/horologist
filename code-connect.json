@@ -1,0 +1,1497 @@
+{
+  "system": "horologist",
+  "title": "Horologist",
+  "label": "Compose",
+  "source": {
+    "repo": "yschimke/horologist",
+    "ref": "previews",
+    "module": ":catalog"
+  },
+  "generatedAt": "2026-08-05T23:07:25.665Z",
+  "mappings": [
+    {
+      "componentId": "MaterialButton",
+      "figmaLayerName": "MaterialButton",
+      "componentName": "ListContext",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MaterialButton",
+      "codeSnippet": "ListContext(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.ListContext"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/materialbutton.svg"
+    },
+    {
+      "componentId": "MaterialButtonLarge",
+      "figmaLayerName": "MaterialButtonLarge",
+      "componentName": "ListContext",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MaterialButtonLarge",
+      "codeSnippet": "ListContext(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.ListContext"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/materialbuttonlarge.svg"
+    },
+    {
+      "componentId": "MaterialChip",
+      "figmaLayerName": "MaterialChip",
+      "componentName": "ListContext",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MaterialChip",
+      "codeSnippet": "ListContext(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.ListContext"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/materialchip.svg"
+    },
+    {
+      "componentId": "MaterialChipDisabled",
+      "figmaLayerName": "MaterialChipDisabled",
+      "componentName": "ListContext",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MaterialChipDisabled",
+      "codeSnippet": "ListContext(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.ListContext"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/materialchipdisabled.svg"
+    },
+    {
+      "componentId": "MaterialChipTruncated",
+      "figmaLayerName": "MaterialChipTruncated",
+      "componentName": "ListContext",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MaterialChipTruncated",
+      "codeSnippet": "ListContext(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.ListContext"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/materialchiptruncated.svg"
+    },
+    {
+      "componentId": "MaterialChipWithSecondaryLabel",
+      "figmaLayerName": "MaterialChipWithSecondaryLabel",
+      "componentName": "ListContext",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MaterialChipWithSecondaryLabel",
+      "codeSnippet": "ListContext(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.ListContext"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/materialchipwithsecondarylabel.svg"
+    },
+    {
+      "componentId": "MaterialCompactChip",
+      "figmaLayerName": "MaterialCompactChip",
+      "componentName": "ListContext",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MaterialCompactChip",
+      "codeSnippet": "ListContext(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.ListContext"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/materialcompactchip.svg"
+    },
+    {
+      "componentId": "MaterialOutlinedChip",
+      "figmaLayerName": "MaterialOutlinedChip",
+      "componentName": "ListContext",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MaterialOutlinedChip",
+      "codeSnippet": "ListContext(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.ListContext"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/materialoutlinedchip.svg"
+    },
+    {
+      "componentId": "MaterialOutlinedCompactChip",
+      "figmaLayerName": "MaterialOutlinedCompactChip",
+      "componentName": "ListContext",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MaterialOutlinedCompactChip",
+      "codeSnippet": "ListContext(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.ListContext"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/materialoutlinedcompactchip.svg"
+    },
+    {
+      "componentId": "MaterialResponsiveListHeader",
+      "figmaLayerName": "MaterialResponsiveListHeader",
+      "componentName": "ListContext",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MaterialResponsiveListHeader",
+      "codeSnippet": "ListContext(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.ListContext"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/materialresponsivelistheader.svg"
+    },
+    {
+      "componentId": "MaterialSecondaryTitle",
+      "figmaLayerName": "MaterialSecondaryTitle",
+      "componentName": "ListContext",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MaterialSecondaryTitle",
+      "codeSnippet": "ListContext(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.ListContext"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/materialsecondarytitle.svg"
+    },
+    {
+      "componentId": "MaterialSplitToggleChip",
+      "figmaLayerName": "MaterialSplitToggleChip",
+      "componentName": "ListContext",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MaterialSplitToggleChip",
+      "codeSnippet": "ListContext(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.ListContext"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/materialsplittogglechip.svg"
+    },
+    {
+      "componentId": "MaterialTitle",
+      "figmaLayerName": "MaterialTitle",
+      "componentName": "ListContext",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MaterialTitle",
+      "codeSnippet": "ListContext(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.ListContext"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/materialtitle.svg"
+    },
+    {
+      "componentId": "MaterialToggleButton",
+      "figmaLayerName": "MaterialToggleButton",
+      "componentName": "ListContext",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MaterialToggleButton",
+      "codeSnippet": "ListContext(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.ListContext"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/materialtogglebutton.svg"
+    },
+    {
+      "componentId": "MaterialToggleChipRadio",
+      "figmaLayerName": "MaterialToggleChipRadio",
+      "componentName": "ListContext",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MaterialToggleChipRadio",
+      "codeSnippet": "ListContext(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.ListContext"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/materialtogglechipradio.svg"
+    },
+    {
+      "componentId": "MaterialToggleChipSwitch",
+      "figmaLayerName": "MaterialToggleChipSwitch",
+      "componentName": "ListContext",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MaterialToggleChipSwitch",
+      "codeSnippet": "ListContext(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.ListContext"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/materialtogglechipswitch.svg"
+    },
+    {
+      "componentId": "MediaArtwork",
+      "figmaLayerName": "MediaArtwork",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MediaArtwork",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/mediaartwork.svg"
+    },
+    {
+      "componentId": "MediaControlButtonsPausedAtQueueEnd",
+      "figmaLayerName": "MediaControlButtonsPausedAtQueueEnd",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MediaControlButtonsPausedAtQueueEnd",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/mediacontrolbuttonspausedatqueueend.svg"
+    },
+    {
+      "componentId": "MediaControlButtonsPlaying",
+      "figmaLayerName": "MediaControlButtonsPlaying",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MediaControlButtonsPlaying",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/mediacontrolbuttonsplaying.svg"
+    },
+    {
+      "componentId": "MediaDetailsButton",
+      "figmaLayerName": "MediaDetailsButton",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MediaDetailsButton",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/mediadetailsbutton.svg"
+    },
+    {
+      "componentId": "MediaDetailsButtonWithArtwork",
+      "figmaLayerName": "MediaDetailsButtonWithArtwork",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MediaDetailsButtonWithArtwork",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/mediadetailsbuttonwithartwork.svg"
+    },
+    {
+      "componentId": "MediaEntityScreen",
+      "figmaLayerName": "MediaEntityScreen",
+      "componentName": "MediaEntityScreen",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "MediaEntityScreen",
+      "figmaSvg": "figma/mediaentityscreen.svg"
+    },
+    {
+      "componentId": "MediaEntityScreenWithArtwork",
+      "figmaLayerName": "MediaEntityScreenWithArtwork",
+      "componentName": "MediaEntityScreenWithArtwork",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "MediaEntityScreenWithArtwork",
+      "figmaSvg": "figma/mediaentityscreenwithartwork.svg"
+    },
+    {
+      "componentId": "MediaLoadingMediaDisplay",
+      "figmaLayerName": "MediaLoadingMediaDisplay",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MediaLoadingMediaDisplay",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/medialoadingmediadisplay.svg"
+    },
+    {
+      "componentId": "MediaMarqueeTextMediaDisplay",
+      "figmaLayerName": "MediaMarqueeTextMediaDisplay",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MediaMarqueeTextMediaDisplay",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/mediamarqueetextmediadisplay.svg"
+    },
+    {
+      "componentId": "MediaMarqueeTextMediaDisplayLongTitle",
+      "figmaLayerName": "MediaMarqueeTextMediaDisplayLongTitle",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MediaMarqueeTextMediaDisplayLongTitle",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/mediamarqueetextmediadisplaylongtitle.svg"
+    },
+    {
+      "componentId": "MediaMessageMediaDisplay",
+      "figmaLayerName": "MediaMessageMediaDisplay",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MediaMessageMediaDisplay",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/mediamessagemediadisplay.svg"
+    },
+    {
+      "componentId": "MediaNothingPlayingDisplay",
+      "figmaLayerName": "MediaNothingPlayingDisplay",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MediaNothingPlayingDisplay",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/medianothingplayingdisplay.svg"
+    },
+    {
+      "componentId": "MediaPlaceholderButton",
+      "figmaLayerName": "MediaPlaceholderButton",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MediaPlaceholderButton",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/mediaplaceholderbutton.svg"
+    },
+    {
+      "componentId": "MediaPlayPauseButtonDisabled",
+      "figmaLayerName": "MediaPlayPauseButtonDisabled",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MediaPlayPauseButtonDisabled",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/mediaplaypausebuttondisabled.svg"
+    },
+    {
+      "componentId": "MediaPlayPauseButtonPaused",
+      "figmaLayerName": "MediaPlayPauseButtonPaused",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MediaPlayPauseButtonPaused",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/mediaplaypausebuttonpaused.svg"
+    },
+    {
+      "componentId": "MediaPlayPauseButtonPlaying",
+      "figmaLayerName": "MediaPlayPauseButtonPlaying",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "MediaPlayPauseButtonPlaying",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/mediaplaypausebuttonplaying.svg"
+    },
+    {
+      "componentId": "AuthWearGuestModeButton",
+      "figmaLayerName": "AuthWearGuestModeButton",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "AuthWearGuestModeButton",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/authwearguestmodebutton.svg"
+    },
+    {
+      "componentId": "AuthWearSelectAccountScreen",
+      "figmaLayerName": "AuthWearSelectAccountScreen",
+      "componentName": "AuthWearSelectAccountScreen",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "AuthWearSelectAccountScreen",
+      "figmaSvg": "figma/authwearselectaccountscreen.svg"
+    },
+    {
+      "componentId": "AuthWearSelectAccountScreenEmailOnly",
+      "figmaLayerName": "AuthWearSelectAccountScreenEmailOnly",
+      "componentName": "AuthWearSelectAccountScreenEmailOnly",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "AuthWearSelectAccountScreenEmailOnly",
+      "figmaSvg": "figma/authwearselectaccountscreenemailonly.svg"
+    },
+    {
+      "componentId": "AuthWearSelectAccountScreenLongEmail",
+      "figmaLayerName": "AuthWearSelectAccountScreenLongEmail",
+      "componentName": "AuthWearSelectAccountScreenLongEmail",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "AuthWearSelectAccountScreenLongEmail",
+      "figmaSvg": "figma/authwearselectaccountscreenlongemail.svg"
+    },
+    {
+      "componentId": "AuthWearSelectAccountScreenSingle",
+      "figmaLayerName": "AuthWearSelectAccountScreenSingle",
+      "componentName": "AuthWearSelectAccountScreenSingle",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "AuthWearSelectAccountScreenSingle",
+      "figmaSvg": "figma/authwearselectaccountscreensingle.svg"
+    },
+    {
+      "componentId": "AuthWearSignInButton",
+      "figmaLayerName": "AuthWearSignInButton",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "AuthWearSignInButton",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/authwearsigninbutton.svg"
+    },
+    {
+      "componentId": "AuthWearSignInButtonDisabled",
+      "figmaLayerName": "AuthWearSignInButtonDisabled",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "AuthWearSignInButtonDisabled",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/authwearsigninbuttondisabled.svg"
+    },
+    {
+      "componentId": "AuthWearSignInPlaceholderScreen",
+      "figmaLayerName": "AuthWearSignInPlaceholderScreen",
+      "componentName": "AuthWearSignInPlaceholderScreen",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "AuthWearSignInPlaceholderScreen",
+      "figmaSvg": "figma/authwearsigninplaceholderscreen.svg"
+    },
+    {
+      "componentId": "AuthWearSignInPromptScreen",
+      "figmaLayerName": "AuthWearSignInPromptScreen",
+      "componentName": "AuthWearSignInPromptScreen",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "AuthWearSignInPromptScreen",
+      "figmaSvg": "figma/authwearsigninpromptscreen.svg"
+    },
+    {
+      "componentId": "AuthWearSignInPromptScreenLoading",
+      "figmaLayerName": "AuthWearSignInPromptScreenLoading",
+      "componentName": "AuthWearSignInPromptScreenLoading",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "AuthWearSignInPromptScreenLoading",
+      "figmaSvg": "figma/authwearsigninpromptscreenloading.svg"
+    },
+    {
+      "componentId": "AuthWearSignedInConfirmationDialog",
+      "figmaLayerName": "AuthWearSignedInConfirmationDialog",
+      "componentName": "AuthWearSignedInConfirmationDialog",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "AuthWearSignedInConfirmationDialog",
+      "figmaSvg": "figma/authwearsignedinconfirmationdialog.svg"
+    },
+    {
+      "componentId": "AuthWearSignedInConfirmationDialogEmailOnly",
+      "figmaLayerName": "AuthWearSignedInConfirmationDialogEmailOnly",
+      "componentName": "AuthWearSignedInConfirmationDialogEmailOnly",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "AuthWearSignedInConfirmationDialogEmailOnly",
+      "figmaSvg": "figma/authwearsignedinconfirmationdialogemailonly.svg"
+    },
+    {
+      "componentId": "AuthWearSignedInConfirmationDialogTruncated",
+      "figmaLayerName": "AuthWearSignedInConfirmationDialogTruncated",
+      "componentName": "AuthWearSignedInConfirmationDialogTruncated",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "AuthWearSignedInConfirmationDialogTruncated",
+      "figmaSvg": "figma/authwearsignedinconfirmationdialogtruncated.svg"
+    },
+    {
+      "componentId": "AuthMobileSignInBottomSheet",
+      "figmaLayerName": "AuthMobileSignInBottomSheet",
+      "componentName": "AuthMobileSignInBottomSheet",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AuthMobileCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "AuthMobileSignInBottomSheet",
+      "figmaSvg": "figma/authmobilesigninbottomsheet.svg"
+    },
+    {
+      "componentId": "AuthMobileSignInBottomSheetCustomLabels",
+      "figmaLayerName": "AuthMobileSignInBottomSheetCustomLabels",
+      "componentName": "AuthMobileSignInBottomSheetCustomLabels",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AuthMobileCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "AuthMobileSignInBottomSheetCustomLabels",
+      "figmaSvg": "figma/authmobilesigninbottomsheetcustomlabels.svg"
+    },
+    {
+      "componentId": "DataLayerMobileInstallAppBottomSheet",
+      "figmaLayerName": "DataLayerMobileInstallAppBottomSheet",
+      "componentName": "DataLayerMobileInstallAppBottomSheet",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/DataLayerMobileCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "DataLayerMobileInstallAppBottomSheet",
+      "figmaSvg": "figma/datalayermobileinstallappbottomsheet.svg"
+    },
+    {
+      "componentId": "DataLayerMobileInstallTileBottomSheet",
+      "figmaLayerName": "DataLayerMobileInstallTileBottomSheet",
+      "componentName": "DataLayerMobileInstallTileBottomSheet",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/DataLayerMobileCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "DataLayerMobileInstallTileBottomSheet",
+      "figmaSvg": "figma/datalayermobileinstalltilebottomsheet.svg"
+    },
+    {
+      "componentId": "DataLayerMobileReEngageBottomSheet",
+      "figmaLayerName": "DataLayerMobileReEngageBottomSheet",
+      "componentName": "DataLayerMobileReEngageBottomSheet",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/DataLayerMobileCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "DataLayerMobileReEngageBottomSheet",
+      "figmaSvg": "figma/datalayermobilereengagebottomsheet.svg"
+    },
+    {
+      "componentId": "ComposablesDatePicker",
+      "figmaLayerName": "ComposablesDatePicker",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "ComposablesDatePicker",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/composablesdatepicker.svg"
+    },
+    {
+      "componentId": "ComposablesMarqueeText",
+      "figmaLayerName": "ComposablesMarqueeText",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "ComposablesMarqueeText",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/composablesmarqueetext.svg"
+    },
+    {
+      "componentId": "ComposablesPlaceholderChip",
+      "figmaLayerName": "ComposablesPlaceholderChip",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "ComposablesPlaceholderChip",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/composablesplaceholderchip.svg"
+    },
+    {
+      "componentId": "ComposablesSegmentedProgressIndicator",
+      "figmaLayerName": "ComposablesSegmentedProgressIndicator",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "ComposablesSegmentedProgressIndicator",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/composablessegmentedprogressindicator.svg"
+    },
+    {
+      "componentId": "ComposablesSegmentedProgressIndicatorComplete",
+      "figmaLayerName": "ComposablesSegmentedProgressIndicatorComplete",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "ComposablesSegmentedProgressIndicatorComplete",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/composablessegmentedprogressindicatorcomplete.svg"
+    },
+    {
+      "componentId": "ComposablesSegmentedProgressIndicatorEmpty",
+      "figmaLayerName": "ComposablesSegmentedProgressIndicatorEmpty",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "ComposablesSegmentedProgressIndicatorEmpty",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/composablessegmentedprogressindicatorempty.svg"
+    },
+    {
+      "componentId": "ComposablesSquareSegmentedProgressIndicator",
+      "figmaLayerName": "ComposablesSquareSegmentedProgressIndicator",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "ComposablesSquareSegmentedProgressIndicator",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/composablessquaresegmentedprogressindicator.svg"
+    },
+    {
+      "componentId": "ComposablesTimePicker",
+      "figmaLayerName": "ComposablesTimePicker",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "ComposablesTimePicker",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/composablestimepicker.svg"
+    },
+    {
+      "componentId": "ComposablesTimePickerNoSeconds",
+      "figmaLayerName": "ComposablesTimePickerNoSeconds",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "ComposablesTimePickerNoSeconds",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/composablestimepickernoseconds.svg"
+    },
+    {
+      "componentId": "ComposablesTimePickerWith12HourClock",
+      "figmaLayerName": "ComposablesTimePickerWith12HourClock",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "ComposablesTimePickerWith12HourClock",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/composablestimepickerwith12hourclock.svg"
+    },
+    {
+      "componentId": "HealthFormattedDurationText",
+      "figmaLayerName": "HealthFormattedDurationText",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "HealthFormattedDurationText",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/healthformatteddurationtext.svg"
+    },
+    {
+      "componentId": "HealthFormattedDurationTextSubMinute",
+      "figmaLayerName": "HealthFormattedDurationTextSubMinute",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "HealthFormattedDurationTextSubMinute",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/healthformatteddurationtextsubminute.svg"
+    },
+    {
+      "componentId": "HealthMetricDisplay",
+      "figmaLayerName": "HealthMetricDisplay",
+      "componentName": "Centred",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "HealthMetricDisplay",
+      "codeSnippet": "Centred(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Centred"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/healthmetricdisplay.svg"
+    },
+    {
+      "componentId": "HealthMetricsScreenFour",
+      "figmaLayerName": "HealthMetricsScreenFour",
+      "componentName": "HealthMetricsScreenFour",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "HealthMetricsScreenFour",
+      "figmaSvg": "figma/healthmetricsscreenfour.svg"
+    },
+    {
+      "componentId": "HealthMetricsScreenSingle",
+      "figmaLayerName": "HealthMetricsScreenSingle",
+      "componentName": "HealthMetricsScreenSingle",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "HealthMetricsScreenSingle",
+      "figmaSvg": "figma/healthmetricsscreensingle.svg"
+    },
+    {
+      "componentId": "HealthMetricsScreenTwo",
+      "figmaLayerName": "HealthMetricsScreenTwo",
+      "componentName": "HealthMetricsScreenTwo",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "HealthMetricsScreenTwo",
+      "figmaSvg": "figma/healthmetricsscreentwo.svg"
+    },
+    {
+      "componentId": "HealthMetricsScreenWideValues",
+      "figmaLayerName": "HealthMetricsScreenWideValues",
+      "componentName": "HealthMetricsScreenWideValues",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "HealthMetricsScreenWideValues",
+      "figmaSvg": "figma/healthmetricsscreenwidevalues.svg"
+    },
+    {
+      "componentId": "AudioVolumeLevelIndicator",
+      "figmaLayerName": "AudioVolumeLevelIndicator",
+      "componentName": "AudioVolumeLevelIndicator",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AudioCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "AudioVolumeLevelIndicator",
+      "figmaSvg": "figma/audiovolumelevelindicator.svg"
+    },
+    {
+      "componentId": "AudioVolumeScreen",
+      "figmaLayerName": "AudioVolumeScreen",
+      "componentName": "Volume",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AudioCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "AudioVolumeScreen",
+      "codeSnippet": "Volume(\n    state = TODO(\"VolumeUiState\"),\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Volume"
+      ],
+      "parameters": [
+        {
+          "name": "state",
+          "type": "VolumeUiState",
+          "hasDefault": false,
+          "composableSlot": false
+        },
+        {
+          "name": "output",
+          "type": "AudioOutputUi",
+          "hasDefault": true,
+          "composableSlot": false
+        }
+      ],
+      "figmaSvg": "figma/audiovolumescreen.svg"
+    },
+    {
+      "componentId": "AudioVolumeScreenMax",
+      "figmaLayerName": "AudioVolumeScreenMax",
+      "componentName": "Volume",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AudioCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "AudioVolumeScreenMax",
+      "codeSnippet": "Volume(\n    state = TODO(\"VolumeUiState\"),\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Volume"
+      ],
+      "parameters": [
+        {
+          "name": "state",
+          "type": "VolumeUiState",
+          "hasDefault": false,
+          "composableSlot": false
+        },
+        {
+          "name": "output",
+          "type": "AudioOutputUi",
+          "hasDefault": true,
+          "composableSlot": false
+        }
+      ],
+      "figmaSvg": "figma/audiovolumescreenmax.svg"
+    },
+    {
+      "componentId": "AudioVolumeScreenMuted",
+      "figmaLayerName": "AudioVolumeScreenMuted",
+      "componentName": "Volume",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AudioCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "AudioVolumeScreenMuted",
+      "codeSnippet": "Volume(\n    state = TODO(\"VolumeUiState\"),\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Volume"
+      ],
+      "parameters": [
+        {
+          "name": "state",
+          "type": "VolumeUiState",
+          "hasDefault": false,
+          "composableSlot": false
+        },
+        {
+          "name": "output",
+          "type": "AudioOutputUi",
+          "hasDefault": true,
+          "composableSlot": false
+        }
+      ],
+      "figmaSvg": "figma/audiovolumescreenmuted.svg"
+    },
+    {
+      "componentId": "AudioVolumeScreenNotConnected",
+      "figmaLayerName": "AudioVolumeScreenNotConnected",
+      "componentName": "Volume",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AudioCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "AudioVolumeScreenNotConnected",
+      "codeSnippet": "Volume(\n    state = TODO(\"VolumeUiState\"),\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Volume"
+      ],
+      "parameters": [
+        {
+          "name": "state",
+          "type": "VolumeUiState",
+          "hasDefault": false,
+          "composableSlot": false
+        },
+        {
+          "name": "output",
+          "type": "AudioOutputUi",
+          "hasDefault": true,
+          "composableSlot": false
+        }
+      ],
+      "figmaSvg": "figma/audiovolumescreennotconnected.svg"
+    },
+    {
+      "componentId": "AiFailedResponseChip",
+      "figmaLayerName": "AiFailedResponseChip",
+      "componentName": "Card",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AiCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "AiFailedResponseChip",
+      "codeSnippet": "Card(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Card"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/aifailedresponsechip.svg"
+    },
+    {
+      "componentId": "AiResponseInProgressCard",
+      "figmaLayerName": "AiResponseInProgressCard",
+      "componentName": "Card",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AiCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "AiResponseInProgressCard",
+      "codeSnippet": "Card(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Card"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/airesponseinprogresscard.svg"
+    },
+    {
+      "componentId": "AiTextPromptDisplay",
+      "figmaLayerName": "AiTextPromptDisplay",
+      "componentName": "Card",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AiCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "AiTextPromptDisplay",
+      "codeSnippet": "Card(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Card"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/aitextpromptdisplay.svg"
+    },
+    {
+      "componentId": "AiTextResponseCard",
+      "figmaLayerName": "AiTextResponseCard",
+      "componentName": "Card",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AiCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "AiTextResponseCard",
+      "codeSnippet": "Card(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Card"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/aitextresponsecard.svg"
+    },
+    {
+      "componentId": "AiTextResponseCardLong",
+      "figmaLayerName": "AiTextResponseCardLong",
+      "componentName": "Card",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/AiCatalog.kt",
+      "label": "Compose",
+      "confidence": "HIGH",
+      "previewName": "AiTextResponseCardLong",
+      "codeSnippet": "Card(\n    content = { },\n)",
+      "imports": [
+        "import com.google.android.horologist.catalog.Card"
+      ],
+      "parameters": [
+        {
+          "name": "content",
+          "type": "() -> Unit",
+          "hasDefault": false,
+          "composableSlot": true
+        }
+      ],
+      "figmaSvg": "figma/aitextresponsecardlong.svg"
+    },
+    {
+      "componentId": "LayoutFillMaxRectangle",
+      "figmaLayerName": "LayoutFillMaxRectangle",
+      "componentName": "LayoutFillMaxRectangle",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/LayoutCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "LayoutFillMaxRectangle",
+      "figmaSvg": "figma/layoutfillmaxrectangle.svg"
+    },
+    {
+      "componentId": "LayoutPagerScreen",
+      "figmaLayerName": "LayoutPagerScreen",
+      "componentName": "LayoutPagerScreen",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/LayoutCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "LayoutPagerScreen",
+      "figmaSvg": "figma/layoutpagerscreen.svg"
+    },
+    {
+      "componentId": "LayoutScalingLazyColumn",
+      "figmaLayerName": "LayoutScalingLazyColumn",
+      "componentName": "LayoutScalingLazyColumn",
+      "source": "https://github.com/yschimke/horologist/blob/previews/catalog/src/main/java/com/google/android/horologist/catalog/LayoutCatalog.kt",
+      "label": "Compose",
+      "confidence": "preview-fallback",
+      "previewName": "LayoutScalingLazyColumn",
+      "figmaSvg": "figma/layoutscalinglazycolumn.svg"
+    }
+  ]
+}

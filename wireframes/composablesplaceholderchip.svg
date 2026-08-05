@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 454 454" width="454" height="454" role="img" aria-label="ComposablesPlaceholderChip layout wireframe">
+  <title>ComposablesPlaceholderChip — layout wireframe (slots + tokens)</title>
+  <rect width="454" height="454" fill="#ffffff"/>
+  <g>
+    <rect x="0" y="0" width="454" height="454" fill="none" fill-opacity="0" stroke="#5B6470" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="0" y="0" width="454" height="454" fill="none" fill-opacity="0" stroke="#2E7D6B" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="0" y="0" width="454" height="454" fill="none" fill-opacity="0" stroke="#8E6BA8" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <path d="M100,187 H354 A40,40 0 0 1 394,227 V227 A40,40 0 0 1 354,267 H100 A40,40 0 0 1 60,227 V227 A40,40 0 0 1 100,187 Z" fill="#AECBFA" fill-opacity="0.38" stroke="#B0813B" stroke-width="1.5" stroke-opacity="1"/>
+    <text x="63" y="199" font-family="system-ui, sans-serif" font-size="9" fill="#B0813B">#61AECBFA  pad ·</text>
+  </g>
+  <g>
+    <rect x="60" y="187" width="334" height="80" fill="none" fill-opacity="0" stroke="#3B72A8" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="60" y="195" width="64" height="64" fill="none" fill-opacity="0" stroke="#A85B6B" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <path d="M92,195 H92 A32,32 0 0 1 124,227 V227 A32,32 0 0 1 92,259 H92 A32,32 0 0 1 60,227 V227 A32,32 0 0 1 92,195 Z" fill="none" fill-opacity="0" stroke="#4F8A4A" stroke-width="1.5" stroke-opacity="1"/>
+  </g>
+  <g>
+    <rect x="124" y="221" width="12" height="12" fill="none" fill-opacity="0" stroke="#A85B6B" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="136" y="195" width="258" height="64" fill="none" fill-opacity="0" stroke="#A85B6B" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="136" y="195" width="258" height="40" fill="none" fill-opacity="0" stroke="#4F8A4A" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="136" y="195" width="258" height="40" fill="none" fill-opacity="0" stroke="#7A7A33" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <path d="M148,195 H362 A12,12 0 0 1 374,207 V207 A12,12 0 0 1 362,219 H148 A12,12 0 0 1 136,207 V207 A12,12 0 0 1 148,195 Z" fill="none" fill-opacity="0" stroke="#5B6470" stroke-width="1.5" stroke-opacity="1"/>
+    <text x="139" y="207" font-family="system-ui, sans-serif" font-size="9" fill="#5B6470">pad ·</text>
+  </g>
+  <g>
+    <rect x="136" y="219" width="16" height="16" fill="none" fill-opacity="0" stroke="#5B6470" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="136" y="235" width="258" height="24" fill="none" fill-opacity="0" stroke="#4F8A4A" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <path d="M148,235 H322 A12,12 0 0 1 334,247 V247 A12,12 0 0 1 322,259 H148 A12,12 0 0 1 136,247 V247 A12,12 0 0 1 148,235 Z" fill="none" fill-opacity="0" stroke="#7A7A33" stroke-width="1.5" stroke-opacity="1"/>
+    <text x="139" y="247" font-family="system-ui, sans-serif" font-size="9" fill="#7A7A33">pad ·</text>
+  </g>
+</svg>

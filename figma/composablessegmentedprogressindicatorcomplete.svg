@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="486" height="486" viewBox="0 0 486 486" text-rendering="geometricPrecision" font-family="sans-serif">
+<clipPath id="deviceRound"><circle cx="227" cy="227" r="227"/></clipPath>
+<g transform="translate(16, 16)" clip-path="url(#deviceRound)">
+  <circle cx="227" cy="227" r="227" fill="#000000"/>
+  <g id="Root">
+    <g id="ReusableComposeNode">
+      <g transform="translate(8.0 8.0) scale(0.99 0.99)">
+        <path d="M230.68,8.32 A211,211 0 0 1 416.28,144.17" fill="none" stroke="#FFFFFF" stroke-opacity="0.1" stroke-width="16" stroke-linecap="round"/>
+        <path d="M230.68,8.32 A211,211 0 0 1 416.28,144.17" fill="none" stroke="#4C8DF6" stroke-width="16" stroke-linecap="round"/>
+        <path d="M423.35,166.43 A211,211 0 0 1 349.98,384.42" fill="none" stroke="#FFFFFF" stroke-opacity="0.1" stroke-width="16" stroke-linecap="round"/>
+        <path d="M423.35,166.43 A211,211 0 0 1 349.98,384.42" fill="none" stroke="#7BC86C" stroke-width="16" stroke-linecap="round"/>
+        <path d="M330.9,397.89 A211,211 0 0 1 14.65,166.43" fill="none" stroke="#FFFFFF" stroke-opacity="0.1" stroke-width="16" stroke-linecap="round"/>
+        <path d="M330.9,397.89 A211,211 0 0 1 14.65,166.43" fill="none" stroke="#F6C04C" stroke-width="16" stroke-linecap="round"/>
+        <path d="M21.72,144.17 A211,211 0 0 1 207.32,8.32" fill="none" stroke="#FFFFFF" stroke-opacity="0.1" stroke-width="16" stroke-linecap="round"/>
+        <path d="M21.72,144.17 A211,211 0 0 1 207.32,8.32" fill="none" stroke="#E8654E" stroke-width="16" stroke-linecap="round"/>
+      </g>
+    </g>
+  </g>
+</g>
+</svg>

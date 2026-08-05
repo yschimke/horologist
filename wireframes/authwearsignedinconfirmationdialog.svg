@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 511 511" width="511" height="511" role="img" aria-label="AuthWearSignedInConfirmationDialog layout wireframe">
+  <title>AuthWearSignedInConfirmationDialog — layout wireframe (slots + tokens)</title>
+  <rect width="511" height="511" fill="#ffffff"/>
+  <g>
+    <rect x="0" y="0" width="454" height="454" fill="none" fill-opacity="0" stroke="#5B6470" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="0" y="0" width="454" height="454" fill="none" fill-opacity="0" stroke="#2E7D6B" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="-57" y="-57" width="568" height="568" fill="none" fill-opacity="0" stroke="#8E6BA8" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="-57" y="-57" width="568" height="568" fill="#000000" fill-opacity="1" stroke="#B0813B" stroke-width="1.5" stroke-opacity="1"/>
+    <text x="-54" y="-45" font-family="system-ui, sans-serif" font-size="9" fill="#B0813B">#FF000000</text>
+  </g>
+  <g>
+    <rect x="-57" y="-57" width="568" height="568" fill="#000000" fill-opacity="1" stroke="#3B72A8" stroke-width="1.5" stroke-opacity="1"/>
+    <text x="-54" y="-45" font-family="system-ui, sans-serif" font-size="9" fill="#3B72A8">#FF000000</text>
+  </g>
+  <g>
+    <rect x="-57" y="-57" width="568" height="568" fill="none" fill-opacity="0" stroke="#A85B6B" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="-57" y="-57" width="568" height="568" fill="none" fill-opacity="0" stroke="#4F8A4A" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="-27" y="-50" width="508" height="508" fill="none" fill-opacity="0" stroke="#7A7A33" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="107" y="13" width="240" height="240" fill="#303133" fill-opacity="1" stroke="#5B6470" stroke-width="1.5" stroke-opacity="1"/>
+    <text x="110" y="25" font-family="system-ui, sans-serif" font-size="9" fill="#5B6470">#FF303133  pad 4.0dp</text>
+  </g>
+  <g>
+    <rect x="187" y="93" width="80" height="80" fill="none" fill-opacity="0" stroke="#2E7D6B" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="-27" y="263" width="508" height="90" fill="none" fill-opacity="0" stroke="#5B6470" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="26" y="363" width="402" height="42" fill="none" fill-opacity="0" stroke="#5B6470" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+</svg>

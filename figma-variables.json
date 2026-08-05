@@ -1,0 +1,156 @@
+{
+  "name": "Horologist",
+  "modes": {
+    "value": "Value"
+  },
+  "defaultModeId": "value",
+  "variables": [
+    {
+      "name": "color/primary",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#d0bcffff"
+      }
+    },
+    {
+      "name": "color/primaryDim",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#d0bcffff"
+      }
+    },
+    {
+      "name": "color/primaryContainer",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#9a82dbff"
+      }
+    },
+    {
+      "name": "color/onPrimary",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#303133ff"
+      }
+    },
+    {
+      "name": "color/onPrimaryContainer",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#303133ff"
+      }
+    },
+    {
+      "name": "color/secondary",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#7fcfffff"
+      }
+    },
+    {
+      "name": "color/secondaryDim",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#bac3ffff"
+      }
+    },
+    {
+      "name": "color/secondaryContainer",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#3998d3ff"
+      }
+    },
+    {
+      "name": "color/tertiary",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#ffdcc2ff"
+      }
+    },
+    {
+      "name": "color/tertiaryContainer",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#6c3a03ff"
+      }
+    },
+    {
+      "name": "color/background",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#000000ff"
+      }
+    },
+    {
+      "name": "color/onBackground",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#ffffffff"
+      }
+    },
+    {
+      "name": "color/surfaceContainerLow",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#272430ff"
+      }
+    },
+    {
+      "name": "color/surfaceContainer",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#303133ff"
+      }
+    },
+    {
+      "name": "color/surfaceContainerHigh",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#494453ff"
+      }
+    },
+    {
+      "name": "color/onSurface",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#ffffffff"
+      }
+    },
+    {
+      "name": "color/onSurfaceVariant",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#cac4d0ff"
+      }
+    },
+    {
+      "name": "color/outline",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#948f9aff"
+      }
+    },
+    {
+      "name": "color/outlineVariant",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#615d67ff"
+      }
+    },
+    {
+      "name": "color/error",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#ee675cff"
+      }
+    },
+    {
+      "name": "color/onError",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#000000ff"
+      }
+    }
+  ]
+}
