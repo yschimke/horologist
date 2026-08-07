@@ -52,7 +52,7 @@ jobs:
     if: ${{ github.repository == 'yschimke/horologist' }}
     permissions:
       contents: write
-    uses: yschimke/compose-ai-tools/.github/workflows/design-artifacts-reusable.yml@v0.19.38
+    uses: yschimke/compose-ai-tools/.github/workflows/design-artifacts-reusable.yml@v0.19.45
     with:
       system: horologist
       spec: catalog.spec.json
