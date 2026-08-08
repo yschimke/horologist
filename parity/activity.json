@@ -1,15 +1,15 @@
 {
   "schema": "compose-preview-activity/v1",
-  "generatedAt": "2026-08-08T06:42:23.785Z",
+  "generatedAt": "2026-08-08T18:55:24.988Z",
   "windowDays": 30,
   "code": {
     "repo": "yschimke/horologist",
     "ref": "previews",
     "events": [
       {
-        "sha": "3acbe3fe37c41287073b5faa66c996c70fb43882",
-        "subject": "chore(deps): update compose-ai-tools to 0.19.46",
-        "at": "2026-08-08T06:34:15Z",
+        "sha": "b9b871bd537417746576ba0d876e395cb422ce43",
+        "subject": "Merge pull request #22 from yschimke/agent/compose-ai-tools-0.19.49",
+        "at": "2026-08-08T18:52:22+01:00",
         "author": "Yuri Schimke",
         "previewIds": [],
         "components": []
