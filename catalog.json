@@ -4823,8 +4823,8 @@
       "sourceFile": "src/main/java/com/google/android/horologist/catalog/LayoutCatalog.kt"
     }
   ],
-  "renderer": "compose-preview 0.19.38",
-  "generatedAt": "2026-08-05T23:07:24.523Z",
+  "renderer": "compose-preview 0.19.46",
+  "generatedAt": "2026-08-08T06:41:56.534Z",
   "display": {
     "surface": "dark"
   },

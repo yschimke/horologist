@@ -1,13 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="486" height="486" viewBox="0 0 486 486" text-rendering="geometricPrecision" font-family="sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="454" height="454" viewBox="0 0 454 454" text-rendering="geometricPrecision" font-family="sans-serif">
+<defs>
+  <g id="material-icon-materialiconsround-play_arrow">
+    <path d="M8 6.82 v10.36 c 0 0.79 0.87 1.27 1.54 0.84 l8.14 -5.18 c 0.62 -0.39 0.62 -1.29 0 -1.69 L9.54 5.98 C 8.87 5.55 8 6.03 8 6.82 Z" fill="#FFFFFF" fill-opacity="0.38"/>
+  </g>
+</defs>
 <clipPath id="deviceRound"><circle cx="227" cy="227" r="227"/></clipPath>
-<g transform="translate(16, 16)" clip-path="url(#deviceRound)">
-  <circle cx="227" cy="227" r="227" fill="#000000"/>
+<g transform="translate(0, 0)" clip-path="url(#deviceRound)">
   <g id="Root">
     <g id="ReusableComposeNode">
       <rect x="175" y="175" width="104" height="104" rx="52" ry="52" fill="#FFFFFF" fill-opacity="0.16"/>
-      <g id="ReusableComposeNode">
+      <g id="ReusableComposeNode" data-material-icon="play_arrow" data-material-icon-style="Rounded" data-material-icon-url="https://fonts.gstatic.com/s/i/materialiconsround/play_arrow/v1/24px.svg">
         <g transform="translate(195 195) scale(2.66 2.66)">
-          <path d="M8 6.82 v10.36 c 0 0.79 0.87 1.27 1.54 0.84 l8.14 -5.18 c 0.62 -0.39 0.62 -1.29 0 -1.69 L9.54 5.98 C 8.87 5.55 8 6.03 8 6.82 Z" fill="#FFFFFF" fill-opacity="0.38"/>
+          <use href="#material-icon-materialiconsround-play_arrow" xlink:href="#material-icon-materialiconsround-play_arrow"/>
         </g>
       </g>
     </g>

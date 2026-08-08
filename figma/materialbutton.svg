@@ -1,13 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="486" height="486" viewBox="0 0 486 486" text-rendering="geometricPrecision" font-family="sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="454" height="454" viewBox="0 0 454 454" text-rendering="geometricPrecision" font-family="sans-serif">
+<defs>
+  <g id="material-icon-materialicons-check">
+    <path d="M9 16.17 L4.83 12 l-1.42 1.41 L9 19 L21 7 l-1.41 -1.41 Z" fill="#303133"/>
+  </g>
+</defs>
 <clipPath id="deviceRound"><circle cx="227" cy="227" r="227"/></clipPath>
-<g transform="translate(16, 16)" clip-path="url(#deviceRound)">
-  <circle cx="227" cy="227" r="227" fill="#000000"/>
+<g transform="translate(0, 0)" clip-path="url(#deviceRound)">
   <g id="Root">
     <g id="ReusableComposeNode">
       <rect x="175" y="175" width="104" height="104" rx="52" ry="52" fill="#AECBFA"/>
-      <g id="ReusableComposeNode">
+      <g id="ReusableComposeNode" data-material-icon="check" data-material-icon-style="Filled" data-material-icon-url="https://fonts.gstatic.com/s/i/materialicons/check/v1/24px.svg">
         <g transform="translate(201 201) scale(2.16 2.16)">
-          <path d="M9 16.17 L4.83 12 l-1.42 1.41 L9 19 L21 7 l-1.41 -1.41 Z" fill="#303133"/>
+          <use href="#material-icon-materialicons-check" xlink:href="#material-icon-materialicons-check"/>
         </g>
       </g>
     </g>

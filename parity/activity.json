@@ -1,0 +1,19 @@
+{
+  "schema": "compose-preview-activity/v1",
+  "generatedAt": "2026-08-08T06:42:23.785Z",
+  "windowDays": 30,
+  "code": {
+    "repo": "yschimke/horologist",
+    "ref": "previews",
+    "events": [
+      {
+        "sha": "3acbe3fe37c41287073b5faa66c996c70fb43882",
+        "subject": "chore(deps): update compose-ai-tools to 0.19.46",
+        "at": "2026-08-08T06:34:15Z",
+        "author": "Yuri Schimke",
+        "previewIds": [],
+        "components": []
+      }
+    ]
+  }
+}
