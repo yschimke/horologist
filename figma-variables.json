@@ -62,6 +62,20 @@
       }
     },
     {
+      "name": "color/onSecondary",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#303133ff"
+      }
+    },
+    {
+      "name": "color/onSecondaryContainer",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#303133ff"
+      }
+    },
+    {
       "name": "color/tertiary",
       "resolvedType": "COLOR",
       "valuesByMode": {
@@ -73,6 +87,20 @@
       "resolvedType": "COLOR",
       "valuesByMode": {
         "value": "#6c3a03ff"
+      }
+    },
+    {
+      "name": "color/onTertiary",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#2e1500ff"
+      }
+    },
+    {
+      "name": "color/onTertiaryContainer",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#ffeee2ff"
       }
     },
     {
@@ -146,10 +174,24 @@
       }
     },
     {
+      "name": "color/errorContainer",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#8c1d18ff"
+      }
+    },
+    {
       "name": "color/onError",
       "resolvedType": "COLOR",
       "valuesByMode": {
         "value": "#000000ff"
+      }
+    },
+    {
+      "name": "color/onErrorContainer",
+      "resolvedType": "COLOR",
+      "valuesByMode": {
+        "value": "#fceeeeff"
       }
     }
   ]

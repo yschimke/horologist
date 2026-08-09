@@ -33,6 +33,14 @@
       "$type": "color",
       "$value": "#3998d3ff"
     },
+    "onSecondary": {
+      "$type": "color",
+      "$value": "#303133ff"
+    },
+    "onSecondaryContainer": {
+      "$type": "color",
+      "$value": "#303133ff"
+    },
     "tertiary": {
       "$type": "color",
       "$value": "#ffdcc2ff"
@@ -40,6 +48,14 @@
     "tertiaryContainer": {
       "$type": "color",
       "$value": "#6c3a03ff"
+    },
+    "onTertiary": {
+      "$type": "color",
+      "$value": "#2e1500ff"
+    },
+    "onTertiaryContainer": {
+      "$type": "color",
+      "$value": "#ffeee2ff"
     },
     "background": {
       "$type": "color",
@@ -81,9 +97,17 @@
       "$type": "color",
       "$value": "#ee675cff"
     },
+    "errorContainer": {
+      "$type": "color",
+      "$value": "#8c1d18ff"
+    },
     "onError": {
       "$type": "color",
       "$value": "#000000ff"
+    },
+    "onErrorContainer": {
+      "$type": "color",
+      "$value": "#fceeeeff"
     }
   },
   "type": {
