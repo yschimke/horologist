@@ -55,7 +55,8 @@
       "group": "Material",
       "caption": "Button",
       "wireframe": "wireframes/materialbutton.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "bodyLine": 196
     },
     {
       "componentId": "MaterialButtonLarge",
@@ -109,7 +110,8 @@
       "group": "Material",
       "caption": "Button Large",
       "wireframe": "wireframes/materialbuttonlarge.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "bodyLine": 206
     },
     {
       "componentId": "MaterialChip",
@@ -163,7 +165,8 @@
       "group": "Material",
       "caption": "Chip",
       "wireframe": "wireframes/materialchip.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "bodyLine": 92
     },
     {
       "componentId": "MaterialChipDisabled",
@@ -217,7 +220,8 @@
       "group": "Material",
       "caption": "Chip Disabled",
       "wireframe": "wireframes/materialchipdisabled.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "bodyLine": 117
     },
     {
       "componentId": "MaterialChipTruncated",
@@ -271,7 +275,8 @@
       "group": "Material",
       "caption": "Chip Truncated",
       "wireframe": "wireframes/materialchiptruncated.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "bodyLine": 105
     },
     {
       "componentId": "MaterialChipWithSecondaryLabel",
@@ -325,7 +330,8 @@
       "group": "Material",
       "caption": "Chip With Secondary Label",
       "wireframe": "wireframes/materialchipwithsecondarylabel.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "bodyLine": 98
     },
     {
       "componentId": "MaterialCompactChip",
@@ -379,7 +385,8 @@
       "group": "Material",
       "caption": "Compact Chip",
       "wireframe": "wireframes/materialcompactchip.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "bodyLine": 129
     },
     {
       "componentId": "MaterialOutlinedChip",
@@ -433,7 +440,8 @@
       "group": "Material",
       "caption": "Outlined Chip",
       "wireframe": "wireframes/materialoutlinedchip.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "bodyLine": 123
     },
     {
       "componentId": "MaterialOutlinedCompactChip",
@@ -487,7 +495,8 @@
       "group": "Material",
       "caption": "Outlined Compact Chip",
       "wireframe": "wireframes/materialoutlinedcompactchip.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "bodyLine": 135
     },
     {
       "componentId": "MaterialResponsiveListHeader",
@@ -525,7 +534,8 @@
       "group": "Material",
       "caption": "Responsive List Header",
       "wireframe": "wireframes/materialresponsivelistheader.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "bodyLine": 84
     },
     {
       "componentId": "MaterialSecondaryTitle",
@@ -563,7 +573,8 @@
       "group": "Material",
       "caption": "Secondary Title",
       "wireframe": "wireframes/materialsecondarytitle.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "bodyLine": 78
     },
     {
       "componentId": "MaterialSplitToggleChip",
@@ -645,7 +656,8 @@
       "group": "Material",
       "caption": "Split Toggle Chip",
       "wireframe": "wireframes/materialsplittogglechip.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "bodyLine": 170
     },
     {
       "componentId": "MaterialTitle",
@@ -683,7 +695,8 @@
       "group": "Material",
       "caption": "Title",
       "wireframe": "wireframes/materialtitle.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "bodyLine": 72
     },
     {
       "componentId": "MaterialToggleButton",
@@ -737,7 +750,8 @@
       "group": "Material",
       "caption": "Toggle Button",
       "wireframe": "wireframes/materialtogglebutton.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "bodyLine": 184
     },
     {
       "componentId": "MaterialToggleChipRadio",
@@ -769,7 +783,8 @@
       "group": "Material",
       "caption": "Toggle Chip Radio",
       "wireframe": "wireframes/materialtogglechipradio.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "bodyLine": 156
     },
     {
       "componentId": "MaterialToggleChipSwitch",
@@ -801,7 +816,8 @@
       "group": "Material",
       "caption": "Toggle Chip Switch",
       "wireframe": "wireframes/materialtogglechipswitch.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MaterialCatalog.kt",
+      "bodyLine": 143
     },
     {
       "componentId": "MediaArtwork",
@@ -823,7 +839,8 @@
       "group": "Media",
       "caption": "Artwork",
       "wireframe": "wireframes/mediaartwork.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "bodyLine": 179
     },
     {
       "componentId": "MediaControlButtonsPausedAtQueueEnd",
@@ -937,7 +954,8 @@
       "group": "Media",
       "caption": "Control Buttons Paused At Queue End",
       "wireframe": "wireframes/mediacontrolbuttonspausedatqueueend.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "bodyLine": 133
     },
     {
       "componentId": "MediaControlButtonsPlaying",
@@ -1051,7 +1069,8 @@
       "group": "Media",
       "caption": "Control Buttons Playing",
       "wireframe": "wireframes/mediacontrolbuttonsplaying.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "bodyLine": 114
     },
     {
       "componentId": "MediaDetailsButton",
@@ -1105,7 +1124,8 @@
       "group": "Media",
       "caption": "Details Button",
       "wireframe": "wireframes/mediadetailsbutton.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "bodyLine": 200
     },
     {
       "componentId": "MediaDetailsButtonWithArtwork",
@@ -1159,7 +1179,8 @@
       "group": "Media",
       "caption": "Details Button With Artwork",
       "wireframe": "wireframes/mediadetailsbuttonwithartwork.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "bodyLine": 206
     },
     {
       "componentId": "MediaEntityScreen",
@@ -1273,7 +1294,8 @@
       "group": "Media",
       "caption": "Entity Screen",
       "wireframe": "wireframes/mediaentityscreen.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "bodyLine": 220
     },
     {
       "componentId": "MediaEntityScreenWithArtwork",
@@ -1387,7 +1409,8 @@
       "group": "Media",
       "caption": "Entity Screen With Artwork",
       "wireframe": "wireframes/mediaentityscreenwithartwork.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "bodyLine": 239
     },
     {
       "componentId": "MediaLoadingMediaDisplay",
@@ -1409,7 +1432,8 @@
       "group": "Media",
       "caption": "Loading Media Display",
       "wireframe": "wireframes/medialoadingmediadisplay.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "bodyLine": 94
     },
     {
       "componentId": "MediaMarqueeTextMediaDisplay",
@@ -1431,7 +1455,8 @@
       "group": "Media",
       "caption": "Marquee Text Media Display",
       "wireframe": "wireframes/mediamarqueetextmediadisplay.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "bodyLine": 76
     },
     {
       "componentId": "MediaMarqueeTextMediaDisplayLongTitle",
@@ -1453,7 +1478,8 @@
       "group": "Media",
       "caption": "Marquee Text Media Display Long Title",
       "wireframe": "wireframes/mediamarqueetextmediadisplaylongtitle.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "bodyLine": 83
     },
     {
       "componentId": "MediaMessageMediaDisplay",
@@ -1475,7 +1501,8 @@
       "group": "Media",
       "caption": "Message Media Display",
       "wireframe": "wireframes/mediamessagemediadisplay.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "bodyLine": 106
     },
     {
       "componentId": "MediaNothingPlayingDisplay",
@@ -1497,7 +1524,8 @@
       "group": "Media",
       "caption": "Nothing Playing Display",
       "wireframe": "wireframes/medianothingplayingdisplay.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "bodyLine": 100
     },
     {
       "componentId": "MediaPlaceholderButton",
@@ -1562,7 +1590,8 @@
       "group": "Media",
       "caption": "Placeholder Button",
       "wireframe": "wireframes/mediaplaceholderbutton.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "bodyLine": 214
     },
     {
       "componentId": "MediaPlayPauseButtonDisabled",
@@ -1616,7 +1645,8 @@
       "group": "Media",
       "caption": "Play Pause Button Disabled",
       "wireframe": "wireframes/mediaplaypausebuttondisabled.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "bodyLine": 163
     },
     {
       "componentId": "MediaPlayPauseButtonPaused",
@@ -1670,7 +1700,8 @@
       "group": "Media",
       "caption": "Play Pause Button Paused",
       "wireframe": "wireframes/mediaplaypausebuttonpaused.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "bodyLine": 157
     },
     {
       "componentId": "MediaPlayPauseButtonPlaying",
@@ -1724,7 +1755,8 @@
       "group": "Media",
       "caption": "Play Pause Button Playing",
       "wireframe": "wireframes/mediaplaypausebuttonplaying.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/MediaCatalog.kt",
+      "bodyLine": 151
     },
     {
       "componentId": "AuthWearGuestModeButton",
@@ -1778,7 +1810,8 @@
       "group": "Auth Wear",
       "caption": "Guest Mode Button",
       "wireframe": "wireframes/authwearguestmodebutton.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "bodyLine": 72
     },
     {
       "componentId": "AuthWearSelectAccountScreen",
@@ -1862,7 +1895,8 @@
       "group": "Auth Wear",
       "caption": "Select Account Screen",
       "wireframe": "wireframes/authwearselectaccountscreen.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "bodyLine": 80
     },
     {
       "componentId": "AuthWearSelectAccountScreenEmailOnly",
@@ -1946,7 +1980,8 @@
       "group": "Auth Wear",
       "caption": "Select Account Screen Email Only",
       "wireframe": "wireframes/authwearselectaccountscreenemailonly.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "bodyLine": 105
     },
     {
       "componentId": "AuthWearSelectAccountScreenLongEmail",
@@ -2000,7 +2035,8 @@
       "group": "Auth Wear",
       "caption": "Select Account Screen Long Email",
       "wireframe": "wireframes/authwearselectaccountscreenlongemail.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "bodyLine": 117
     },
     {
       "componentId": "AuthWearSelectAccountScreenSingle",
@@ -2054,7 +2090,8 @@
       "group": "Auth Wear",
       "caption": "Select Account Screen Single",
       "wireframe": "wireframes/authwearselectaccountscreensingle.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "bodyLine": 92
     },
     {
       "componentId": "AuthWearSignInButton",
@@ -2108,7 +2145,8 @@
       "group": "Auth Wear",
       "caption": "Sign In Button",
       "wireframe": "wireframes/authwearsigninbutton.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "bodyLine": 60
     },
     {
       "componentId": "AuthWearSignInButtonDisabled",
@@ -2162,7 +2200,8 @@
       "group": "Auth Wear",
       "caption": "Sign In Button Disabled",
       "wireframe": "wireframes/authwearsigninbuttondisabled.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "bodyLine": 66
     },
     {
       "componentId": "AuthWearSignInPlaceholderScreen",
@@ -2209,7 +2248,8 @@
       "group": "Auth Wear",
       "caption": "Sign In Placeholder Screen",
       "wireframe": "wireframes/authwearsigninplaceholderscreen.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "bodyLine": 137
     },
     {
       "componentId": "AuthWearSignInPromptScreen",
@@ -2293,7 +2333,8 @@
       "group": "Auth Wear",
       "caption": "Sign In Prompt Screen",
       "wireframe": "wireframes/authwearsigninpromptscreen.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "bodyLine": 174
     },
     {
       "componentId": "AuthWearSignInPromptScreenLoading",
@@ -2315,7 +2356,8 @@
       "group": "Auth Wear",
       "caption": "Sign In Prompt Screen Loading",
       "wireframe": "wireframes/authwearsigninpromptscreenloading.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "bodyLine": 191
     },
     {
       "componentId": "AuthWearSignedInConfirmationDialog",
@@ -2367,7 +2409,8 @@
       "group": "Auth Wear",
       "caption": "Signed In Confirmation Dialog",
       "wireframe": "wireframes/authwearsignedinconfirmationdialog.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "bodyLine": 143
     },
     {
       "componentId": "AuthWearSignedInConfirmationDialogEmailOnly",
@@ -2419,7 +2462,8 @@
       "group": "Auth Wear",
       "caption": "Signed In Confirmation Dialog Email Only",
       "wireframe": "wireframes/authwearsignedinconfirmationdialogemailonly.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "bodyLine": 151
     },
     {
       "componentId": "AuthWearSignedInConfirmationDialogTruncated",
@@ -2471,7 +2515,8 @@
       "group": "Auth Wear",
       "caption": "Signed In Confirmation Dialog Truncated",
       "wireframe": "wireframes/authwearsignedinconfirmationdialogtruncated.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthWearCatalog.kt",
+      "bodyLine": 160
     },
     {
       "componentId": "AuthMobileSignInBottomSheet",
@@ -2614,7 +2659,8 @@
       "group": "Auth Mobile",
       "caption": "Sign In Bottom Sheet",
       "wireframe": "wireframes/authmobilesigninbottomsheet.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthMobileCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthMobileCatalog.kt",
+      "bodyLine": 44
     },
     {
       "componentId": "AuthMobileSignInBottomSheetCustomLabels",
@@ -2757,7 +2803,8 @@
       "group": "Auth Mobile",
       "caption": "Sign In Bottom Sheet Custom Labels",
       "wireframe": "wireframes/authmobilesigninbottomsheetcustomlabels.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthMobileCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AuthMobileCatalog.kt",
+      "bodyLine": 58
     },
     {
       "componentId": "DataLayerMobileInstallAppBottomSheet",
@@ -2900,7 +2947,8 @@
       "group": "DataLayer Mobile",
       "caption": "Install App Bottom Sheet",
       "wireframe": "wireframes/datalayermobileinstallappbottomsheet.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/DataLayerMobileCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/DataLayerMobileCatalog.kt",
+      "bodyLine": 47
     },
     {
       "componentId": "DataLayerMobileInstallTileBottomSheet",
@@ -3043,7 +3091,8 @@
       "group": "DataLayer Mobile",
       "caption": "Install Tile Bottom Sheet",
       "wireframe": "wireframes/datalayermobileinstalltilebottomsheet.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/DataLayerMobileCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/DataLayerMobileCatalog.kt",
+      "bodyLine": 61
     },
     {
       "componentId": "DataLayerMobileReEngageBottomSheet",
@@ -3186,7 +3235,8 @@
       "group": "DataLayer Mobile",
       "caption": "Re Engage Bottom Sheet",
       "wireframe": "wireframes/datalayermobilereengagebottomsheet.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/DataLayerMobileCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/DataLayerMobileCatalog.kt",
+      "bodyLine": 75
     },
     {
       "componentId": "ComposablesDatePicker",
@@ -3285,7 +3335,8 @@
       "group": "Composables",
       "caption": "Date Picker",
       "wireframe": "wireframes/composablesdatepicker.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt",
+      "bodyLine": 129
     },
     {
       "componentId": "ComposablesMarqueeText",
@@ -3323,7 +3374,8 @@
       "group": "Composables",
       "caption": "Marquee Text",
       "wireframe": "wireframes/composablesmarqueetext.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt",
+      "bodyLine": 157
     },
     {
       "componentId": "ComposablesPlaceholderChip",
@@ -3424,7 +3476,8 @@
       "group": "Composables",
       "caption": "Placeholder Chip",
       "wireframe": "wireframes/composablesplaceholderchip.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt",
+      "bodyLine": 168
     },
     {
       "componentId": "ComposablesSegmentedProgressIndicator",
@@ -3461,7 +3514,8 @@
       "group": "Composables",
       "caption": "Segmented Progress Indicator",
       "wireframe": "wireframes/composablessegmentedprogressindicator.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt",
+      "bodyLine": 72
     },
     {
       "componentId": "ComposablesSegmentedProgressIndicatorComplete",
@@ -3498,7 +3552,8 @@
       "group": "Composables",
       "caption": "Segmented Progress Indicator Complete",
       "wireframe": "wireframes/composablessegmentedprogressindicatorcomplete.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt",
+      "bodyLine": 100
     },
     {
       "componentId": "ComposablesSegmentedProgressIndicatorEmpty",
@@ -3535,7 +3590,8 @@
       "group": "Composables",
       "caption": "Segmented Progress Indicator Empty",
       "wireframe": "wireframes/composablessegmentedprogressindicatorempty.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt",
+      "bodyLine": 86
     },
     {
       "componentId": "ComposablesSquareSegmentedProgressIndicator",
@@ -3572,7 +3628,8 @@
       "group": "Composables",
       "caption": "Square Segmented Progress Indicator",
       "wireframe": "wireframes/composablessquaresegmentedprogressindicator.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt",
+      "bodyLine": 114
     },
     {
       "componentId": "ComposablesTimePicker",
@@ -3671,7 +3728,8 @@
       "group": "Composables",
       "caption": "Time Picker",
       "wireframe": "wireframes/composablestimepicker.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt",
+      "bodyLine": 135
     },
     {
       "componentId": "ComposablesTimePickerNoSeconds",
@@ -3755,7 +3813,8 @@
       "group": "Composables",
       "caption": "Time Picker No Seconds",
       "wireframe": "wireframes/composablestimepickernoseconds.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt",
+      "bodyLine": 141
     },
     {
       "componentId": "ComposablesTimePickerWith12HourClock",
@@ -3854,7 +3913,8 @@
       "group": "Composables",
       "caption": "Time Picker With12 Hour Clock",
       "wireframe": "wireframes/composablestimepickerwith12hourclock.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/ComposablesCatalog.kt",
+      "bodyLine": 149
     },
     {
       "componentId": "HealthFormattedDurationText",
@@ -3876,7 +3936,8 @@
       "group": "Health",
       "caption": "Formatted Duration Text",
       "wireframe": "wireframes/healthformatteddurationtext.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt",
+      "bodyLine": 102
     },
     {
       "componentId": "HealthFormattedDurationTextSubMinute",
@@ -3898,7 +3959,8 @@
       "group": "Health",
       "caption": "Formatted Duration Text Sub Minute",
       "wireframe": "wireframes/healthformatteddurationtextsubminute.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt",
+      "bodyLine": 108
     },
     {
       "componentId": "HealthMetricDisplay",
@@ -3920,7 +3982,8 @@
       "group": "Health",
       "caption": "Metric Display",
       "wireframe": "wireframes/healthmetricdisplay.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt",
+      "bodyLine": 96
     },
     {
       "componentId": "HealthMetricsScreenFour",
@@ -3942,7 +4005,8 @@
       "group": "Health",
       "caption": "Metrics Screen Four",
       "wireframe": "wireframes/healthmetricsscreenfour.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt",
+      "bodyLine": 59
     },
     {
       "componentId": "HealthMetricsScreenSingle",
@@ -3964,7 +4028,8 @@
       "group": "Health",
       "caption": "Metrics Screen Single",
       "wireframe": "wireframes/healthmetricsscreensingle.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt",
+      "bodyLine": 78
     },
     {
       "componentId": "HealthMetricsScreenTwo",
@@ -3986,7 +4051,8 @@
       "group": "Health",
       "caption": "Metrics Screen Two",
       "wireframe": "wireframes/healthmetricsscreentwo.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt",
+      "bodyLine": 72
     },
     {
       "componentId": "HealthMetricsScreenWideValues",
@@ -4008,7 +4074,8 @@
       "group": "Health",
       "caption": "Metrics Screen Wide Values",
       "wireframe": "wireframes/healthmetricsscreenwidevalues.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/HealthCatalog.kt",
+      "bodyLine": 85
     },
     {
       "componentId": "AudioVolumeLevelIndicator",
@@ -4030,7 +4097,8 @@
       "group": "Audio",
       "caption": "Volume Level Indicator",
       "wireframe": "wireframes/audiovolumelevelindicator.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AudioCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AudioCatalog.kt",
+      "bodyLine": 86
     },
     {
       "componentId": "AudioVolumeScreen",
@@ -4140,7 +4208,8 @@
       "group": "Audio",
       "caption": "Volume Screen",
       "wireframe": "wireframes/audiovolumescreen.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AudioCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AudioCatalog.kt",
+      "bodyLine": 62
     },
     {
       "componentId": "AudioVolumeScreenMax",
@@ -4250,7 +4319,8 @@
       "group": "Audio",
       "caption": "Volume Screen Max",
       "wireframe": "wireframes/audiovolumescreenmax.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AudioCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AudioCatalog.kt",
+      "bodyLine": 74
     },
     {
       "componentId": "AudioVolumeScreenMuted",
@@ -4360,7 +4430,8 @@
       "group": "Audio",
       "caption": "Volume Screen Muted",
       "wireframe": "wireframes/audiovolumescreenmuted.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AudioCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AudioCatalog.kt",
+      "bodyLine": 68
     },
     {
       "componentId": "AudioVolumeScreenNotConnected",
@@ -4470,7 +4541,8 @@
       "group": "Audio",
       "caption": "Volume Screen Not Connected",
       "wireframe": "wireframes/audiovolumescreennotconnected.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AudioCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AudioCatalog.kt",
+      "bodyLine": 80
     },
     {
       "componentId": "AiFailedResponseChip",
@@ -4492,7 +4564,8 @@
       "group": "AI",
       "caption": "Failed Response Chip",
       "wireframe": "wireframes/aifailedresponsechip.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AiCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AiCatalog.kt",
+      "bodyLine": 99
     },
     {
       "componentId": "AiResponseInProgressCard",
@@ -4514,7 +4587,8 @@
       "group": "AI",
       "caption": "Response In Progress Card",
       "wireframe": "wireframes/airesponseinprogresscard.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AiCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AiCatalog.kt",
+      "bodyLine": 67
     },
     {
       "componentId": "AiTextPromptDisplay",
@@ -4546,7 +4620,8 @@
       "group": "AI",
       "caption": "Text Prompt Display",
       "wireframe": "wireframes/aitextpromptdisplay.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AiCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AiCatalog.kt",
+      "bodyLine": 57
     },
     {
       "componentId": "AiTextResponseCard",
@@ -4578,7 +4653,8 @@
       "group": "AI",
       "caption": "Text Response Card",
       "wireframe": "wireframes/aitextresponsecard.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AiCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AiCatalog.kt",
+      "bodyLine": 73
     },
     {
       "componentId": "AiTextResponseCardLong",
@@ -4610,7 +4686,8 @@
       "group": "AI",
       "caption": "Text Response Card Long",
       "wireframe": "wireframes/aitextresponsecardlong.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AiCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/AiCatalog.kt",
+      "bodyLine": 84
     },
     {
       "componentId": "LayoutFillMaxRectangle",
@@ -4632,7 +4709,8 @@
       "group": "Layout",
       "caption": "Fill Max Rectangle",
       "wireframe": "wireframes/layoutfillmaxrectangle.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/LayoutCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/LayoutCatalog.kt",
+      "bodyLine": 68
     },
     {
       "componentId": "LayoutPagerScreen",
@@ -4691,7 +4769,8 @@
       "group": "Layout",
       "caption": "Pager Screen",
       "wireframe": "wireframes/layoutpagerscreen.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/LayoutCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/LayoutCatalog.kt",
+      "bodyLine": 55
     },
     {
       "componentId": "LayoutScalingLazyColumn",
@@ -4820,15 +4899,38 @@
       "group": "Layout",
       "caption": "Scaling Lazy Column",
       "wireframe": "wireframes/layoutscalinglazycolumn.svg",
-      "sourceFile": "src/main/java/com/google/android/horologist/catalog/LayoutCatalog.kt"
+      "sourceFile": "src/main/java/com/google/android/horologist/catalog/LayoutCatalog.kt",
+      "bodyLine": 44
     }
   ],
   "renderer": "compose-preview 0.19.51",
-  "generatedAt": "2026-08-09T09:17:50.747Z",
+  "generatedAt": "2026-08-10T08:01:37.823Z",
   "display": {
     "surface": "dark"
   },
-  "tokensFile": "tokens.dtcg.json",
+  "themes": [
+    {
+      "id": "com.google.android.horologist.catalog.HorologistBlueThemeCatalog",
+      "tokensFile": "themes/com.google.android.horologist.catalog.horologistbluethemecatalog.dtcg.json",
+      "name": "Blue",
+      "group": "Horologist · Dark",
+      "dark": true
+    },
+    {
+      "id": "com.google.android.horologist.catalog.HorologistGreenThemeCatalog",
+      "tokensFile": "themes/com.google.android.horologist.catalog.horologistgreenthemecatalog.dtcg.json",
+      "name": "Green",
+      "group": "Horologist · Dark",
+      "dark": true
+    },
+    {
+      "id": "com.google.android.horologist.catalog.HorologistLilacThemeCatalog",
+      "tokensFile": "themes/com.google.android.horologist.catalog.horologistlilacthemecatalog.dtcg.json",
+      "name": "Lilac",
+      "group": "Horologist · Dark",
+      "dark": true
+    }
+  ],
   "liveBundle": {
     "path": "bundle/",
     "file": "bundle.png"

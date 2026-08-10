@@ -1,10 +1,10 @@
 {
   "schema": "compose-preview-activity/v1",
-  "generatedAt": "2026-08-09T09:18:19.790Z",
+  "generatedAt": "2026-08-10T08:02:05.525Z",
   "windowDays": 30,
   "code": {
     "repo": "yschimke/horologist",
-    "ref": "previews",
+    "ref": "main",
     "events": [
       {
         "sha": "06e7511bc4f19d502e402aaeecf17201b1ec7cc7",
