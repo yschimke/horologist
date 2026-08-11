@@ -14,7 +14,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/materialbutton__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialButton_Material"
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialButton_Material",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -69,7 +70,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/materialbuttonlarge__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialButtonLarge_Material"
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialButtonLarge_Material",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -124,7 +126,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/materialchip__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialChip_Material"
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialChip_Material",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -185,7 +188,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/materialchipdisabled__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialChipDisabled_Material"
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialChipDisabled_Material",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -246,7 +250,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/materialchiptruncated__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialChipTruncated_Material"
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialChipTruncated_Material",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -307,7 +312,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/materialchipwithsecondarylabel__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialChipWithSecondaryLabel_Material"
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialChipWithSecondaryLabel_Material",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -368,7 +374,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/materialcompactchip__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialCompactChip_Material"
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialCompactChip_Material",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -429,7 +436,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/materialoutlinedchip__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialOutlinedChip_Material"
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialOutlinedChip_Material",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -490,7 +498,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/materialoutlinedcompactchip__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialOutlinedCompactChip_Material"
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialOutlinedCompactChip_Material",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -551,7 +560,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/materialresponsivelistheader__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialResponsiveListHeader_Material"
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialResponsiveListHeader_Material",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -618,7 +628,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/materialsecondarytitle__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialSecondaryTitle_Material"
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialSecondaryTitle_Material",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -671,7 +682,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/materialsplittogglechip__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialSplitToggleChip_Material"
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialSplitToggleChip_Material",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -754,7 +766,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/materialtitle__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialTitle_Material"
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialTitle_Material",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -807,7 +820,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/materialtogglebutton__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialToggleButton_Material"
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialToggleButton_Material",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -862,7 +876,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/materialtogglechipradio__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialToggleChipRadio_Material"
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialToggleChipRadio_Material",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -901,7 +916,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/materialtogglechipswitch__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialToggleChipSwitch_Material"
+          "previewId": "com.google.android.horologist.catalog.MaterialCatalogKt.MaterialToggleChipSwitch_Material",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -940,7 +956,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/mediaartwork__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaArtwork_Media"
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaArtwork_Media",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -963,7 +980,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/mediacontrolbuttonspausedatqueueend__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaControlButtonsPausedAtQueueEnd_Media"
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaControlButtonsPausedAtQueueEnd_Media",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -1100,7 +1118,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/mediacontrolbuttonsplaying__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaControlButtonsPlaying_Media"
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaControlButtonsPlaying_Media",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -1237,7 +1256,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/mediadetailsbutton__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaDetailsButton_Media"
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaDetailsButton_Media",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -1298,7 +1318,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/mediadetailsbuttonwithartwork__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaDetailsButtonWithArtwork_Media"
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaDetailsButtonWithArtwork_Media",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -1359,7 +1380,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/mediaentityscreen__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaEntityScreen_Media"
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaEntityScreen_Media",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -1506,7 +1528,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/mediaentityscreenwithartwork__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaEntityScreenWithArtwork_Media"
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaEntityScreenWithArtwork_Media",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -1653,7 +1676,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/medialoadingmediadisplay__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaLoadingMediaDisplay_Media"
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaLoadingMediaDisplay_Media",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -1676,7 +1700,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/mediamarqueetextmediadisplay__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaMarqueeTextMediaDisplay_Media"
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaMarqueeTextMediaDisplay_Media",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -1699,7 +1724,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/mediamarqueetextmediadisplaylongtitle__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaMarqueeTextMediaDisplayLongTitle_Media"
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaMarqueeTextMediaDisplayLongTitle_Media",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -1722,7 +1748,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/mediamessagemediadisplay__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaMessageMediaDisplay_Media"
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaMessageMediaDisplay_Media",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -1745,7 +1772,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/medianothingplayingdisplay__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaNothingPlayingDisplay_Media"
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaNothingPlayingDisplay_Media",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -1768,7 +1796,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/mediaplaceholderbutton__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaPlaceholderButton_Media"
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaPlaceholderButton_Media",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -1840,7 +1869,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/mediaplaypausebuttondisabled__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaPlayPauseButtonDisabled_Media"
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaPlayPauseButtonDisabled_Media",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -1895,7 +1925,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/mediaplaypausebuttonpaused__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaPlayPauseButtonPaused_Media"
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaPlayPauseButtonPaused_Media",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -1950,7 +1981,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/mediaplaypausebuttonplaying__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaPlayPauseButtonPlaying_Media"
+          "previewId": "com.google.android.horologist.catalog.MediaCatalogKt.MediaPlayPauseButtonPlaying_Media",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -2005,7 +2037,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/authwearguestmodebutton__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearGuestModeButton_Auth_Wear"
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearGuestModeButton_Auth_Wear",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -2066,7 +2099,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/authwearselectaccountscreen__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSelectAccountScreen_Auth_Wear"
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSelectAccountScreen_Auth_Wear",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -2177,7 +2211,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/authwearselectaccountscreenemailonly__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSelectAccountScreenEmailOnly_Auth_Wear"
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSelectAccountScreenEmailOnly_Auth_Wear",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -2288,7 +2323,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/authwearselectaccountscreenlongemail__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSelectAccountScreenLongEmail_Auth_Wear"
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSelectAccountScreenLongEmail_Auth_Wear",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -2363,7 +2399,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/authwearselectaccountscreensingle__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSelectAccountScreenSingle_Auth_Wear"
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSelectAccountScreenSingle_Auth_Wear",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -2438,7 +2475,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/authwearsigninbutton__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignInButton_Auth_Wear"
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignInButton_Auth_Wear",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -2499,7 +2537,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/authwearsigninbuttondisabled__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignInButtonDisabled_Auth_Wear"
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignInButtonDisabled_Auth_Wear",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -2560,7 +2599,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/authwearsigninplaceholderscreen__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignInPlaceholderScreen_Auth_Wear"
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignInPlaceholderScreen_Auth_Wear",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -2608,7 +2648,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/authwearsigninpromptscreen__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignInPromptScreen_Auth_Wear"
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignInPromptScreen_Auth_Wear",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -2705,7 +2746,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/authwearsigninpromptscreenloading__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignInPromptScreenLoading_Auth_Wear"
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignInPromptScreenLoading_Auth_Wear",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -2728,7 +2770,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/authwearsignedinconfirmationdialog__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignedInConfirmationDialog_Auth_Wear"
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignedInConfirmationDialog_Auth_Wear",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -2781,7 +2824,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/authwearsignedinconfirmationdialogemailonly__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignedInConfirmationDialogEmailOnly_Auth_Wear"
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignedInConfirmationDialogEmailOnly_Auth_Wear",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -2834,7 +2878,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/authwearsignedinconfirmationdialogtruncated__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignedInConfirmationDialogTruncated_Auth_Wear"
+          "previewId": "com.google.android.horologist.catalog.AuthWearCatalogKt.AuthWearSignedInConfirmationDialogTruncated_Auth_Wear",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -2887,7 +2932,8 @@
           "height": 2399,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/authmobilesigninbottomsheet__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AuthMobileCatalogKt.AuthMobileSignInBottomSheet_Auth_Mobile"
+          "previewId": "com.google.android.horologist.catalog.AuthMobileCatalogKt.AuthMobileSignInBottomSheet_Auth_Mobile",
+          "density": 2.625
         }
       ],
       "greenlines": [
@@ -3031,7 +3077,8 @@
           "height": 2399,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/authmobilesigninbottomsheetcustomlabels__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AuthMobileCatalogKt.AuthMobileSignInBottomSheetCustomLabels_Auth_Mobile"
+          "previewId": "com.google.android.horologist.catalog.AuthMobileCatalogKt.AuthMobileSignInBottomSheetCustomLabels_Auth_Mobile",
+          "density": 2.625
         }
       ],
       "greenlines": [
@@ -3175,7 +3222,8 @@
           "height": 2399,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/datalayermobileinstallappbottomsheet__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.DataLayerMobileCatalogKt.DataLayerMobileInstallAppBottomSheet_DataLayer_Mobile"
+          "previewId": "com.google.android.horologist.catalog.DataLayerMobileCatalogKt.DataLayerMobileInstallAppBottomSheet_DataLayer_Mobile",
+          "density": 2.625
         }
       ],
       "greenlines": [
@@ -3319,7 +3367,8 @@
           "height": 2399,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/datalayermobileinstalltilebottomsheet__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.DataLayerMobileCatalogKt.DataLayerMobileInstallTileBottomSheet_DataLayer_Mobile"
+          "previewId": "com.google.android.horologist.catalog.DataLayerMobileCatalogKt.DataLayerMobileInstallTileBottomSheet_DataLayer_Mobile",
+          "density": 2.625
         }
       ],
       "greenlines": [
@@ -3463,7 +3512,8 @@
           "height": 2399,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/datalayermobilereengagebottomsheet__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.DataLayerMobileCatalogKt.DataLayerMobileReEngageBottomSheet_DataLayer_Mobile"
+          "previewId": "com.google.android.horologist.catalog.DataLayerMobileCatalogKt.DataLayerMobileReEngageBottomSheet_DataLayer_Mobile",
+          "density": 2.625
         }
       ],
       "greenlines": [
@@ -3607,7 +3657,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/composablesdatepicker__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesDatePicker_Composables"
+          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesDatePicker_Composables",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -3707,7 +3758,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/composablesmarqueetext__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesMarqueeText_Composables"
+          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesMarqueeText_Composables",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -3746,7 +3798,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/composablesplaceholderchip__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesPlaceholderChip_Composables"
+          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesPlaceholderChip_Composables",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -3848,7 +3901,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/composablessegmentedprogressindicator__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesSegmentedProgressIndicator_Composables"
+          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesSegmentedProgressIndicator_Composables",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -3886,7 +3940,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/composablessegmentedprogressindicatorcomplete__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesSegmentedProgressIndicatorComplete_Composables"
+          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesSegmentedProgressIndicatorComplete_Composables",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -3924,7 +3979,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/composablessegmentedprogressindicatorempty__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesSegmentedProgressIndicatorEmpty_Composables"
+          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesSegmentedProgressIndicatorEmpty_Composables",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -3962,7 +4018,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/composablessquaresegmentedprogressindicator__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesSquareSegmentedProgressIndicator_Composables"
+          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesSquareSegmentedProgressIndicator_Composables",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -4000,7 +4057,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/composablestimepicker__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesTimePicker_Composables"
+          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesTimePicker_Composables",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -4100,7 +4158,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/composablestimepickernoseconds__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesTimePickerNoSeconds_Composables"
+          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesTimePickerNoSeconds_Composables",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -4185,7 +4244,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/composablestimepickerwith12hourclock__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesTimePickerWith12HourClock_Composables"
+          "previewId": "com.google.android.horologist.catalog.ComposablesCatalogKt.ComposablesTimePickerWith12HourClock_Composables",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -4285,7 +4345,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/healthformatteddurationtext__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthFormattedDurationText_Health"
+          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthFormattedDurationText_Health",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -4308,7 +4369,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/healthformatteddurationtextsubminute__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthFormattedDurationTextSubMinute_Health"
+          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthFormattedDurationTextSubMinute_Health",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -4331,7 +4393,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/healthmetricdisplay__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthMetricDisplay_Health"
+          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthMetricDisplay_Health",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -4354,7 +4417,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/healthmetricsscreenfour__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthMetricsScreenFour_Health"
+          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthMetricsScreenFour_Health",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -4377,7 +4441,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/healthmetricsscreensingle__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthMetricsScreenSingle_Health"
+          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthMetricsScreenSingle_Health",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -4400,7 +4465,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/healthmetricsscreentwo__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthMetricsScreenTwo_Health"
+          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthMetricsScreenTwo_Health",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -4423,7 +4489,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/healthmetricsscreenwidevalues__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthMetricsScreenWideValues_Health"
+          "previewId": "com.google.android.horologist.catalog.HealthCatalogKt.HealthMetricsScreenWideValues_Health",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -4446,7 +4513,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/audiovolumelevelindicator__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AudioCatalogKt.AudioVolumeLevelIndicator_Audio"
+          "previewId": "com.google.android.horologist.catalog.AudioCatalogKt.AudioVolumeLevelIndicator_Audio",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -4469,7 +4537,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/audiovolumescreen__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AudioCatalogKt.AudioVolumeScreen_Audio"
+          "previewId": "com.google.android.horologist.catalog.AudioCatalogKt.AudioVolumeScreen_Audio",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -4580,7 +4649,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/audiovolumescreenmax__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AudioCatalogKt.AudioVolumeScreenMax_Audio"
+          "previewId": "com.google.android.horologist.catalog.AudioCatalogKt.AudioVolumeScreenMax_Audio",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -4691,7 +4761,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/audiovolumescreenmuted__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AudioCatalogKt.AudioVolumeScreenMuted_Audio"
+          "previewId": "com.google.android.horologist.catalog.AudioCatalogKt.AudioVolumeScreenMuted_Audio",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -4802,7 +4873,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/audiovolumescreennotconnected__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AudioCatalogKt.AudioVolumeScreenNotConnected_Audio"
+          "previewId": "com.google.android.horologist.catalog.AudioCatalogKt.AudioVolumeScreenNotConnected_Audio",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -4913,7 +4985,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/aifailedresponsechip__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AiCatalogKt.AiFailedResponseChip_AI"
+          "previewId": "com.google.android.horologist.catalog.AiCatalogKt.AiFailedResponseChip_AI",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -4936,7 +5009,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/airesponseinprogresscard__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AiCatalogKt.AiResponseInProgressCard_AI"
+          "previewId": "com.google.android.horologist.catalog.AiCatalogKt.AiResponseInProgressCard_AI",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -4959,7 +5033,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/aitextpromptdisplay__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AiCatalogKt.AiTextPromptDisplay_AI"
+          "previewId": "com.google.android.horologist.catalog.AiCatalogKt.AiTextPromptDisplay_AI",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -4998,7 +5073,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/aitextresponsecard__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AiCatalogKt.AiTextResponseCard_AI"
+          "previewId": "com.google.android.horologist.catalog.AiCatalogKt.AiTextResponseCard_AI",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -5037,7 +5113,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/aitextresponsecardlong__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.AiCatalogKt.AiTextResponseCardLong_AI"
+          "previewId": "com.google.android.horologist.catalog.AiCatalogKt.AiTextResponseCardLong_AI",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -5076,7 +5153,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/layoutfillmaxrectangle__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.LayoutCatalogKt.LayoutFillMaxRectangle_Layout"
+          "previewId": "com.google.android.horologist.catalog.LayoutCatalogKt.LayoutFillMaxRectangle_Layout",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -5099,7 +5177,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/layoutpagerscreen__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.LayoutCatalogKt.LayoutPagerScreen_Layout"
+          "previewId": "com.google.android.horologist.catalog.LayoutCatalogKt.LayoutPagerScreen_Layout",
+          "density": 2
         }
       ],
       "greenlines": [],
@@ -5159,7 +5238,8 @@
           "height": 454,
           "size": "compact",
           "livePreview": "https://preview.coo.ee/horologist/p/layoutscalinglazycolumn__ideal__default__compact",
-          "previewId": "com.google.android.horologist.catalog.LayoutCatalogKt.LayoutScalingLazyColumn_Layout"
+          "previewId": "com.google.android.horologist.catalog.LayoutCatalogKt.LayoutScalingLazyColumn_Layout",
+          "density": 2
         }
       ],
       "greenlines": [
@@ -5311,8 +5391,8 @@
       "bodyLine": 44
     }
   ],
-  "renderer": "compose-preview 0.19.57",
-  "generatedAt": "2026-08-11T09:28:05.501Z",
+  "renderer": "compose-preview 0.19.60",
+  "generatedAt": "2026-08-11T23:10:34.133Z",
   "display": {
     "surface": "dark"
   },
