@@ -15,7 +15,7 @@
           <g id="Row">
               <rect x="20" y="175" width="414" height="104" rx="52" ry="52" fill="#303133"/>
             <g id="ImageKt">
-              <image href="mediaentityscreen.figma-raster/1513.png" x="44" y="195" width="64" height="64"/>
+              <image href="mediaentityscreen.figma-raster/1644.png" x="44" y="195" width="64" height="64"/>
             </g>
             <g id="Spacer">
             </g>
@@ -26,7 +26,7 @@
           <g id="Row">
               <rect x="20" y="287" width="414" height="104" rx="52" ry="52" fill="#303133"/>
             <g id="ImageKt">
-              <image href="mediaentityscreen.figma-raster/1522.png" x="44" y="307" width="64" height="64"/>
+              <image href="mediaentityscreen.figma-raster/1653.png" x="44" y="307" width="64" height="64"/>
             </g>
             <g id="Spacer">
             </g>
@@ -34,22 +34,26 @@
               <text x="120" y="349.35" font-size="30" font-family="Roboto, sans-serif" font-weight="500" letter-spacing="0.8" fill="#FFFFFF">Track 2</text>
             </g>
           </g>
-          <g id="Row">
-              <rect x="66" y="399" width="323" height="81" rx="40.57" ry="40.57" fill="#303133"/>
-            <g id="ImageKt">
-              <image href="mediaentityscreen.figma-raster/1531.png" x="84" y="414" width="50" height="50"/>
-            </g>
-            <g id="Spacer">
-            </g>
-            <g id="Empty">
-              <text x="144" y="447.12" font-size="23.4" font-family="Roboto, sans-serif" font-weight="500" letter-spacing="0.62" fill="#FFFFFF">Track 3</text>
+          <g id="Box">
+            <g id="Row">
+              <g opacity="0.63">
+                <rect x="65" y="399" width="324" height="81" rx="40.57" ry="40.57" fill="#303133"/>
+              </g>
+              <g id="ImageKt">
+                <image href="mediaentityscreen.figma-raster/1662.png" x="84" y="414" width="50" height="50"/>
+              </g>
+              <g id="Spacer" opacity="0.63">
+              </g>
+              <g id="Empty" opacity="0.63">
+                <text x="144" y="447.12" font-size="23.4" font-family="Roboto, sans-serif" font-weight="500" letter-spacing="0.62" fill="#FFFFFF">Track 3</text>
+              </g>
             </g>
           </g>
         </g>
       </g>
       <g id="ReusableComposeNode">
         <g id="ReusableComposeNode">
-          <image href="mediaentityscreen.figma-raster/1500.png" x="432" y="171" width="22" height="112"/>
+          <image href="mediaentityscreen.figma-raster/1631.png" x="432" y="171" width="22" height="112"/>
         </g>
       </g>
     </g>

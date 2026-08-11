@@ -53,6 +53,20 @@
     margin:16px auto; border-radius:8px; max-width:100%; }
   .shot--framed img { position:absolute; max-width:none; max-height:none; }
   .shot--missing { color:var(--muted); font-style:italic; }
+  .card--failed { border-color:#7d4148; }
+  .shot--failed { color:#f1b5b9; background:#26191b; text-align:center; display:flex; flex-direction:column; gap:6px; }
+  .shot--failed .failure-mark { display:grid; place-items:center; width:30px; height:30px; border:1px solid #d66c75; border-radius:50%; font-size:18px; }
+  .shot--failed span:last-child { color:#c9a3a6; font-size:11px; max-width:32ch; }
+  .failure-chip { color:#ef9299; border:1px solid #7d4148; border-radius:999px; padding:1px 7px; white-space:nowrap; }
+  .failure-detail { min-width:min(680px,80vw); color:var(--fg); }
+  .failure-detail + .failure-detail { border-top:1px solid var(--line); margin-top:14px; padding-top:14px; }
+  .failure-meta,.failure-frame { color:var(--muted); font-size:12px; margin-top:4px; }
+  .failure-detail details { margin-top:10px; }
+  .failure-detail pre { white-space:pre-wrap; overflow-wrap:anywhere; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:10px; font-size:11px; }
+  .failure-summary { margin:18px clamp(16px,4vw,40px) 0; padding:12px 14px; border:1px solid #7d4148; border-radius:10px; background:#26191b; color:#c9a3a6; }
+  .failure-summary > strong { color:#ef9299; }
+  .failure-summary ul { display:grid; gap:4px; margin:8px 0 0; padding:0; list-style:none; }
+  .failure-summary li { display:flex; justify-content:space-between; gap:16px; font-size:12px; }
   .meta { padding:10px 12px 12px; border-top:1px solid var(--line); }
   .meta h3 { margin:0; font-size:13px; font-weight:600; word-break:break-word; }
   .meta h3 a.ctitle { color:inherit; text-decoration:none; }
@@ -90,9 +104,10 @@
 <body>
 <header class="top">
   <h1>Horologist</h1>
-  <div class="subtitle">system <code>horologist</code> · rendered by compose-preview 0.19.51 · 2026-08-10T08:01:37.823Z · 80 components</div>
+  <div class="subtitle">system <code>horologist</code> · rendered by compose-preview 0.19.57 · 2026-08-11T09:28:05.501Z · 80 components</div>
   <div class="subtitle"><a class="pagelink" href="compare.html">PNG vs SVG compare ↗</a></div>
 </header>
+
 <div class="layout">
   <nav class="index"><section class="nav-group">
       <a class="nav-head" href="#g-material">Material <span>16</span></a>

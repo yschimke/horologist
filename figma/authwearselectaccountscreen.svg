@@ -33,8 +33,8 @@
           </g>
         </g>
       </g>
-      <g id="Row">
-        <rect x="25" y="263" width="403" height="127" rx="51.55" ry="51.55" fill="#303133"/>
+      <g id="Row" opacity="0.98">
+        <rect x="26" y="263" width="402" height="127" rx="51.55" ry="51.55" fill="#303133"/>
         <g opacity="0.98">
           <g id="BoxKt" data-material-icon="account_circle" data-material-icon-style="Outlined" data-material-icon-url="https://fonts.gstatic.com/s/i/materialiconsoutlined/account_circle/v1/24px.svg">
             <g transform="translate(53.5 301) scale(2.12 2.12)">

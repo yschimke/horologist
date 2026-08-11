@@ -6,8 +6,10 @@
     <clipPath id="clip-0"><rect x="0" y="0" width="454" height="454"/></clipPath>
     <g id="LayoutNodeSubcompositionsState">
       <g clip-path="url(#clip-0)">
-        <g id="Empty">
-          <text x="227" y="116.87" font-size="29.51" font-family="Roboto, sans-serif" font-weight="700" letter-spacing="0.74" text-anchor="middle" fill="#DADCE0">Library</text>
+        <g id="Box" opacity="0.97">
+          <g id="Empty">
+            <text x="227" y="116.87" font-size="29.51" font-family="Roboto, sans-serif" font-weight="700" letter-spacing="0.74" text-anchor="middle" fill="#DADCE0">Library</text>
+          </g>
         </g>
         <g id="Row">
           <rect x="24" y="146" width="406" height="104" rx="52" ry="52" fill="#AECBFA"/>
@@ -21,10 +23,12 @@
             <text x="227" y="322.35" font-size="30" font-family="Roboto, sans-serif" font-weight="700" letter-spacing="0.76" text-anchor="middle" fill="#303133">Playlist 2</text>
           </g>
         </g>
-        <g id="Row">
-          <rect x="57" y="370" width="340" height="87" rx="43.62" ry="43.62" fill="#AECBFA"/>
-          <g id="Empty">
-            <text x="227" y="423.62" font-size="25.16" font-family="Roboto, sans-serif" font-weight="700" letter-spacing="0.63" text-anchor="middle" fill="#303133">Playlist 3</text>
+        <g id="Box" opacity="0.73">
+          <g id="Row">
+            <rect x="57" y="370" width="340" height="87" rx="43.62" ry="43.62" fill="#AECBFA"/>
+            <g id="Empty">
+              <text x="227" y="423.62" font-size="25.16" font-family="Roboto, sans-serif" font-weight="700" letter-spacing="0.63" text-anchor="middle" fill="#303133">Playlist 3</text>
+            </g>
           </g>
         </g>
       </g>

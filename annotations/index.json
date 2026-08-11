@@ -44,9 +44,13 @@
           "width": 390,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -79,9 +83,13 @@
           "width": 390,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -114,9 +122,13 @@
           "width": 390,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -167,9 +179,13 @@
           "width": 390,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -220,9 +236,13 @@
           "width": 193,
           "height": 64
         },
-        "label": "r 26dp",
+        "label": "pad 8dp/0dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "0",
+          "padding.top": "8",
+          "padding.end": "0",
+          "padding.bottom": "8",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -255,9 +275,13 @@
           "width": 390,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -290,9 +314,13 @@
           "width": 193,
           "height": 64
         },
-        "label": "r 26dp",
+        "label": "pad 8dp/0dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "0",
+          "padding.top": "8",
+          "padding.end": "0",
+          "padding.bottom": "8",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -317,6 +345,40 @@
       }
     ],
     "materialresponsivelistheader__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 65,
+          "y": 206,
+          "width": 324,
+          "height": 51
+        },
+        "label": "pad t 12dp e 16.6dp b 8dp s 16.6dp",
+        "detail": {
+          "padding.start": "16.6",
+          "padding.top": "12",
+          "padding.end": "16.6",
+          "padding.bottom": "8",
+          "unit": "dp"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 98,
+          "y": 206,
+          "width": 258,
+          "height": 35
+        },
+        "label": "pad t 0dp e 16.6dp b 8dp s 16.6dp",
+        "detail": {
+          "padding.start": "16.6",
+          "padding.top": "0",
+          "padding.end": "16.6",
+          "padding.bottom": "8",
+          "unit": "dp"
+        }
+      },
       {
         "kind": "layout",
         "bounds": {
@@ -355,6 +417,23 @@
       }
     ],
     "materialsecondarytitle__ideal__default__compact": [
+      {
+        "kind": "layout",
+        "bounds": {
+          "x": 65,
+          "y": 215,
+          "width": 324,
+          "height": 33
+        },
+        "label": "pad t 12dp e 16.6dp b 8dp s 16.6dp",
+        "detail": {
+          "padding.start": "16.6",
+          "padding.top": "12",
+          "padding.end": "16.6",
+          "padding.bottom": "8",
+          "unit": "dp"
+        }
+      },
       {
         "kind": "layout",
         "bounds": {
@@ -465,6 +544,23 @@
       {
         "kind": "layout",
         "bounds": {
+          "x": 65,
+          "y": 202,
+          "width": 324,
+          "height": 35
+        },
+        "label": "pad t 0dp e 16.6dp b 8dp s 16.6dp",
+        "detail": {
+          "padding.start": "16.6",
+          "padding.top": "0",
+          "padding.end": "16.6",
+          "padding.bottom": "8",
+          "unit": "dp"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
           "x": 89,
           "y": 202,
           "width": 276,
@@ -543,8 +639,12 @@
           "width": 390,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -595,8 +695,12 @@
           "width": 390,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -624,14 +728,33 @@
       {
         "kind": "layout",
         "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 454,
+          "height": 454
+        },
+        "label": "pad 0dp",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "0",
+          "padding.end": "0",
+          "padding.bottom": "0",
+          "unit": "dp"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
           "x": 34,
           "y": 24,
           "width": 99,
           "height": 406
         },
-        "label": "r 24.8dp",
+        "label": "pad t 12dp b 12dp · r 24.8dp",
         "role": "Button",
         "detail": {
+          "padding.top": "12",
+          "padding.bottom": "12",
           "cornerRadius": "24.8",
           "unit": "dp"
         }
@@ -659,9 +782,11 @@
           "width": 99,
           "height": 406
         },
-        "label": "r 24.8dp",
+        "label": "pad t 12dp b 12dp · r 24.8dp",
         "role": "Button",
         "detail": {
+          "padding.top": "12",
+          "padding.bottom": "12",
           "cornerRadius": "24.8",
           "unit": "dp"
         }
@@ -671,14 +796,33 @@
       {
         "kind": "layout",
         "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 454,
+          "height": 454
+        },
+        "label": "pad 0dp",
+        "detail": {
+          "padding.start": "0",
+          "padding.top": "0",
+          "padding.end": "0",
+          "padding.bottom": "0",
+          "unit": "dp"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
           "x": 34,
           "y": 24,
           "width": 99,
           "height": 406
         },
-        "label": "r 24.8dp",
+        "label": "pad t 12dp b 12dp · r 24.8dp",
         "role": "Button",
         "detail": {
+          "padding.top": "12",
+          "padding.bottom": "12",
           "cornerRadius": "24.8",
           "unit": "dp"
         }
@@ -706,9 +850,11 @@
           "width": 99,
           "height": 406
         },
-        "label": "r 24.8dp",
+        "label": "pad t 12dp b 12dp · r 24.8dp",
         "role": "Button",
         "detail": {
+          "padding.top": "12",
+          "padding.bottom": "12",
           "cornerRadius": "24.8",
           "unit": "dp"
         }
@@ -723,9 +869,13 @@
           "width": 454,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad t 6dp e 0dp b 6dp s 12dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "12",
+          "padding.top": "6",
+          "padding.end": "0",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -758,9 +908,13 @@
           "width": 454,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad t 6dp e 0dp b 6dp s 12dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "12",
+          "padding.top": "6",
+          "padding.end": "0",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -788,14 +942,35 @@
       {
         "kind": "layout",
         "bounds": {
+          "x": 93,
+          "y": 104,
+          "width": 269,
+          "height": 38
+        },
+        "label": "pad t 16dp e 14dp b 12dp s 14dp",
+        "detail": {
+          "padding.start": "14",
+          "padding.top": "16",
+          "padding.end": "14",
+          "padding.bottom": "12",
+          "unit": "dp"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
           "x": 20,
           "y": 175,
           "width": 414,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad t 6dp e 0dp b 6dp s 12dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "12",
+          "padding.top": "6",
+          "padding.end": "0",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -808,9 +983,13 @@
           "width": 414,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad t 6dp e 0dp b 6dp s 12dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "12",
+          "padding.top": "6",
+          "padding.end": "0",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -823,9 +1002,13 @@
           "width": 323,
           "height": 56
         },
-        "label": "r 26dp",
+        "label": "pad t 6dp e 0dp b 6dp s 12dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "12",
+          "padding.top": "6",
+          "padding.end": "0",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -907,14 +1090,35 @@
       {
         "kind": "layout",
         "bounds": {
+          "x": 93,
+          "y": 104,
+          "width": 269,
+          "height": 38
+        },
+        "label": "pad t 16dp e 14dp b 12dp s 14dp",
+        "detail": {
+          "padding.start": "14",
+          "padding.top": "16",
+          "padding.end": "14",
+          "padding.bottom": "12",
+          "unit": "dp"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
           "x": 20,
           "y": 175,
           "width": 414,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad t 6dp e 0dp b 6dp s 12dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "12",
+          "padding.top": "6",
+          "padding.end": "0",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -927,9 +1131,13 @@
           "width": 414,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad t 6dp e 0dp b 6dp s 12dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "12",
+          "padding.top": "6",
+          "padding.end": "0",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -942,9 +1150,13 @@
           "width": 323,
           "height": 56
         },
-        "label": "r 26dp",
+        "label": "pad t 6dp e 0dp b 6dp s 12dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "12",
+          "padding.top": "6",
+          "padding.end": "0",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -1147,9 +1359,13 @@
           "width": 122,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "role": "Loading",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -1229,9 +1445,13 @@
           "width": 344,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -1259,14 +1479,35 @@
       {
         "kind": "layout",
         "bounds": {
+          "x": 104,
+          "y": 77,
+          "width": 246,
+          "height": 42
+        },
+        "label": "pad t 16dp e 14dp b 12dp s 14dp",
+        "detail": {
+          "padding.start": "14",
+          "padding.top": "16",
+          "padding.end": "14",
+          "padding.bottom": "12",
+          "unit": "dp"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
           "x": 24,
           "y": 151,
           "width": 406,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -1279,9 +1520,13 @@
           "width": 403,
           "height": 126
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -1381,14 +1626,35 @@
       {
         "kind": "layout",
         "bounds": {
+          "x": 104,
+          "y": 77,
+          "width": 246,
+          "height": 42
+        },
+        "label": "pad t 16dp e 14dp b 12dp s 14dp",
+        "detail": {
+          "padding.start": "14",
+          "padding.top": "16",
+          "padding.end": "14",
+          "padding.bottom": "12",
+          "unit": "dp"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
           "x": 24,
           "y": 151,
           "width": 406,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -1401,9 +1667,13 @@
           "width": 405,
           "height": 103
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -1485,14 +1755,35 @@
       {
         "kind": "layout",
         "bounds": {
+          "x": 104,
+          "y": 77,
+          "width": 246,
+          "height": 42
+        },
+        "label": "pad t 16dp e 14dp b 12dp s 14dp",
+        "detail": {
+          "padding.start": "14",
+          "padding.top": "16",
+          "padding.end": "14",
+          "padding.bottom": "12",
+          "unit": "dp"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
           "x": 24,
           "y": 151,
           "width": 406,
           "height": 164
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -1556,14 +1847,35 @@
       {
         "kind": "layout",
         "bounds": {
+          "x": 104,
+          "y": 77,
+          "width": 246,
+          "height": 42
+        },
+        "label": "pad t 16dp e 14dp b 12dp s 14dp",
+        "detail": {
+          "padding.start": "14",
+          "padding.top": "16",
+          "padding.end": "14",
+          "padding.bottom": "12",
+          "unit": "dp"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
           "x": 24,
           "y": 151,
           "width": 406,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -1632,9 +1944,13 @@
           "width": 217,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -1667,9 +1983,13 @@
           "width": 217,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -1754,9 +2074,13 @@
           "width": 217,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -1769,9 +2093,13 @@
           "width": 344,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -5097,8 +5425,12 @@
           "width": 406,
           "height": 128
         },
-        "label": "r 26dp",
+        "label": "pad 12dp · r 26dp",
         "detail": {
+          "padding.start": "12",
+          "padding.top": "12",
+          "padding.end": "12",
+          "padding.bottom": "12",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -5131,8 +5463,12 @@
           "width": 406,
           "height": 128
         },
-        "label": "r 26dp",
+        "label": "pad 12dp · r 26dp",
         "detail": {
+          "padding.start": "12",
+          "padding.top": "12",
+          "padding.end": "12",
+          "padding.bottom": "12",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -5165,8 +5501,12 @@
           "width": 406,
           "height": 273
         },
-        "label": "r 26dp",
+        "label": "pad 12dp · r 26dp",
         "detail": {
+          "padding.start": "12",
+          "padding.top": "12",
+          "padding.end": "12",
+          "padding.bottom": "12",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -5290,6 +5630,23 @@
       {
         "kind": "layout",
         "bounds": {
+          "x": 59,
+          "y": 88,
+          "width": 335,
+          "height": 34
+        },
+        "label": "pad t 0dp e 16.6dp b 8dp s 16.6dp",
+        "detail": {
+          "padding.start": "16.6",
+          "padding.top": "0",
+          "padding.end": "16.6",
+          "padding.bottom": "8",
+          "unit": "dp"
+        }
+      },
+      {
+        "kind": "layout",
+        "bounds": {
           "x": 83,
           "y": 88,
           "width": 287,
@@ -5313,9 +5670,13 @@
           "width": 406,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -5328,9 +5689,13 @@
           "width": 406,
           "height": 104
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }
@@ -5343,9 +5708,13 @@
           "width": 341,
           "height": 84
         },
-        "label": "r 26dp",
+        "label": "pad 6dp/14dp · r 26dp",
         "role": "Button",
         "detail": {
+          "padding.start": "14",
+          "padding.top": "6",
+          "padding.end": "14",
+          "padding.bottom": "6",
           "cornerRadius": "26",
           "unit": "dp"
         }

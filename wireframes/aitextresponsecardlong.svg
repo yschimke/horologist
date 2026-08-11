@@ -15,7 +15,7 @@
   </g>
   <g>
     <path d="M100,115 H354 A52,52 0 0 1 406,167 V288 A52,52 0 0 1 354,340 H100 A52,52 0 0 1 48,288 V167 A52,52 0 0 1 100,115 Z" fill="#303133" fill-opacity="1" stroke="#3B72A8" stroke-width="1.5" stroke-opacity="1"/>
-    <text x="51" y="127" font-family="system-ui, sans-serif" font-size="9" fill="#3B72A8">#FF303133</text>
+    <text x="51" y="127" font-family="system-ui, sans-serif" font-size="9" fill="#3B72A8">#FF303133  pad 12.0dp</text>
   </g>
   <g>
     <rect x="48" y="115" width="358" height="225" fill="none" fill-opacity="0" stroke="#A85B6B" stroke-width="1" stroke-opacity="0.5"/>

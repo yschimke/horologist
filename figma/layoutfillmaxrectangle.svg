@@ -4,7 +4,7 @@
 <g transform="translate(0, 0)" clip-path="url(#deviceRound)">
   <g id="Root">
     <g id="ReusableComposeNode">
-      <rect x="0" y="0" width="454" height="454" fill="#04409F"/>
+      <rect x="66" y="66" width="321" height="321" fill="#04409F"/>
       <g id="ReusableComposeNode">
         <text x="105" y="239.04" font-size="32" font-family="Roboto, sans-serif" font-weight="400" letter-spacing="0.36" fill="#FFFFFF" fill-opacity="0.87">fillMaxRectangle</text>
       </g>

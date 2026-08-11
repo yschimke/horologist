@@ -12,7 +12,7 @@
   </g>
   <g>
     <path d="M123,187 H331 A40,40 0 0 1 371,227 V227 A40,40 0 0 1 331,267 H123 A40,40 0 0 1 83,227 V227 A40,40 0 0 1 123,187 Z" fill="#303133" fill-opacity="1" stroke="#B0813B" stroke-width="1.5" stroke-opacity="1"/>
-    <text x="86" y="199" font-family="system-ui, sans-serif" font-size="9" fill="#B0813B">#FF303133</text>
+    <text x="86" y="199" font-family="system-ui, sans-serif" font-size="9" fill="#B0813B">#FF303133  pad ·</text>
   </g>
   <g>
     <rect x="83" y="209" width="288" height="36" fill="none" fill-opacity="0" stroke="#3B72A8" stroke-width="1" stroke-opacity="0.5"/>

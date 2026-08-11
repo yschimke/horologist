@@ -11,8 +11,10 @@
   <g id="Root">
     <g id="ReusableComposeNode">
       <g id="LayoutNodeSubcompositionsState">
-        <g id="Empty">
-          <text x="227" y="79.44" font-size="35.96" font-family="Roboto, sans-serif" font-weight="500" letter-spacing="0.39" text-anchor="middle" fill="#FFFFFF">Sign in</text>
+        <g id="Box" opacity="0.99">
+          <g id="Empty">
+            <text x="227" y="79.44" font-size="35.96" font-family="Roboto, sans-serif" font-weight="500" letter-spacing="0.39" text-anchor="middle" fill="#FFFFFF">Sign in</text>
+          </g>
         </g>
         <g id="Column">
           <g id="Spacer">

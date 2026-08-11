@@ -33,7 +33,7 @@
   </g>
   <g>
     <path d="M84,187 H394 A40,40 0 0 1 434,227 V227 A40,40 0 0 1 394,267 H84 A40,40 0 0 1 44,227 V227 A40,40 0 0 1 84,187 Z" fill="#303133" fill-opacity="1" stroke="#7A7A33" stroke-width="1.5" stroke-opacity="1"/>
-    <text x="47" y="199" font-family="system-ui, sans-serif" font-size="9" fill="#7A7A33">#FF303133</text>
+    <text x="47" y="199" font-family="system-ui, sans-serif" font-size="9" fill="#7A7A33">#FF303133  pad ·</text>
   </g>
   <g>
     <rect x="44" y="195" width="64" height="64" fill="none" fill-opacity="0" stroke="#5B6470" stroke-width="1" stroke-opacity="0.5"/>
@@ -58,7 +58,7 @@
   </g>
   <g>
     <path d="M84,299 H394 A40,40 0 0 1 434,339 V339 A40,40 0 0 1 394,379 H84 A40,40 0 0 1 44,339 V339 A40,40 0 0 1 84,299 Z" fill="#303133" fill-opacity="1" stroke="#7A7A33" stroke-width="1.5" stroke-opacity="1"/>
-    <text x="47" y="311" font-family="system-ui, sans-serif" font-size="9" fill="#7A7A33">#FF303133</text>
+    <text x="47" y="311" font-family="system-ui, sans-serif" font-size="9" fill="#7A7A33">#FF303133  pad ·</text>
   </g>
   <g>
     <rect x="44" y="307" width="64" height="64" fill="none" fill-opacity="0" stroke="#5B6470" stroke-width="1" stroke-opacity="0.5"/>
@@ -83,7 +83,7 @@
   </g>
   <g>
     <path d="M115,408 H358 A31,31 0 0 1 389,439 V439 A31,31 0 0 1 358,470 H115 A31,31 0 0 1 84,439 V439 A31,31 0 0 1 115,408 Z" fill="#303133" fill-opacity="1" stroke="#7A7A33" stroke-width="1.5" stroke-opacity="1"/>
-    <text x="87" y="420" font-family="system-ui, sans-serif" font-size="9" fill="#7A7A33">#FF303133</text>
+    <text x="87" y="420" font-family="system-ui, sans-serif" font-size="9" fill="#7A7A33">#FF303133  pad ·</text>
   </g>
   <g>
     <rect x="84" y="414" width="50" height="50" fill="none" fill-opacity="0" stroke="#5B6470" stroke-width="1" stroke-opacity="0.5"/>
