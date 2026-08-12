@@ -30,11 +30,11 @@ on:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
 
-permissions:
-  # Baseline mode pushes rendered PNGs to `compose-preview/…` branches.
-  contents: write
-  # Comment mode posts (and updates) the sticky diff comment.
-  pull-requests: write
+# Nothing by default — each job asks for exactly what it needs. This matters
+# for the fork path below: a workflow-level write grant would be handed to the
+# job that runs the PR's own Gradle build if the org ever enables write tokens
+# for fork pull requests.
+permissions: {}
 
 concurrency:
   # Per-PR group so concurrent PRs don't cancel each other; push and dispatch
@@ -56,6 +56,8 @@ jobs:
     if: github.ref == 'refs/heads/previews' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -85,13 +87,72 @@ jobs:
           path: catalog/build/compose-previews/renders/
           if-no-files-found: error
 
+  # Fork PRs render here and publish nothing.
+  #
+  # A fork PR's GITHUB_TOKEN is read-only on every scope, so the `apply` job
+  # below cannot push its renders or post its comment for one — it fails on the
+  # push and the PR gets no preview at all. `pull_request_target` looks like the
+  # fix and is not: it would hand a write-scoped token to a job that checks out
+  # and builds the PR's own code.
+  #
+  # So this job renders and stops, and `compose-preview-publish.yml` picks the
+  # result up from a `workflow_run` and publishes it from `main`'s own code.
+  # Its `permissions` block is what keeps the isolation real: an org can enable
+  # write tokens for fork PRs, and this job must not receive them.
+  render-fork:
+    name: Render previews (fork PR)
+    if: ${{ github.ref != 'refs/heads/previews' && github.event.pull_request.head.repo.fork }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          lfs: 'true'
+          persist-credentials: false
+
+      - name: Copy CI gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+
+      - name: set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: 21
+
+      - uses: yschimke/compose-ai-tools/.github/actions/apply@main
+        with:
+          phase: render
+          # Kept in step with the `apply` job below — these are render-side
+          # settings, so they belong on this call, not the publish one.
+          only: compose
+          timeout: '1800'
+          missing-renders: fail
+
+      - name: Upload preview handoff
+        uses: actions/upload-artifact@v7
+        with:
+          name: compose-preview-handoff
+          path: _compose_preview_handoff/
+          if-no-files-found: error
+          retention-days: 1
+
   apply:
     name: Apply compose-preview
     # Baselines come from `main` and diff comments from PRs; the `previews`
-    # scratch branch runs the cheap `catalog` job above instead.
-    if: github.ref != 'refs/heads/previews'
+    # scratch branch runs the cheap `catalog` job above instead. Fork PRs go
+    # through `render-fork` — this job holds the write token, so it only ever
+    # runs on code that already had commit access.
+    if: ${{ github.ref != 'refs/heads/previews' && !github.event.pull_request.head.repo.fork }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    permissions:
+      # Baseline mode pushes rendered PNGs to `compose-preview/…` branches.
+      contents: write
+      # Comment mode posts (and updates) the sticky diff comment.
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
