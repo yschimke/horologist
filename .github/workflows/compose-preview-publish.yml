@@ -21,7 +21,8 @@ name: Compose Preview Publish
 #    branch, commit message and skip flag from its own constants.
 #  - The staged PR number is verified against this run's head repository and
 #    branch before anything is posted.
-#  - Gated on `conclusion == 'success'` and serialised per head branch.
+#  - Only runs for a render that reached the staging step, and is serialised
+#    per head branch.
 on:  # zizmor: ignore[dangerous-triggers]
   workflow_run:
     workflows: [Compose Preview]
@@ -39,9 +40,12 @@ concurrency:
 jobs:
   publish:
     name: Publish fork PR previews
-    # A failed render has nothing worth publishing, and a stale sticky comment
-    # beats one built from a half-written envelope.
-    if: github.event.workflow_run.conclusion == 'success'
+    # Runs on a failed render too: it usually still carries a complete bundle,
+    # and the comment names the previews that failed. Gating on success alone
+    # means one broken preview costs a fork PR its comment entirely.
+    if: >-
+      github.event.workflow_run.conclusion == 'success' ||
+      github.event.workflow_run.conclusion == 'failure'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -77,7 +81,11 @@ jobs:
           fi
 
       - name: Download preview handoff
+        id: handoff
         if: steps.fork.outputs.is_fork == 'true'
+        # Absence is tolerated only when the render went red (it may have died
+        # before staging). After a success it is a real bug and stays loud.
+        continue-on-error: ${{ github.event.workflow_run.conclusion == 'failure' }}
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: compose-preview-handoff
@@ -91,7 +99,7 @@ jobs:
       # by the render job can't redirect the comment onto another PR.
       - name: Read PR number
         id: pr
-        if: steps.fork.outputs.is_fork == 'true'
+        if: steps.handoff.outcome == 'success'
         run: echo "number=$(cat _compose_preview_handoff/_pr_number)" >> "$GITHUB_OUTPUT"
 
       - uses: yschimke/compose-ai-tools/.github/actions/apply@main
