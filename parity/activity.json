@@ -1,15 +1,15 @@
 {
   "schema": "compose-preview-activity/v1",
-  "generatedAt": "2026-08-11T23:11:02.486Z",
+  "generatedAt": "2026-08-15T14:22:20.253Z",
   "windowDays": 30,
   "code": {
     "repo": "yschimke/horologist",
     "ref": "previews",
     "events": [
       {
-        "sha": "a1304b91a1c7b50474f5b9f65a21540d2d943b4c",
-        "subject": "Merge pull request #25 from yschimke/agent/bump-compose-ai-tools-0.19.60",
-        "at": "2026-08-11T23:56:15+01:00",
+        "sha": "690d38675056f00cfeb9171445cae28913f41673",
+        "subject": "Merge main into previews",
+        "at": "2026-08-15T14:10:36Z",
         "author": "Yuri Schimke",
         "previewIds": [],
         "components": []
