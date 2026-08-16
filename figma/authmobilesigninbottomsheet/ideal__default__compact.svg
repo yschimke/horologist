@@ -10,33 +10,33 @@
     <g id="Box">
       <g id="Spacer">
         <g transform="translate(0 0) scale(1 1)">
-          <path d="M0,0 H1076 V2396 H0 Z" fill="none"/>
+          <path d="M0,0 H1076 V2396 H0 Z" fill="#000000" fill-opacity="0.18"/>
         </g>
       </g>
       <g id="Box">
-        <path d="M73.5,2396 H1002.5 A73.5,73.5 0 0 1 1076,2469.5 V3163 H0 V2469.5 A73.5,73.5 0 0 1 73.5,2396 Z" fill="#F7F2FA"/>
+        <path d="M73.5,1985 H1002.5 A73.5,73.5 0 0 1 1076,2058.5 V2752 H0 V2058.5 A73.5,73.5 0 0 1 73.5,1985 Z" fill="#F7F2FA"/>
         <g id="Column">
           <g id="BoxKt" data-material-icon="email" data-material-icon-style="Filled" data-material-icon-url="https://fonts.gstatic.com/s/i/materialicons/email/v1/24px.svg">
-            <g transform="translate(475 2501) scale(5.25 5.25)">
+            <g transform="translate(475 2090) scale(5.25 5.25)">
               <use href="#material-icon-materialicons-email" xlink:href="#material-icon-materialicons-email"/>
             </g>
           </g>
           <g id="Empty">
-            <text x="538" y="2746.67" font-size="57.75" font-family="Roboto" font-weight="400" text-anchor="middle" fill="#1D1B20">Sign in to Horologist Chat</text>
+            <text x="538" y="2335.67" font-size="57.75" font-family="Roboto" font-weight="400" text-anchor="middle" fill="#1D1B20">Sign in to Horologist Chat</text>
           </g>
           <g id="Empty">
-            <text font-size="42" font-family="Roboto" font-weight="400" letter-spacing="1.31" fill="#49454F"><tspan x="92" y="2852" textLength="892" lengthAdjust="spacing">Signing in on your phone signs you in on your</tspan><tspan x="433" y="2915" textLength="210" lengthAdjust="spacing">watch too.</tspan></text>
+            <text font-size="42" font-family="Roboto" font-weight="400" letter-spacing="1.31" fill="#49454F"><tspan x="92" y="2441" textLength="892" lengthAdjust="spacing">Signing in on your phone signs you in on your</tspan><tspan x="433" y="2504" textLength="210" lengthAdjust="spacing">watch too.</tspan></text>
           </g>
           <g id="Spacer">
           </g>
           <g id="Row">
             <g id="Empty">
-              <text x="389" y="3070.92" font-size="36.75" font-family="Roboto" font-weight="500" letter-spacing="0.26" fill="#6750A4">Not now</text>
+              <text x="389" y="2659.92" font-size="36.75" font-family="Roboto" font-weight="500" letter-spacing="0.26" fill="#6750A4">Not now</text>
             </g>
             <g id="Box">
-              <rect x="592" y="3006" width="400" height="105" rx="52.5" ry="52.5" fill="#6750A4"/>
+              <rect x="592" y="2595" width="400" height="105" rx="52.5" ry="52.5" fill="#6750A4"/>
               <g id="Empty">
-                <text x="655" y="3070.92" font-size="36.75" font-family="Roboto" font-weight="500" letter-spacing="0.26" fill="#FFFFFF">Sign-in on watch</text>
+                <text x="655" y="2659.92" font-size="36.75" font-family="Roboto" font-weight="500" letter-spacing="0.26" fill="#FFFFFF">Sign-in on watch</text>
               </g>
             </g>
           </g>

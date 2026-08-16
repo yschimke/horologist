@@ -10,33 +10,33 @@
     <g id="Box">
       <g id="Spacer">
         <g transform="translate(0 0) scale(1 1)">
-          <path d="M0,0 H1076 V2396 H0 Z" fill="none"/>
+          <path d="M0,0 H1076 V2396 H0 Z" fill="#000000" fill-opacity="0.18"/>
         </g>
       </g>
       <g id="Box">
-        <path d="M73.5,2396 H1002.5 A73.5,73.5 0 0 1 1076,2469.5 V3174 H0 V2469.5 A73.5,73.5 0 0 1 73.5,2396 Z" fill="#F7F2FA"/>
+        <path d="M73.5,1979 H1002.5 A73.5,73.5 0 0 1 1076,2052.5 V2757 H0 V2052.5 A73.5,73.5 0 0 1 73.5,1979 Z" fill="#F7F2FA"/>
         <g id="Column">
           <g id="BoxKt" data-material-icon="notifications" data-material-icon-style="Filled" data-material-icon-url="https://fonts.gstatic.com/s/i/materialicons/notifications/v1/24px.svg">
-            <g transform="translate(475 2501) scale(5.25 5.25)">
+            <g transform="translate(475 2084) scale(5.25 5.25)">
               <use href="#material-icon-materialicons-notifications" xlink:href="#material-icon-materialicons-notifications"/>
             </g>
           </g>
           <g id="Empty">
-            <text font-size="57.75" font-family="Roboto" font-weight="400" fill="#1D1B20"><tspan x="91" y="2747" textLength="894" lengthAdjust="spacing">You have unread messages on your</tspan><tspan x="461" y="2821" textLength="154" lengthAdjust="spacing">watch</tspan></text>
+            <text font-size="57.75" font-family="Roboto" font-weight="400" fill="#1D1B20"><tspan x="91" y="2330" textLength="894" lengthAdjust="spacing">You have unread messages on your</tspan><tspan x="461" y="2404" textLength="154" lengthAdjust="spacing">watch</tspan></text>
           </g>
           <g id="Empty">
-            <text x="538" y="2925.99" font-size="42" font-family="Roboto" font-weight="400" letter-spacing="1.31" text-anchor="middle" fill="#49454F">Open Horologist Chat to catch up.</text>
+            <text x="538" y="2508.98" font-size="42" font-family="Roboto" font-weight="400" letter-spacing="1.31" text-anchor="middle" fill="#49454F">Open Horologist Chat to catch up.</text>
           </g>
           <g id="Spacer">
           </g>
           <g id="Row">
             <g id="Empty">
-              <text x="449" y="3081.92" font-size="36.75" font-family="Roboto" font-weight="500" letter-spacing="0.26" fill="#6750A4">Not now</text>
+              <text x="449" y="2664.92" font-size="36.75" font-family="Roboto" font-weight="500" letter-spacing="0.26" fill="#6750A4">Not now</text>
             </g>
             <g id="Box">
-              <rect x="652" y="3017" width="340" height="105" rx="52.5" ry="52.5" fill="#6750A4"/>
+              <rect x="652" y="2600" width="340" height="105" rx="52.5" ry="52.5" fill="#6750A4"/>
               <g id="Empty">
-                <text x="715" y="3081.92" font-size="36.75" font-family="Roboto" font-weight="500" letter-spacing="0.26" fill="#FFFFFF">Try on watch</text>
+                <text x="715" y="2664.92" font-size="36.75" font-family="Roboto" font-weight="500" letter-spacing="0.26" fill="#FFFFFF">Try on watch</text>
               </g>
             </g>
           </g>

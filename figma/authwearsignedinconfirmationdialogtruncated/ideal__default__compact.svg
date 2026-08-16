@@ -8,25 +8,25 @@
 <clipPath id="deviceRound"><circle cx="227" cy="227" r="227"/></clipPath>
 <g transform="translate(0, 0)" clip-path="url(#deviceRound)">
   <g id="Root">
-    <g id="Box" opacity="0">
+    <g id="Box" opacity="0.87">
       <g id="Box">
-        <rect x="-57" y="-57" width="568" height="568" fill="#000000"/>
+        <rect x="-21" y="-21" width="496" height="496" fill="#000000"/>
         <g id="Box">
-          <rect x="-57" y="-57" width="568" height="568" fill="#000000"/>
+          <rect x="-21" y="-21" width="496" height="496" fill="#000000"/>
           <g id="Column">
             <g id="Box">
-              <rect x="107" y="-7" width="240" height="240" fill="#303133"/>
+              <rect x="122" y="23" width="210" height="209" fill="#303133"/>
               <g id="BoxKt" data-material-icon="account_circle" data-material-icon-style="Filled" data-material-icon-url="https://fonts.gstatic.com/s/i/materialicons/account_circle/v1/24px.svg">
-                <g transform="translate(187 73) scale(3.33 3.33)">
+                <g transform="translate(192 93) scale(2.91 2.91)">
                   <use href="#material-icon-materialicons-account_circle" xlink:href="#material-icon-materialicons-account_circle"/>
                 </g>
               </g>
             </g>
             <g id="Empty">
-              <text font-size="75" font-family="Roboto, sans-serif" font-weight="520" letter-spacing="0.5" fill="#FFFFFF"><tspan x="-26" y="313" textLength="404" lengthAdjust="spacing">Hi, Wolfeschl…</tspan></text>
+              <text font-size="65.51" font-family="Roboto, sans-serif" font-weight="520" letter-spacing="0.43" fill="#FFFFFF"><tspan x="6" y="302" textLength="404" lengthAdjust="spacing">Hi, Wolfeschl…</tspan></text>
             </g>
             <g id="Empty">
-              <text font-size="35" font-family="Roboto, sans-serif" font-weight="450" letter-spacing="1" fill="#FFFFFF"><tspan x="35" y="376" textLength="308" lengthAdjust="spacing">wolfeschlegelsteinhaus</tspan><tspan x="27" y="416" textLength="320" lengthAdjust="spacing">enbergerdorff@examp…</tspan></text>
+              <text font-size="30.57" font-family="Roboto, sans-serif" font-weight="450" letter-spacing="0.87" fill="#FFFFFF"><tspan x="59" y="357" textLength="308" lengthAdjust="spacing">wolfeschlegelsteinhaus</tspan><tspan x="52" y="392" textLength="320" lengthAdjust="spacing">enbergerdorff@examp…</tspan></text>
             </g>
           </g>
         </g>
