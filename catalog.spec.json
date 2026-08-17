@@ -2,6 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/yschimke/compose-ai-tools/main/scripts/design-artifacts/catalog.spec.schema.json",
   "system": "horologist",
   "title": "Horologist",
+  "module": ":catalog",
   "modes": [
     "dark",
     "light"
