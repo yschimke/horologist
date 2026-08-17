@@ -75,7 +75,15 @@ jobs:
     if: ${{ github.repository == 'yschimke/horologist' }}
     permissions:
       contents: write
-    uses: yschimke/compose-ai-tools/.github/workflows/design-artifacts-reusable.yml@v1.12.0
+    # `@main`, the documented usage (see the header of design-artifacts-reusable.yml
+    # and docs/design/DESIGN_CATALOGS.md), and what every other catalog repo uses.
+    # This file used to pin a release tag, which bought less than it looked like: the
+    # export driver is NOT taken from this ref — it is the release commit named by
+    # compose-ai-tools' `.github/design-artifacts-driver-pin.txt`, which the workflow
+    # reads from `main` whatever ref the caller pins. So a tag here froze the workflow
+    # (missing pipeline fixes the other repos pick up) without freezing the driver it
+    # runs — the worst half of both. Tracking `main` makes the two consistent.
+    uses: yschimke/compose-ai-tools/.github/workflows/design-artifacts-reusable.yml@main
     with:
       system: horologist
       spec: catalog.spec.json
@@ -97,11 +105,14 @@ jobs:
       # CLI that renders the bundle can never drift ahead of the applied plugin.
       cli-version: catalog
       catalog-key: composeAiTools
-      # Keep the export driver on the same release as the renderer, so the driver
-      # and the CLI that produced the PNGs it reads can't skew apart. The pinned
-      # @design-parity/catalog-export provenance is recorded in catalog.json when
-      # the delivery branch is regenerated.
-      driver-ref: v1.12.0
+      # `driver-ref` deliberately absent. It is a deprecated compatibility input and
+      # is IGNORED: the export driver revision is decided by the reusable workflow
+      # itself, from the immutable release commit in compose-ai-tools'
+      # `.github/design-artifacts-driver-pin.txt`. Passing `driver-ref: v1.12.0` here
+      # read as if it held the driver on a chosen release — the comment that used to
+      # sit on this line said exactly that — while doing nothing at all. Better absent
+      # than present and misleading; the driver's provenance is still recorded in
+      # catalog.json when the delivery branch is regenerated.
       # Refuse to publish a degraded render, the default. This was briefly `true`,
       # then the eight dialog- and bottom-sheet-shaped previews were withheld from
       # the spec instead: they captured blank, which the export reported as
