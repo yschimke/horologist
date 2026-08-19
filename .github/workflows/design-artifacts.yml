@@ -129,7 +129,12 @@ jobs:
       # public server already re-renders for wear-m3 — so the live daemon runs here.
       publish-live-bundle: true
       # Split the render into one addressable bundle per preview for the serve
-      # host's per-preview live lane. full keeps each per-preview bundle's re-render
-      # classpath (requires publish-live-bundle), mirroring compose-ai-tools' wear-m3.
+      # host's per-preview live lane, with a SHARED classpath (requires
+      # publish-live-bundle), mirroring compose-ai-tools' wear-m3: `classes/app.jar`
+      # is published once into `bundle/res` and each split manifest carries a
+      # hash-verified `externalClasspath`, so the live re-render lane is intact while
+      # the delivery branch stops carrying the same jar once per preview (a `full`
+      # split grows with the preview count on every publish — see
+      # yschimke/compose-ai-tools#4211).
       split-per-preview: true
-      split-mode: full
+      split-mode: full-shared-classpath
