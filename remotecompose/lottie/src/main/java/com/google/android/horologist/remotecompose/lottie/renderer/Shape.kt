@@ -19,11 +19,7 @@ package com.google.android.horologist.remotecompose.lottie.renderer
 import android.annotation.SuppressLint
 import androidx.compose.remote.creation.RemotePath
 import androidx.compose.remote.creation.compose.layout.RemoteCanvas
-import androidx.compose.remote.creation.compose.layout.RemoteComposable
-import androidx.compose.remote.creation.compose.modifier.RemoteModifier
-import androidx.compose.remote.creation.compose.modifier.fillMaxSize
-import androidx.compose.runtime.Composable
-import com.google.android.horologist.remotecompose.lottie.LocalAnimationSettings
+import androidx.compose.remote.creation.compose.layout.RemoteDrawScope
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
 import com.google.android.horologist.remotecompose.lottie.format.GraphicElement
 import com.google.android.horologist.remotecompose.lottie.format.GraphicElement.Ellipse
@@ -44,39 +40,23 @@ import kotlin.math.sin
 
 internal data class StyledShapes(val shapes: List<RemoteShape>, val style: RemoteStyle)
 
-/** Renders a list of Lottie Shapes to the RemoteCanvas. */
+/** Draws a list of Lottie Shapes to the RemoteDrawScope and RemoteCanvas. */
 @SuppressLint("RestrictedApi")
-@Composable
-@RemoteComposable
-internal fun RenderShapes(shapes: List<GraphicElement>, transformStack: List<Transform>) {
-  val animationSettings = LocalAnimationSettings.current
-  val shapeGroups = gatherShapes(shapes, animationSettings)
+internal fun RemoteDrawScope.drawShapes(
+  shapeGroups: List<StyledShapes>,
+) {
+  for (shapeGroup in shapeGroups) {
+    val paint = shapeGroup.style.getPaint()
 
-  // Aspect-ratio scaling and centering is applied once, at the top level, by the
-  // drawWithContent modifier in LottieAnimation - shapes draw in raw Lottie coordinates here.
-  RemoteCanvas(modifier = RemoteModifier.fillMaxSize()) {
-    for (shapeGroup in shapeGroups) {
-      val paint = shapeGroup.style.getPaint()
-
-      for (transform in transformStack) {
-        remoteCanvas.save()
-        transform(transform, paint, animationSettings, remoteCanvas)
-      }
-
-      usePaint(paint) {
-        for (shape in shapeGroup.shapes) {
-          shape.draw(this, remoteCanvas)
-        }
-      }
-
-      for (transform in transformStack) {
-        remoteCanvas.restore()
+    usePaint(paint) {
+      for (shape in shapeGroup.shapes) {
+        shape.draw(this, remoteCanvas)
       }
     }
   }
 }
 
-private fun gatherShapes(
+internal fun gatherShapes(
   shapes: List<GraphicElement>,
   animationSettings: LottieSettings,
 ): List<StyledShapes> {

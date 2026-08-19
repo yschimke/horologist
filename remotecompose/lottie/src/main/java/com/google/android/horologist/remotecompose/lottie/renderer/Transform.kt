@@ -26,9 +26,9 @@ import com.google.android.horologist.remotecompose.lottie.format.GraphicElement.
 /** Applies a transform described by a Lottie [Transform] object to the RemoteCanvas. */
 internal fun transform(
   transform: Transform,
-  paint: RemotePaint,
   animationSettings: LottieSettings,
   canvas: RemoteCanvas,
+  paint: RemotePaint? = null,
 ) {
   val rotation = animateScalar(transform.rotation, animationSettings)
   val translation = animatePosition(transform.positionTranslation, animationSettings)
@@ -45,5 +45,7 @@ internal fun transform(
   canvas.scale(scaleX, scaleY)
   canvas.translate(-anchorPoint.x, -anchorPoint.y)
 
-  paint.color = paint.color.copy(alpha = opacity / 100f)
+  if (paint != null) {
+    paint.color = paint.color.copy(alpha = opacity / 100f)
+  }
 }

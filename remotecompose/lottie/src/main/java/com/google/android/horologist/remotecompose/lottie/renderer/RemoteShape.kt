@@ -47,7 +47,7 @@ internal class RemoteGroup(
       canvas.save()
 
       if (transform != null) {
-        transform(transform, paint, animationSettings, canvas)
+        transform(transform, animationSettings, canvas, paint)
       }
 
       drawScope.usePaint(paint) {

@@ -38,12 +38,13 @@ internal sealed class Layer {
   abstract val index: Int?
   abstract val parent: Int?
   abstract val transform: Transform?
+  abstract val hidden: Boolean?
 
   /** A layer with no data. Usually used as a parent to apply a transform. */
   @Serializable
   data class NullLayer(
     @SerialName("nm") override val name: String? = "",
-    @SerialName("hd") val hidden: Boolean? = false,
+    @SerialName("hd") override val hidden: Boolean? = false,
     @SerialName("ty") override val type: LayerType = LayerType.Null,
     @SerialName("ind") override val index: Int? = null,
     @SerialName("parent") override val parent: Int? = null,
@@ -56,7 +57,7 @@ internal sealed class Layer {
   @Serializable
   data class ShapeLayer(
     @SerialName("nm") override val name: String? = "",
-    @SerialName("hd") val hidden: Boolean? = false,
+    @SerialName("hd") override val hidden: Boolean? = false,
     @SerialName("ty") override val type: LayerType = LayerType.Shape,
     @SerialName("ind") override val index: Int? = null,
     @SerialName("parent") override val parent: Int? = null,
