@@ -31,9 +31,7 @@ import com.google.android.horologist.audit.AuditNavigation.PageIndicator.Config.
 import com.google.android.horologist.audit.AuditNavigation.PageIndicator.Config.Right5Plus
 import com.google.android.horologist.audit.AuditNavigation.PageIndicator.Config.TwoDots
 import com.google.android.horologist.compose.layout.AppScaffold
-import com.google.android.horologist.compose.layout.ResponsiveTimeText
 import com.google.android.horologist.compose.pager.PagerScreen
-import com.google.android.horologist.compose.tools.PreviewTimeSource
 
 @Composable
 fun PageIndicatorAudit(route: AuditNavigation.PageIndicator.Audit) {
@@ -67,16 +65,12 @@ fun PageIndicatorAudit(route: AuditNavigation.PageIndicator.Audit) {
 @WearPreviewSmallRound
 @WearPreviewLargeRound
 fun PageIndicatorLeft5PlusAuditPreview() {
-  AppScaffold(timeText = { ResponsiveTimeText(timeSource = PreviewTimeSource) }) {
-    PageIndicatorAudit(AuditNavigation.PageIndicator.Audit(Left5Plus))
-  }
+  AppScaffold { PageIndicatorAudit(AuditNavigation.PageIndicator.Audit(Left5Plus)) }
 }
 
 @Composable
 @WearPreviewSmallRound
 @WearPreviewLargeRound
 fun PageIndicatorRight5PlusAuditPreview() {
-  AppScaffold(timeText = { ResponsiveTimeText(timeSource = PreviewTimeSource) }) {
-    PageIndicatorAudit(AuditNavigation.PageIndicator.Audit(Right5Plus))
-  }
+  AppScaffold { PageIndicatorAudit(AuditNavigation.PageIndicator.Audit(Right5Plus)) }
 }

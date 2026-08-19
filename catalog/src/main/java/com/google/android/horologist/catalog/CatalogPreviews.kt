@@ -17,7 +17,6 @@
 package com.google.android.horologist.catalog
 
 import androidx.compose.ui.tooling.preview.Preview
-import ee.schimke.composeai.preview.PreviewWrapperClass
 
 /**
  * The catalog's section annotations: one per (area, form factor) pair.
@@ -44,9 +43,6 @@ private const val WEAR_BACKGROUND = 0xFF000000
 
 private const val MOBILE_BACKGROUND = 0xFFFFFBFE
 
-private const val DEFAULT_THEME_PROVIDER =
-  "com.google.android.horologist.catalog.HorologistBlueThemeCatalog"
-
 // ---------------------------------------------------------------------------------------------
 // Wear areas. No form factor in the name — Wear is the default reading.
 // ---------------------------------------------------------------------------------------------
@@ -58,7 +54,6 @@ private const val DEFAULT_THEME_PROVIDER =
   showBackground = true,
   group = "Auth Wear",
 )
-@PreviewWrapperClass(DEFAULT_THEME_PROVIDER)
 public annotation class AuthWearCatalog
 
 /** `:media:ui-material3` — the player, its displays, and its controls. */
@@ -68,7 +63,6 @@ public annotation class AuthWearCatalog
   showBackground = true,
   group = "Media",
 )
-@PreviewWrapperClass(DEFAULT_THEME_PROVIDER)
 public annotation class MediaCatalog
 
 /** `:compose-material` — the Material 2 building blocks Horologist wraps. */
@@ -78,7 +72,6 @@ public annotation class MediaCatalog
   showBackground = true,
   group = "Material",
 )
-@PreviewWrapperClass(DEFAULT_THEME_PROVIDER)
 public annotation class MaterialCatalog
 
 /** `:composables` — the standalone widgets that have no Material equivalent. */
@@ -88,7 +81,6 @@ public annotation class MaterialCatalog
   showBackground = true,
   group = "Composables",
 )
-@PreviewWrapperClass(DEFAULT_THEME_PROVIDER)
 public annotation class ComposablesCatalog
 
 /** `:health:composables` — exercise metrics and durations. */
@@ -98,7 +90,6 @@ public annotation class ComposablesCatalog
   showBackground = true,
   group = "Health",
 )
-@PreviewWrapperClass(DEFAULT_THEME_PROVIDER)
 public annotation class HealthCatalog
 
 /** `:media:audio-ui-material3` — volume and audio-output surfaces. */
@@ -108,7 +99,6 @@ public annotation class HealthCatalog
   showBackground = true,
   group = "Audio",
 )
-@PreviewWrapperClass(DEFAULT_THEME_PROVIDER)
 public annotation class AudioCatalog
 
 /** `:compose-layout` — the scaffolding: scrolling columns, pagers, time text. */
@@ -118,7 +108,6 @@ public annotation class AudioCatalog
   showBackground = true,
   group = "Layout",
 )
-@PreviewWrapperClass(DEFAULT_THEME_PROVIDER)
 public annotation class LayoutCatalog
 
 /** `:ai:ui` — the on-watch prompt/response surfaces. */
@@ -128,7 +117,6 @@ public annotation class LayoutCatalog
   showBackground = true,
   group = "AI",
 )
-@PreviewWrapperClass(DEFAULT_THEME_PROVIDER)
 public annotation class AiCatalog
 
 // ---------------------------------------------------------------------------------------------
