@@ -27,11 +27,9 @@ import androidx.wear.compose.navigation.composable
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import androidx.wear.compose.ui.tooling.preview.WearPreviewSmallRound
 import com.google.android.horologist.compose.layout.AppScaffold
-import com.google.android.horologist.compose.layout.ResponsiveTimeText
 import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults.ItemType
 import com.google.android.horologist.compose.layout.ScreenScaffold
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
-import com.google.android.horologist.compose.tools.PreviewTimeSource
 import com.google.android.horologist.datalayer.sample.screens.MainScreen
 import com.google.android.horologist.datalayer.sample.screens.datalayer.DataLayerScreen
 import com.google.android.horologist.datalayer.sample.screens.info.infoScreen
@@ -47,9 +45,8 @@ import com.google.android.horologist.datalayer.sample.screens.tracking.TrackingS
 fun WearApp(
   modifier: Modifier = Modifier,
   navController: NavHostController = rememberSwipeDismissableNavController(),
-  timeText: @Composable () -> Unit = { ResponsiveTimeText() },
 ) {
-  AppScaffold(timeText = timeText) {
+  AppScaffold {
     SwipeDismissableNavHost(
       startDestination = Screen.MainScreen.route,
       navController = navController,
@@ -114,5 +111,5 @@ fun WearApp(
 @WearPreviewSmallRound
 @Composable
 fun DefaultPreview() {
-  WearApp(timeText = { ResponsiveTimeText(timeSource = PreviewTimeSource) })
+  WearApp()
 }

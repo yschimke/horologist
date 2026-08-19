@@ -51,7 +51,6 @@ import androidx.wear.compose.material.curvedText
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import androidx.wear.compose.ui.tooling.preview.WearPreviewLargeRound
 import com.google.android.horologist.compose.layout.AppScaffold
-import com.google.android.horologist.compose.layout.ResponsiveTimeText
 import com.google.android.horologist.compose.layout.ScalingLazyColumn
 import com.google.android.horologist.compose.layout.ScreenScaffold
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
@@ -62,7 +61,6 @@ import com.google.android.horologist.compose.material.ToggleChip
 import com.google.android.horologist.compose.material.ToggleChipToggleControl
 import com.google.android.horologist.compose.nav.SwipeDismissableNavHost
 import com.google.android.horologist.compose.nav.composable
-import com.google.android.horologist.compose.tools.PreviewTimeSource
 import kotlinx.serialization.Serializable
 
 class AmbientAwareActivity : ComponentActivity() {
@@ -74,13 +72,13 @@ class AmbientAwareActivity : ComponentActivity() {
 }
 
 @Composable
-fun AmbientAwareWearApp(timeText: @Composable () -> Unit = { ResponsiveTimeText() }) {
+fun AmbientAwareWearApp() {
   val ambientModeManager = rememberAmbientModeManager()
 
   CompositionLocalProvider(LocalAmbientModeManager provides ambientModeManager) {
     val navController = rememberSwipeDismissableNavController()
 
-    AppScaffold(timeText = timeText) {
+    AppScaffold {
       Box(modifier = Modifier.fillMaxSize()) {
         SwipeDismissableNavHost(navController, Home) {
           composable<Home> {
@@ -234,5 +232,5 @@ fun AmbientAwareTimeText(ambientMode: AmbientMode?) {
 @WearPreviewLargeRound
 @Composable
 fun WearAppPreview() {
-  AmbientAwareWearApp(timeText = { ResponsiveTimeText(timeSource = PreviewTimeSource) })
+  AmbientAwareWearApp()
 }

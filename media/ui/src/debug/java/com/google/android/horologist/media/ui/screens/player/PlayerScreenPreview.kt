@@ -41,7 +41,6 @@ import com.google.android.horologist.audio.ui.components.SettingsButtons
 import com.google.android.horologist.audio.ui.components.SettingsButtonsDefaults
 import com.google.android.horologist.compose.layout.ResponsiveTimeText
 import com.google.android.horologist.compose.pager.PagerScreen
-import com.google.android.horologist.compose.tools.PreviewTimeSource
 import com.google.android.horologist.logo.R
 import com.google.android.horologist.media.ui.components.MediaControlButtons
 import com.google.android.horologist.media.ui.components.background.radialBackgroundBrush
@@ -56,7 +55,7 @@ import kotlin.time.Duration.Companion.seconds
 fun PlayerScreenPreview() {
   Scaffold(
     modifier = Modifier.fillMaxSize().background(BACKGROUND_COLOR),
-    timeText = { ResponsiveTimeText(timeSource = PreviewTimeSource) },
+    timeText = { ResponsiveTimeText() },
   ) {
     PagerScreen(state = rememberPagerState { 2 }) {
       PlayerScreen(
@@ -94,7 +93,7 @@ fun PlayerScreenPreview() {
 fun PlayerScreenPreviewCustomMediaDisplay() {
   Scaffold(
     modifier = Modifier.fillMaxSize().background(BACKGROUND_COLOR),
-    timeText = { ResponsiveTimeText(timeSource = PreviewTimeSource) },
+    timeText = { ResponsiveTimeText() },
   ) {
     PagerScreen(state = rememberPagerState { 2 }) {
       PlayerScreen(
@@ -138,7 +137,7 @@ fun PlayerScreenPreviewCustomMediaDisplay() {
 fun PlayerScreenPreviewCustomBackground() {
   Scaffold(
     modifier = Modifier.fillMaxSize().background(BACKGROUND_COLOR),
-    timeText = { ResponsiveTimeText(timeSource = PreviewTimeSource) },
+    timeText = { ResponsiveTimeText() },
   ) {
     PagerScreen(state = rememberPagerState { 2 }) {
       PlayerScreen(
@@ -204,10 +203,7 @@ fun PlayerScreenThemePreview() {
 
 @Composable
 fun DefaultMediaPreview() {
-  Scaffold(
-    modifier = Modifier.fillMaxSize(),
-    timeText = { ResponsiveTimeText(timeSource = PreviewTimeSource) },
-  ) {
+  Scaffold(modifier = Modifier.fillMaxSize(), timeText = { ResponsiveTimeText() }) {
     PagerScreen(state = rememberPagerState { 2 }) {
       PlayerScreen(
         modifier =
@@ -259,7 +255,7 @@ fun DefaultMediaPreview() {
 fun PlayerScreenPreviewNotingPlayingDisplay() {
   Scaffold(
     modifier = Modifier.fillMaxSize().background(BACKGROUND_COLOR),
-    timeText = { ResponsiveTimeText(timeSource = PreviewTimeSource) },
+    timeText = { ResponsiveTimeText() },
   ) {
     PagerScreen(state = rememberPagerState { 2 }) {
       PlayerScreen(

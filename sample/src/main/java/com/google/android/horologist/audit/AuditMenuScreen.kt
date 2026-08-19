@@ -27,7 +27,6 @@ import androidx.wear.compose.material.Text
 import androidx.wear.compose.ui.tooling.preview.WearPreviewLargeRound
 import androidx.wear.compose.ui.tooling.preview.WearPreviewSmallRound
 import com.google.android.horologist.compose.layout.AppScaffold
-import com.google.android.horologist.compose.layout.ResponsiveTimeText
 import com.google.android.horologist.compose.layout.ScalingLazyColumn
 import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults.ItemType
 import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults.listTextPadding
@@ -38,7 +37,6 @@ import com.google.android.horologist.compose.layout.rememberResponsiveColumnStat
 import com.google.android.horologist.compose.material.Chip
 import com.google.android.horologist.compose.material.SecondaryTitle
 import com.google.android.horologist.compose.material.Title
-import com.google.android.horologist.compose.tools.PreviewTimeSource
 
 @Composable
 fun AuditMenuScreen(
@@ -77,7 +75,5 @@ fun AuditMenuScreen(
 @WearPreviewSmallRound
 @WearPreviewLargeRound
 fun AuditMenuScreenPreview() {
-  AppScaffold(timeText = { ResponsiveTimeText(timeSource = PreviewTimeSource) }) {
-    AuditMenuScreen {}
-  }
+  AppScaffold { AuditMenuScreen {} }
 }
