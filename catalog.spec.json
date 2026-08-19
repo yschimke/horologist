@@ -2,13 +2,18 @@
   "$schema": "https://raw.githubusercontent.com/yschimke/compose-ai-tools/main/scripts/design-artifacts/catalog.spec.schema.json",
   "system": "horologist",
   "title": "Horologist",
+  "module": ":catalog",
   "modes": [
     "dark",
     "light"
   ],
+  "display": {
+    "surface": "dark"
+  },
   "groups": [
     {
       "name": "Material",
+      "section": "Core UI",
       "blurb": "Horologist's wrappers over Wear Material 2 \u2014 chips, toggles, buttons, headers.",
       "components": [
         {
@@ -95,6 +100,7 @@
     },
     {
       "name": "Media",
+      "section": "Media",
       "blurb": "The player screen taken apart: title-area states, transport controls, entity screen.",
       "components": [
         {
@@ -181,6 +187,7 @@
     },
     {
       "name": "Auth Wear",
+      "section": "Auth",
       "blurb": "The on-watch sign-in flow, in the order a user meets it.",
       "components": [
         {
@@ -232,11 +239,66 @@
           "componentId": "AuthWearSignInPromptScreenLoading",
           "preview": "AuthWearSignInPromptScreenLoading",
           "caption": "Sign In Prompt Screen Loading"
+        },
+        {
+          "componentId": "AuthWearSignedInConfirmationDialog",
+          "preview": "AuthWearSignedInConfirmationDialog",
+          "caption": "Signed In Confirmation Dialog"
+        },
+        {
+          "componentId": "AuthWearSignedInConfirmationDialogEmailOnly",
+          "preview": "AuthWearSignedInConfirmationDialogEmailOnly",
+          "caption": "Signed In Confirmation Dialog Email Only"
+        },
+        {
+          "componentId": "AuthWearSignedInConfirmationDialogTruncated",
+          "preview": "AuthWearSignedInConfirmationDialogTruncated",
+          "caption": "Signed In Confirmation Dialog Truncated"
+        }
+      ]
+    },
+    {
+      "name": "Auth Mobile",
+      "section": "Auth",
+      "blurb": "The phone half of the sign-in story, from `:datalayer:phone-ui` — Material 3 on a phone, rendered in the same pass as the Wear auth stickers above.",
+      "components": [
+        {
+          "componentId": "AuthMobileSignInBottomSheet",
+          "preview": "AuthMobileSignInBottomSheet",
+          "caption": "Sign In Bottom Sheet"
+        },
+        {
+          "componentId": "AuthMobileSignInBottomSheetCustomLabels",
+          "preview": "AuthMobileSignInBottomSheetCustomLabels",
+          "caption": "Sign In Bottom Sheet Custom Labels"
+        }
+      ]
+    },
+    {
+      "name": "DataLayer Mobile",
+      "section": "Data Layer",
+      "blurb": "The three prompts a phone app shows to push its user towards the watch app.",
+      "components": [
+        {
+          "componentId": "DataLayerMobileInstallAppBottomSheet",
+          "preview": "DataLayerMobileInstallAppBottomSheet",
+          "caption": "Install App Bottom Sheet"
+        },
+        {
+          "componentId": "DataLayerMobileInstallTileBottomSheet",
+          "preview": "DataLayerMobileInstallTileBottomSheet",
+          "caption": "Install Tile Bottom Sheet"
+        },
+        {
+          "componentId": "DataLayerMobileReEngageBottomSheet",
+          "preview": "DataLayerMobileReEngageBottomSheet",
+          "caption": "Re Engage Bottom Sheet"
         }
       ]
     },
     {
       "name": "Composables",
+      "section": "Core UI",
       "blurb": "Widgets with no Wear Material equivalent \u2014 pickers, segmented indicators, marquee.",
       "components": [
         {
@@ -293,6 +355,7 @@
     },
     {
       "name": "Health",
+      "section": "Health",
       "blurb": "The mid-exercise metrics screen and its parts.",
       "components": [
         {
@@ -334,6 +397,7 @@
     },
     {
       "name": "Audio",
+      "section": "Audio",
       "blurb": "Volume screen and indicator, at the positions whose rendering differs.",
       "components": [
         {
@@ -365,6 +429,7 @@
     },
     {
       "name": "AI",
+      "section": "AI",
       "blurb": "One sticker per state of a prompt/response turn.",
       "components": [
         {
@@ -396,6 +461,7 @@
     },
     {
       "name": "Layout",
+      "section": "Core UI",
       "blurb": "Scaffolding: responsive scrolling column, pager, inscribed rectangle.",
       "components": [
         {

@@ -18,10 +18,9 @@ and cost a second module, a second render invocation, and a duplicated dependenc
 end to end: a single `composePreviewRenderAll` renders the Wear stickers at 227×227dp and the phone
 stickers at 411×914dp in the same pass.
 
-## How sections are declared
+## How groups and sections are declared
 
-Sections are annotations, not configuration. There is no catalog JSON, no manifest, and no registry
-to keep in sync — [`CatalogPreviews.kt`](src/main/java/com/google/android/horologist/catalog/CatalogPreviews.kt)
+Preview groups are annotations. [`CatalogPreviews.kt`](src/main/java/com/google/android/horologist/catalog/CatalogPreviews.kt)
 declares one multipreview annotation per (area, form factor) pair, each fixing the device, the
 background, and the `group`:
 
@@ -39,30 +38,33 @@ internal fun MediaNothingPlayingDisplay() { … }
 ```
 
 The group reaches `previews.json` and the rendered filenames
-(`MediaNothingPlayingDisplay_Media.png`), so the grouping is visible to every downstream consumer
-without anything else being declared anywhere.
+(`MediaNothingPlayingDisplay_Media.png`). [`catalog.spec.json`](../catalog.spec.json) maps those
+groups into the preview server's broader top-level sections: **Auth**, **Media**, **AI**, **Audio**,
+**Health**, **Data Layer**, and **Core UI**. Core UI combines the Material, Composables, and Layout
+groups; Auth combines its Wear and Mobile groups.
 
 The form factor is only spelled out when an area spans both — `Auth Wear` / `Auth Mobile`. An area
 that only exists on the watch is just `Media`, `Material`, `Composables`, `Health`, and reads as
 Wear by default, matching how Horologist itself is described.
 
-Adding an area means adding an annotation and a file. Nothing in the build wiring is per-area.
+Adding an area means adding an annotation and a file, then assigning its spec group to a section.
+Nothing in the build wiring is per-area.
 
-| Section | Form factor | Previews | Source library |
-| --- | --- | --- | --- |
-| Material | Wear | 16 | `:compose-material` |
-| Media | Wear | 16 | `:media:ui-material3` |
-| Auth Wear | Wear | 13 | `:auth:composables-material3`, `:auth:ui-material3` |
-| Composables | Wear | 10 | `:composables` |
-| Health | Wear | 7 | `:health:composables` |
-| Audio | Wear | 5 | `:media:audio-ui-material3` |
-| AI | Wear | 5 | `:ai:ui` |
-| Layout | Wear | 3 | `:compose-layout` |
-| DataLayer Mobile | Phone | 3 | `:datalayer:phone-ui` |
-| Auth Mobile | Phone | 2 | `:datalayer:phone-ui` |
+| Section | Group | Form factor | Previews | Source library |
+| --- | --- | --- | --- | --- |
+| Core UI | Material | Wear | 16 | `:compose-material` |
+| Media | Media | Wear | 16 | `:media:ui-material3` |
+| Auth | Auth Wear | Wear | 13 | `:auth:composables-material3`, `:auth:ui-material3` |
+| Core UI | Composables | Wear | 10 | `:composables` |
+| Health | Health | Wear | 7 | `:health:composables` |
+| Audio | Audio | Wear | 5 | `:media:audio-ui-material3` |
+| AI | AI | Wear | 5 | `:ai:ui` |
+| Core UI | Layout | Wear | 3 | `:compose-layout` |
+| Data Layer | DataLayer Mobile | Phone | 3 | `:datalayer:phone-ui` |
+| Auth | Auth Mobile | Phone | 2 | `:datalayer:phone-ui` |
 
-80 previews in total, of which 72 are published — see the known gap below. Sections cover a
-component's *states*, not just its happy path — disabled
+80 curated component previews are published, plus three generated dark-theme specimen sheets.
+Sections cover a component's *states*, not just its happy path — disabled
 seek buttons at a queue end, an account row with no display name, a five-digit metric, an empty and
 a complete segmented indicator — because those are the cases that break and the ones a static
 screenshot is good at catching.
@@ -92,33 +94,47 @@ they are — they're the library author's working previews. This module is the c
 one place where a surface is previewed with realistic data, on the device it ships to, grouped so a
 reader can navigate by area rather than by Gradle path.
 
-## Known gap: dialogs and bottom sheets render blank, and are withheld
+## Dialogs and bottom sheets
 
-72 of the 80 previews render with real content. The 8 that don't are all dialog-shaped:
+All 80 previews render with real content. The 8 dialog-shaped ones —
+`AuthWearSignedInConfirmationDialog` and its two variants (Wear `Dialog`), plus every `Auth Mobile`
+and `DataLayer Mobile` sticker (`ModalBottomSheet`) — were withheld from
+[`catalog.spec.json`](../catalog.spec.json) until compose-ai-tools 0.19.13, and are back in it now.
 
-- `AuthWearSignedInConfirmationDialog` and its two variants (Wear `Dialog`)
-- every `Auth Mobile` and `DataLayer Mobile` sticker (`ModalBottomSheet`)
+They compose into their own window with their own `ViewRootImpl` and Compose root, rather than into
+the host activity's content view. The renderer used to prefer the activity's root unconditionally,
+which for these is present but empty: the previews were discovered, sized (411×914dp for the phone
+sheets) and grouped correctly, but the exported tree had nothing in it — so they reported under
+`no semantics for: …` and the sticker was the whole activity window with the component floating in
+it. Fixed upstream in
+[yschimke/compose-ai-tools#3048](https://github.com/yschimke/compose-ai-tools/issues/3048): the
+renderer now picks the dialog's root and crops the capture to the dialog's own window.
 
-`Dialog`- and `ModalBottomSheet`-based composables compose into their own window with their own
-`ViewRootImpl` and Compose root, and the renderer's capture reads the host activity's root. Those
-previews are discovered, sized (411×914dp for the phone sheets), and grouped correctly — only the
-pixels are missing, and with them the semantics tree, so the export reports them under
-`no semantics for: …`.
+Two things worth knowing when reading these stickers:
 
-This is a renderer-side limitation, not a catalog one: the same previews are blank whether they
-live here or in a library's `src/debug`. Tracked upstream as
-[yschimke/compose-ai-tools#3048](https://github.com/yschimke/compose-ai-tools/issues/3048), with a
-reproduction and the investigation notes on `agent/dialog-window-capture` — capturing the dialog's
-decor view fails Espresso's activity-scoped view matching, and capturing its Compose root returns
-transparent pixels because the capture path is bound to the activity window's surface.
+- A Wear `Dialog` is centred in its window, so its sticker is cropped to the dialog itself rather
+  than to the 227dp round screen the other Wear stickers show.
+- A `ModalBottomSheet`'s window fills the screen, so its sticker keeps the full 411×914dp phone
+  frame — the crop is a no-op there. What changed for those is the semantics, which is what the
+  completeness gate was failing on.
 
-**The eight are withheld from [`catalog.spec.json`](../catalog.spec.json)** rather than published
-as empty stickers. A blank sticker on a browsable sheet is worse than an absent one: it reads as
-"this is what the component looks like". Withholding them also lets `design-artifacts.yml` run with
-`allow-incomplete: false`, so the completeness gate stays on for everything the catalog *does*
-declare — with the flag set, a genuinely broken render elsewhere would have published unnoticed.
+`design-artifacts.yml` runs with `allow-incomplete: false`, so the completeness gate is on for
+everything the catalog declares.
 
-The `@Preview`s stay in this module, so when #3048 lands the fix is to put the entries back in the
-spec — the previews themselves need no change. Note the whole phone form factor is in that set:
-every `Auth Mobile` and `DataLayer Mobile` sticker is a `ModalBottomSheet`, so the published catalog
-is Wear-only until then.
+## Custom themes
+
+The catalog exposes three dark themes: **Blue**, **Lilac**, and **Green**. They reuse palettes that
+Horologist already carries in `:compose-tools` for preview and screenshot coverage rather than
+inventing catalog-only colours.
+
+Each theme is a `@WearThemeCatalog` `PreviewWrapperProvider` whose wrapper installs the selected
+palette into both Wear Material 3 and Wear Material 2. The default Blue provider is inherited from
+the Wear section annotations through `@PreviewWrapperClass`. A live theme selection replaces that
+provider, so preview-local Wear theme wrappers deliberately remain pass-through and cannot shadow
+the selected theme. The five phone bottom-sheet previews keep their existing fixed Material 3
+presentation outside the Wear theme axis; wrapping their separate dialog window with a preview
+provider produces an empty capture.
+
+Discovery therefore reports 83 entries: the 80 curated previews from `catalog.spec.json` and the
+three generated theme specimen sheets. All custom themes use dark backgrounds and dark colour
+schemes; the catalog does not advertise a synthetic Wear light mode.
