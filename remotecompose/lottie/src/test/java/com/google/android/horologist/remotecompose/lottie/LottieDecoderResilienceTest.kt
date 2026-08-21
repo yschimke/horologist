@@ -200,6 +200,148 @@ class LottieDecoderResilienceTest {
   }
 
   @Test
+  fun colorProperty_parsesHexColorStrings() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 50,
+        "h": 50,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "ShapeLayer",
+            "shapes": [
+              {
+                "ty": "fl",
+                "nm": "Hex6Fill",
+                "c": { "k": "#FF8000" }
+              },
+              {
+                "ty": "fl",
+                "nm": "Hex8Fill",
+                "c": { "k": "#80FF8000" }
+              },
+              {
+                "ty": "fl",
+                "nm": "Hex3Fill",
+                "c": { "k": "#F80" }
+              },
+              {
+                "ty": "fl",
+                "nm": "Hex4Fill",
+                "c": { "k": "#8F80" }
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+
+    val shapeLayer = animation.layers[0] as Layer.ShapeLayer
+    assertThat(shapeLayer.shapes).hasSize(4)
+    val fill1 = shapeLayer.shapes[0] as GraphicElement.Fill
+    val fill2 = shapeLayer.shapes[1] as GraphicElement.Fill
+    val fill3 = shapeLayer.shapes[2] as GraphicElement.Fill
+    val fill4 = shapeLayer.shapes[3] as GraphicElement.Fill
+
+    assertThat(fill1.color.value).isNotNull()
+    assertThat(fill2.color.value).isNotNull()
+    assertThat(fill3.color.value).isNotNull()
+    assertThat(fill4.color.value).isNotNull()
+  }
+
+  @Test
+  fun colorProperty_4ComponentFloat_preservesAlpha() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 50,
+        "h": 50,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "ShapeLayer",
+            "shapes": [
+              {
+                "ty": "fl",
+                "nm": "AlphaFill",
+                "c": { "k": [1.0, 0.0, 0.0, 0.5] }
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+
+    val shapeLayer = animation.layers[0] as Layer.ShapeLayer
+    val fill = shapeLayer.shapes[0] as GraphicElement.Fill
+    assertThat(fill.color.value).isNotNull()
+  }
+
+  @Test
+  fun colorProperty_animatedColor_parsesKeyframes() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 50,
+        "h": 50,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "ShapeLayer",
+            "shapes": [
+              {
+                "ty": "fl",
+                "nm": "AnimatedColorFill",
+                "c": {
+                  "a": 1,
+                  "k": [
+                    {
+                      "t": 0,
+                      "s": [1.0, 0.0, 0.0, 1.0],
+                      "i": { "x": 0.5, "y": 1.0 },
+                      "o": { "x": 0.5, "y": 0.0 }
+                    },
+                    {
+                      "t": 30,
+                      "s": [0.0, 0.0, 1.0, 1.0]
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+
+    val shapeLayer = animation.layers[0] as Layer.ShapeLayer
+    val fill = shapeLayer.shapes[0] as GraphicElement.Fill
+    assertThat(fill.color.animated).isTrue()
+  }
+
+  @Test
   fun extraPluginMetadata_ignoredCleanly() {
     val json =
       """
