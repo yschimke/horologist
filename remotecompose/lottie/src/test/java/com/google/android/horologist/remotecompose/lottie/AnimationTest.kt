@@ -526,4 +526,61 @@ class AnimationTest {
     assertThat(beforeStartResult.x.constantValue).isEqualTo(10f)
     assertThat(beforeStartResult.y.constantValue).isEqualTo(20f)
   }
+
+  @Test
+  fun animatePositionWithHoldKeyframe_holdsValue() {
+    val animatedPosition =
+      AnimatedPositionProperty(
+        keyframes =
+          listOf(
+            PositionPropertyKeyframe(frame = 0f, hold = true, value = listOf(10f, 20f)),
+            PositionPropertyKeyframe(frame = 10f, value = listOf(30f, 40f)),
+          )
+      )
+
+    val firstFrameResult = animatePosition(animatedPosition, LottieSettings(0.rf, emptySlotMap))
+    val middleFrameResult = animatePosition(animatedPosition, LottieSettings(5.rf, emptySlotMap))
+    val lastFrameResult = animatePosition(animatedPosition, LottieSettings(10.rf, emptySlotMap))
+    val afterAnimationResult =
+      animatePosition(animatedPosition, LottieSettings(15.rf, emptySlotMap))
+
+    assertThat(firstFrameResult.x.constantValue).isEqualTo(10f)
+    assertThat(firstFrameResult.y.constantValue).isEqualTo(20f)
+    assertThat(middleFrameResult.x.constantValue).isEqualTo(10f)
+    assertThat(middleFrameResult.y.constantValue).isEqualTo(20f)
+    assertThat(lastFrameResult.x.constantValue).isEqualTo(30f)
+    assertThat(lastFrameResult.y.constantValue).isEqualTo(40f)
+    assertThat(afterAnimationResult.x.constantValue).isEqualTo(30f)
+    assertThat(afterAnimationResult.y.constantValue).isEqualTo(40f)
+  }
+
+  @Test
+  fun animatePositionWithSplitPosition_evaluatesXYIndependently() {
+    val splitPosition =
+      SplitPositionProperty(
+        x =
+          AnimatedScalarProperty(
+            keyframes =
+              listOf(
+                ScalarPropertyKeyframe(frame = 0f, value = 10f),
+                ScalarPropertyKeyframe(frame = 10f, value = 30f),
+              )
+          ),
+        y = StaticScalarProperty(value = 50f),
+      )
+
+    val frame0Result = animatePosition(splitPosition, LottieSettings(0.rf, emptySlotMap))
+    val frame5Result = animatePosition(splitPosition, LottieSettings(5.rf, emptySlotMap))
+    val frame10Result = animatePosition(splitPosition, LottieSettings(10.rf, emptySlotMap))
+    val frame15Result = animatePosition(splitPosition, LottieSettings(15.rf, emptySlotMap))
+
+    assertThat(frame0Result.x.constantValue).isEqualTo(10f)
+    assertThat(frame0Result.y.constantValue).isEqualTo(50f)
+    assertThat(frame5Result.x.constantValue).isEqualTo(20f)
+    assertThat(frame5Result.y.constantValue).isEqualTo(50f)
+    assertThat(frame10Result.x.constantValue).isEqualTo(30f)
+    assertThat(frame10Result.y.constantValue).isEqualTo(50f)
+    assertThat(frame15Result.x.constantValue).isEqualTo(30f)
+    assertThat(frame15Result.y.constantValue).isEqualTo(50f)
+  }
 }
