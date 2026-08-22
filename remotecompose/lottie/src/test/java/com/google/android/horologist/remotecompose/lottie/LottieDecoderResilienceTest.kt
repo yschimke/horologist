@@ -63,7 +63,7 @@ class LottieDecoderResilienceTest {
   }
 
   @Test
-  fun unknownShapeType_deserializesAsGroupFallback() {
+  fun unknownShapeType_deserializesAsUnknownElementFallback() {
     val json =
       """
       {
@@ -80,7 +80,7 @@ class LottieDecoderResilienceTest {
             "ip": 0,
             "op": 30,
             "shapes": [
-              { "ty": "unknown_shape_type", "nm": "CustomShape", "it": [] },
+              { "ty": "unknown_shape_type", "nm": "CustomShape" },
               {
                 "ty": "fl",
                 "nm": "RedFill",
@@ -247,10 +247,10 @@ class LottieDecoderResilienceTest {
 
     val shapeLayer = animation.layers[0] as Layer.ShapeLayer
     assertThat(shapeLayer.shapes).hasSize(4)
-    val fill1 = shapeLayer.shapes[0] as GraphicElement.Fill
-    val fill2 = shapeLayer.shapes[1] as GraphicElement.Fill
-    val fill3 = shapeLayer.shapes[2] as GraphicElement.Fill
-    val fill4 = shapeLayer.shapes[3] as GraphicElement.Fill
+    val fill1 = shapeLayer.shapes[0] as Fill
+    val fill2 = shapeLayer.shapes[1] as Fill
+    val fill3 = shapeLayer.shapes[2] as Fill
+    val fill4 = shapeLayer.shapes[3] as Fill
 
     assertThat(fill1.color.value).isNotNull()
     assertThat(fill2.color.value).isNotNull()
@@ -338,7 +338,7 @@ class LottieDecoderResilienceTest {
     val animation = Animation.decodeFromString(json)
 
     val shapeLayer = animation.layers[0] as Layer.ShapeLayer
-    val fill = shapeLayer.shapes[0] as GraphicElement.Fill
+    val fill = shapeLayer.shapes[0] as Fill
     assertThat(fill.color.animated).isTrue()
   }
 
@@ -394,8 +394,8 @@ class LottieDecoderResilienceTest {
     val animation = Animation.decodeFromString(json)
 
     val shapeLayer = animation.layers[0] as Layer.ShapeLayer
-    val path1 = shapeLayer.shapes[0] as GraphicElement.Path
-    val path2 = shapeLayer.shapes[1] as GraphicElement.Path
+    val path1 = shapeLayer.shapes[0] as Path
+    val path2 = shapeLayer.shapes[1] as Path
 
     assertThat(path1.shape).isNotNull()
     assertThat(path2.shape).isNotNull()
@@ -485,8 +485,8 @@ class LottieDecoderResilienceTest {
     val animation = Animation.decodeFromString(json)
 
     val shapeLayer = animation.layers[0] as Layer.ShapeLayer
-    val path1 = shapeLayer.shapes[0] as GraphicElement.Path
-    val path2 = shapeLayer.shapes[1] as GraphicElement.Path
+    val path1 = shapeLayer.shapes[0] as Path
+    val path2 = shapeLayer.shapes[1] as Path
 
     assertThat(path1.shape.animated).isTrue()
     assertThat(path2.shape.animated).isTrue()
@@ -532,7 +532,7 @@ class LottieDecoderResilienceTest {
     val animation = Animation.decodeFromString(json)
 
     val shapeLayer = animation.layers[0] as Layer.ShapeLayer
-    val path = shapeLayer.shapes[0] as GraphicElement.Path
+    val path = shapeLayer.shapes[0] as Path
     assertThat(path.shape).isNotNull()
   }
 
@@ -573,8 +573,8 @@ class LottieDecoderResilienceTest {
 
     val shapeLayer = animation.layers[0] as Layer.ShapeLayer
     assertThat(shapeLayer.shapes).hasSize(2)
-    val rect = shapeLayer.shapes[0] as GraphicElement.Rectangle
-    val ellipse = shapeLayer.shapes[1] as GraphicElement.Ellipse
+    val rect = shapeLayer.shapes[0] as Rectangle
+    val ellipse = shapeLayer.shapes[1] as Ellipse
 
     assertThat(rect.size).isNotNull()
     assertThat(ellipse.size).isNotNull()
@@ -626,8 +626,8 @@ class LottieDecoderResilienceTest {
     val animation = Animation.decodeFromString(json)
 
     val shapeLayer = animation.layers[0] as Layer.ShapeLayer
-    val rect = shapeLayer.shapes[0] as GraphicElement.Rectangle
-    val transform = shapeLayer.shapes[1] as GraphicElement.Transform
+    val rect = shapeLayer.shapes[0] as Rectangle
+    val transform = shapeLayer.shapes[1] as Transform
 
     assertThat(rect.size).isNotNull()
     assertThat(transform.scale).isNotNull()
@@ -678,7 +678,7 @@ class LottieDecoderResilienceTest {
     val animation = Animation.decodeFromString(json)
 
     val shapeLayer = animation.layers[0] as Layer.ShapeLayer
-    val rect = shapeLayer.shapes[0] as GraphicElement.Rectangle
+    val rect = shapeLayer.shapes[0] as Rectangle
     assertThat(rect.size.animated).isTrue()
   }
 
@@ -719,8 +719,8 @@ class LottieDecoderResilienceTest {
 
     val shapeLayer = animation.layers[0] as Layer.ShapeLayer
     assertThat(shapeLayer.shapes).hasSize(2)
-    val rect = shapeLayer.shapes[0] as GraphicElement.Rectangle
-    val ellipse = shapeLayer.shapes[1] as GraphicElement.Ellipse
+    val rect = shapeLayer.shapes[0] as Rectangle
+    val ellipse = shapeLayer.shapes[1] as Ellipse
 
     assertThat(rect.position).isNotNull()
     assertThat(ellipse.position).isNotNull()
@@ -772,8 +772,8 @@ class LottieDecoderResilienceTest {
     val animation = Animation.decodeFromString(json)
 
     val shapeLayer = animation.layers[0] as Layer.ShapeLayer
-    val rect = shapeLayer.shapes[0] as GraphicElement.Rectangle
-    val transform = shapeLayer.shapes[1] as GraphicElement.Transform
+    val rect = shapeLayer.shapes[0] as Rectangle
+    val transform = shapeLayer.shapes[1] as Transform
 
     assertThat(rect.position).isNotNull()
     assertThat(transform.positionTranslation).isNotNull()
@@ -824,7 +824,7 @@ class LottieDecoderResilienceTest {
     val animation = Animation.decodeFromString(json)
 
     val shapeLayer = animation.layers[0] as Layer.ShapeLayer
-    val rect = shapeLayer.shapes[0] as GraphicElement.Rectangle
+    val rect = shapeLayer.shapes[0] as Rectangle
     assertThat(rect.position.animated).isTrue()
   }
 
@@ -991,7 +991,7 @@ class LottieDecoderResilienceTest {
 
     val animation = Animation.decodeFromString(json)
     val shapeLayer = animation.layers[0] as Layer.ShapeLayer
-    val gf = shapeLayer.shapes[0] as GraphicElement.GradientFill
+    val gf = shapeLayer.shapes[0] as GradientFill
     assertThat(gf.colors.animated).isTrue()
     assertThat(gf.colors.slotId).isEqualTo("slot.grad")
     val animGradient = gf.colors as AnimatedGradientProperty
@@ -1037,9 +1037,103 @@ class LottieDecoderResilienceTest {
 
     val animation = Animation.decodeFromString(json)
     val shapeLayer = animation.layers[0] as Layer.ShapeLayer
-    val gs = shapeLayer.shapes[0] as GraphicElement.GradientStroke
+    val gs = shapeLayer.shapes[0] as GradientStroke
     assertThat((gs.highlightLength as StaticScalarProperty).value).isEqualTo(45.0f)
     assertThat((gs.highlightAngle as StaticScalarProperty).value).isEqualTo(90.0f)
     assertThat((gs.strokeWidth as StaticScalarProperty).value).isEqualTo(2.5f)
+  }
+
+  @Test
+  fun shapeTypeEnum_deserializesFromStringOrDefaultsToUnknown() {
+    assertThat(ShapeType.fromValueOrNull("sh")).isEqualTo(ShapeType.Path)
+    assertThat(ShapeType.fromValueOrNull("rc")).isEqualTo(ShapeType.Rectangle)
+    assertThat(ShapeType.fromValueOrNull("el")).isEqualTo(ShapeType.Ellipse)
+    assertThat(ShapeType.fromValueOrNull("sr")).isEqualTo(ShapeType.PolyStar)
+    assertThat(ShapeType.fromValueOrNull("gr")).isEqualTo(ShapeType.Group)
+    assertThat(ShapeType.fromValueOrNull("tr")).isEqualTo(ShapeType.Transform)
+    assertThat(ShapeType.fromValueOrNull("fl")).isEqualTo(ShapeType.Fill)
+    assertThat(ShapeType.fromValueOrNull("st")).isEqualTo(ShapeType.Stroke)
+    assertThat(ShapeType.fromValueOrNull("gf")).isEqualTo(ShapeType.GradientFill)
+    assertThat(ShapeType.fromValueOrNull("gs")).isEqualTo(ShapeType.GradientStroke)
+    assertThat(ShapeType.fromValueOrNull("no")).isEqualTo(ShapeType.NoStyle)
+    assertThat(ShapeType.fromValueOrNull("tm")).isEqualTo(ShapeType.TrimPath)
+    assertThat(ShapeType.fromValueOrNull("rp")).isEqualTo(ShapeType.Repeater)
+    assertThat(ShapeType.fromValueOrNull("rd")).isEqualTo(ShapeType.RoundedCorners)
+    assertThat(ShapeType.fromValueOrNull("mm")).isEqualTo(ShapeType.MergePaths)
+    assertThat(ShapeType.fromValueOrNull("unsupported")).isNull()
+
+    val decodedKnown = LottieDecoder.json.decodeFromString(ShapeType.serializer(), "\"st\"")
+    assertThat(decodedKnown).isEqualTo(ShapeType.Stroke)
+
+    val decodedUnknown =
+      LottieDecoder.json.decodeFromString(ShapeType.serializer(), "\"invalid_type\"")
+    assertThat(decodedUnknown).isEqualTo(ShapeType.Unknown)
+  }
+
+  @Test
+  fun lineCapAndJoin_handlesIntegerAndFloatAndFallback() {
+    assertThat(LottieDecoder.json.decodeFromString(LineCapSerializer, "1")).isEqualTo(LineCap.Butt)
+    assertThat(LottieDecoder.json.decodeFromString(LineCapSerializer, "2")).isEqualTo(LineCap.Round)
+    assertThat(LottieDecoder.json.decodeFromString(LineCapSerializer, "3"))
+      .isEqualTo(LineCap.Square)
+    assertThat(LottieDecoder.json.decodeFromString(LineCapSerializer, "2.0"))
+      .isEqualTo(LineCap.Round)
+    assertThat(LottieDecoder.json.decodeFromString(LineCapSerializer, "999"))
+      .isEqualTo(LineCap.Round)
+
+    assertThat(LottieDecoder.json.decodeFromString(LineJoinSerializer, "1"))
+      .isEqualTo(LineJoin.Miter)
+    assertThat(LottieDecoder.json.decodeFromString(LineJoinSerializer, "2"))
+      .isEqualTo(LineJoin.Round)
+    assertThat(LottieDecoder.json.decodeFromString(LineJoinSerializer, "3"))
+      .isEqualTo(LineJoin.Bevel)
+    assertThat(LottieDecoder.json.decodeFromString(LineJoinSerializer, "1.0"))
+      .isEqualTo(LineJoin.Miter)
+    assertThat(LottieDecoder.json.decodeFromString(LineJoinSerializer, "999"))
+      .isEqualTo(LineJoin.Round)
+  }
+
+  @Test
+  fun enumSerializers_trimCompositeMergePolyStarFillRule_handlesIntegersFloatsAndFallbacks() {
+    assertThat(LottieDecoder.json.decodeFromString(TrimModeSerializer, "1"))
+      .isEqualTo(TrimMode.Simultaneously)
+    assertThat(LottieDecoder.json.decodeFromString(TrimModeSerializer, "2.0"))
+      .isEqualTo(TrimMode.Individually)
+    assertThat(LottieDecoder.json.decodeFromString(TrimModeSerializer, "99"))
+      .isEqualTo(TrimMode.Simultaneously)
+
+    assertThat(LottieDecoder.json.decodeFromString(CompositeModeSerializer, "1"))
+      .isEqualTo(CompositeMode.Above)
+    assertThat(LottieDecoder.json.decodeFromString(CompositeModeSerializer, "2.0"))
+      .isEqualTo(CompositeMode.Below)
+    assertThat(LottieDecoder.json.decodeFromString(CompositeModeSerializer, "99"))
+      .isEqualTo(CompositeMode.Above)
+
+    assertThat(LottieDecoder.json.decodeFromString(MergeModeSerializer, "1"))
+      .isEqualTo(MergeMode.Merge)
+    assertThat(LottieDecoder.json.decodeFromString(MergeModeSerializer, "2"))
+      .isEqualTo(MergeMode.Add)
+    assertThat(LottieDecoder.json.decodeFromString(MergeModeSerializer, "3"))
+      .isEqualTo(MergeMode.Subtract)
+    assertThat(LottieDecoder.json.decodeFromString(MergeModeSerializer, "4.0"))
+      .isEqualTo(MergeMode.Intersect)
+    assertThat(LottieDecoder.json.decodeFromString(MergeModeSerializer, "5"))
+      .isEqualTo(MergeMode.ExcludeIntersections)
+    assertThat(LottieDecoder.json.decodeFromString(MergeModeSerializer, "99"))
+      .isEqualTo(MergeMode.Merge)
+
+    assertThat(LottieDecoder.json.decodeFromString(PolyStarTypeSerializer, "1"))
+      .isEqualTo(PolyStarType.Star)
+    assertThat(LottieDecoder.json.decodeFromString(PolyStarTypeSerializer, "2.0"))
+      .isEqualTo(PolyStarType.Polygon)
+    assertThat(LottieDecoder.json.decodeFromString(PolyStarTypeSerializer, "99"))
+      .isEqualTo(PolyStarType.Star)
+
+    assertThat(LottieDecoder.json.decodeFromString(FillRuleSerializer, "1"))
+      .isEqualTo(FillRule.NonZero)
+    assertThat(LottieDecoder.json.decodeFromString(FillRuleSerializer, "2.0"))
+      .isEqualTo(FillRule.EvenOdd)
+    assertThat(LottieDecoder.json.decodeFromString(FillRuleSerializer, "99"))
+      .isEqualTo(FillRule.NonZero)
   }
 }

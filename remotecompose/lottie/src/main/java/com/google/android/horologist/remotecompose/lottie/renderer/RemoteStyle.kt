@@ -19,7 +19,7 @@ package com.google.android.horologist.remotecompose.lottie.renderer
 import androidx.compose.remote.creation.compose.state.RemoteColor
 import androidx.compose.remote.creation.compose.state.RemoteFloat
 import androidx.compose.remote.creation.compose.state.RemotePaint
-import com.google.android.horologist.remotecompose.lottie.format.GradientType
+import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.GradientType
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.Point
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.RemoteGradientValue
 

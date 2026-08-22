@@ -57,11 +57,11 @@ class MediaLottieDiffScreenshotTest : LottieDiffScreenshotTest() {
 
   @Test
   fun muteToUnmute() {
-    runLottieDiffTest(R.raw.mute_to_unmute, expectedFailure = true)
+    runLottieDiffTest(R.raw.mute_to_unmute)
   }
 
   @Test
   fun unmuteToMute() {
-    runLottieDiffTest(R.raw.unmute_to_mute, expectedFailure = true)
+    runLottieDiffTest(R.raw.unmute_to_mute)
   }
 }
