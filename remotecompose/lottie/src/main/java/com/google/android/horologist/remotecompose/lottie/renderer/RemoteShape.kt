@@ -20,6 +20,7 @@ import android.annotation.SuppressLint
 import androidx.compose.remote.creation.RemotePath
 import androidx.compose.remote.creation.compose.layout.RemoteCanvas
 import androidx.compose.remote.creation.compose.layout.RemoteDrawScope
+import androidx.compose.remote.creation.compose.state.remotePath
 import androidx.compose.remote.creation.compose.state.rf
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
@@ -40,48 +41,48 @@ internal class RemoteCompiledPath(val path: RemotePath) : RemoteShape {
 internal class RemoteLottiePath(val path: List<RemoteBezierValue>) : RemoteShape {
   override fun draw(drawScope: RemoteDrawScope, canvas: RemoteCanvas) {
     if (path.isEmpty()) return
-    val rcPath = RemotePath()
-    rcPath.reset()
 
-    for (subpath in path) {
-      val vertices = subpath.vertices
-      val inTangents = subpath.inTangents
-      val outTangents = subpath.outTangents
+    val rcPath = drawScope.remotePath {
+      for (subpath in path) {
+        val vertices = subpath.vertices
+        val inTangents = subpath.inTangents
+        val outTangents = subpath.outTangents
 
-      if (vertices.isEmpty()) continue
+        if (vertices.isEmpty()) continue
 
-      val startX = vertices[0].getOrElse(0) { 0f.rf }.constantValueOrNull ?: 0f
-      val startY = vertices[0].getOrElse(1) { 0f.rf }.constantValueOrNull ?: 0f
-      rcPath.moveTo(startX, startY)
+        val startX = vertices[0].getOrElse(0) { 0f.rf }
+        val startY = vertices[0].getOrElse(1) { 0f.rf }
+        moveTo(startX, startY)
 
-      val maxIndex = if (subpath.closed) vertices.size else vertices.size - 1
-      for (i in 0 until maxIndex) {
-        val p0 = vertices[i]
-        val lastIndex = if (i == vertices.size - 1 && subpath.closed) 0 else i + 1
-        val p4 = vertices[lastIndex]
-        val inTangent = inTangents.getOrNull(lastIndex)
-        val outTangent = outTangents.getOrNull(i)
+        val maxIndex = if (subpath.closed) vertices.size else vertices.size - 1
+        for (i in 0 until maxIndex) {
+          val p0 = vertices[i]
+          val lastIndex = if (i == vertices.size - 1 && subpath.closed) 0 else i + 1
+          val p4 = vertices[lastIndex]
+          val inTangent = inTangents.getOrNull(lastIndex)
+          val outTangent = outTangents.getOrNull(i)
 
-        val p0x = p0.getOrElse(0) { 0f.rf }.constantValueOrNull ?: 0f
-        val p0y = p0.getOrElse(1) { 0f.rf }.constantValueOrNull ?: 0f
-        val p4x = p4.getOrElse(0) { 0f.rf }.constantValueOrNull ?: 0f
-        val p4y = p4.getOrElse(1) { 0f.rf }.constantValueOrNull ?: 0f
+          val p0x = p0.getOrElse(0) { 0f.rf }
+          val p0y = p0.getOrElse(1) { 0f.rf }
+          val p4x = p4.getOrElse(0) { 0f.rf }
+          val p4y = p4.getOrElse(1) { 0f.rf }
 
-        val inTangentX = inTangent?.getOrElse(0) { 0f.rf }?.constantValueOrNull ?: 0f
-        val inTangentY = inTangent?.getOrElse(1) { 0f.rf }?.constantValueOrNull ?: 0f
-        val outTangentX = outTangent?.getOrElse(0) { 0f.rf }?.constantValueOrNull ?: 0f
-        val outTangentY = outTangent?.getOrElse(1) { 0f.rf }?.constantValueOrNull ?: 0f
+          val inTangentX = inTangent?.getOrElse(0) { 0f.rf } ?: 0f.rf
+          val inTangentY = inTangent?.getOrElse(1) { 0f.rf } ?: 0f.rf
+          val outTangentX = outTangent?.getOrElse(0) { 0f.rf } ?: 0f.rf
+          val outTangentY = outTangent?.getOrElse(1) { 0f.rf } ?: 0f.rf
 
-        val p1x = p0x + outTangentX
-        val p1y = p0y + outTangentY
-        val p2x = p4x + inTangentX
-        val p2y = p4y + inTangentY
+          val p1x = p0x + outTangentX
+          val p1y = p0y + outTangentY
+          val p2x = p4x + inTangentX
+          val p2y = p4y + inTangentY
 
-        rcPath.cubicTo(p1x, p1y, p2x, p2y, p4x, p4y)
-      }
+          curveTo(p1x, p1y, p2x, p2y, p4x, p4y)
+        }
 
-      if (subpath.closed) {
-        rcPath.close()
+        if (subpath.closed) {
+          close()
+        }
       }
     }
 
