@@ -14,33 +14,16 @@
  * limitations under the License.
  */
 
-package com.google.android.horologist.remotecompose.lottie.renderer
+package com.google.android.horologist.remotecompose.lottie.renderer.shapes
 
 import android.annotation.SuppressLint
-import androidx.compose.remote.creation.compose.layout.RemoteCanvas
-import androidx.compose.remote.creation.compose.layout.RemoteComposable
-import androidx.compose.remote.creation.compose.modifier.RemoteModifier
-import androidx.compose.remote.creation.compose.modifier.fillMaxSize
-import androidx.compose.runtime.Composable
-import com.google.android.horologist.remotecompose.lottie.LocalAnimationSettings
+import androidx.compose.remote.creation.RemotePath
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
-import com.google.android.horologist.remotecompose.lottie.format.graphicelement.GraphicElement
-import com.google.android.horologist.remotecompose.lottie.format.graphicelement.ShapeType
-import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.Ellipse
-import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.GeometryShape
-import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.Path
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.PolyStar
-import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.Rectangle
-import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Group
-import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
-import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.Fill
-import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateColor
-import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateGradient
+import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.PolyStarType
+import com.google.android.horologist.remotecompose.lottie.renderer.RemoteCompiledPath
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animatePosition
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateScalar
-import com.google.android.horologist.remotecompose.lottie.renderer.shapes.ellipse
-import com.google.android.horologist.remotecompose.lottie.renderer.shapes.path
-import com.google.android.horologist.remotecompose.lottie.renderer.shapes.rectangle
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.ceil
@@ -48,99 +31,24 @@ import kotlin.math.cos
 import kotlin.math.floor
 import kotlin.math.sin
 
-internal data class StyledShapes(val shapes: List<RemoteShape>, val style: RemoteStyle)
+// Note: We deliberately do not use `androidx.graphics.shapes.RoundedPolygon` here because:
+// 1. Lottie defines its own exact Bézier tangent calculation and rounding constants (0.47829 for
+//    stars, 0.25 for polygons) matching Bodymovin/After Effects and lottie-android, whereas
+//    RoundedPolygon cuts corner arcs with a different circular/smoothed curvature profile.
+// 2. Lottie polystars support fractional points (e.g. 5.5 points) smoothly morphing the last
+//    vertex, while RoundedPolygon requires an integer vertex count.
+// 3. Lottie shapes support explicit path direction (e.g. counter-clockwise d=3) affecting fill
+//    winding rules.
+// 4. Writing directly into RemotePath avoids intermediate allocations and preserves 1:1 visual
+//    parity.
 
-/** Renders a list of Lottie Shapes to the RemoteCanvas. */
+/** Evaluates a Lottie [PolyStar] parametric shape into a [RemoteCompiledPath]. */
 @SuppressLint("RestrictedApi")
-@Composable
-@RemoteComposable
-internal fun RenderShapes(shapes: List<GraphicElement>, transformStack: List<Transform>) {
-  val animationSettings = LocalAnimationSettings.current
-  val shapeGroups = gatherShapes(shapes, animationSettings)
-
-  // Aspect-ratio scaling and centering is applied once, at the top level, by the
-  // drawWithContent modifier in LottieAnimation - shapes draw in raw Lottie coordinates here.
-  RemoteCanvas(modifier = RemoteModifier.fillMaxSize()) {
-    for (shapeGroup in shapeGroups) {
-      val paint = shapeGroup.style.getPaint()
-
-      for (transform in transformStack) {
-        remoteCanvas.save()
-        transform(transform, paint, animationSettings, remoteCanvas)
-      }
-
-      usePaint(paint) {
-        for (shape in shapeGroup.shapes) {
-          shape.draw(this, remoteCanvas)
-        }
-      }
-
-      for (transform in transformStack) {
-        remoteCanvas.restore()
-      }
-    }
-  }
-}
-
-private fun gatherShapes(
-  shapes: List<GraphicElement>,
+internal fun evaluatePolyStar(
+  star: PolyStar,
   animationSettings: LottieSettings,
-): List<StyledShapes> {
-  val shapeGroups = mutableListOf<StyledShapes>()
-  var currentShapes = mutableListOf<RemoteShape>()
-
-  for (shape in shapes.reversed()) {
-    when (shape) {
-      is GeometryShape -> {
-        val remoteShape =
-          when (shape) {
-            is Path -> evaluatePath(shape, animationSettings)
-            is Rectangle -> evaluateRectangle(shape, animationSettings)
-            is Ellipse -> evaluateEllipse(shape, animationSettings)
-            is PolyStar -> evaluatePolyStar(shape, animationSettings)
-          }
-        currentShapes.addIfNotNull(remoteShape)
-      }
-      is Group -> currentShapes.addIfNotNull(group(shape, animationSettings))
-      is Fill -> {
-        val fill = fill(shape, animationSettings)
-        shapeGroups.add(StyledShapes(currentShapes, fill))
-        currentShapes = mutableListOf()
-      }
-      is Transform -> {} // No-op - handled groups
-      else -> {}
-    }
-  }
-
-  // Groups don't have to have styling information associated with them, because the child nodes
-  // can have styles instead. If there's a Group node left over that doesn't have a style, add
-  // it to the render tree anyway
-  if (currentShapes.isNotEmpty() && currentShapes.all { it is RemoteGroup }) {
-    shapeGroups.add(StyledShapes(currentShapes, NoopStyle()))
-  }
-
-  return shapeGroups
-}
-
-private fun group(group: Group, animationSettings: LottieSettings): RemoteGroup? {
-  if (group.hidden?.constantValue == true) {
-    return null
-  }
-
-  val reversed = group.shapes.reversed()
-
-  if (reversed.firstOrNull()?.type == ShapeType.Transform) {
-    val transform = reversed[0] as Transform
-    val styledShapes = gatherShapes(reversed.drop(1), animationSettings)
-    return RemoteGroup(styledShapes, animationSettings, transform)
-  } else {
-    return RemoteGroup(gatherShapes(reversed, animationSettings), animationSettings, null)
-  }
-}
-
-@SuppressLint("RestrictedApi")
-private fun polyStar(star: PolyStar, animationSettings: LottieSettings): RemoteLottiePath? {
-  if (star.hidden?.constantValue == true) return null
+): RemoteCompiledPath? {
+  if (star.hidden == true) return null
 
   val pos = animatePosition(star.position, animationSettings)
   val posX = pos.x.constantValueOrNull ?: 0f
@@ -150,7 +58,7 @@ private fun polyStar(star: PolyStar, animationSettings: LottieSettings): RemoteL
   val rotation = animateScalar(star.rotation, animationSettings).constantValueOrNull ?: 0f
   val outerRadius = animateScalar(star.outerRadius, animationSettings).constantValueOrNull ?: 0f
   val outerRoundedness =
-    (animateScalar(star.outerRoundness, animationSettings).constantValueOrNull ?: 0f) / 100f
+    (animateScalar(star.outerRoundedness, animationSettings).constantValueOrNull ?: 0f) / 100f
 
   val rcPath =
     when (star.starType) {
@@ -158,7 +66,7 @@ private fun polyStar(star: PolyStar, animationSettings: LottieSettings): RemoteL
         val innerRadius =
           star.innerRadius?.let { animateScalar(it, animationSettings).constantValueOrNull } ?: 0f
         val innerRoundedness =
-          (star.innerRoundness?.let { animateScalar(it, animationSettings).constantValueOrNull }
+          (star.innerRoundedness?.let { animateScalar(it, animationSettings).constantValueOrNull }
             ?: 0f) / 100f
         createStarPath(
           points = points,
@@ -352,50 +260,4 @@ private fun createPolygonPath(
 
   path.close()
   return path
-}
-
-private fun fill(fill: Fill, animationSettings: LottieSettings): RemoteFill {
-  return RemoteFill(animateColor(fill.color, animationSettings))
-}
-
-private fun gradientFill(
-  fill: GradientFill,
-  animationSettings: LottieSettings,
-): RemoteGradientFill {
-  val startPoint = animatePosition(fill.startPoint, animationSettings)
-  val endPoint = animatePosition(fill.endPoint, animationSettings)
-  val gradient = animateGradient(fill.colors, animationSettings)
-  val opacity = animateScalar(fill.opacity, animationSettings)
-  return RemoteGradientFill(
-    gradient = gradient,
-    startPoint = startPoint,
-    endPoint = endPoint,
-    gradientType = fill.gradientType,
-    opacity = opacity,
-  )
-}
-
-private fun gradientStroke(
-  stroke: GradientStroke,
-  animationSettings: LottieSettings,
-): RemoteGradientStroke {
-  val startPoint = animatePosition(stroke.startPoint, animationSettings)
-  val endPoint = animatePosition(stroke.endPoint, animationSettings)
-  val gradient = animateGradient(stroke.colors, animationSettings)
-  val opacity = animateScalar(stroke.opacity, animationSettings)
-  val strokeWidth = animateScalar(stroke.strokeWidth, animationSettings)
-  return RemoteGradientStroke(
-    gradient = gradient,
-    startPoint = startPoint,
-    endPoint = endPoint,
-    gradientType = stroke.gradientType,
-    opacity = opacity,
-    strokeWidth = strokeWidth,
-  )
-}
-
-private fun MutableList<RemoteShape>.addIfNotNull(shape: RemoteShape?) {
-  if (shape != null) {
-    this.add(shape)
-  }
 }
