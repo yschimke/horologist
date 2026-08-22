@@ -682,6 +682,152 @@ class LottieDecoderResilienceTest {
   }
 
   @Test
+  fun positionProperty_handlesFloatArraysAndSingleNumberFallback() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 50,
+        "h": 50,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "ShapeLayer",
+            "shapes": [
+              {
+                "ty": "rc",
+                "nm": "StandardRect",
+                "p": { "k": [100.0, 50.0] }
+              },
+              {
+                "ty": "el",
+                "nm": "3DPositionEllipse",
+                "p": { "k": [40.0, 40.0, 0.0] }
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+
+    val shapeLayer = animation.layers[0] as Layer.ShapeLayer
+    assertThat(shapeLayer.shapes).hasSize(2)
+    val rect = shapeLayer.shapes[0] as GraphicElement.Rectangle
+    val ellipse = shapeLayer.shapes[1] as GraphicElement.Ellipse
+
+    assertThat(rect.position).isNotNull()
+    assertThat(ellipse.position).isNotNull()
+  }
+
+  @Test
+  fun positionProperty_parsesSlotId() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 50,
+        "h": 50,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "ShapeLayer",
+            "shapes": [
+              {
+                "ty": "rc",
+                "nm": "SlotRect",
+                "p": {
+                  "sid": "position.rect_pos",
+                  "k": [120.0, 80.0]
+                }
+              },
+              {
+                "ty": "tr",
+                "nm": "TransformGroup",
+                "p": {
+                  "sid": "position.translation",
+                  "a": 1,
+                  "k": [
+                    { "t": 0, "s": [100.0, 100.0] },
+                    { "t": 30, "s": [200.0, 200.0] }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+
+    val shapeLayer = animation.layers[0] as Layer.ShapeLayer
+    val rect = shapeLayer.shapes[0] as GraphicElement.Rectangle
+    val transform = shapeLayer.shapes[1] as GraphicElement.Transform
+
+    assertThat(rect.position).isNotNull()
+    assertThat(transform.positionTranslation).isNotNull()
+  }
+
+  @Test
+  fun positionProperty_animatedKeyframesWithSingleAndNestedValues() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 50,
+        "h": 50,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "ShapeLayer",
+            "shapes": [
+              {
+                "ty": "rc",
+                "nm": "AnimatedRect",
+                "p": {
+                  "a": 1,
+                  "k": [
+                    {
+                      "t": 0,
+                      "s": [50.0, 50.0],
+                      "i": { "x": 0.5, "y": 1.0 },
+                      "o": { "x": 0.5, "y": 0.0 }
+                    },
+                    {
+                      "t": 30,
+                      "s": [100.0, 100.0]
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+
+    val shapeLayer = animation.layers[0] as Layer.ShapeLayer
+    val rect = shapeLayer.shapes[0] as GraphicElement.Rectangle
+    assertThat(rect.position.animated).isTrue()
+  }
+
+  @Test
   fun extraPluginMetadata_ignoredCleanly() {
     val json =
       """

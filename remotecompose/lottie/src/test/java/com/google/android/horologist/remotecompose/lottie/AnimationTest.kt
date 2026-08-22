@@ -445,4 +445,85 @@ class AnimationTest {
     assertThat(middleFrameResult[1].vertices.map { point -> point.map { it.constantValue } })
       .isEqualTo(listOf(listOf(150f, 150f)))
   }
+
+  @Test
+  fun animatePositionWithStaticInput_returnsInput() {
+    val staticPosition = StaticPositionProperty(value = floatArrayOf(10f, 20f))
+
+    val result1 = animatePosition(staticPosition, LottieSettings(0.rf, emptySlotMap))
+    assertThat(result1.x.constantValue).isEqualTo(10f)
+    assertThat(result1.y.constantValue).isEqualTo(20f)
+
+    val result2 = animatePosition(staticPosition, LottieSettings(5.rf, emptySlotMap))
+    assertThat(result2.x.constantValue).isEqualTo(10f)
+    assertThat(result2.y.constantValue).isEqualTo(20f)
+  }
+
+  @Test
+  fun animatePositionWithEmptyKeyframes_returnsZeroPoint() {
+    val animatedPosition = AnimatedPositionProperty(keyframes = emptyList())
+
+    val result = animatePosition(animatedPosition, LottieSettings(0.rf, emptySlotMap))
+    assertThat(result.x.constantValue).isEqualTo(0f)
+    assertThat(result.y.constantValue).isEqualTo(0f)
+  }
+
+  @Test
+  fun animatePositionWithSingleKeyframe_returnsInput() {
+    val animatedPosition =
+      AnimatedPositionProperty(
+        keyframes = listOf(VectorPropertyKeyframe(frame = 0f, value = listOf(10f, 20f)))
+      )
+
+    val result1 = animatePosition(animatedPosition, LottieSettings(0.rf, emptySlotMap))
+    assertThat(result1.x.constantValue).isEqualTo(10f)
+    assertThat(result1.y.constantValue).isEqualTo(20f)
+
+    val result2 = animatePosition(animatedPosition, LottieSettings(5.rf, emptySlotMap))
+    assertThat(result2.x.constantValue).isEqualTo(10f)
+    assertThat(result2.y.constantValue).isEqualTo(20f)
+  }
+
+  @Test
+  fun animatePositionWithTwoKeyframes_returnsAnimatedValues() {
+    val animatedPosition =
+      AnimatedPositionProperty(
+        keyframes =
+          listOf(
+            VectorPropertyKeyframe(frame = 0f, value = listOf(10f, 20f)),
+            VectorPropertyKeyframe(frame = 10f, value = listOf(30f, 40f)),
+          )
+      )
+
+    val firstFrameResult = animatePosition(animatedPosition, LottieSettings(0.rf, emptySlotMap))
+    val middleFrameResult = animatePosition(animatedPosition, LottieSettings(5.rf, emptySlotMap))
+    val lastFrameResult = animatePosition(animatedPosition, LottieSettings(10.rf, emptySlotMap))
+    val afterAnimationResult =
+      animatePosition(animatedPosition, LottieSettings(15.rf, emptySlotMap))
+
+    assertThat(firstFrameResult.x.constantValue).isEqualTo(10f)
+    assertThat(firstFrameResult.y.constantValue).isEqualTo(20f)
+    assertThat(middleFrameResult.x.constantValue).isEqualTo(20f)
+    assertThat(middleFrameResult.y.constantValue).isEqualTo(30f)
+    assertThat(lastFrameResult.x.constantValue).isEqualTo(30f)
+    assertThat(lastFrameResult.y.constantValue).isEqualTo(40f)
+    assertThat(afterAnimationResult.x.constantValue).isEqualTo(30f)
+    assertThat(afterAnimationResult.y.constantValue).isEqualTo(40f)
+  }
+
+  @Test
+  fun animatePositionWithDelayedStart_holdsInitialValue() {
+    val animatedPosition =
+      AnimatedPositionProperty(
+        keyframes =
+          listOf(
+            VectorPropertyKeyframe(frame = 5f, value = listOf(10f, 20f)),
+            VectorPropertyKeyframe(frame = 10f, value = listOf(30f, 40f)),
+          )
+      )
+
+    val beforeStartResult = animatePosition(animatedPosition, LottieSettings(0.rf, emptySlotMap))
+    assertThat(beforeStartResult.x.constantValue).isEqualTo(10f)
+    assertThat(beforeStartResult.y.constantValue).isEqualTo(20f)
+  }
 }
