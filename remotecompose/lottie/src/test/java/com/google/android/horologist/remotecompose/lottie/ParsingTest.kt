@@ -811,7 +811,7 @@ class ParsingTest {
         .trimIndent()
 
     val animation = Animation.decodeFromString(json)
-    val shapeLayer = animation.layers[0] as Layer.ShapeLayer
+    val shapeLayer = animation.layers[0] as ShapeLayer
     assertThat(shapeLayer.shapes).hasSize(1)
     val gf = shapeLayer.shapes[0] as GradientFill
     assertThat(gf.type).isEqualTo(ShapeType.GradientFill)
@@ -858,7 +858,7 @@ class ParsingTest {
         .trimIndent()
 
     val animation = Animation.decodeFromString(json)
-    val shapeLayer = animation.layers[0] as Layer.ShapeLayer
+    val shapeLayer = animation.layers[0] as ShapeLayer
     assertThat(shapeLayer.shapes).hasSize(1)
     val gs = shapeLayer.shapes[0] as GradientStroke
     assertThat(gs.type).isEqualTo(ShapeType.GradientStroke)
@@ -906,7 +906,7 @@ class ParsingTest {
         .trimIndent()
 
     val animation = Animation.decodeFromString(json)
-    val shapeLayer = animation.layers[0] as Layer.ShapeLayer
+    val shapeLayer = animation.layers[0] as ShapeLayer
     assertThat(shapeLayer.shapes).hasSize(1)
     val stroke = shapeLayer.shapes[0] as Stroke
     assertThat(stroke.type).isEqualTo(ShapeType.Stroke)
@@ -963,7 +963,7 @@ class ParsingTest {
         .trimIndent()
 
     val animation = Animation.decodeFromString(json)
-    val shapeLayer = animation.layers[0] as Layer.ShapeLayer
+    val shapeLayer = animation.layers[0] as ShapeLayer
     assertThat(shapeLayer.shapes).hasSize(2)
     val fill = shapeLayer.shapes[0] as Fill
     assertThat(fill.fillRule).isEqualTo(FillRule.EvenOdd)
@@ -1002,7 +1002,7 @@ class ParsingTest {
         .trimIndent()
 
     val animation = Animation.decodeFromString(json)
-    val shapeLayer = animation.layers[0] as Layer.ShapeLayer
+    val shapeLayer = animation.layers[0] as ShapeLayer
     val tr = shapeLayer.shapes[0] as Transform
     assertThat(tr.type).isEqualTo(ShapeType.Transform)
     assertThat(tr.skew).isNotNull()
@@ -1067,7 +1067,7 @@ class ParsingTest {
         .trimIndent()
 
     val animation = Animation.decodeFromString(json)
-    val shapeLayer = animation.layers[0] as Layer.ShapeLayer
+    val shapeLayer = animation.layers[0] as ShapeLayer
     assertThat(shapeLayer.shapes).hasSize(5)
 
     val tm = shapeLayer.shapes[0] as TrimPath
@@ -1129,12 +1129,283 @@ class ParsingTest {
         .trimIndent()
 
     val animation = Animation.decodeFromString(json)
-    val shapeLayer = animation.layers[0] as Layer.ShapeLayer
+    val shapeLayer = animation.layers[0] as ShapeLayer
     val rect = shapeLayer.shapes[0] as Rectangle
     assertThat(rect.name).isEqualTo("RectWithMeta")
     assertThat(rect.matchName).isEqualTo("ADBE Vector Shape - Rect")
     assertThat(rect.index).isEqualTo(3)
     assertThat(rect.propertyIndex).isEqualTo(2)
     assertThat(rect.direction).isEqualTo(1)
+  }
+
+  @Test
+  fun shapeLayer_withFloatTimings_deserializes() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 60,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "FloatTimingShapeLayer",
+            "ip": 12.5,
+            "op": 45.0,
+            "st": 5.5,
+            "sr": 1.5,
+            "ao": 1,
+            "bm": 1,
+            "tt": 2,
+            "tp": 3,
+            "td": 1,
+            "ddd": 1,
+            "shapes": []
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+    assertThat(animation.layers).hasSize(1)
+    val layer = animation.layers[0] as ShapeLayer
+    assertThat(layer.name).isEqualTo("FloatTimingShapeLayer")
+    assertThat(layer.type).isEqualTo(LayerType.Shape)
+    assertThat(layer.startFrame).isEqualTo(12.5f)
+    assertThat(layer.endFrame).isEqualTo(45.0f)
+    assertThat(layer.startTime).isEqualTo(5.5f)
+    assertThat(layer.timeStretch).isEqualTo(1.5f)
+    assertThat(layer.autoOrient).isEqualTo(1)
+    assertThat(layer.blendMode).isEqualTo(BlendMode.Multiply)
+    assertThat(layer.matteMode).isEqualTo(MatteMode.InvertedAlpha)
+    assertThat(layer.matteParent).isEqualTo(3)
+    assertThat(layer.matteTarget).isEqualTo(1)
+    assertThat(layer.is3d).isEqualTo(1)
+  }
+
+  @Test
+  fun solidColorLayer_deserializes() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 60,
+        "w": 200,
+        "h": 200,
+        "layers": [
+          {
+            "ty": 1,
+            "nm": "BackgroundSolid",
+            "sc": "#FF5722",
+            "sw": 200.0,
+            "sh": 200.0,
+            "ip": 0.0,
+            "op": 60.0
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+    assertThat(animation.layers).hasSize(1)
+    val layer = animation.layers[0] as SolidColorLayer
+    assertThat(layer.name).isEqualTo("BackgroundSolid")
+    assertThat(layer.type).isEqualTo(LayerType.Solid)
+    assertThat(layer.solidColor).isEqualTo("#FF5722")
+    assertThat(layer.solidWidth).isEqualTo(200f)
+    assertThat(layer.solidHeight).isEqualTo(200f)
+    assertThat(layer.startFrame).isEqualTo(0f)
+    assertThat(layer.endFrame).isEqualTo(60f)
+  }
+
+  @Test
+  fun nullLayer_withParentAndTransform_deserializes() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 60,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 3,
+            "nm": "ControllerNull",
+            "ind": 1,
+            "parent": 2,
+            "ks": {
+              "p": { "k": [50.0, 50.0] },
+              "r": { "k": 45.0 }
+            }
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+    assertThat(animation.layers).hasSize(1)
+    val layer = animation.layers[0] as NullLayer
+    assertThat(layer.name).isEqualTo("ControllerNull")
+    assertThat(layer.type).isEqualTo(LayerType.Null)
+    assertThat(layer.index).isEqualTo(1)
+    assertThat(layer.parent).isEqualTo(2)
+    assertThat(layer.transform).isNotNull()
+    assertThat((layer.transform?.rotation as StaticScalarProperty).value).isEqualTo(45f)
+  }
+
+  @Test
+  fun precompLayer_deserializes() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 60,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 0,
+            "nm": "NestedComposition",
+            "refId": "comp_1",
+            "w": 1920.0,
+            "h": 1080.0,
+            "tm": {
+              "a": 0,
+              "k": 12.0
+            }
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+    assertThat(animation.layers).hasSize(1)
+    val layer = animation.layers[0] as PrecompLayer
+    assertThat(layer.name).isEqualTo("NestedComposition")
+    assertThat(layer.type).isEqualTo(LayerType.Precomposition)
+    assertThat(layer.refId).isEqualTo("comp_1")
+    assertThat(layer.width).isEqualTo(1920f)
+    assertThat(layer.height).isEqualTo(1080f)
+    assertThat(layer.timeRemap).isNotNull()
+    assertThat((layer.timeRemap as StaticScalarProperty).value).isEqualTo(12f)
+  }
+
+  @Test
+  fun imageLayer_deserializes() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 60,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 2,
+            "nm": "BitmapImageLayer",
+            "refId": "image_0"
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+    assertThat(animation.layers).hasSize(1)
+    val layer = animation.layers[0] as ImageLayer
+    assertThat(layer.name).isEqualTo("BitmapImageLayer")
+    assertThat(layer.type).isEqualTo(LayerType.Image)
+    assertThat(layer.refId).isEqualTo("image_0")
+  }
+
+  @Test
+  fun textLayer_deserializes() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 60,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 5,
+            "nm": "TypographyLayer",
+            "ip": 0.0,
+            "op": 30.0
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+    assertThat(animation.layers).hasSize(1)
+    val layer = animation.layers[0] as TextLayer
+    assertThat(layer.name).isEqualTo("TypographyLayer")
+    assertThat(layer.type).isEqualTo(LayerType.Text)
+    assertThat(layer.startFrame).isEqualTo(0f)
+    assertThat(layer.endFrame).isEqualTo(30f)
+  }
+
+  @Test
+  fun blendModeAndMatteModeEnums_deserializes() {
+    assertThat(BlendMode.fromValueOrNull(0)).isEqualTo(BlendMode.Normal)
+    assertThat(BlendMode.fromValueOrNull(1)).isEqualTo(BlendMode.Multiply)
+    assertThat(BlendMode.fromValueOrNull(2)).isEqualTo(BlendMode.Screen)
+    assertThat(BlendMode.fromValueOrNull(3)).isEqualTo(BlendMode.Overlay)
+    assertThat(BlendMode.fromValueOrNull(4)).isEqualTo(BlendMode.Darken)
+    assertThat(BlendMode.fromValueOrNull(5)).isEqualTo(BlendMode.Lighten)
+    assertThat(BlendMode.fromValueOrNull(6)).isEqualTo(BlendMode.ColorDodge)
+    assertThat(BlendMode.fromValueOrNull(7)).isEqualTo(BlendMode.ColorBurn)
+    assertThat(BlendMode.fromValueOrNull(8)).isEqualTo(BlendMode.HardLight)
+    assertThat(BlendMode.fromValueOrNull(9)).isEqualTo(BlendMode.SoftLight)
+    assertThat(BlendMode.fromValueOrNull(10)).isEqualTo(BlendMode.Difference)
+    assertThat(BlendMode.fromValueOrNull(11)).isEqualTo(BlendMode.Exclusion)
+    assertThat(BlendMode.fromValueOrNull(12)).isEqualTo(BlendMode.Hue)
+    assertThat(BlendMode.fromValueOrNull(13)).isEqualTo(BlendMode.Saturation)
+    assertThat(BlendMode.fromValueOrNull(14)).isEqualTo(BlendMode.Color)
+    assertThat(BlendMode.fromValueOrNull(15)).isEqualTo(BlendMode.Luminosity)
+    assertThat(BlendMode.fromValueOrNull(16)).isEqualTo(BlendMode.Add)
+    assertThat(BlendMode.fromValueOrNull(17)).isEqualTo(BlendMode.HardMix)
+    assertThat(BlendMode.fromValueOrNull(99)).isNull()
+
+    assertThat(LottieDecoder.json.decodeFromString(BlendModeSerializer, "0"))
+      .isEqualTo(BlendMode.Normal)
+    assertThat(LottieDecoder.json.decodeFromString(BlendModeSerializer, "1.0"))
+      .isEqualTo(BlendMode.Multiply)
+    assertThat(LottieDecoder.json.decodeFromString(BlendModeSerializer, "99"))
+      .isEqualTo(BlendMode.Normal)
+
+    assertThat(MatteMode.fromValueOrNull(0)).isEqualTo(MatteMode.Normal)
+    assertThat(MatteMode.fromValueOrNull(1)).isEqualTo(MatteMode.Alpha)
+    assertThat(MatteMode.fromValueOrNull(2)).isEqualTo(MatteMode.InvertedAlpha)
+    assertThat(MatteMode.fromValueOrNull(3)).isEqualTo(MatteMode.Luma)
+    assertThat(MatteMode.fromValueOrNull(4)).isEqualTo(MatteMode.InvertedLuma)
+    assertThat(MatteMode.fromValueOrNull(99)).isNull()
+
+    assertThat(LottieDecoder.json.decodeFromString(MatteModeSerializer, "0"))
+      .isEqualTo(MatteMode.Normal)
+    assertThat(LottieDecoder.json.decodeFromString(MatteModeSerializer, "2.0"))
+      .isEqualTo(MatteMode.InvertedAlpha)
+    assertThat(LottieDecoder.json.decodeFromString(MatteModeSerializer, "99"))
+      .isEqualTo(MatteMode.Normal)
   }
 }
