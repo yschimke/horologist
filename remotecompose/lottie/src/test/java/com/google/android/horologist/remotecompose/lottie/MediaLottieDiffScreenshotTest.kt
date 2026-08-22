@@ -37,7 +37,11 @@ class MediaLottieDiffScreenshotTest : LottieDiffScreenshotTest() {
 
   @Test
   fun m3PlayPause() {
-    runLottieDiffTest(R.raw.m3_play_pause)
+    runLottieDiffTest(R.raw.m3_play_pause) {
+      captureProgress(0.0f)
+      captureProgress(0.5f)
+      captureProgress(1.0f)
+    }
   }
 
   @Test
