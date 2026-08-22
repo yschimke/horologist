@@ -358,6 +358,21 @@ private fun fill(fill: Fill, animationSettings: LottieSettings): RemoteFill {
   return RemoteFill(animateColor(fill.color, animationSettings))
 }
 
+private fun stroke(stroke: Stroke, animationSettings: LottieSettings): RemoteStroke {
+  val strokeColor = animateColor(stroke.color, animationSettings)
+  val strokeWidth = animateScalar(stroke.strokeWidth, animationSettings)
+  val opacity = animateScalar(stroke.opacity, animationSettings)
+  val miterLimit = stroke.miterLimit?.let { animateScalar(it, animationSettings) }
+  return RemoteStroke(
+    strokeColor = strokeColor,
+    strokeWidth = strokeWidth,
+    opacity = opacity,
+    lineCap = stroke.lineCap,
+    lineJoin = stroke.lineJoin,
+    miterLimit = miterLimit,
+  )
+}
+
 private fun gradientFill(
   fill: GradientFill,
   animationSettings: LottieSettings,
