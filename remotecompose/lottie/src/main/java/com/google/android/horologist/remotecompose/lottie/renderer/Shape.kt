@@ -33,6 +33,7 @@ import com.google.android.horologist.remotecompose.lottie.format.graphicelement.
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.Rectangle
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Group
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
+import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.TrimPath
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.Fill
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateColor
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateGradient
@@ -85,23 +86,30 @@ internal fun RenderShapes(shapes: List<GraphicElement>, transformStack: List<Tra
 private fun gatherShapes(
   shapes: List<GraphicElement>,
   animationSettings: LottieSettings,
+  parentTrimPath: TrimPath? = null,
 ): List<StyledShapes> {
   val shapeGroups = mutableListOf<StyledShapes>()
   var currentShapes = mutableListOf<RemoteShape>()
+  var activeTrimPath: TrimPath? = parentTrimPath
 
   for (shape in shapes.reversed()) {
     when (shape) {
+      is TrimPath -> {
+        if (shape.hidden != true) {
+          activeTrimPath = shape
+        }
+      }
       is GeometryShape -> {
         val remoteShape =
           when (shape) {
-            is Path -> evaluatePath(shape, animationSettings)
+            is Path -> evaluatePath(shape, animationSettings, activeTrimPath)
             is Rectangle -> evaluateRectangle(shape, animationSettings)
             is Ellipse -> evaluateEllipse(shape, animationSettings)
             is PolyStar -> evaluatePolyStar(shape, animationSettings)
           }
         currentShapes.addIfNotNull(remoteShape)
       }
-      is Group -> currentShapes.addIfNotNull(group(shape, animationSettings))
+      is Group -> currentShapes.addIfNotNull(group(shape, animationSettings, activeTrimPath))
       is Fill -> {
         val fill = fill(shape, animationSettings)
         shapeGroups.add(StyledShapes(currentShapes, fill))
@@ -131,10 +139,14 @@ private fun group(group: Group, animationSettings: LottieSettings): RemoteGroup?
 
   if (reversed.firstOrNull()?.type == ShapeType.Transform) {
     val transform = reversed[0] as Transform
-    val styledShapes = gatherShapes(reversed.drop(1), animationSettings)
+    val styledShapes = gatherShapes(reversed.drop(1), animationSettings, parentTrimPath)
     return RemoteGroup(styledShapes, animationSettings, transform)
   } else {
-    return RemoteGroup(gatherShapes(reversed, animationSettings), animationSettings, null)
+    return RemoteGroup(
+      gatherShapes(reversed, animationSettings, parentTrimPath),
+      animationSettings,
+      null,
+    )
   }
 }
 

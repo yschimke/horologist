@@ -137,8 +137,16 @@ class TrimPathEvaluatorTest {
     assertThat(halfTrim[0].vertices[0][0]).isWithin(0.01f).of(0f)
     assertThat(halfTrim[0].vertices[1][0]).isWithin(0.01f).of(50f)
 
-    // Zero length: start 0.0, end 0.0 -> empty
-    val zeroTrim = trimBezierValue(line, startFraction = 0f, endFraction = 0f)
+    // Zero length: start 0.0, end 0.0 with keepStructureIfDegenerate = false -> empty
+    val zeroTrim =
+      trimBezierValue(line, startFraction = 0f, endFraction = 0f, keepStructureIfDegenerate = false)
     assertThat(zeroTrim).isEmpty()
+
+    // Zero length with keepStructureIfDegenerate = true -> degenerate collapsed vertices
+    val degenTrim =
+      trimBezierValue(line, startFraction = 0f, endFraction = 0f, keepStructureIfDegenerate = true)
+    assertThat(degenTrim).hasSize(1)
+    assertThat(degenTrim[0].vertices[0][0]).isWithin(0.01f).of(0f)
+    assertThat(degenTrim[0].vertices[1][0]).isWithin(0.01f).of(0f)
   }
 }
