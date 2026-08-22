@@ -260,4 +260,143 @@ class AnimationTest {
     assertThat(result[0].vertices.map { point -> point.map { it.constantValueOrNull } })
       .isEqualTo(listOf(listOf(5f, 5f)))
   }
+
+  @Test
+  fun animateBezierWithTwoKeyframes_returnsAnimatedValues() {
+    val keyframe1 =
+      BezierPropertyKeyframe(
+        frame = 0f,
+        value =
+          listOf(
+            BezierValue(
+              closed = true,
+              inTangents = listOf(listOf(0f, 0f), listOf(2f, 2f)),
+              outTangents = listOf(listOf(1f, 1f), listOf(3f, 3f)),
+              vertices = listOf(listOf(0f, 0f), listOf(10f, 10f)),
+            )
+          ),
+      )
+    val keyframe2 =
+      BezierPropertyKeyframe(
+        frame = 10f,
+        value =
+          listOf(
+            BezierValue(
+              closed = true,
+              inTangents = listOf(listOf(10f, 10f), listOf(12f, 12f)),
+              outTangents = listOf(listOf(11f, 11f), listOf(13f, 13f)),
+              vertices = listOf(listOf(10f, 20f), listOf(30f, 40f)),
+            )
+          ),
+      )
+    val animatedBezier = AnimatedBezierProperty(keyframes = listOf(keyframe1, keyframe2))
+
+    val firstFrameResult = animateBezier(animatedBezier, LottieSettings(0.rf, emptySlotMap))
+    val middleFrameResult = animateBezier(animatedBezier, LottieSettings(5.rf, emptySlotMap))
+    val lastFrameResult = animateBezier(animatedBezier, LottieSettings(10.rf, emptySlotMap))
+    val afterAnimationResult = animateBezier(animatedBezier, LottieSettings(15.rf, emptySlotMap))
+
+    assertThat(firstFrameResult[0].vertices.map { point -> point.map { it.constantValue } })
+      .isEqualTo(listOf(listOf(0f, 0f), listOf(10f, 10f)))
+    assertThat(middleFrameResult[0].vertices.map { point -> point.map { it.constantValue } })
+      .isEqualTo(listOf(listOf(5f, 10f), listOf(20f, 25f)))
+    assertThat(lastFrameResult[0].vertices.map { point -> point.map { it.constantValue } })
+      .isEqualTo(listOf(listOf(10f, 20f), listOf(30f, 40f)))
+    assertThat(afterAnimationResult[0].vertices.map { point -> point.map { it.constantValue } })
+      .isEqualTo(listOf(listOf(10f, 20f), listOf(30f, 40f)))
+
+    assertThat(middleFrameResult[0].inTangents.map { point -> point.map { it.constantValue } })
+      .isEqualTo(listOf(listOf(5f, 5f), listOf(7f, 7f)))
+    assertThat(middleFrameResult[0].outTangents.map { point -> point.map { it.constantValue } })
+      .isEqualTo(listOf(listOf(6f, 6f), listOf(8f, 8f)))
+  }
+
+  @Test
+  fun animateBezierWithHoldKeyframe_holdsValue() {
+    val keyframe1 =
+      BezierPropertyKeyframe(
+        frame = 0f,
+        hold = true,
+        value = listOf(BezierValue(closed = false, vertices = listOf(listOf(0f, 0f)))),
+      )
+    val keyframe2 =
+      BezierPropertyKeyframe(
+        frame = 10f,
+        value = listOf(BezierValue(closed = false, vertices = listOf(listOf(100f, 100f)))),
+      )
+    val animatedBezier = AnimatedBezierProperty(keyframes = listOf(keyframe1, keyframe2))
+
+    val firstFrameResult = animateBezier(animatedBezier, LottieSettings(0.rf, emptySlotMap))
+    val middleFrameResult = animateBezier(animatedBezier, LottieSettings(5.rf, emptySlotMap))
+    val lastFrameResult = animateBezier(animatedBezier, LottieSettings(10.rf, emptySlotMap))
+    val afterAnimationResult = animateBezier(animatedBezier, LottieSettings(15.rf, emptySlotMap))
+
+    assertThat(firstFrameResult[0].vertices.map { point -> point.map { it.constantValue } })
+      .isEqualTo(listOf(listOf(0f, 0f)))
+    assertThat(middleFrameResult[0].vertices.map { point -> point.map { it.constantValue } })
+      .isEqualTo(listOf(listOf(0f, 0f)))
+    assertThat(lastFrameResult[0].vertices.map { point -> point.map { it.constantValue } })
+      .isEqualTo(listOf(listOf(100f, 100f)))
+    assertThat(afterAnimationResult[0].vertices.map { point -> point.map { it.constantValue } })
+      .isEqualTo(listOf(listOf(100f, 100f)))
+  }
+
+  @Test
+  fun animateBezierWithDelayedStart_holdsInitialValue() {
+    val keyframe1 =
+      BezierPropertyKeyframe(
+        frame = 5f,
+        value = listOf(BezierValue(closed = true, vertices = listOf(listOf(10f, 10f)))),
+      )
+    val keyframe2 =
+      BezierPropertyKeyframe(
+        frame = 10f,
+        value = listOf(BezierValue(closed = true, vertices = listOf(listOf(20f, 20f)))),
+      )
+    val animatedBezier = AnimatedBezierProperty(keyframes = listOf(keyframe1, keyframe2))
+
+    val beforeStartResult = animateBezier(animatedBezier, LottieSettings(0.rf, emptySlotMap))
+    val startFrameResult = animateBezier(animatedBezier, LottieSettings(5.rf, emptySlotMap))
+    val endFrameResult = animateBezier(animatedBezier, LottieSettings(10.rf, emptySlotMap))
+
+    assertThat(beforeStartResult[0].vertices.map { point -> point.map { it.constantValue } })
+      .isEqualTo(listOf(listOf(10f, 10f)))
+    assertThat(startFrameResult[0].vertices.map { point -> point.map { it.constantValue } })
+      .isEqualTo(listOf(listOf(10f, 10f)))
+    assertThat(endFrameResult[0].vertices.map { point -> point.map { it.constantValue } })
+      .isEqualTo(listOf(listOf(20f, 20f)))
+  }
+
+  @Test
+  fun animateBezierWithMultipleSubpaths_interpolatesEachSubpath() {
+    val keyframe1 =
+      BezierPropertyKeyframe(
+        frame = 0f,
+        value =
+          listOf(
+            BezierValue(closed = true, vertices = listOf(listOf(0f, 0f))),
+            BezierValue(closed = false, vertices = listOf(listOf(100f, 100f))),
+          ),
+      )
+    val keyframe2 =
+      BezierPropertyKeyframe(
+        frame = 10f,
+        value =
+          listOf(
+            BezierValue(closed = true, vertices = listOf(listOf(10f, 10f))),
+            BezierValue(closed = false, vertices = listOf(listOf(200f, 200f))),
+          ),
+      )
+    val animatedBezier = AnimatedBezierProperty(keyframes = listOf(keyframe1, keyframe2))
+
+    val middleFrameResult = animateBezier(animatedBezier, LottieSettings(5.rf, emptySlotMap))
+
+    assertThat(middleFrameResult).hasSize(2)
+    assertThat(middleFrameResult[0].closed).isTrue()
+    assertThat(middleFrameResult[0].vertices.map { point -> point.map { it.constantValue } })
+      .isEqualTo(listOf(listOf(5f, 5f)))
+    assertThat(middleFrameResult[1].closed).isFalse()
+    assertThat(middleFrameResult[1].vertices.map { point -> point.map { it.constantValue } })
+      .isEqualTo(listOf(listOf(150f, 150f)))
+  }
 }
