@@ -342,6 +342,200 @@ class LottieDecoderResilienceTest {
   }
 
   @Test
+  fun bezierProperty_handlesBooleanAndIntClosedFlag() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 50,
+        "h": 50,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "ShapeLayer",
+            "shapes": [
+              {
+                "ty": "sh",
+                "nm": "IntClosedPath",
+                "ks": {
+                  "a": 0,
+                  "k": {
+                    "c": 1,
+                    "i": [[0.0, 0.0], [0.0, 0.0]],
+                    "o": [[0.0, 0.0], [0.0, 0.0]],
+                    "v": [[10.0, 10.0], [20.0, 20.0]]
+                  }
+                }
+              },
+              {
+                "ty": "sh",
+                "nm": "BoolClosedPath",
+                "ks": {
+                  "a": 0,
+                  "k": {
+                    "c": false,
+                    "i": [[0.0, 0.0], [0.0, 0.0]],
+                    "o": [[0.0, 0.0], [0.0, 0.0]],
+                    "v": [[10.0, 10.0], [20.0, 20.0]]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+
+    val shapeLayer = animation.layers[0] as Layer.ShapeLayer
+    val path1 = shapeLayer.shapes[0] as GraphicElement.Path
+    val path2 = shapeLayer.shapes[1] as GraphicElement.Path
+
+    assertThat(path1.shape).isNotNull()
+    assertThat(path2.shape).isNotNull()
+  }
+
+  @Test
+  fun bezierProperty_handlesSingleObjectAndArrayKeyframeValue() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 50,
+        "h": 50,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "ShapeLayer",
+            "shapes": [
+              {
+                "ty": "sh",
+                "nm": "ArrayKeyframePath",
+                "ks": {
+                  "a": 1,
+                  "k": [
+                    {
+                      "t": 0,
+                      "s": [
+                        {
+                          "c": true,
+                          "i": [[0.0, 0.0]],
+                          "o": [[0.0, 0.0]],
+                          "v": [[0.0, 0.0]]
+                        }
+                      ]
+                    },
+                    {
+                      "t": 30,
+                      "s": [
+                        {
+                          "c": true,
+                          "i": [[0.0, 0.0]],
+                          "o": [[0.0, 0.0]],
+                          "v": [[10.0, 10.0]]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "ty": "sh",
+                "nm": "SingleObjectKeyframePath",
+                "ks": {
+                  "a": 1,
+                  "k": [
+                    {
+                      "t": 0,
+                      "s": {
+                        "c": 0,
+                        "i": [[0.0, 0.0]],
+                        "o": [[0.0, 0.0]],
+                        "v": [[0.0, 0.0]]
+                      }
+                    },
+                    {
+                      "t": 30,
+                      "s": {
+                        "c": 0,
+                        "i": [[0.0, 0.0]],
+                        "o": [[0.0, 0.0]],
+                        "v": [[10.0, 10.0]]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+
+    val shapeLayer = animation.layers[0] as Layer.ShapeLayer
+    val path1 = shapeLayer.shapes[0] as GraphicElement.Path
+    val path2 = shapeLayer.shapes[1] as GraphicElement.Path
+
+    assertThat(path1.shape.animated).isTrue()
+    assertThat(path2.shape.animated).isTrue()
+  }
+
+  @Test
+  fun bezierProperty_parsesSlotId() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 50,
+        "h": 50,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "ShapeLayer",
+            "shapes": [
+              {
+                "ty": "sh",
+                "nm": "SlotPath",
+                "ks": {
+                  "sid": "path.custom_outline",
+                  "a": 0,
+                  "k": {
+                    "c": true,
+                    "i": [[0.0, 0.0]],
+                    "o": [[0.0, 0.0]],
+                    "v": [[0.0, 0.0]]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+
+    val shapeLayer = animation.layers[0] as Layer.ShapeLayer
+    val path = shapeLayer.shapes[0] as GraphicElement.Path
+    assertThat(path.shape).isNotNull()
+  }
+
+  @Test
   fun extraPluginMetadata_ignoredCleanly() {
     val json =
       """
