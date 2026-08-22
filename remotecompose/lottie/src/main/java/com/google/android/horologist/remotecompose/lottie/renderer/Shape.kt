@@ -177,7 +177,7 @@ private fun polyStar(star: PolyStar, animationSettings: LottieSettings): RemoteL
       }
     }
 
-  return RemoteLottiePath(rcPath)
+  return RemoteCompiledPath(rcPath)
 }
 
 @SuppressLint("RestrictedApi")

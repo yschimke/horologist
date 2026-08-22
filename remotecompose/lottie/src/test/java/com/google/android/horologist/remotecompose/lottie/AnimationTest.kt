@@ -209,4 +209,55 @@ class AnimationTest {
     val beforeStartResult = animateColor(animatedColor, LottieSettings(0.rf, emptySlotMap))
     assertThat(beforeStartResult.constantValueOrNull).isEqualTo(Color.Yellow)
   }
+
+  @Test
+  fun animateBezierWithStaticInput_returnsInput() {
+    val bezierValue =
+      BezierValue(
+        closed = true,
+        inTangents = listOf(listOf(0f, 0f), listOf(1f, 1f)),
+        outTangents = listOf(listOf(2f, 2f), listOf(3f, 3f)),
+        vertices = listOf(listOf(10f, 10f), listOf(20f, 20f)),
+      )
+    val staticBezier = StaticBezierProperty(value = bezierValue)
+
+    val result = animateBezier(staticBezier, LottieSettings(0.rf, emptySlotMap))
+    assertThat(result).hasSize(1)
+    assertThat(result[0].closed).isTrue()
+    assertThat(result[0].vertices.map { point -> point.map { it.constantValueOrNull } })
+      .isEqualTo(listOf(listOf(10f, 10f), listOf(20f, 20f)))
+    assertThat(result[0].inTangents.map { point -> point.map { it.constantValueOrNull } })
+      .isEqualTo(listOf(listOf(0f, 0f), listOf(1f, 1f)))
+    assertThat(result[0].outTangents.map { point -> point.map { it.constantValueOrNull } })
+      .isEqualTo(listOf(listOf(2f, 2f), listOf(3f, 3f)))
+  }
+
+  @Test
+  fun animateBezierWithEmptyKeyframes_returnsEmptyList() {
+    val animatedBezier = AnimatedBezierProperty(keyframes = emptyList())
+
+    val result = animateBezier(animatedBezier, LottieSettings(0.rf, emptySlotMap))
+    assertThat(result).isEmpty()
+  }
+
+  @Test
+  fun animateBezierWithSingleKeyframe_returnsInput() {
+    val bezierValue =
+      BezierValue(
+        closed = false,
+        inTangents = listOf(listOf(0f, 0f)),
+        outTangents = listOf(listOf(1f, 1f)),
+        vertices = listOf(listOf(5f, 5f)),
+      )
+    val animatedBezier =
+      AnimatedBezierProperty(
+        keyframes = listOf(BezierPropertyKeyframe(frame = 0f, value = listOf(bezierValue)))
+      )
+
+    val result = animateBezier(animatedBezier, LottieSettings(0.rf, emptySlotMap))
+    assertThat(result).hasSize(1)
+    assertThat(result[0].closed).isFalse()
+    assertThat(result[0].vertices.map { point -> point.map { it.constantValueOrNull } })
+      .isEqualTo(listOf(listOf(5f, 5f)))
+  }
 }
