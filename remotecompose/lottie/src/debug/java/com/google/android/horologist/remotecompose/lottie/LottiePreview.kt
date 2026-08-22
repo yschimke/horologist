@@ -18,6 +18,7 @@ package com.google.android.horologist.remotecompose.lottie
 
 import android.annotation.SuppressLint
 import androidx.annotation.RawRes
+import androidx.compose.animation.core.InfiniteTransition
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -35,6 +36,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.UiComposable
 import androidx.compose.ui.platform.LocalContext
 import com.google.android.horologist.remotecompose.lottie.format.Animation
 
@@ -49,6 +51,8 @@ import com.google.android.horologist.remotecompose.lottie.format.Animation
  * @param progress Optional progress value to drive animation frame instead of clock time.
  */
 @SuppressLint("RestrictedApi")
+@Suppress("COMPOSE_APPLIER_CALL_MISMATCH")
+@UiComposable
 @Composable
 internal fun LottiePreview(
   animation: Animation,
@@ -100,6 +104,7 @@ internal fun LottiePreview(
  * @param progress Optional progress value to drive animation frame instead of clock time.
  */
 @SuppressLint("RestrictedApi")
+@UiComposable
 @Composable
 fun LottiePreview(
   @RawRes animationResId: Int,
@@ -123,6 +128,7 @@ fun LottiePreview(
  * @param durationMillis Optional override for the animation duration in milliseconds.
  */
 @SuppressLint("RestrictedApi")
+@UiComposable
 @Composable
 internal fun LottieAnimatedPreview(
   animation: Animation,
@@ -164,6 +170,7 @@ internal fun LottieAnimatedPreview(
  * @param durationMillis Optional override for the animation duration in milliseconds.
  */
 @SuppressLint("RestrictedApi")
+@UiComposable
 @Composable
 fun LottieAnimatedPreview(
   @RawRes animationResId: Int,

@@ -51,7 +51,7 @@ internal enum class BlendMode(val value: Int) {
   HardMix(17);
 
   companion object {
-    fun fromValueOrNull(value: Int): BlendMode? = values().firstOrNull { it.value == value }
+    fun fromValueOrNull(value: Int): BlendMode? = entries.firstOrNull { it.value == value }
   }
 }
 
