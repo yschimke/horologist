@@ -673,4 +673,160 @@ class AnimationTest {
     assertThat(lastFrameResult.constantValueOrNull).isEqualTo(30f)
     assertThat(afterAnimationResult.constantValueOrNull).isEqualTo(30f)
   }
+
+  @Test
+  fun animateGradientWithStaticInput_returnsInput() {
+    val staticGradient =
+      StaticGradientProperty(
+        value = GradientValue(numberOfColors = 2, values = listOf(0f, 1f, 0f, 0f, 1f, 0f, 1f, 0f))
+      )
+
+    val result1 = animateGradient(staticGradient, LottieSettings(0.rf, emptySlotMap))
+    assertThat(result1.numberOfColors).isEqualTo(2)
+    assertThat(result1.hasTransparency).isFalse()
+    assertThat(result1.values.map { it.constantValueOrNull }).isEqualTo(staticGradient.value.values)
+
+    val result2 = animateGradient(staticGradient, LottieSettings(5.rf, emptySlotMap))
+    assertThat(result2.values.map { it.constantValueOrNull }).isEqualTo(staticGradient.value.values)
+  }
+
+  @Test
+  fun animateGradientWithStaticTransparentInput_returnsInput() {
+    val staticGradient =
+      StaticGradientProperty(
+        value =
+          GradientValue(
+            numberOfColors = 2,
+            values = listOf(0f, 1f, 0f, 0f, 1f, 0f, 1f, 0f, 0f, 1f, 1f, 0.5f),
+          )
+      )
+
+    val result = animateGradient(staticGradient, LottieSettings(0.rf, emptySlotMap))
+    assertThat(result.numberOfColors).isEqualTo(2)
+    assertThat(result.hasTransparency).isTrue()
+    assertThat(result.values.map { it.constantValueOrNull }).isEqualTo(staticGradient.value.values)
+  }
+
+  @Test
+  fun animateGradientWithEmptyKeyframes_returnsEmpty() {
+    val animatedGradient = AnimatedGradientProperty(numberOfColors = 2, keyframes = emptyList())
+
+    val result = animateGradient(animatedGradient, LottieSettings(0.rf, emptySlotMap))
+    assertThat(result.numberOfColors).isEqualTo(2)
+    assertThat(result.values).isEmpty()
+  }
+
+  @Test
+  fun animateGradientWithSingleKeyframe_returnsInput() {
+    val gradientValue =
+      GradientValue(numberOfColors = 2, values = listOf(0f, 1f, 0f, 0f, 1f, 0f, 0f, 1f))
+    val animatedGradient =
+      AnimatedGradientProperty(
+        numberOfColors = 2,
+        keyframes = listOf(GradientPropertyKeyframe(frame = 0f, value = listOf(gradientValue))),
+      )
+
+    val result1 = animateGradient(animatedGradient, LottieSettings(0.rf, emptySlotMap))
+    assertThat(result1.numberOfColors).isEqualTo(2)
+    assertThat(result1.values.map { it.constantValueOrNull }).isEqualTo(gradientValue.values)
+
+    val result2 = animateGradient(animatedGradient, LottieSettings(5.rf, emptySlotMap))
+    assertThat(result2.values.map { it.constantValueOrNull }).isEqualTo(gradientValue.values)
+  }
+
+  @Test
+  fun animateGradientWithTwoKeyframes_returnsAnimatedValues() {
+    val keyframe1 =
+      GradientPropertyKeyframe(
+        frame = 0f,
+        value =
+          listOf(GradientValue(numberOfColors = 2, values = listOf(0f, 1f, 0f, 0f, 1f, 0f, 1f, 0f))),
+      )
+    val keyframe2 =
+      GradientPropertyKeyframe(
+        frame = 10f,
+        value =
+          listOf(GradientValue(numberOfColors = 2, values = listOf(0f, 0f, 1f, 0f, 1f, 0f, 0f, 1f))),
+      )
+    val animatedGradient =
+      AnimatedGradientProperty(numberOfColors = 2, keyframes = listOf(keyframe1, keyframe2))
+
+    val firstFrameResult = animateGradient(animatedGradient, LottieSettings(0.rf, emptySlotMap))
+    val middleFrameResult = animateGradient(animatedGradient, LottieSettings(5.rf, emptySlotMap))
+    val lastFrameResult = animateGradient(animatedGradient, LottieSettings(10.rf, emptySlotMap))
+    val afterAnimationResult =
+      animateGradient(animatedGradient, LottieSettings(15.rf, emptySlotMap))
+
+    assertThat(firstFrameResult.values.map { it.constantValueOrNull })
+      .isEqualTo(listOf(0f, 1f, 0f, 0f, 1f, 0f, 1f, 0f))
+    assertThat(middleFrameResult.values.map { it.constantValueOrNull })
+      .isEqualTo(listOf(0f, 0.5f, 0.5f, 0f, 1f, 0f, 0.5f, 0.5f))
+    assertThat(lastFrameResult.values.map { it.constantValueOrNull })
+      .isEqualTo(listOf(0f, 0f, 1f, 0f, 1f, 0f, 0f, 1f))
+    assertThat(afterAnimationResult.values.map { it.constantValueOrNull })
+      .isEqualTo(listOf(0f, 0f, 1f, 0f, 1f, 0f, 0f, 1f))
+  }
+
+  @Test
+  fun animateGradientWithHoldKeyframe_holdsValue() {
+    val keyframe1 =
+      GradientPropertyKeyframe(
+        frame = 0f,
+        hold = true,
+        value =
+          listOf(GradientValue(numberOfColors = 2, values = listOf(0f, 1f, 0f, 0f, 1f, 0f, 1f, 0f))),
+      )
+    val keyframe2 =
+      GradientPropertyKeyframe(
+        frame = 10f,
+        value =
+          listOf(GradientValue(numberOfColors = 2, values = listOf(0f, 0f, 0f, 1f, 1f, 1f, 1f, 1f))),
+      )
+    val animatedGradient =
+      AnimatedGradientProperty(numberOfColors = 2, keyframes = listOf(keyframe1, keyframe2))
+
+    val firstFrameResult = animateGradient(animatedGradient, LottieSettings(0.rf, emptySlotMap))
+    val middleFrameResult = animateGradient(animatedGradient, LottieSettings(5.rf, emptySlotMap))
+    val lastFrameResult = animateGradient(animatedGradient, LottieSettings(10.rf, emptySlotMap))
+    val afterAnimationResult =
+      animateGradient(animatedGradient, LottieSettings(15.rf, emptySlotMap))
+
+    assertThat(firstFrameResult.values.map { it.constantValueOrNull })
+      .isEqualTo(listOf(0f, 1f, 0f, 0f, 1f, 0f, 1f, 0f))
+    assertThat(middleFrameResult.values.map { it.constantValueOrNull })
+      .isEqualTo(listOf(0f, 1f, 0f, 0f, 1f, 0f, 1f, 0f))
+    assertThat(lastFrameResult.values.map { it.constantValueOrNull })
+      .isEqualTo(listOf(0f, 0f, 0f, 1f, 1f, 1f, 1f, 1f))
+    assertThat(afterAnimationResult.values.map { it.constantValueOrNull })
+      .isEqualTo(listOf(0f, 0f, 0f, 1f, 1f, 1f, 1f, 1f))
+  }
+
+  @Test
+  fun animateGradientWithDelayedStart_holdsInitialValue() {
+    val keyframe1 =
+      GradientPropertyKeyframe(
+        frame = 5f,
+        value =
+          listOf(GradientValue(numberOfColors = 2, values = listOf(0f, 1f, 0f, 0f, 1f, 0f, 1f, 0f))),
+      )
+    val keyframe2 =
+      GradientPropertyKeyframe(
+        frame = 10f,
+        value =
+          listOf(GradientValue(numberOfColors = 2, values = listOf(0f, 0f, 1f, 0f, 1f, 0f, 0f, 1f))),
+      )
+    val animatedGradient =
+      AnimatedGradientProperty(numberOfColors = 2, keyframes = listOf(keyframe1, keyframe2))
+
+    val beforeStartResult = animateGradient(animatedGradient, LottieSettings(0.rf, emptySlotMap))
+    val startFrameResult = animateGradient(animatedGradient, LottieSettings(5.rf, emptySlotMap))
+    val endFrameResult = animateGradient(animatedGradient, LottieSettings(10.rf, emptySlotMap))
+
+    assertThat(beforeStartResult.values.map { it.constantValueOrNull })
+      .isEqualTo(listOf(0f, 1f, 0f, 0f, 1f, 0f, 1f, 0f))
+    assertThat(startFrameResult.values.map { it.constantValueOrNull })
+      .isEqualTo(listOf(0f, 1f, 0f, 0f, 1f, 0f, 1f, 0f))
+    assertThat(endFrameResult.values.map { it.constantValueOrNull })
+      .isEqualTo(listOf(0f, 0f, 1f, 0f, 1f, 0f, 0f, 1f))
+  }
 }
