@@ -583,4 +583,72 @@ class AnimationTest {
     assertThat(frame15Result.x.constantValue).isEqualTo(30f)
     assertThat(frame15Result.y.constantValue).isEqualTo(50f)
   }
+
+  @Test
+  fun animateScalarWithStaticInput_returnsInput() {
+    val staticScalar = StaticScalarProperty(value = 42f)
+
+    val result1 = animateScalar(staticScalar, LottieSettings(0.rf, emptySlotMap))
+    assertThat(result1.constantValueOrNull).isEqualTo(42f)
+
+    val result2 = animateScalar(staticScalar, LottieSettings(5.rf, emptySlotMap))
+    assertThat(result2.constantValueOrNull).isEqualTo(42f)
+  }
+
+  @Test
+  fun animateScalarWithEmptyKeyframes_returnsZero() {
+    val animatedScalar = AnimatedScalarProperty(keyframes = emptyList())
+
+    val result = animateScalar(animatedScalar, LottieSettings(0.rf, emptySlotMap))
+    assertThat(result.constantValueOrNull).isEqualTo(0f)
+  }
+
+  @Test
+  fun animateScalarWithSingleKeyframe_returnsInput() {
+    val animatedScalar =
+      AnimatedScalarProperty(keyframes = listOf(ScalarPropertyKeyframe(frame = 0f, value = 42f)))
+
+    val result1 = animateScalar(animatedScalar, LottieSettings(0.rf, emptySlotMap))
+    assertThat(result1.constantValueOrNull).isEqualTo(42f)
+
+    val result2 = animateScalar(animatedScalar, LottieSettings(5.rf, emptySlotMap))
+    assertThat(result2.constantValueOrNull).isEqualTo(42f)
+  }
+
+  @Test
+  fun animateScalarWithTwoKeyframes_returnsAnimatedValues() {
+    val animatedScalar =
+      AnimatedScalarProperty(
+        keyframes =
+          listOf(
+            ScalarPropertyKeyframe(frame = 0f, value = 10f),
+            ScalarPropertyKeyframe(frame = 10f, value = 30f),
+          )
+      )
+
+    val firstFrameResult = animateScalar(animatedScalar, LottieSettings(0.rf, emptySlotMap))
+    val middleFrameResult = animateScalar(animatedScalar, LottieSettings(5.rf, emptySlotMap))
+    val lastFrameResult = animateScalar(animatedScalar, LottieSettings(10.rf, emptySlotMap))
+    val afterAnimationResult = animateScalar(animatedScalar, LottieSettings(15.rf, emptySlotMap))
+
+    assertThat(firstFrameResult.constantValueOrNull).isEqualTo(10f)
+    assertThat(middleFrameResult.constantValueOrNull).isEqualTo(20f)
+    assertThat(lastFrameResult.constantValueOrNull).isEqualTo(30f)
+    assertThat(afterAnimationResult.constantValueOrNull).isEqualTo(30f)
+  }
+
+  @Test
+  fun animateScalarWithDelayedStart_holdsInitialValue() {
+    val animatedScalar =
+      AnimatedScalarProperty(
+        keyframes =
+          listOf(
+            ScalarPropertyKeyframe(frame = 5f, value = 10f),
+            ScalarPropertyKeyframe(frame = 10f, value = 30f),
+          )
+      )
+
+    val beforeStartResult = animateScalar(animatedScalar, LottieSettings(0.rf, emptySlotMap))
+    assertThat(beforeStartResult.constantValueOrNull).isEqualTo(10f)
+  }
 }

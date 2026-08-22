@@ -19,6 +19,7 @@ package com.google.android.horologist.remotecompose.lottie
 import androidx.compose.remote.creation.compose.state.rc
 import androidx.compose.ui.graphics.Color
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.google.android.horologist.remotecompose.lottie.format.AnimatedScalarProperty
 import com.google.android.horologist.remotecompose.lottie.format.Animation
 import com.google.android.horologist.remotecompose.lottie.format.LottieDecoder
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Group
