@@ -19,6 +19,9 @@ package com.google.android.horologist.remotecompose.lottie.renderer
 import android.annotation.SuppressLint
 import androidx.compose.remote.creation.compose.layout.RemoteCanvas
 import androidx.compose.remote.creation.compose.state.RemotePaint
+import androidx.compose.remote.creation.compose.state.rf
+import androidx.compose.remote.creation.compose.state.tan
+import androidx.compose.remote.creation.compose.state.toRad
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animatePosition
@@ -45,6 +48,19 @@ internal fun transform(
 
   canvas.translate(translation.x, translation.y)
   canvas.rotate(rotation)
+
+  val skew = transform.skew?.let { animateScalar(it, animationSettings) }
+  val skewAxis = transform.skewAxis?.let { animateScalar(it, animationSettings) }
+  if (skew != null) {
+    if (skewAxis != null) {
+      canvas.rotate(-skewAxis)
+    }
+    canvas.internalCanvas.skew(-tan(toRad(skew)), 0f.rf)
+    if (skewAxis != null) {
+      canvas.rotate(skewAxis)
+    }
+  }
+
   canvas.scale(scaleX, scaleY)
   canvas.translate(-anchorPoint.x, -anchorPoint.y)
 

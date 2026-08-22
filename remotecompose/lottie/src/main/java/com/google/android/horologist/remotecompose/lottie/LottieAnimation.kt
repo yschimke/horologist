@@ -208,7 +208,7 @@ private fun populateAncestorTransforms(
       currentStack
     }
 
-  val children = childrenMap[layerIndex] ?: emptyList()
+  val children = if (layerIndex != null) childrenMap[layerIndex] ?: emptyList() else emptyList()
   for (child in children) {
     populateAncestorTransforms(child, nextStack, childrenMap, outMap)
   }
