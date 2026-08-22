@@ -1060,10 +1060,23 @@ class LottieDecoderResilienceTest {
     assertThat(ShapeType.fromValueOrNull("rp")).isEqualTo(ShapeType.Repeater)
     assertThat(ShapeType.fromValueOrNull("rd")).isEqualTo(ShapeType.RoundedCorners)
     assertThat(ShapeType.fromValueOrNull("mm")).isEqualTo(ShapeType.MergePaths)
+    assertThat(ShapeType.fromValueOrNull("op")).isEqualTo(ShapeType.OffsetPath)
+    assertThat(ShapeType.fromValueOrNull("pb")).isEqualTo(ShapeType.PuckerBloat)
+    assertThat(ShapeType.fromValueOrNull("tw")).isEqualTo(ShapeType.Twist)
+    assertThat(ShapeType.fromValueOrNull("zz")).isEqualTo(ShapeType.ZigZag)
     assertThat(ShapeType.fromValueOrNull("unsupported")).isNull()
 
     val decodedKnown = LottieDecoder.json.decodeFromString(ShapeType.serializer(), "\"st\"")
     assertThat(decodedKnown).isEqualTo(ShapeType.Stroke)
+
+    assertThat(LottieDecoder.json.decodeFromString(ShapeType.serializer(), "\"op\""))
+      .isEqualTo(ShapeType.OffsetPath)
+    assertThat(LottieDecoder.json.decodeFromString(ShapeType.serializer(), "\"pb\""))
+      .isEqualTo(ShapeType.PuckerBloat)
+    assertThat(LottieDecoder.json.decodeFromString(ShapeType.serializer(), "\"tw\""))
+      .isEqualTo(ShapeType.Twist)
+    assertThat(LottieDecoder.json.decodeFromString(ShapeType.serializer(), "\"zz\""))
+      .isEqualTo(ShapeType.ZigZag)
 
     val decodedUnknown =
       LottieDecoder.json.decodeFromString(ShapeType.serializer(), "\"invalid_type\"")
@@ -1094,7 +1107,7 @@ class LottieDecoderResilienceTest {
   }
 
   @Test
-  fun enumSerializers_trimCompositeMergePolyStarFillRule_handlesIntegersFloatsAndFallbacks() {
+  fun enumSerializers_trimCompositeMergePolyStarFillRuleZigZag_handlesIntegersFloatsAndFallbacks() {
     assertThat(LottieDecoder.json.decodeFromString(TrimModeSerializer, "1"))
       .isEqualTo(TrimMode.Simultaneously)
     assertThat(LottieDecoder.json.decodeFromString(TrimModeSerializer, "2.0"))
@@ -1135,5 +1148,12 @@ class LottieDecoderResilienceTest {
       .isEqualTo(FillRule.EvenOdd)
     assertThat(LottieDecoder.json.decodeFromString(FillRuleSerializer, "99"))
       .isEqualTo(FillRule.NonZero)
+
+    assertThat(LottieDecoder.json.decodeFromString(ZigZagTypeSerializer, "1"))
+      .isEqualTo(ZigZagType.Corner)
+    assertThat(LottieDecoder.json.decodeFromString(ZigZagTypeSerializer, "2.0"))
+      .isEqualTo(ZigZagType.Smooth)
+    assertThat(LottieDecoder.json.decodeFromString(ZigZagTypeSerializer, "99"))
+      .isEqualTo(ZigZagType.Corner)
   }
 }
