@@ -106,6 +106,22 @@ class AnimationTest {
   }
 
   @Test
+  fun animateVectorWithDelayedStart_holdsInitialValue() {
+    val animatedVector =
+      AnimatedVectorProperty(
+        keyframes =
+          listOf(
+            VectorPropertyKeyframe(frame = 5f, value = floatArrayOf(10f, 20f)),
+            VectorPropertyKeyframe(frame = 10f, value = floatArrayOf(30f, 40f)),
+          )
+      )
+
+    val beforeStartResult = animateVector(animatedVector, LottieSettings(0.rf, emptySlotMap))
+    assertThat(beforeStartResult.map { it.constantValue }.toFloatArray())
+      .isEqualTo(floatArrayOf(10f, 20f))
+  }
+
+  @Test
   fun animateColorWithStaticInput_returnsInput() {
     val staticColor = StaticColorProperty(value = Color.Red.rc)
 
