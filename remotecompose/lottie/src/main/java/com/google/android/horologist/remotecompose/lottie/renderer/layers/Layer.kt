@@ -16,8 +16,10 @@
 
 package com.google.android.horologist.remotecompose.lottie.renderer.layers
 
+import android.annotation.SuppressLint
 import androidx.compose.remote.creation.compose.layout.RemoteComposable
 import androidx.compose.runtime.Composable
+import com.google.android.horologist.remotecompose.lottie.LocalAnimationSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
 import com.google.android.horologist.remotecompose.lottie.format.layer.Layer
 import com.google.android.horologist.remotecompose.lottie.format.layer.LayerType
@@ -25,6 +27,7 @@ import com.google.android.horologist.remotecompose.lottie.format.layer.ShapeLaye
 import com.google.android.horologist.remotecompose.lottie.format.layer.SolidColorLayer
 
 /** A Layer in the Lottie composition */
+@SuppressLint("RestrictedApi")
 @Composable
 @RemoteComposable
 internal fun Layer(
@@ -32,6 +35,19 @@ internal fun Layer(
   parentTransforms: Map<Int, List<Transform>>,
   transform: Transform? = null,
 ) {
+  if (layer.hidden == true) {
+    return
+  }
+
+  val currentFrame = LocalAnimationSettings.current.currentFrame.constantValueOrNull
+  if (currentFrame != null) {
+    val startFrame = layer.startFrame ?: 0f
+    val endFrame = layer.endFrame ?: Float.MAX_VALUE
+    if (currentFrame < startFrame || currentFrame >= endFrame) {
+      return
+    }
+  }
+
   val ancestorStack = parentTransforms[layer.index] ?: emptyList()
 
   val completeStack =

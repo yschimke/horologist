@@ -829,4 +829,30 @@ class AnimationTest {
     assertThat(endFrameResult.values.map { it.constantValueOrNull })
       .isEqualTo(listOf(0f, 0f, 1f, 0f, 1f, 0f, 0f, 1f))
   }
+
+  @Test
+  fun parseHexColor_parsesSixDigitHexWithAndWithoutHash() {
+    assertThat(parseHexColor("#ff0000")).isEqualTo(Color(0xFFFF0000))
+    assertThat(parseHexColor("00ff00")).isEqualTo(Color(0xFF00FF00))
+    assertThat(parseHexColor("#0000ff")).isEqualTo(Color(0xFF0000FF))
+  }
+
+  @Test
+  fun parseHexColor_parsesEightDigitHexWithAndWithoutHash() {
+    assertThat(parseHexColor("#80ff0000")).isEqualTo(Color(0x80FF0000))
+    assertThat(parseHexColor("4000ff00")).isEqualTo(Color(0x4000FF00))
+  }
+
+  @Test
+  fun parseHexColor_parsesThreeDigitHexWithAndWithoutHash() {
+    assertThat(parseHexColor("#f00")).isEqualTo(Color(0xFFFF0000))
+    assertThat(parseHexColor("0f0")).isEqualTo(Color(0xFF00FF00))
+  }
+
+  @Test
+  fun parseHexColor_invalidColorReturnsTransparent() {
+    assertThat(parseHexColor("")).isEqualTo(Color.Transparent)
+    assertThat(parseHexColor("invalid_hex")).isEqualTo(Color.Transparent)
+    assertThat(parseHexColor("#zzzzzz")).isEqualTo(Color.Transparent)
+  }
 }
