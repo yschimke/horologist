@@ -36,6 +36,7 @@ import com.google.android.horologist.remotecompose.lottie.format.graphicelement.
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.Fill
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateColor
+import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateGradient
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animatePosition
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateScalar
 import com.google.android.horologist.remotecompose.lottie.renderer.shapes.ellipse
@@ -350,6 +351,42 @@ private fun createPolygonPath(
 
 private fun fill(fill: Fill, animationSettings: LottieSettings): RemoteFill {
   return RemoteFill(animateColor(fill.color, animationSettings))
+}
+
+private fun gradientFill(
+  fill: GradientFill,
+  animationSettings: LottieSettings,
+): RemoteGradientFill {
+  val startPoint = animatePosition(fill.startPoint, animationSettings)
+  val endPoint = animatePosition(fill.endPoint, animationSettings)
+  val gradient = animateGradient(fill.colors, animationSettings)
+  val opacity = animateScalar(fill.opacity, animationSettings)
+  return RemoteGradientFill(
+    gradient = gradient,
+    startPoint = startPoint,
+    endPoint = endPoint,
+    gradientType = fill.gradientType,
+    opacity = opacity,
+  )
+}
+
+private fun gradientStroke(
+  stroke: GradientStroke,
+  animationSettings: LottieSettings,
+): RemoteGradientStroke {
+  val startPoint = animatePosition(stroke.startPoint, animationSettings)
+  val endPoint = animatePosition(stroke.endPoint, animationSettings)
+  val gradient = animateGradient(stroke.colors, animationSettings)
+  val opacity = animateScalar(stroke.opacity, animationSettings)
+  val strokeWidth = animateScalar(stroke.strokeWidth, animationSettings)
+  return RemoteGradientStroke(
+    gradient = gradient,
+    startPoint = startPoint,
+    endPoint = endPoint,
+    gradientType = stroke.gradientType,
+    opacity = opacity,
+    strokeWidth = strokeWidth,
+  )
 }
 
 private fun MutableList<RemoteShape>.addIfNotNull(shape: RemoteShape?) {

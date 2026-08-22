@@ -943,4 +943,103 @@ class LottieDecoderResilienceTest {
     assertThat(c1?.blue).isWithin(0.01f).of(1.0f)
     assertThat(c1?.alpha).isWithin(0.01f).of(0.4f)
   }
+
+  @Test
+  fun gradientFill_animatedAndSlotId_deserializes() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 50,
+        "h": 50,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "ShapeLayer",
+            "shapes": [
+              {
+                "ty": "gf",
+                "nm": "DynamicGradFill",
+                "t": 1,
+                "s": { "k": [0.0, 0.0] },
+                "e": { "k": [50.0, 50.0] },
+                "g": {
+                  "sid": "slot.grad",
+                  "a": 1,
+                  "p": 2,
+                  "k": [
+                    {
+                      "t": 0,
+                      "s": [0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0]
+                    },
+                    {
+                      "t": 30,
+                      "s": [0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0]
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+    val shapeLayer = animation.layers[0] as Layer.ShapeLayer
+    val gf = shapeLayer.shapes[0] as GraphicElement.GradientFill
+    assertThat(gf.colors.animated).isTrue()
+    assertThat(gf.colors.slotId).isEqualTo("slot.grad")
+    val animGradient = gf.colors as AnimatedGradientProperty
+    assertThat(animGradient.keyframes).hasSize(2)
+  }
+
+  @Test
+  fun gradientStroke_withHighlights_deserializes() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 50,
+        "h": 50,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "ShapeLayer",
+            "shapes": [
+              {
+                "ty": "gs",
+                "nm": "RadialGradStroke",
+                "t": 2,
+                "s": { "k": [25.0, 25.0] },
+                "e": { "k": [50.0, 50.0] },
+                "r": { "k": 45.0 },
+                "h": { "k": 90.0 },
+                "w": { "k": 2.5 },
+                "g": {
+                  "p": 2,
+                  "k": [0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0]
+                }
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+    val shapeLayer = animation.layers[0] as Layer.ShapeLayer
+    val gs = shapeLayer.shapes[0] as GraphicElement.GradientStroke
+    assertThat((gs.highlightLength as StaticScalarProperty).value).isEqualTo(45.0f)
+    assertThat((gs.highlightAngle as StaticScalarProperty).value).isEqualTo(90.0f)
+    assertThat((gs.strokeWidth as StaticScalarProperty).value).isEqualTo(2.5f)
+  }
 }

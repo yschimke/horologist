@@ -17,7 +17,11 @@
 package com.google.android.horologist.remotecompose.lottie.renderer
 
 import androidx.compose.remote.creation.compose.state.RemoteColor
+import androidx.compose.remote.creation.compose.state.RemoteFloat
 import androidx.compose.remote.creation.compose.state.RemotePaint
+import com.google.android.horologist.remotecompose.lottie.format.GradientType
+import com.google.android.horologist.remotecompose.lottie.renderer.properties.Point
+import com.google.android.horologist.remotecompose.lottie.renderer.properties.RemoteGradientValue
 
 internal interface RemoteStyle {
   fun getPaint(): RemotePaint
@@ -26,6 +30,31 @@ internal interface RemoteStyle {
 internal class RemoteFill(val fillColor: RemoteColor) : RemoteStyle {
   override fun getPaint(): RemotePaint {
     return RemotePaint { this.color = fillColor }
+  }
+}
+
+internal class RemoteGradientFill(
+  val gradient: RemoteGradientValue,
+  val startPoint: Point,
+  val endPoint: Point,
+  val gradientType: GradientType,
+  val opacity: RemoteFloat,
+) : RemoteStyle {
+  override fun getPaint(): RemotePaint {
+    return RemotePaint()
+  }
+}
+
+internal class RemoteGradientStroke(
+  val gradient: RemoteGradientValue,
+  val startPoint: Point,
+  val endPoint: Point,
+  val gradientType: GradientType,
+  val opacity: RemoteFloat,
+  val strokeWidth: RemoteFloat,
+) : RemoteStyle {
+  override fun getPaint(): RemotePaint {
+    return RemotePaint()
   }
 }
 

@@ -774,4 +774,97 @@ class ParsingTest {
     assertThat(remoteGrad.numberOfColors).isEqualTo(2)
     assertThat(remoteGrad.values).hasSize(8)
   }
+
+  @Test
+  fun gradientFill_deserializes() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "GradientFillLayer",
+            "shapes": [
+              {
+                "ty": "gf",
+                "nm": "LinearGradientFill",
+                "t": 1,
+                "s": { "k": [0.0, 0.0] },
+                "e": { "k": [100.0, 100.0] },
+                "o": { "k": 100.0 },
+                "g": {
+                  "p": 2,
+                  "k": [0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0]
+                }
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+    val shapeLayer = animation.layers[0] as Layer.ShapeLayer
+    assertThat(shapeLayer.shapes).hasSize(1)
+    val gf = shapeLayer.shapes[0] as GraphicElement.GradientFill
+    assertThat(gf.type).isEqualTo(ShapeType.GradientFill)
+    assertThat(gf.gradientType).isEqualTo(GradientType.Linear)
+    assertThat(gf.colors.animated).isFalse()
+    assertThat((gf.colors as StaticGradientProperty).value.numberOfColors).isEqualTo(2)
+    assertThat((gf.opacity as StaticScalarProperty).value).isEqualTo(100f)
+  }
+
+  @Test
+  fun gradientStroke_deserializes() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "GradientStrokeLayer",
+            "shapes": [
+              {
+                "ty": "gs",
+                "nm": "RadialGradientStroke",
+                "t": 2,
+                "s": { "k": [50.0, 50.0] },
+                "e": { "k": [100.0, 100.0] },
+                "w": { "k": 4.0 },
+                "o": { "k": 80.0 },
+                "g": {
+                  "p": 2,
+                  "k": [0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0]
+                }
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+    val shapeLayer = animation.layers[0] as Layer.ShapeLayer
+    assertThat(shapeLayer.shapes).hasSize(1)
+    val gs = shapeLayer.shapes[0] as GraphicElement.GradientStroke
+    assertThat(gs.type).isEqualTo(ShapeType.GradientStroke)
+    assertThat(gs.gradientType).isEqualTo(GradientType.Radial)
+    assertThat((gs.strokeWidth as StaticScalarProperty).value).isEqualTo(4f)
+    assertThat((gs.opacity as StaticScalarProperty).value).isEqualTo(80f)
+    assertThat((gs.colors as StaticGradientProperty).value.numberOfColors).isEqualTo(2)
+  }
 }
