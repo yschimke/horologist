@@ -171,7 +171,7 @@ internal fun LottieAnimation(
       contentAlignment = RemoteAlignment.Center,
     ) {
       for (layer in animation.layers) {
-        Layer(layer, ancestorTransforms, null)
+        Layer(layer, ancestorTransforms)
       }
     }
   }

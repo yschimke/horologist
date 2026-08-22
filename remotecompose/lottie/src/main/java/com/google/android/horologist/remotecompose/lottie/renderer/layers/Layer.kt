@@ -30,7 +30,7 @@ import com.google.android.horologist.remotecompose.lottie.format.layer.SolidColo
 internal fun Layer(
   layer: Layer,
   parentTransforms: Map<Int, List<Transform>>,
-  transform: Transform?,
+  transform: Transform? = null,
 ) {
   val ancestorStack = parentTransforms[layer.index] ?: emptyList()
 
