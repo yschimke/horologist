@@ -22,6 +22,7 @@ import androidx.compose.remote.creation.compose.layout.RemoteCanvas
 import androidx.compose.remote.creation.compose.layout.RemoteComposable
 import androidx.compose.remote.creation.compose.modifier.RemoteModifier
 import androidx.compose.remote.creation.compose.modifier.fillMaxSize
+import androidx.compose.remote.creation.compose.state.RemoteFloat
 import androidx.compose.remote.creation.compose.state.rf
 import androidx.compose.runtime.Composable
 import com.google.android.horologist.remotecompose.lottie.LocalAnimationSettings
@@ -60,6 +61,7 @@ internal fun RenderShapes(
   shapes: List<GraphicElement>,
   transformStack: List<Transform>,
   matteContext: MatteContext? = null,
+  layerVisibility: RemoteFloat = 1f.rf,
 ) {
   val animationSettings = LocalAnimationSettings.current
   val shapeGroups = gatherShapes(shapes, animationSettings)
@@ -73,8 +75,8 @@ internal fun RenderShapes(
     }
 
     val layerOpacity =
-      transformStack.lastOrNull()?.opacity?.let { animateScalar(it, animationSettings) / 100f }
-        ?: 1f.rf
+      (transformStack.lastOrNull()?.opacity?.let { animateScalar(it, animationSettings) / 100f }
+        ?: 1f.rf) * layerVisibility
 
     for (shapeGroup in shapeGroups) {
       val paint = shapeGroup.style.getPaint(layerOpacity)

@@ -51,11 +51,14 @@ internal data class LottieSettings(
   val slotMap: SlotMap = SlotMap.Empty,
   val width: Float = 0f,
   val height: Float = 0f,
+  val endFrame: Float = Float.MAX_VALUE,
 )
 
 /** CompositionLocal for [LottieSettings]. */
 internal val LocalAnimationSettings =
-  staticCompositionLocalOf<LottieSettings> { LottieSettings(0.rf, SlotMap.Empty, 0f, 0f) }
+  staticCompositionLocalOf<LottieSettings> {
+    LottieSettings(0.rf, SlotMap.Empty, 0f, 0f, Float.MAX_VALUE)
+  }
 
 /**
  * A RemoteComposable that loads and renders a Lottie animation from a raw resource ID.
@@ -137,6 +140,7 @@ internal fun LottieAnimation(
       slotMap = slotMap,
       width = animation.width.toFloat(),
       height = animation.height.toFloat(),
+      endFrame = animation.endFrame.toFloat(),
     )
 
   CompositionLocalProvider(LocalAnimationSettings provides animationSettings) {

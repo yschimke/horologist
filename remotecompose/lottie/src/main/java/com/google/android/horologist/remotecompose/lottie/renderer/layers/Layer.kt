@@ -18,6 +18,8 @@ package com.google.android.horologist.remotecompose.lottie.renderer.layers
 
 import android.annotation.SuppressLint
 import androidx.compose.remote.creation.compose.layout.RemoteComposable
+import androidx.compose.remote.creation.compose.state.rf
+import androidx.compose.remote.creation.compose.state.selectIfLt
 import androidx.compose.runtime.Composable
 import com.google.android.horologist.remotecompose.lottie.LocalAnimationSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
@@ -43,14 +45,28 @@ internal fun Layer(
     return
   }
 
-  val currentFrame = LocalAnimationSettings.current.currentFrame.constantValueOrNull
-  if (currentFrame != null) {
-    val startFrame = layer.startFrame ?: 0f
-    val endFrame = layer.endFrame ?: Float.MAX_VALUE
-    if (currentFrame < startFrame || currentFrame >= endFrame) {
-      return
+  val startFrame = layer.startFrame ?: 0f
+  val endFrame = layer.endFrame ?: Float.MAX_VALUE
+  val compositionEndFrame = LocalAnimationSettings.current.endFrame
+
+  // If layer spans up to or past the composition endFrame, extend by 0.01f
+  // so it remains visible at progress 1.0f / final frame.
+  val effectiveEndFrame =
+    if (endFrame >= compositionEndFrame) {
+      endFrame + 0.01f
+    } else {
+      endFrame
     }
+
+  val currentFrame = LocalAnimationSettings.current.currentFrame
+  val constFrame = currentFrame.constantValueOrNull
+  if (constFrame != null && (constFrame < startFrame || constFrame >= effectiveEndFrame)) {
+    return
   }
+
+  val isAfterStart = selectIfLt(currentFrame, startFrame.rf, 0f.rf, 1f.rf)
+  val isBeforeEnd = selectIfLt(currentFrame, effectiveEndFrame.rf, 1f.rf, 0f.rf)
+  val layerVisibility = isAfterStart * isBeforeEnd
 
   val ancestorStack = parentTransforms[layer.index] ?: emptyList()
 

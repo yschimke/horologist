@@ -22,14 +22,17 @@ import androidx.compose.remote.creation.compose.layout.RemoteCanvas
 import androidx.compose.remote.creation.compose.layout.RemoteComposable
 import androidx.compose.remote.creation.compose.modifier.RemoteModifier
 import androidx.compose.remote.creation.compose.modifier.fillMaxSize
+import androidx.compose.remote.creation.compose.state.RemoteFloat
 import androidx.compose.remote.creation.compose.state.RemotePaint
 import androidx.compose.remote.creation.compose.state.rc
+import androidx.compose.remote.creation.compose.state.rf
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
 import com.google.android.horologist.remotecompose.lottie.LocalAnimationSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
 import com.google.android.horologist.remotecompose.lottie.format.layer.SolidColorLayer
+import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateScalar
 import com.google.android.horologist.remotecompose.lottie.renderer.transform
 
 /** A Layer rendering a solid color rectangle. */
@@ -39,6 +42,7 @@ import com.google.android.horologist.remotecompose.lottie.renderer.transform
 internal fun SolidColorLayer(
   layer: SolidColorLayer,
   transformStack: List<Transform> = emptyList(),
+  layerVisibility: RemoteFloat = 1f.rf,
 ) {
   // No-op in PR 2 - solid color layer drawing integrated in downstream PR.
 }
