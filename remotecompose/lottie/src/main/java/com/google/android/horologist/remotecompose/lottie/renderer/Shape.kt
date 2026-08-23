@@ -89,6 +89,7 @@ private fun gatherShapes(
 ): List<StyledShapes> {
   val shapeGroups = mutableListOf<StyledShapes>()
   var currentGeometries = mutableListOf<RemoteShape>()
+  var currentGroupGeometries = mutableListOf<RemoteShape>()
   val activeTrimPath: TrimPath? =
     shapes.filterIsInstance<TrimPath>().firstOrNull { it.hidden != true } ?: parentTrimPath
   var hasEmittedStyle = false
@@ -101,6 +102,7 @@ private fun gatherShapes(
       is GeometryShape -> {
         if (hasEmittedStyle) {
           currentGeometries = mutableListOf()
+          currentGroupGeometries = mutableListOf()
           hasEmittedStyle = false
         }
         val remoteShape =
@@ -113,15 +115,26 @@ private fun gatherShapes(
         currentGeometries.addIfNotNull(remoteShape)
       }
       is Group -> {
+        if (hasEmittedStyle) {
+          currentGeometries = mutableListOf()
+          currentGroupGeometries = mutableListOf()
+          hasEmittedStyle = false
+        }
         val groupShape = group(shape, animationSettings, activeTrimPath)
         if (groupShape != null) {
           shapeGroups.add(StyledShapes(listOf(groupShape), NoopStyle()))
+          currentGroupGeometries.addAll(
+            extractLeafGeometries(shape, animationSettings, activeTrimPath)
+          )
         }
       }
       is Fill -> {
         if (shape.hidden != true) {
           val fill = fill(shape, animationSettings)
-          shapeGroups.add(StyledShapes(currentGeometries.toList(), fill))
+          val targetShapes = currentGeometries + currentGroupGeometries
+          if (targetShapes.isNotEmpty()) {
+            shapeGroups.add(StyledShapes(targetShapes.toList(), fill))
+          }
           hasEmittedStyle = true
         }
       }
