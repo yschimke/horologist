@@ -17,7 +17,8 @@
 package com.google.android.horologist.remotecompose.lottie.renderer.shapes
 
 import android.annotation.SuppressLint
-import androidx.compose.remote.creation.RemotePath
+import androidx.compose.remote.creation.compose.state.RemoteFloat
+import androidx.compose.remote.creation.compose.state.rf
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.Ellipse
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.ShapeDirection
@@ -32,20 +33,18 @@ internal fun ellipse(el: Ellipse, animationSettings: LottieSettings): RemoteLott
   if (el.hidden?.constantValue == true) return null
 
   val pos = animatePosition(el.position, animationSettings)
-  val posX = pos.x.constantValueOrNull ?: 0f
-  val posY = pos.y.constantValueOrNull ?: 0f
-
   val size = animateVector(el.size, animationSettings)
-  val width = size.getOrNull(0)?.constantValueOrNull ?: 0f
-  val height = size.getOrNull(1)?.constantValueOrNull ?: 0f
+  val width = size.getOrElse(0) { 0f.rf }
+  val height = size.getOrElse(1) { 0f.rf }
   val halfWidth = width / 2f
   val halfHeight = height / 2f
 
   val cpW = halfWidth * 0.55228f
   val cpH = halfHeight * 0.55228f
 
-  val rcPath = RemotePath()
-  rcPath.reset()
+  val vertices: List<List<RemoteFloat>>
+  val inTangents: List<List<RemoteFloat>>
+  val outTangents: List<List<RemoteFloat>>
 
   if (el.shapeDirection == ShapeDirection.Reversed) {
     rcPath.moveTo(posX, posY - halfHeight)

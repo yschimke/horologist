@@ -20,6 +20,8 @@ import android.annotation.SuppressLint
 import androidx.compose.remote.creation.compose.state.RemoteColor
 import androidx.compose.remote.creation.compose.state.RemoteFloat
 import androidx.compose.remote.creation.compose.state.RemotePaint
+import androidx.compose.remote.creation.compose.state.rf
+import androidx.compose.remote.creation.compose.state.selectIfLt
 import androidx.compose.ui.graphics.PaintingStyle
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
@@ -30,13 +32,13 @@ import com.google.android.horologist.remotecompose.lottie.renderer.properties.Po
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.RemoteGradientValue
 
 internal interface RemoteStyle {
-  fun getPaint(): RemotePaint
+  fun getPaint(inheritedOpacity: RemoteFloat = 1f.rf): RemotePaint
 }
 
 @SuppressLint("RestrictedApi")
 internal class RemoteFill(val fillColor: RemoteColor) : RemoteStyle {
-  override fun getPaint(): RemotePaint {
-    return RemotePaint { this.color = fillColor }
+  override fun getPaint(inheritedOpacity: RemoteFloat): RemotePaint {
+    return RemotePaint { this.color = fillColor.copy(alpha = fillColor.alpha * inheritedOpacity) }
   }
 }
 
@@ -49,9 +51,11 @@ internal class RemoteStroke(
   val lineJoin: LineJoin = LineJoin.Round,
   val miterLimit: RemoteFloat? = null,
 ) : RemoteStyle {
-  override fun getPaint(): RemotePaint {
+  override fun getPaint(inheritedOpacity: RemoteFloat): RemotePaint {
     return RemotePaint {
-      this.color = strokeColor.copy(alpha = opacity / 100f)
+      val baseAlpha = strokeColor.alpha * (opacity / 100f) * inheritedOpacity
+      val effectiveAlpha = selectIfLt(this@RemoteStroke.strokeWidth, 0.001f.rf, 0f.rf, baseAlpha)
+      this.color = strokeColor.copy(alpha = effectiveAlpha)
       this.style = PaintingStyle.Stroke
       this.strokeWidth = this@RemoteStroke.strokeWidth
       this.strokeCap =
@@ -77,7 +81,7 @@ internal class RemoteGradientFill(
   val gradientType: GradientType,
   val opacity: RemoteFloat,
 ) : RemoteStyle {
-  override fun getPaint(): RemotePaint {
+  override fun getPaint(inheritedOpacity: RemoteFloat): RemotePaint {
     return RemotePaint()
   }
 }
@@ -90,13 +94,13 @@ internal class RemoteGradientStroke(
   val opacity: RemoteFloat,
   val strokeWidth: RemoteFloat,
 ) : RemoteStyle {
-  override fun getPaint(): RemotePaint {
+  override fun getPaint(inheritedOpacity: RemoteFloat): RemotePaint {
     return RemotePaint()
   }
 }
 
 internal class NoopStyle() : RemoteStyle {
-  override fun getPaint(): RemotePaint {
+  override fun getPaint(inheritedOpacity: RemoteFloat): RemotePaint {
     return RemotePaint()
   }
 }

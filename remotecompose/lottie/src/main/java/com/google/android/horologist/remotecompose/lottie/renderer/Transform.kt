@@ -66,3 +66,43 @@ internal fun transform(
 
   paint?.let { it.color = it.color.copy(alpha = opacity / 100f) }
 }
+
+@SuppressLint("RestrictedApi")
+/**
+ * Inverts the transform operations described by a Lottie [Transform] object on the RemoteCanvas.
+ */
+internal fun inverseTransform(
+  transform: Transform,
+  animationSettings: LottieSettings,
+  canvas: RemoteCanvas,
+) {
+  val rotation = animateScalar(transform.rotation, animationSettings)
+  val translation = animatePosition(transform.positionTranslation, animationSettings)
+  val anchorPoint = animatePosition(transform.anchorPoint, animationSettings)
+
+  val scale = animateVector(transform.scale, animationSettings)
+
+  val scaleX = scale[0] / 100f
+  val scaleY = scale[1] / 100f
+
+  val invScaleX = 1f.rf / scaleX
+  val invScaleY = 1f.rf / scaleY
+
+  canvas.translate(anchorPoint.x, anchorPoint.y)
+  canvas.scale(invScaleX, invScaleY)
+
+  val skew = transform.skew?.let { animateScalar(it, animationSettings) }
+  val skewAxis = transform.skewAxis?.let { animateScalar(it, animationSettings) }
+  if (skew != null) {
+    if (skewAxis != null) {
+      canvas.rotate(-skewAxis)
+    }
+    canvas.internalCanvas.skew(tan(toRad(skew)), 0f.rf)
+    if (skewAxis != null) {
+      canvas.rotate(skewAxis)
+    }
+  }
+
+  canvas.rotate(-rotation)
+  canvas.translate(-translation.x, -translation.y)
+}

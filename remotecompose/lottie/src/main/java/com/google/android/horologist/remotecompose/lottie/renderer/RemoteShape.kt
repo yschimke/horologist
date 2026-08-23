@@ -20,6 +20,7 @@ import android.annotation.SuppressLint
 import androidx.compose.remote.creation.RemotePath
 import androidx.compose.remote.creation.compose.layout.RemoteCanvas
 import androidx.compose.remote.creation.compose.layout.RemoteDrawScope
+import androidx.compose.remote.creation.compose.state.RemoteFloat
 import androidx.compose.remote.creation.compose.state.remotePath
 import androidx.compose.remote.creation.compose.state.rf
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
@@ -27,19 +28,27 @@ import com.google.android.horologist.remotecompose.lottie.format.graphicelement.
 
 @SuppressLint("RestrictedApi")
 internal interface RemoteShape {
-  fun draw(drawScope: RemoteDrawScope, canvas: RemoteCanvas)
+  fun draw(drawScope: RemoteDrawScope, canvas: RemoteCanvas, inheritedOpacity: RemoteFloat = 1f.rf)
 }
 
 @SuppressLint("RestrictedApi")
 internal class RemoteCompiledPath(val path: RemotePath) : RemoteShape {
-  override fun draw(drawScope: RemoteDrawScope, canvas: RemoteCanvas) {
+  override fun draw(
+    drawScope: RemoteDrawScope,
+    canvas: RemoteCanvas,
+    inheritedOpacity: RemoteFloat,
+  ) {
     canvas.drawPath(path)
   }
 }
 
 @SuppressLint("RestrictedApi")
 internal class RemoteLottiePath(val path: List<RemoteBezierValue>) : RemoteShape {
-  override fun draw(drawScope: RemoteDrawScope, canvas: RemoteCanvas) {
+  override fun draw(
+    drawScope: RemoteDrawScope,
+    canvas: RemoteCanvas,
+    inheritedOpacity: RemoteFloat,
+  ) {
     if (path.isEmpty()) return
 
     val rcPath = drawScope.remotePath {
@@ -96,18 +105,30 @@ internal class RemoteGroup(
   val animationSettings: LottieSettings,
   val transform: Transform?,
 ) : RemoteShape {
-  override fun draw(drawScope: RemoteDrawScope, canvas: RemoteCanvas) {
+  override fun draw(
+    drawScope: RemoteDrawScope,
+    canvas: RemoteCanvas,
+    inheritedOpacity: RemoteFloat,
+  ) {
+    val groupOpacity =
+      if (transform != null) {
+        val o = animateScalar(transform.opacity, animationSettings)
+        inheritedOpacity * (o / 100f)
+      } else {
+        inheritedOpacity
+      }
+
     for (shapeGroup in childShapes) {
-      val paint = shapeGroup.style.getPaint()
+      val paint = shapeGroup.style.getPaint(groupOpacity)
       canvas.save()
 
       if (transform != null) {
-        transform(transform, paint, animationSettings, canvas)
+        transform(transform, null, animationSettings, canvas)
       }
 
       drawScope.usePaint(paint) {
         for (shape in shapeGroup.shapes) {
-          shape.draw(drawScope, canvas)
+          shape.draw(drawScope, canvas, groupOpacity)
         }
       }
 
