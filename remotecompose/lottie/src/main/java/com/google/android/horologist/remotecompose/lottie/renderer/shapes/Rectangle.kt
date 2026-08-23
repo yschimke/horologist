@@ -17,7 +17,8 @@
 package com.google.android.horologist.remotecompose.lottie.renderer.shapes
 
 import android.annotation.SuppressLint
-import androidx.compose.remote.creation.RemotePath
+import androidx.compose.remote.creation.compose.state.RemoteFloat
+import androidx.compose.remote.creation.compose.state.rf
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.Rectangle
 import com.google.android.horologist.remotecompose.lottie.renderer.RemoteLottiePath
@@ -31,12 +32,9 @@ internal fun rectangle(rect: Rectangle, animationSettings: LottieSettings): Remo
   if (rect.hidden?.constantValue == true) return null
 
   val pos = animatePosition(rect.position, animationSettings)
-  val posX = pos.x.constantValueOrNull ?: 0f
-  val posY = pos.y.constantValueOrNull ?: 0f
-
   val size = animateVector(rect.size, animationSettings)
-  val width = size.getOrNull(0)?.constantValueOrNull ?: 0f
-  val height = size.getOrNull(1)?.constantValueOrNull ?: 0f
+  val width = size.getOrElse(0) { 0f.rf }
+  val height = size.getOrElse(1) { 0f.rf }
   val halfWidth = width / 2f
   val halfHeight = height / 2f
 
@@ -45,55 +43,62 @@ internal fun rectangle(rect: Rectangle, animationSettings: LottieSettings): Remo
   val maxRadius = minOf(halfWidth, halfHeight)
   val r = cornerRadius.coerceIn(0f, maxRadius)
 
-  val rcPath = RemotePath()
-  rcPath.reset()
+  val vertices: List<List<RemoteFloat>>
+  val inTangents: List<List<RemoteFloat>>
+  val outTangents: List<List<RemoteFloat>>
 
   if (r == 0f) {
-    rcPath.moveTo(posX + halfWidth, posY - halfHeight)
-    rcPath.lineTo(posX + halfWidth, posY + halfHeight)
-    rcPath.lineTo(posX - halfWidth, posY + halfHeight)
-    rcPath.lineTo(posX - halfWidth, posY - halfHeight)
-    rcPath.close()
+    vertices =
+      listOf(
+        listOf(pos.x + halfWidth, pos.y - halfHeight),
+        listOf(pos.x + halfWidth, pos.y + halfHeight),
+        listOf(pos.x - halfWidth, pos.y + halfHeight),
+        listOf(pos.x - halfWidth, pos.y - halfHeight),
+      )
+    inTangents =
+      listOf(listOf(0f.rf, 0f.rf), listOf(0f.rf, 0f.rf), listOf(0f.rf, 0f.rf), listOf(0f.rf, 0f.rf))
+    outTangents =
+      listOf(listOf(0f.rf, 0f.rf), listOf(0f.rf, 0f.rf), listOf(0f.rf, 0f.rf), listOf(0f.rf, 0f.rf))
   } else {
-    val k = r * 0.55228475f
-    rcPath.moveTo(posX + halfWidth, posY - halfHeight + r)
-    rcPath.lineTo(posX + halfWidth, posY + halfHeight - r)
-    rcPath.cubicTo(
-      posX + halfWidth,
-      posY + halfHeight - r + k,
-      posX + halfWidth - r + k,
-      posY + halfHeight,
-      posX + halfWidth - r,
-      posY + halfHeight,
-    )
-    rcPath.lineTo(posX - halfWidth + r, posY + halfHeight)
-    rcPath.cubicTo(
-      posX - halfWidth + r - k,
-      posY + halfHeight,
-      posX - halfWidth,
-      posY + halfHeight - r + k,
-      posX - halfWidth,
-      posY + halfHeight - r,
-    )
-    rcPath.lineTo(posX - halfWidth, posY - halfHeight + r)
-    rcPath.cubicTo(
-      posX - halfWidth,
-      posY - halfHeight + r - k,
-      posX - halfWidth + r - k,
-      posY - halfHeight,
-      posX - halfWidth + r,
-      posY - halfHeight,
-    )
-    rcPath.lineTo(posX + halfWidth - r, posY - halfHeight)
-    rcPath.cubicTo(
-      posX + halfWidth - r + k,
-      posY - halfHeight,
-      posX + halfWidth,
-      posY - halfHeight + r - k,
-      posX + halfWidth,
-      posY - halfHeight + r,
-    )
-    rcPath.close()
+    val maxRadius = minOf(halfWidth.constantValueOrNull ?: 0f, halfHeight.constantValueOrNull ?: 0f)
+    val clampedR = if (maxRadius > 0f) r.coerceIn(0f, maxRadius) else r
+    val k = clampedR * 0.55228475f
+    val kr = k.rf
+    val rr = clampedR.rf
+
+    vertices =
+      listOf(
+        listOf(pos.x + halfWidth, pos.y - halfHeight + rr),
+        listOf(pos.x + halfWidth, pos.y + halfHeight - rr),
+        listOf(pos.x + halfWidth - rr, pos.y + halfHeight),
+        listOf(pos.x - halfWidth + rr, pos.y + halfHeight),
+        listOf(pos.x - halfWidth, pos.y + halfHeight - rr),
+        listOf(pos.x - halfWidth, pos.y - halfHeight + rr),
+        listOf(pos.x - halfWidth + rr, pos.y - halfHeight),
+        listOf(pos.x + halfWidth - rr, pos.y - halfHeight),
+      )
+    inTangents =
+      listOf(
+        listOf(0f.rf, -kr),
+        listOf(0f.rf, 0f.rf),
+        listOf(kr, 0f.rf),
+        listOf(0f.rf, 0f.rf),
+        listOf(0f.rf, kr),
+        listOf(0f.rf, 0f.rf),
+        listOf(-kr, 0f.rf),
+        listOf(0f.rf, 0f.rf),
+      )
+    outTangents =
+      listOf(
+        listOf(0f.rf, 0f.rf),
+        listOf(0f.rf, kr),
+        listOf(0f.rf, 0f.rf),
+        listOf(-kr, 0f.rf),
+        listOf(0f.rf, 0f.rf),
+        listOf(0f.rf, -kr),
+        listOf(0f.rf, 0f.rf),
+        listOf(kr, 0f.rf),
+      )
   }
 
   return RemoteLottiePath(rcPath)

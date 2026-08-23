@@ -149,14 +149,15 @@ private fun gatherShapes(
       is Fill -> {
         if (shape.hidden != true) {
           val fill = fill(shape, animationSettings)
+          val shapesToStyle = mutableListOf<RemoteShape>()
           if (currentGeometries.isNotEmpty()) {
-            shapeGroups.add(StyledShapes(currentGeometries.toList(), fill))
+            shapesToStyle.addAll(currentGeometries)
           }
           for (group in currentGroups) {
-            val styledGroup = createStyledGroup(group, fill, animationSettings, activeTrimPath)
-            if (styledGroup != null) {
-              shapeGroups.add(StyledShapes(listOf(styledGroup), NoopStyle()))
-            }
+            shapesToStyle.addAll(evaluateGroupGeometries(group, animationSettings, activeTrimPath))
+          }
+          if (shapesToStyle.isNotEmpty()) {
+            shapeGroups.add(StyledShapes(shapesToStyle, fill))
           }
           hasEmittedStyle = true
         }
@@ -505,9 +506,10 @@ private fun clipShapes(
         val cornerRadius =
           animateScalar(shape.cornerRadius, animationSettings).constantValueOrNull ?: 0f
         if (cornerRadius > 0f) {
-          val compiledPath = evaluateRectangle(shape, animationSettings)
-          if (compiledPath != null) {
-            canvas.clipPath(compiledPath.path)
+          val lottiePath = evaluateRectangle(shape, animationSettings)
+          if (lottiePath != null) {
+            val rcPath = buildRemotePathFromBezier(lottiePath.path)
+            canvas.clipPath(rcPath)
           }
         } else {
           val pos = animatePosition(shape.position, animationSettings)
