@@ -17,10 +17,12 @@
 package com.google.android.horologist.remotecompose.lottie.renderer
 
 import android.annotation.SuppressLint
+import androidx.compose.remote.creation.RemotePath
 import androidx.compose.remote.creation.compose.layout.RemoteCanvas
 import androidx.compose.remote.creation.compose.layout.RemoteComposable
 import androidx.compose.remote.creation.compose.modifier.RemoteModifier
 import androidx.compose.remote.creation.compose.modifier.fillMaxSize
+import androidx.compose.remote.creation.compose.state.rf
 import androidx.compose.runtime.Composable
 import com.google.android.horologist.remotecompose.lottie.LocalAnimationSettings
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
@@ -54,13 +56,23 @@ internal data class StyledShapes(val shapes: List<RemoteShape>, val style: Remot
 @SuppressLint("RestrictedApi")
 @Composable
 @RemoteComposable
-internal fun RenderShapes(shapes: List<GraphicElement>, transformStack: List<Transform>) {
+internal fun RenderShapes(
+  shapes: List<GraphicElement>,
+  transformStack: List<Transform>,
+  matteContext: MatteContext? = null,
+) {
   val animationSettings = LocalAnimationSettings.current
   val shapeGroups = gatherShapes(shapes, animationSettings)
 
   // Aspect-ratio scaling and centering is applied once, at the top level, by the
   // drawWithContent modifier in LottieAnimation - shapes draw in raw Lottie coordinates here.
   RemoteCanvas(modifier = RemoteModifier.fillMaxSize()) {
+    if (matteContext != null) {
+      remoteCanvas.save()
+      applyMatteClip(matteContext, animationSettings, remoteCanvas)
+      remoteCanvas.restore()
+    }
+
     for (shapeGroup in shapeGroups) {
       val paint = shapeGroup.style.getPaint()
 
@@ -434,4 +446,138 @@ private fun MutableList<RemoteShape>.addIfNotNull(shape: RemoteShape?) {
   if (shape != null) {
     this.add(shape)
   }
+}
+
+private fun applyMatteClip(
+  matteContext: MatteContext,
+  animationSettings: LottieSettings,
+  canvas: RemoteCanvas,
+) {
+  val matteLayer = matteContext.matteLayer
+  if (matteLayer !is ShapeLayer || matteLayer.hidden == true) return
+
+  val layerTransforms =
+    if (matteLayer.transform != null) {
+      matteContext.matteTransforms + matteLayer.transform
+    } else {
+      matteContext.matteTransforms
+    }
+
+  for (transform in layerTransforms) {
+    transform(transform, null, animationSettings, canvas)
+  }
+
+  clipShapes(matteLayer.shapes, animationSettings, canvas)
+}
+
+private fun clipShapes(
+  shapes: List<GraphicElement>,
+  animationSettings: LottieSettings,
+  canvas: RemoteCanvas,
+) {
+  for (shape in shapes) {
+    if (shape.hidden == true) continue
+    when (shape) {
+      is Rectangle -> {
+        val cornerRadius =
+          animateScalar(shape.cornerRadius, animationSettings).constantValueOrNull ?: 0f
+        if (cornerRadius > 0f) {
+          val compiledPath = evaluateRectangle(shape, animationSettings)
+          if (compiledPath != null) {
+            canvas.clipPath(compiledPath.path)
+          }
+        } else {
+          val pos = animatePosition(shape.position, animationSettings)
+          val size = animateVector(shape.size, animationSettings)
+          val width = size.getOrNull(0) ?: 0f.rf
+          val height = size.getOrNull(1) ?: 0f.rf
+          val halfWidth = width / 2f
+          val halfHeight = height / 2f
+          val left = pos.x - halfWidth
+          val top = pos.y - halfHeight
+          val right = pos.x + halfWidth
+          val bottom = pos.y + halfHeight
+          canvas.clipRect(left, top, right, bottom)
+        }
+      }
+      is Path -> {
+        val lottiePath = evaluatePath(shape, animationSettings, null)
+        if (lottiePath != null) {
+          val rcPath = buildRemotePathFromBezier(lottiePath.path)
+          canvas.clipPath(rcPath)
+        }
+      }
+      is Ellipse -> {
+        val compiledPath = evaluateEllipse(shape, animationSettings)
+        if (compiledPath != null) {
+          canvas.clipPath(compiledPath.path)
+        }
+      }
+      is PolyStar -> {
+        val compiledPath = evaluatePolyStar(shape, animationSettings)
+        if (compiledPath != null) {
+          canvas.clipPath(compiledPath.path)
+        }
+      }
+      is Group -> {
+        val groupTransform = shape.shapes.filterIsInstance<Transform>().firstOrNull()
+        if (groupTransform != null) {
+          canvas.save()
+          transform(groupTransform, null, animationSettings, canvas)
+          clipShapes(shape.shapes.filter { it !is Transform }, animationSettings, canvas)
+          canvas.restore()
+        } else {
+          clipShapes(shape.shapes, animationSettings, canvas)
+        }
+      }
+      else -> {}
+    }
+  }
+}
+
+private fun buildRemotePathFromBezier(path: List<RemoteBezierValue>): RemotePath {
+  val rcPath = RemotePath()
+  rcPath.reset()
+  for (subpath in path) {
+    val vertices = subpath.vertices
+    val inTangents = subpath.inTangents
+    val outTangents = subpath.outTangents
+
+    if (vertices.isEmpty()) continue
+
+    val startX = vertices[0].getOrElse(0) { 0f.rf }.constantValueOrNull ?: 0f
+    val startY = vertices[0].getOrElse(1) { 0f.rf }.constantValueOrNull ?: 0f
+    rcPath.moveTo(startX, startY)
+
+    val maxIndex = if (subpath.closed) vertices.size else vertices.size - 1
+    for (i in 0 until maxIndex) {
+      val p0 = vertices[i]
+      val lastIndex = if (i == vertices.size - 1 && subpath.closed) 0 else i + 1
+      val p4 = vertices[lastIndex]
+      val inTangent = inTangents.getOrNull(lastIndex)
+      val outTangent = outTangents.getOrNull(i)
+
+      val p0x = p0.getOrElse(0) { 0f.rf }.constantValueOrNull ?: 0f
+      val p0y = p0.getOrElse(1) { 0f.rf }.constantValueOrNull ?: 0f
+      val p4x = p4.getOrElse(0) { 0f.rf }.constantValueOrNull ?: 0f
+      val p4y = p4.getOrElse(1) { 0f.rf }.constantValueOrNull ?: 0f
+
+      val inTangentX = inTangent?.getOrElse(0) { 0f.rf }?.constantValueOrNull ?: 0f
+      val inTangentY = inTangent?.getOrElse(1) { 0f.rf }?.constantValueOrNull ?: 0f
+      val outTangentX = outTangent?.getOrElse(0) { 0f.rf }?.constantValueOrNull ?: 0f
+      val outTangentY = outTangent?.getOrElse(1) { 0f.rf }?.constantValueOrNull ?: 0f
+
+      val p1x = p0x + outTangentX
+      val p1y = p0y + outTangentY
+      val p2x = p4x + inTangentX
+      val p2y = p4y + inTangentY
+
+      rcPath.cubicTo(p1x, p1y, p2x, p2y, p4x, p4y)
+    }
+
+    if (subpath.closed) {
+      rcPath.close()
+    }
+  }
+  return rcPath
 }

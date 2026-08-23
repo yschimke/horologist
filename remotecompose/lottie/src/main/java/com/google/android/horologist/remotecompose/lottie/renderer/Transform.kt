@@ -32,7 +32,7 @@ import com.google.android.horologist.remotecompose.lottie.renderer.properties.an
 /** Applies a transform described by a Lottie [Transform] object to the RemoteCanvas. */
 internal fun transform(
   transform: Transform,
-  paint: RemotePaint,
+  paint: RemotePaint? = null,
   animationSettings: LottieSettings,
   canvas: RemoteCanvas,
 ) {
@@ -64,5 +64,5 @@ internal fun transform(
   canvas.scale(scaleX, scaleY)
   canvas.translate(-anchorPoint.x, -anchorPoint.y)
 
-  paint.color = paint.color.copy(alpha = opacity / 100f)
+  paint?.let { it.color = it.color.copy(alpha = opacity / 100f) }
 }

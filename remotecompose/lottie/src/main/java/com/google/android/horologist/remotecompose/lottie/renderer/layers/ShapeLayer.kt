@@ -34,5 +34,5 @@ internal fun ShapeLayer(layer: ShapeLayer, transformStack: List<Transform?>? = n
   val updatedTransformStack =
     if (layer.transform != null) safeStack + layer.transform else safeStack
 
-  RenderShapes(layer.shapes, updatedTransformStack)
+  RenderShapes(layer.shapes, updatedTransformStack, matteContext)
 }

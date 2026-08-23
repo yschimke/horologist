@@ -36,7 +36,9 @@ import androidx.compose.ui.platform.LocalContext
 import com.google.android.horologist.remotecompose.lottie.format.Animation
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
 import com.google.android.horologist.remotecompose.lottie.format.layer.Layer
+import com.google.android.horologist.remotecompose.lottie.format.layer.MatteMode
 import com.google.android.horologist.remotecompose.lottie.renderer.layers.Layer
+import com.google.android.horologist.remotecompose.lottie.renderer.layers.MatteContext
 
 /**
  * Settings for the Lottie animation player.
@@ -170,8 +172,25 @@ internal fun LottieAnimation(
       // .clip(RemoteRectangleShape)
       contentAlignment = RemoteAlignment.Center,
     ) {
+      var pendingMatteSource: Layer? = null
       for (layer in animation.layers) {
-        Layer(layer, ancestorTransforms)
+        if (layer.matteTarget == 1) {
+          pendingMatteSource = layer
+        } else {
+          val matteContext =
+            if (
+              layer.matteMode != null &&
+                layer.matteMode != MatteMode.Normal &&
+                pendingMatteSource != null
+            ) {
+              val transforms = ancestorTransforms[pendingMatteSource.index] ?: emptyList()
+              MatteContext(pendingMatteSource, transforms)
+            } else {
+              null
+            }
+          pendingMatteSource = null
+          Layer(layer, ancestorTransforms, matteContext = matteContext)
+        }
       }
     }
   }

@@ -26,6 +26,9 @@ import com.google.android.horologist.remotecompose.lottie.format.layer.LayerType
 import com.google.android.horologist.remotecompose.lottie.format.layer.ShapeLayer
 import com.google.android.horologist.remotecompose.lottie.format.layer.SolidColorLayer
 
+/** Matte context for paired track matte layer masking */
+internal data class MatteContext(val matteLayer: Layer, val matteTransforms: List<Transform>)
+
 /** A Layer in the Lottie composition */
 @SuppressLint("RestrictedApi")
 @Composable
@@ -34,6 +37,7 @@ internal fun Layer(
   layer: Layer,
   parentTransforms: Map<Int, List<Transform>>,
   transform: Transform? = null,
+  matteContext: MatteContext? = null,
 ) {
   if (layer.hidden == true) {
     return
