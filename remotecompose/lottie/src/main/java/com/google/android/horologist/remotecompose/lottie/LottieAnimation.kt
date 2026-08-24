@@ -121,8 +121,8 @@ internal fun LottieAnimation(
   progress: RemoteFloat? = null,
 ) {
   // Total span of frames across the animation timeline.
-  val totalFrames = (animation.endFrame - animation.startFrame).toFloat()
-  val startFrameRf = animation.startFrame.toFloat().rf
+  val totalFrames = animation.endFrame - animation.startFrame
+  val startFrameRf = animation.startFrame.rf
 
   // Determine current frame: if progress [0.0, 1.0] is provided (e.g. via a named variable
   // or user-driven state), map it directly to frames; otherwise drive it continuously
@@ -131,8 +131,7 @@ internal fun LottieAnimation(
     if (progress != null) {
       startFrameRf + (progress * totalFrames)
     } else {
-      startFrameRf +
-        (floor(RemoteFloat(ANIMATION_TIME) * animation.frameRate.toFloat()) % totalFrames)
+      startFrameRf + (floor(RemoteFloat(ANIMATION_TIME) * animation.frameRate) % totalFrames)
     }
   val animationSettings =
     LottieSettings(
@@ -140,7 +139,7 @@ internal fun LottieAnimation(
       slotMap = slotMap,
       width = animation.width.toFloat(),
       height = animation.height.toFloat(),
-      endFrame = animation.endFrame.toFloat(),
+      endFrame = animation.endFrame,
     )
 
   CompositionLocalProvider(LocalAnimationSettings provides animationSettings) {

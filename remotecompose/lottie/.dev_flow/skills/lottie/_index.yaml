@@ -1,0 +1,4 @@
+skills:
+  - name: parsing
+    file: parsing.md
+    description: "Lottie JSON hierarchy"

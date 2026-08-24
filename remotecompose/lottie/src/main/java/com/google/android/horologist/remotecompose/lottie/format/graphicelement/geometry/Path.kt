@@ -46,5 +46,5 @@ internal data class Path(
   @SerialName("hd") override val hidden: SerializableBoolean? = null,
   @SerialName("ty") override val type: ShapeType = ShapeType.Path,
   @SerialName("d") override val direction: Int? = null,
-  @SerialName("ks") val shape: BaseBezierProperty,
+  @SerialName("ks") val shape: BaseBezierProperty = StaticBezierProperty(value = BezierValue()),
 ) : GeometryShape

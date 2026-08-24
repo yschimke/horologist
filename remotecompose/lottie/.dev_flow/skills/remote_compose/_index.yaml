@@ -1,0 +1,4 @@
+skills:
+  - name: remote_shapes
+    file: remote_shapes.md
+    description: "How to draw parametric shapes in RemoteCompose"

@@ -16,6 +16,8 @@
 
 package com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles
 
+import androidx.compose.remote.creation.compose.state.rc
+import androidx.compose.ui.graphics.Color
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.ShapeType
 import com.google.android.horologist.remotecompose.lottie.format.properties.BaseColorProperty
 import com.google.android.horologist.remotecompose.lottie.format.properties.BaseScalarProperty
