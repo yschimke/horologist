@@ -53,7 +53,7 @@ Following the project's Spec-Driven Execution Protocol:
   - [x] [Task 1.4: PolyStar Dynamic RemoteLottiePath Refactoring](#PL_LOTTIE_SPEC_PARITY_T1_4)
   - [x] [Task 1.5: Hierarchy Cycle Guard & Dynamic Track Matte Path Builder](#PL_LOTTIE_SPEC_PARITY_T1_5)
 - [ ] [Phase 2: Core Rendering & Mathematical Parity](#PL_LOTTIE_SPEC_PARITY_P2)
-  - [ ] [Task 2.1: Spatial Bézier Tangents (to, ti) in Position Keyframes](#PL_LOTTIE_SPEC_PARITY_T2_1)
+  - [x] [Task 2.1: Spatial Bézier Tangents (to, ti) in Position Keyframes](#PL_LOTTIE_SPEC_PARITY_T2_1)
   - [ ] [Task 2.2: Gradient Shaders for GradientFill and GradientStroke](#PL_LOTTIE_SPEC_PARITY_T2_2)
   - [ ] [Task 2.3: Stroke Dash Pattern (d) and Miter Limit (ml)](#PL_LOTTIE_SPEC_PARITY_T2_3)
   - [ ] [Task 2.4: Path FillRule (EvenOdd) & Primitive TrimPath Dispatch](#PL_LOTTIE_SPEC_PARITY_T2_4)

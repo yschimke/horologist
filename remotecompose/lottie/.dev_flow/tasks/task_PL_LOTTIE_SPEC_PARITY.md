@@ -2,7 +2,7 @@
 
 > **Task ID:** `task_PL_LOTTIE_SPEC_PARITY`
 > **Created:** 2026-08-24 17:45
-> **Last updated:** 2026-08-24 19:50
+> **Last updated:** 2026-08-24 21:20
 > **Status:** `in-progress`
 > **Contributors:** dev-flow-orchestrator
 
@@ -43,13 +43,13 @@ Execute the 4-phase implementation plan defined in `docs/lottie_spec_parity.plan
 - [x] [Task 1.5: Hierarchy Cycle Guard & Dynamic Track Matte Path Safety (`PL_LOTTIE_SPEC_PARITY_T1_5`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T1_5)
 
 ### Subtask: Execute Phase 2 (Core Rendering & Mathematical Parity)
-> Author: `dev-flow-orchestrator` — Created: 19:50 — Last updated: 19:50 — Status: `in-progress`
+> Author: `dev-flow-orchestrator` — Created: 19:50 — Last updated: 21:20 — Status: `in-progress`
 
 **Goal:** Implement Phase 2 core rendering and mathematical parity (Spatial Bézier tangents `to`/`ti`, gradient shaders for fill/stroke, stroke dash patterns and miter limits, EvenOdd fill rule, and local layer timing scaling).
 
 **Progress:**
-- [ ] **Next:** [Task 2.1: Spatial Bézier Tangents (to, ti) in Position Keyframes (`PL_LOTTIE_SPEC_PARITY_T2_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T2_1)
-- [ ] [Task 2.2: Gradient Shaders for GradientFill and GradientStroke (`PL_LOTTIE_SPEC_PARITY_T2_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T2_2)
+- [x] [Task 2.1: Spatial Bézier Tangents (to, ti) in Position Keyframes (`PL_LOTTIE_SPEC_PARITY_T2_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T2_1)
+- [ ] **Next:** [Task 2.2: Gradient Shaders for GradientFill and GradientStroke (`PL_LOTTIE_SPEC_PARITY_T2_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T2_2)
 - [ ] [Task 2.3: Stroke Dash Pattern (d) and Miter Limit (ml) (`PL_LOTTIE_SPEC_PARITY_T2_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T2_3)
 - [ ] [Task 2.4: Path FillRule (EvenOdd) & Primitive TrimPath Dispatch (`PL_LOTTIE_SPEC_PARITY_T2_4`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T2_4)
 - [ ] [Task 2.5: Local Layer Timing Scaling & Inverted Alpha Track Mattes (`PL_LOTTIE_SPEC_PARITY_T2_5`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T2_5)
@@ -61,9 +61,11 @@ Execute the 4-phase implementation plan defined in `docs/lottie_spec_parity.plan
 - 19:27 — Completed Task 1.3: Transform Inversion Singularities (Scale = 0 Guard) with clean pre-commit review and Roborazzi verification.
 - 19:40 — Completed Task 1.4: PolyStar Dynamic RemoteLottiePath Refactoring with clean pre-commit review and Roborazzi verification.
 - 19:50 — Completed Task 1.5: Hierarchy Cycle Guard & Dynamic Track Matte Path Safety with clean pre-commit review and full check suite pass. Phase 1 complete!
+- 21:20 — Completed Task 2.1: Spatial Bézier Tangents (to, ti) in Position Keyframes with dedicated `PositionTest` suite, Roborazzi baseline updates, and clean pre-commit review.
 
 ## Coordination Notes
 
+- 21:20 [dev-flow-orchestrator] — Completed Task 2.1. Implemented 2D cubic Bézier spatial curve evaluation in `Position.kt`, added `PositionTest.kt`, updated Roborazzi screenshot baselines for `play_pause` and `m3_next`, and passed clean-context review.
 - 19:50 [dev-flow-orchestrator] — Completed Task 1.5 and completed Phase 1. Added recursion cycle guard `visited: Set<Int>` in `buildAncestorTransforms` and path guards in `buildRemotePathFromBezier`, verified with unit tests and `./gradlew :remotecompose:lottie:check`.
 - 19:40 [dev-flow-orchestrator] — Completed Task 1.4. Refactored `evaluatePolyStar` to return `RemoteLottiePath`, added `PolyStarTest`, recorded Roborazzi screenshots, and passed clean-context review.
 - 19:27 [dev-flow-orchestrator] — Completed Task 1.3. Verified with unit tests (`TransformTest`), metalava, Roborazzi baseline updates & verification, and clean-context pre-commit review.
@@ -84,6 +86,7 @@ Execute the 4-phase implementation plan defined in `docs/lottie_spec_parity.plan
 
 ## Shared Activity Log
 
+- 21:20 [dev-flow-orchestrator] — completed Task 2.1 Spatial Bézier Tangents (to, ti) in Position Keyframes
 - 19:50 [dev-flow-orchestrator] — completed Task 1.5 Hierarchy Cycle Guard & Dynamic Track Matte Path Safety (Phase 1 Complete)
 - 19:40 [dev-flow-orchestrator] — completed Task 1.4 PolyStar Dynamic RemoteLottiePath Refactoring
 - 19:27 [dev-flow-orchestrator] — completed Task 1.3 Transform Inversion Singularities (Scale = 0 Guard)
