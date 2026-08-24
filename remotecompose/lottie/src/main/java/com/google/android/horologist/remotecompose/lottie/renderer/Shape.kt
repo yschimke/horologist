@@ -452,6 +452,7 @@ private fun gradientStroke(
   val gradient = animateGradient(stroke.colors, animationSettings)
   val opacity = animateScalar(stroke.opacity, animationSettings)
   val strokeWidth = animateScalar(stroke.strokeWidth, animationSettings)
+  val miterLimit = stroke.miterLimit?.let { animateScalar(it, animationSettings) }
   return RemoteGradientStroke(
     gradient = gradient,
     startPoint = startPoint,
@@ -459,6 +460,9 @@ private fun gradientStroke(
     gradientType = stroke.gradientType,
     opacity = opacity,
     strokeWidth = strokeWidth,
+    lineCap = stroke.lineCap,
+    lineJoin = stroke.lineJoin,
+    miterLimit = miterLimit,
   )
 }
 
