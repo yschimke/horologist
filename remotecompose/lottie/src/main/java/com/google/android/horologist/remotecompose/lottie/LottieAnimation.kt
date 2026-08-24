@@ -175,16 +175,28 @@ internal fun LottieAnimation(
       // .clip(RemoteRectangleShape)
       contentAlignment = RemoteAlignment.Center,
     ) {
+      val matteTargetIndices = animation.layers.mapNotNull { it.matteParent }.toSet()
       for (i in animation.layers.indices.reversed()) {
         val layer = animation.layers[i]
-        if (layer.matteTarget == 1) {
+        if (layer.matteTarget == 1 || (layer.index != null && layer.index in matteTargetIndices)) {
           continue
         }
         val matteContext =
-          if (layer.matteMode != null && layer.matteMode != MatteMode.Normal && i > 0) {
-            val matteLayer = animation.layers[i - 1]
-            val transforms = ancestorTransforms[matteLayer.index] ?: emptyList()
-            MatteContext(matteLayer, transforms)
+          if (layer.matteMode != null && layer.matteMode != MatteMode.Normal) {
+            val matteLayer =
+              if (layer.matteParent != null) {
+                animation.layers.firstOrNull { it.index == layer.matteParent }
+              } else if (i > 0) {
+                animation.layers[i - 1]
+              } else {
+                null
+              }
+            if (matteLayer != null) {
+              val transforms = ancestorTransforms[matteLayer.index] ?: emptyList()
+              MatteContext(matteLayer, transforms, layer.matteMode ?: MatteMode.Alpha)
+            } else {
+              null
+            }
           } else {
             null
           }

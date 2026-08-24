@@ -18,18 +18,41 @@ package com.google.android.horologist.remotecompose.lottie.renderer.layers
 
 import android.annotation.SuppressLint
 import androidx.compose.remote.creation.compose.layout.RemoteComposable
+import androidx.compose.remote.creation.compose.state.RemoteFloat
 import androidx.compose.remote.creation.compose.state.rf
 import androidx.compose.remote.creation.compose.state.selectIfLt
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import com.google.android.horologist.remotecompose.lottie.LocalAnimationSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
 import com.google.android.horologist.remotecompose.lottie.format.layer.Layer
 import com.google.android.horologist.remotecompose.lottie.format.layer.LayerType
+import com.google.android.horologist.remotecompose.lottie.format.layer.MatteMode
 import com.google.android.horologist.remotecompose.lottie.format.layer.ShapeLayer
 import com.google.android.horologist.remotecompose.lottie.format.layer.SolidColorLayer
 
 /** Matte context for paired track matte layer masking */
-internal data class MatteContext(val matteLayer: Layer, val matteTransforms: List<Transform>)
+internal data class MatteContext(
+  val matteLayer: Layer,
+  val matteTransforms: List<Transform>,
+  val matteMode: MatteMode = MatteMode.Alpha,
+)
+
+/** Calculates local layer time $t_{\text{local}} = (t - st) / sr$ for layer properties. */
+@SuppressLint("RestrictedApi")
+internal fun calculateLocalFrame(
+  currentFrame: RemoteFloat,
+  startTime: Float?,
+  timeStretch: Float?,
+): RemoteFloat {
+  val st = startTime ?: 0f
+  val sr = timeStretch ?: 1f
+  if (st == 0f && sr == 1f) {
+    return currentFrame
+  }
+  val safeSr = if (sr == 0f) 1f else sr
+  return (currentFrame - st.rf) / safeSr.rf
+}
 
 /** A Layer in the Lottie composition */
 @SuppressLint("RestrictedApi")
@@ -47,7 +70,8 @@ internal fun Layer(
 
   val startFrame = layer.startFrame ?: 0f
   val endFrame = layer.endFrame ?: Float.MAX_VALUE
-  val compositionEndFrame = LocalAnimationSettings.current.endFrame
+  val parentSettings = LocalAnimationSettings.current
+  val compositionEndFrame = parentSettings.endFrame
 
   // If layer spans up to or past the composition endFrame, extend by 0.01f
   // so it remains visible at progress 1.0f / final frame.
@@ -58,7 +82,7 @@ internal fun Layer(
       endFrame
     }
 
-  val currentFrame = LocalAnimationSettings.current.currentFrame
+  val currentFrame = parentSettings.currentFrame
   val constFrame = currentFrame.constantValueOrNull
   if (constFrame != null && (constFrame < startFrame || constFrame >= effectiveEndFrame)) {
     return
