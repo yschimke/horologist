@@ -548,9 +548,10 @@ private fun clipShapes(
 }
 
 @SuppressLint("RestrictedApi")
-private fun buildRemotePathFromBezier(path: List<RemoteBezierValue>): RemotePath {
+internal fun buildRemotePathFromBezier(path: List<RemoteBezierValue>): RemotePath {
   val rcPath = RemotePath()
   rcPath.reset()
+  if (path.isEmpty()) return rcPath
   for (subpath in path) {
     val vertices = subpath.vertices
     val inTangents = subpath.inTangents

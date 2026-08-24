@@ -194,13 +194,13 @@ internal fun LottieAnimation(
   }
 }
 
-private fun buildAncestorTransforms(layers: List<Layer>): Map<Int, List<Transform>> {
+internal fun buildAncestorTransforms(layers: List<Layer>): Map<Int, List<Transform>> {
   val map = mutableMapOf<Int, List<Transform>>()
   val childrenMap = layers.groupBy { it.parent }
 
   val roots = childrenMap[null] ?: emptyList()
   for (layer in roots) {
-    populateAncestorTransforms(layer, emptyList(), childrenMap, map)
+    populateAncestorTransforms(layer, emptyList(), emptySet(), childrenMap, map)
   }
 
   return map
@@ -209,11 +209,15 @@ private fun buildAncestorTransforms(layers: List<Layer>): Map<Int, List<Transfor
 private fun populateAncestorTransforms(
   layer: Layer,
   currentStack: List<Transform>,
+  visited: Set<Int>,
   childrenMap: Map<Int?, List<Layer>>,
   outMap: MutableMap<Int, List<Transform>>,
 ) {
   val layerIndex = layer.index
   if (layerIndex != null) {
+    if (layerIndex in visited) {
+      return
+    }
     outMap[layerIndex] = currentStack
   }
 
@@ -225,8 +229,9 @@ private fun populateAncestorTransforms(
       currentStack
     }
 
+  val nextVisited = if (layerIndex != null) visited + layerIndex else visited
   val children = if (layerIndex != null) childrenMap[layerIndex] ?: emptyList() else emptyList()
   for (child in children) {
-    populateAncestorTransforms(child, nextStack, childrenMap, outMap)
+    populateAncestorTransforms(child, nextStack, nextVisited, childrenMap, outMap)
   }
 }
