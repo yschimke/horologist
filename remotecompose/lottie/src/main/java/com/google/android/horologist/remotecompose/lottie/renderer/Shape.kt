@@ -526,9 +526,10 @@ private fun clipShapes(
         }
       }
       is PolyStar -> {
-        val compiledPath = evaluatePolyStar(shape, animationSettings)
-        if (compiledPath != null) {
-          canvas.clipPath(compiledPath.path)
+        val lottiePath = evaluatePolyStar(shape, animationSettings)
+        if (lottiePath != null) {
+          val rcPath = buildRemotePathFromBezier(lottiePath.path)
+          canvas.clipPath(rcPath)
         }
       }
       is Group -> {

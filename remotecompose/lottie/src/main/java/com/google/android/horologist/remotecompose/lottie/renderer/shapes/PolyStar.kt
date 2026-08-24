@@ -17,11 +17,13 @@
 package com.google.android.horologist.remotecompose.lottie.renderer.shapes
 
 import android.annotation.SuppressLint
-import androidx.compose.remote.creation.RemotePath
+import androidx.compose.remote.creation.compose.state.RemoteFloat
+import androidx.compose.remote.creation.compose.state.rf
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.PolyStar
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.PolyStarType
-import com.google.android.horologist.remotecompose.lottie.renderer.RemoteCompiledPath
+import com.google.android.horologist.remotecompose.lottie.renderer.RemoteLottiePath
+import com.google.android.horologist.remotecompose.lottie.renderer.properties.RemoteBezierValue
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animatePosition
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateScalar
 import kotlin.math.PI
@@ -39,15 +41,15 @@ import kotlin.math.sin
 //    vertex, while RoundedPolygon requires an integer vertex count.
 // 3. Lottie shapes support explicit path direction (e.g. counter-clockwise d=3) affecting fill
 //    winding rules.
-// 4. Writing directly into RemotePath avoids intermediate allocations and preserves 1:1 visual
-//    parity.
+// 4. Constructing RemoteBezierValue enables affine transform baking in GeometryTransform.kt and
+//    preserves 1:1 visual parity across group transformations.
 
-/** Evaluates a Lottie [PolyStar] parametric shape into a [RemoteCompiledPath]. */
+/** Evaluates a Lottie [PolyStar] parametric shape into a [RemoteLottiePath]. */
 @SuppressLint("RestrictedApi")
 internal fun evaluatePolyStar(
   star: PolyStar,
   animationSettings: LottieSettings,
-): RemoteCompiledPath? {
+): RemoteLottiePath? {
   if (star.hidden == true) return null
 
   val pos = animatePosition(star.position, animationSettings)
@@ -60,7 +62,7 @@ internal fun evaluatePolyStar(
   val outerRoundedness =
     (animateScalar(star.outerRoundedness, animationSettings).constantValueOrNull ?: 0f) / 100f
 
-  val rcPath =
+  val subpath =
     when (star.starType) {
       PolyStarType.Star -> {
         val innerRadius =
@@ -68,7 +70,7 @@ internal fun evaluatePolyStar(
         val innerRoundedness =
           (star.innerRoundedness?.let { animateScalar(it, animationSettings).constantValueOrNull }
             ?: 0f) / 100f
-        createStarPath(
+        createStarBezier(
           points = points,
           positionX = posX,
           positionY = posY,
@@ -80,7 +82,7 @@ internal fun evaluatePolyStar(
         )
       }
       PolyStarType.Polygon -> {
-        createPolygonPath(
+        createPolygonBezier(
           points = points,
           positionX = posX,
           positionY = posY,
@@ -91,11 +93,11 @@ internal fun evaluatePolyStar(
       }
     }
 
-  return RemoteCompiledPath(rcPath)
+  return RemoteLottiePath(listOf(subpath))
 }
 
 @SuppressLint("RestrictedApi")
-private fun createStarPath(
+private fun createStarBezier(
   points: Float,
   positionX: Float,
   positionY: Float,
@@ -104,9 +106,10 @@ private fun createStarPath(
   outerRadius: Float,
   innerRoundedness: Float,
   outerRoundedness: Float,
-): RemotePath {
-  val path = RemotePath()
-  path.reset()
+): RemoteBezierValue {
+  if (points <= 0f) {
+    return RemoteBezierValue(closed = true, emptyList(), emptyList(), emptyList())
+  }
 
   var currentAngle = Math.toRadians((rotation - 90.0)).toFloat()
   val anglePerPoint = (2.0 * PI / points).toFloat()
@@ -123,17 +126,26 @@ private fun createStarPath(
     partialPointRadius = innerRadius + partialPointAmount * (outerRadius - innerRadius)
     x = (partialPointRadius * cos(currentAngle.toDouble())).toFloat()
     y = (partialPointRadius * sin(currentAngle.toDouble())).toFloat()
-    path.moveTo(x + positionX, y + positionY)
     currentAngle += anglePerPoint * partialPointAmount / 2f
   } else {
     x = (outerRadius * cos(currentAngle.toDouble())).toFloat()
     y = (outerRadius * sin(currentAngle.toDouble())).toFloat()
-    path.moveTo(x + positionX, y + positionY)
     currentAngle += halfAnglePerPoint
   }
 
-  var longSegment = false
   val numPoints = ceil(points.toDouble()).toInt() * 2
+  val vertices = ArrayList<List<RemoteFloat>>(numPoints)
+  val inTangents = ArrayList<List<RemoteFloat>>(numPoints)
+  val outTangents = ArrayList<List<RemoteFloat>>(numPoints)
+
+  for (k in 0 until numPoints) {
+    inTangents.add(listOf(0f.rf, 0f.rf))
+    outTangents.add(listOf(0f.rf, 0f.rf))
+  }
+
+  vertices.add(listOf((x + positionX).rf, (y + positionY).rf))
+
+  var longSegment = false
   for (i in 0 until numPoints) {
     var radius = if (longSegment) outerRadius else innerRadius
     var dTheta = halfAnglePerPoint
@@ -148,9 +160,12 @@ private fun createStarPath(
     x = (radius * cos(currentAngle.toDouble())).toFloat()
     y = (radius * sin(currentAngle.toDouble())).toFloat()
 
-    if (innerRoundedness == 0f && outerRoundedness == 0f) {
-      path.lineTo(x + positionX, y + positionY)
-    } else {
+    val targetIndex = (i + 1) % numPoints
+    if (i < numPoints - 1) {
+      vertices.add(listOf((x + positionX).rf, (y + positionY).rf))
+    }
+
+    if (innerRoundedness != 0f || outerRoundedness != 0f) {
       val cp1Theta = (atan2(previousY.toDouble(), previousX.toDouble()) - PI / 2.0).toFloat()
       val cp1Dx = cos(cp1Theta.toDouble()).toFloat()
       val cp1Dy = sin(cp1Theta.toDouble()).toFloat()
@@ -178,35 +193,34 @@ private fun createStarPath(
         }
       }
 
-      path.cubicTo(
-        previousX - cp1x + positionX,
-        previousY - cp1y + positionY,
-        x + cp2x + positionX,
-        y + cp2y + positionY,
-        x + positionX,
-        y + positionY,
-      )
+      outTangents[i] = listOf((-cp1x).rf, (-cp1y).rf)
+      inTangents[targetIndex] = listOf(cp2x.rf, cp2y.rf)
     }
 
     currentAngle += dTheta
     longSegment = !longSegment
   }
 
-  path.close()
-  return path
+  return RemoteBezierValue(
+    closed = true,
+    inTangents = inTangents,
+    outTangents = outTangents,
+    vertices = vertices,
+  )
 }
 
 @SuppressLint("RestrictedApi")
-private fun createPolygonPath(
+private fun createPolygonBezier(
   points: Float,
   positionX: Float,
   positionY: Float,
   rotation: Float,
   radius: Float,
   roundedness: Float,
-): RemotePath {
-  val path = RemotePath()
-  path.reset()
+): RemoteBezierValue {
+  if (points < 3f) {
+    return RemoteBezierValue(closed = true, emptyList(), emptyList(), emptyList())
+  }
 
   val pts = floor(points.toDouble()).toInt()
   var currentAngle = Math.toRadians((rotation - 90.0)).toFloat()
@@ -214,17 +228,33 @@ private fun createPolygonPath(
 
   var x = (radius * cos(currentAngle.toDouble())).toFloat()
   var y = (radius * sin(currentAngle.toDouble())).toFloat()
-  path.moveTo(x + positionX, y + positionY)
   currentAngle += anglePerPoint
 
   var previousX: Float
   var previousY: Float
   val numPoints = ceil(points.toDouble()).toInt()
+
+  val vertices = ArrayList<List<RemoteFloat>>(numPoints)
+  val inTangents = ArrayList<List<RemoteFloat>>(numPoints)
+  val outTangents = ArrayList<List<RemoteFloat>>(numPoints)
+
+  for (k in 0 until numPoints) {
+    inTangents.add(listOf(0f.rf, 0f.rf))
+    outTangents.add(listOf(0f.rf, 0f.rf))
+  }
+
+  vertices.add(listOf((x + positionX).rf, (y + positionY).rf))
+
   for (i in 0 until numPoints) {
     previousX = x
     previousY = y
     x = (radius * cos(currentAngle.toDouble())).toFloat()
     y = (radius * sin(currentAngle.toDouble())).toFloat()
+
+    val targetIndex = (i + 1) % numPoints
+    if (i < numPoints - 1) {
+      vertices.add(listOf((x + positionX).rf, (y + positionY).rf))
+    }
 
     if (roundedness != 0f) {
       val cp1Theta = (atan2(previousY.toDouble(), previousX.toDouble()) - PI / 2.0).toFloat()
@@ -240,24 +270,17 @@ private fun createPolygonPath(
       val cp2x = radius * roundedness * 0.25f * cp2Dx
       val cp2y = radius * roundedness * 0.25f * cp2Dy
 
-      path.cubicTo(
-        previousX - cp1x + positionX,
-        previousY - cp1y + positionY,
-        x + cp2x + positionX,
-        y + cp2y + positionY,
-        x + positionX,
-        y + positionY,
-      )
-    } else {
-      if (i == numPoints - 1) {
-        continue
-      }
-      path.lineTo(x + positionX, y + positionY)
+      outTangents[i] = listOf((-cp1x).rf, (-cp1y).rf)
+      inTangents[targetIndex] = listOf(cp2x.rf, cp2y.rf)
     }
 
     currentAngle += anglePerPoint
   }
 
-  path.close()
-  return path
+  return RemoteBezierValue(
+    closed = true,
+    inTangents = inTangents,
+    outTangents = outTangents,
+    vertices = vertices,
+  )
 }
