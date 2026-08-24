@@ -30,14 +30,21 @@ import androidx.compose.remote.creation.compose.state.selectIfLt
 import androidx.compose.remote.creation.compose.state.sqrt
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PaintingStyle
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.TileMode
+import com.google.android.horologist.remotecompose.lottie.LottieSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.GradientType
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.LineCap
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.LineJoin
+import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.StrokeDash
+import com.google.android.horologist.remotecompose.lottie.format.properties.AnimatedScalarProperty
+import com.google.android.horologist.remotecompose.lottie.format.properties.BaseScalarProperty
+import com.google.android.horologist.remotecompose.lottie.format.properties.StaticScalarProperty
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.Point
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.RemoteGradientValue
+import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateScalar
 
 internal interface RemoteStyle {
   fun getPaint(inheritedOpacity: RemoteFloat = 1f.rf): RemotePaint
@@ -58,6 +65,7 @@ internal class RemoteStroke(
   val lineCap: LineCap = LineCap.Round,
   val lineJoin: LineJoin = LineJoin.Round,
   val miterLimit: RemoteFloat? = null,
+  val dashPattern: PathEffect? = null,
 ) : RemoteStyle {
   override fun getPaint(inheritedOpacity: RemoteFloat): RemotePaint {
     return RemotePaint {
@@ -78,6 +86,9 @@ internal class RemoteStroke(
           LineJoin.Round -> StrokeJoin.Round
           LineJoin.Bevel -> StrokeJoin.Bevel
         }
+      if (this@RemoteStroke.dashPattern != null) {
+        this.pathEffect = this@RemoteStroke.dashPattern
+      }
     }
   }
 }
@@ -117,6 +128,7 @@ internal class RemoteGradientStroke(
   val lineCap: LineCap = LineCap.Round,
   val lineJoin: LineJoin = LineJoin.Round,
   val miterLimit: RemoteFloat? = null,
+  val dashPattern: PathEffect? = null,
 ) : RemoteStyle {
   override fun getPaint(inheritedOpacity: RemoteFloat): RemotePaint {
     return RemotePaint {
@@ -136,6 +148,9 @@ internal class RemoteGradientStroke(
           LineJoin.Round -> StrokeJoin.Round
           LineJoin.Bevel -> StrokeJoin.Bevel
         }
+      if (this@RemoteGradientStroke.dashPattern != null) {
+        this.pathEffect = this@RemoteGradientStroke.dashPattern
+      }
       this.shader =
         createGradientShader(
           gradient = gradient,
@@ -146,6 +161,55 @@ internal class RemoteGradientStroke(
           inheritedOpacity = inheritedOpacity,
         )
     }
+  }
+}
+
+@SuppressLint("RestrictedApi")
+internal fun createDashPathEffect(
+  dashes: List<StrokeDash>?,
+  animationSettings: LottieSettings,
+): PathEffect? {
+  if (dashes.isNullOrEmpty()) return null
+
+  val intervalsList = mutableListOf<Float>()
+  var phase = 0f
+
+  for (dash in dashes) {
+    val property = dash.value ?: continue
+    val value = resolveScalarFloat(property, animationSettings)
+    val type = dash.dashType?.lowercase() ?: dash.name?.lowercase()
+    if (type == "o" || type == "offset" || type?.startsWith("o") == true) {
+      phase = value
+    } else {
+      intervalsList.add(value)
+    }
+  }
+
+  if (intervalsList.isEmpty()) return null
+
+  val finalIntervals =
+    if (intervalsList.size % 2 != 0) {
+      (intervalsList + intervalsList).toFloatArray()
+    } else {
+      intervalsList.toFloatArray()
+    }
+
+  if (finalIntervals.all { it == 0f }) return null
+
+  return PathEffect.dashPathEffect(finalIntervals, phase)
+}
+
+@SuppressLint("RestrictedApi")
+private fun resolveScalarFloat(
+  property: BaseScalarProperty,
+  animationSettings: LottieSettings,
+): Float {
+  val rf = animateScalar(property, animationSettings)
+  val constVal = rf.constantValueOrNull
+  if (constVal != null) return constVal
+  return when (property) {
+    is StaticScalarProperty -> property.value
+    is AnimatedScalarProperty -> property.keyframes.firstOrNull()?.value ?: 0f
   }
 }
 
