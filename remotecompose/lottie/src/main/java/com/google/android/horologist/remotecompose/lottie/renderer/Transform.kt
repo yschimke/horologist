@@ -18,8 +18,11 @@ package com.google.android.horologist.remotecompose.lottie.renderer
 
 import android.annotation.SuppressLint
 import androidx.compose.remote.creation.compose.layout.RemoteCanvas
+import androidx.compose.remote.creation.compose.state.RemoteFloat
 import androidx.compose.remote.creation.compose.state.RemotePaint
+import androidx.compose.remote.creation.compose.state.abs
 import androidx.compose.remote.creation.compose.state.rf
+import androidx.compose.remote.creation.compose.state.selectIfLt
 import androidx.compose.remote.creation.compose.state.tan
 import androidx.compose.remote.creation.compose.state.toRad
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
@@ -27,6 +30,15 @@ import com.google.android.horologist.remotecompose.lottie.format.graphicelement.
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animatePosition
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateScalar
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateVector
+
+@SuppressLint("RestrictedApi")
+/**
+ * Calculates the inverse scale factor, guarding against division-by-zero singularities when scale
+ * is zero or near zero.
+ */
+internal fun computeInverseScale(scale: RemoteFloat): RemoteFloat {
+  return selectIfLt(abs(scale), 0.0001f.rf, 1f.rf, 1f.rf / scale)
+}
 
 @SuppressLint("RestrictedApi")
 /** Applies a transform described by a Lottie [Transform] object to the RemoteCanvas. */
@@ -85,8 +97,8 @@ internal fun inverseTransform(
   val scaleX = scale[0] / 100f
   val scaleY = scale[1] / 100f
 
-  val invScaleX = 1f.rf / scaleX
-  val invScaleY = 1f.rf / scaleY
+  val invScaleX = computeInverseScale(scaleX)
+  val invScaleY = computeInverseScale(scaleY)
 
   canvas.translate(anchorPoint.x, anchorPoint.y)
   canvas.scale(invScaleX, invScaleY)

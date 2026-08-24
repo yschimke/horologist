@@ -49,7 +49,7 @@ Following the project's Spec-Driven Execution Protocol:
 - [ ] [Phase 1: Critical Bug Fixes & Serialization Hardening](#PL_LOTTIE_SPEC_PARITY_P1)
   - [x] [Task 1.1: AST Model Defaults & Fractional Framerate](#PL_LOTTIE_SPEC_PARITY_T1_1)
   - [x] [Task 1.2: GradientStroke Annotations & Keyframe Hold Flag Parsing](#PL_LOTTIE_SPEC_PARITY_T1_2)
-  - [ ] [Task 1.3: Transform Inversion Singularities & Compounded Ancestor Layer Opacity](#PL_LOTTIE_SPEC_PARITY_T1_3)
+  - [x] [Task 1.3: Transform Inversion Singularities (Scale = 0 Guard)](#PL_LOTTIE_SPEC_PARITY_T1_3)
   - [ ] [Task 1.4: PolyStar Dynamic RemoteLottiePath Refactoring](#PL_LOTTIE_SPEC_PARITY_T1_4)
   - [ ] [Task 1.5: Hierarchy Cycle Guard & Dynamic Track Matte Path Builder](#PL_LOTTIE_SPEC_PARITY_T1_5)
 - [ ] [Phase 2: Core Rendering & Mathematical Parity](#PL_LOTTIE_SPEC_PARITY_P2)
@@ -97,14 +97,13 @@ Following the project's Spec-Driven Execution Protocol:
 - **Verify:** `./gradlew :remotecompose:lottie:testDebugUnitTest --no-build-cache`
 - **Commit:** `fix(lottie): align GradientStroke serial names and support boolean hold keyframes`
 
-#### Task 1.3: Transform Inversion Singularities & Compounded Ancestor Layer Opacity {#PL_LOTTIE_SPEC_PARITY_T1_3}
-- **Objective:** Guard against division by zero in `Transform.inverseTransform` when `scaleX` or `scaleY` evaluates to zero, and compound all ancestor layer opacities across `transformStack` in `renderer/Shape.kt`.
+#### Task 1.3: Transform Inversion Singularities (Scale = 0 Guard) {#PL_LOTTIE_SPEC_PARITY_T1_3}
+- **Objective:** Guard against division by zero in `Transform.inverseTransform` when `scaleX` or `scaleY` evaluates to zero or near-zero using `computeInverseScale`. (Note: Per After Effects and Lottie specification, layer parenting links affine spatial transforms but not layer opacity `ks.o`, which remains local to the layer; shape groups compound opacity hierarchically inside `RemoteGroup`).
 - **Files to Modify:**
   - `remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/renderer/Transform.kt`
-  - `remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/renderer/Shape.kt`
   - `remotecompose/lottie/src/test/java/com/google/android/horologist/remotecompose/lottie/TransformTest.kt`
 - **Verify:** `./gradlew :remotecompose:lottie:testDebugUnitTest --no-build-cache`
-- **Commit:** `fix(lottie): guard scale zero transform singularities and compound ancestor opacities`
+- **Commit:** `fix(lottie): guard scale zero singularities in transform inversion`
 
 #### Task 1.4: PolyStar Dynamic RemoteLottiePath Refactoring {#PL_LOTTIE_SPEC_PARITY_T1_4}
 - **Objective:** Refactor `evaluatePolyStar` in `PolyStar.kt` to construct and return a `RemoteLottiePath` containing `RemoteBezierValue` vertices and tangents, enabling full affine transform baking in `GeometryTransform.kt` and animated property support.
