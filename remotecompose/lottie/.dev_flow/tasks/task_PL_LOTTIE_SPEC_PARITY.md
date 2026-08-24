@@ -50,8 +50,8 @@ Execute the 4-phase implementation plan defined in `docs/lottie_spec_parity.plan
 **Progress:**
 - [x] [Task 2.1: Spatial Bézier Tangents (to, ti) in Position Keyframes (`PL_LOTTIE_SPEC_PARITY_T2_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T2_1)
 - [x] [Task 2.2: Gradient Shaders for GradientFill and GradientStroke (`PL_LOTTIE_SPEC_PARITY_T2_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T2_2)
-- [ ] **Next:** [Task 2.3: Stroke Dash Pattern (d) and Miter Limit (ml) (`PL_LOTTIE_SPEC_PARITY_T2_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T2_3)
-- [ ] [Task 2.4: Path FillRule (EvenOdd) & Primitive TrimPath Dispatch (`PL_LOTTIE_SPEC_PARITY_T2_4`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T2_4)
+- [x] [Task 2.3: Stroke Dash Pattern (d) and Miter Limit (ml) (`PL_LOTTIE_SPEC_PARITY_T2_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T2_3)
+- [ ] **Next:** [Task 2.4: Path FillRule (EvenOdd) & Primitive TrimPath Dispatch (`PL_LOTTIE_SPEC_PARITY_T2_4`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T2_4)
 - [ ] [Task 2.5: Local Layer Timing Scaling & Inverted Alpha Track Mattes (`PL_LOTTIE_SPEC_PARITY_T2_5`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T2_5)
 
 **Activity:**
@@ -63,8 +63,11 @@ Execute the 4-phase implementation plan defined in `docs/lottie_spec_parity.plan
 - 19:50 — Completed Task 1.5: Hierarchy Cycle Guard & Dynamic Track Matte Path Safety with clean pre-commit review and full check suite pass. Phase 1 complete!
 - 21:20 — Completed Task 2.1: Spatial Bézier Tangents (to, ti) in Position Keyframes with dedicated `PositionTest` suite, Roborazzi baseline updates, and clean pre-commit review.
 - 21:40 — Completed Task 2.2: Gradient Shaders for GradientFill and GradientStroke with dedicated `GradientTest` suite and clean pre-commit review.
+- 22:00 — Completed Task 2.3: Stroke Dash Pattern (d) and Miter Limit (ml) with dedicated `StrokeTest` suite and clean pre-commit review.
 
 ## Coordination Notes
+
+- 22:00 [dev-flow-orchestrator] — Completed Task 2.3. Configured `RemotePaint.pathEffect` with animated dash patterns in `RemoteStyle.kt`, updated `Shape.kt`, authored `StrokeTest.kt`, and passed clean-context review.
 
 - 21:40 [dev-flow-orchestrator] — Completed Task 2.2. Implemented `RemoteLinearShader` and `RemoteRadialShader` rendering in `RemoteStyle.kt`, updated `Shape.kt`, authored `GradientTest.kt`, and passed clean-context review.
 - 21:20 [dev-flow-orchestrator] — Completed Task 2.1. Implemented 2D cubic Bézier spatial curve evaluation in `Position.kt`, added `PositionTest.kt`, updated Roborazzi screenshot baselines for `play_pause` and `m3_next`, and passed clean-context review.
