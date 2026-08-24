@@ -16,7 +16,7 @@
   <g id="Root">
     <g id="ReusableComposeNode">
       <g id="ReusableComposeNode">
-        <image href="audiovolumescreenmuted.figma-raster/257.png" x="0" y="0" width="454" height="454"/>
+        <image href="audiovolumescreenmuted.figma-raster/56.png" x="0" y="0" width="454" height="454"/>
       </g>
       <g id="ReusableComposeNode">
         <g id="ReusableComposeNode">
@@ -28,16 +28,16 @@
           </g>
         </g>
         <g id="ReusableComposeNode">
-          <rect x="69" y="175" width="316" height="104" rx="52" ry="52" fill="#AECBFA"/>
+          <rect x="66" y="175" width="323" height="104" rx="52" ry="52" fill="#AECBFA"/>
           <g id="ReusableComposeNode" data-material-icon="phone" data-material-icon-style="Filled" data-material-icon-url="https://fonts.gstatic.com/s/i/materialicons/phone/v1/24px.svg">
-            <g transform="translate(97 203) scale(2 2)">
+            <g transform="translate(94 203) scale(2 2)">
               <use href="#material-icon-materialicons-phone" xlink:href="#material-icon-materialicons-phone"/>
             </g>
           </g>
           <g id="ReusableComposeNode">
           </g>
           <g id="ReusableComposeNode">
-            <text x="157" y="237.35" font-size="30" font-family="Roboto, sans-serif" font-weight="500" letter-spacing="0.8" fill="#303133">Pixel Buds Pro</text>
+            <text x="154" y="237.35" font-size="30" font-family="Roboto, sans-serif" font-weight="500" letter-spacing="0.8" fill="#303133">Pixel Buds Pro</text>
           </g>
         </g>
         <g id="ReusableComposeNode">

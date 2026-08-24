@@ -6,7 +6,7 @@
     <g id="ReusableComposeNode">
       <rect x="24" y="91" width="406" height="273" rx="52" ry="52" fill="#303133"/>
       <g id="ReusableComposeNode">
-        <text font-size="28" font-family="Roboto, sans-serif" font-weight="450" letter-spacing="0.8" fill="#FFFFFF"><tspan x="48" y="141" textLength="283" lengthAdjust="spacing">Your next run is 8 km,</tspan><tspan x="48" y="173" textLength="277" lengthAdjust="spacing">starting at 18:00. The</tspan><tspan x="48" y="205" textLength="322" lengthAdjust="spacing">forecast is 14°C and light</tspan><tspan x="48" y="237" textLength="290" lengthAdjust="spacing">rain, so a shell layer is</tspan><tspan x="48" y="269" textLength="357" lengthAdjust="spacing">worth taking. Based on last</tspan><tspan x="48" y="301" textLength="283" lengthAdjust="spacing">week you should hold</tspan><tspan x="48" y="333" textLength="196" lengthAdjust="spacing">about 5:30/km.</tspan></text>
+        <text font-size="28" font-family="Roboto, sans-serif" font-weight="450" letter-spacing="0.8" fill="#FFFFFF"><tspan x="48" y="141" textLength="284" lengthAdjust="spacing">Your next run is 8 km,</tspan><tspan x="48" y="173" textLength="280" lengthAdjust="spacing">starting at 18:00. The</tspan><tspan x="48" y="205" textLength="329" lengthAdjust="spacing">forecast is 14°C and light</tspan><tspan x="48" y="237" textLength="290" lengthAdjust="spacing">rain, so a shell layer is</tspan><tspan x="48" y="269" textLength="303" lengthAdjust="spacing">worth taking. Based on</tspan><tspan x="48" y="301" textLength="340" lengthAdjust="spacing">last week you should hold</tspan><tspan x="48" y="333" textLength="201" lengthAdjust="spacing">about 5:30/km.</tspan></text>
       </g>
     </g>
   </g>

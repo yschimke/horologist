@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 930 454" width="930" height="454" role="img" aria-label="MediaMarqueeTextMediaDisplayLongTitle layout wireframe">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 935 454" width="935" height="454" role="img" aria-label="MediaMarqueeTextMediaDisplayLongTitle layout wireframe">
   <title>MediaMarqueeTextMediaDisplayLongTitle — layout wireframe (slots + tokens)</title>
-  <rect width="930" height="454" fill="#ffffff"/>
+  <rect width="935" height="454" fill="#ffffff"/>
   <g>
     <rect x="0" y="0" width="454" height="454" fill="none" fill-opacity="0" stroke="#5B6470" stroke-width="1" stroke-opacity="0.5"/>
   </g>
@@ -23,7 +23,7 @@
     <rect x="76" y="189" width="303" height="40" fill="none" fill-opacity="0" stroke="#4F8A4A" stroke-width="1" stroke-opacity="0.5"/>
   </g>
   <g>
-    <rect x="92" y="190" width="838" height="38" fill="none" fill-opacity="0" stroke="#7A7A33" stroke-width="1" stroke-opacity="0.5"/>
+    <rect x="92" y="190" width="843" height="38" fill="none" fill-opacity="0" stroke="#7A7A33" stroke-width="1" stroke-opacity="0.5"/>
   </g>
   <g>
     <rect x="66" y="229" width="322" height="36" fill="none" fill-opacity="0" stroke="#3B72A8" stroke-width="1" stroke-opacity="0.5"/>

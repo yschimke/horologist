@@ -4,7 +4,7 @@
 <g transform="translate(0, 0)" clip-path="url(#deviceRound)">
   <g id="Root">
     <g id="ReusableComposeNode">
-      <text font-size="32" font-family="Roboto, sans-serif" font-weight="450" letter-spacing="0.8" fill="#EE675C"><tspan x="24" y="220" textLength="311" lengthAdjust="spacing">No connection to the</tspan><tspan x="24" y="256" textLength="92" lengthAdjust="spacing">model</tspan></text>
+      <text font-size="32" font-family="Roboto, sans-serif" font-weight="450" letter-spacing="0.8" fill="#EE675C"><tspan x="24" y="220" textLength="312" lengthAdjust="spacing">No connection to the</tspan><tspan x="24" y="256" textLength="92" lengthAdjust="spacing">model</tspan></text>
     </g>
   </g>
 </g>

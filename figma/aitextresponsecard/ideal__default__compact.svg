@@ -6,7 +6,7 @@
     <g id="ReusableComposeNode">
       <rect x="24" y="163" width="406" height="128" rx="52" ry="52" fill="#303133"/>
       <g id="ReusableComposeNode">
-        <text font-size="28" font-family="Roboto, sans-serif" font-weight="450" letter-spacing="0.8" fill="#FFFFFF"><tspan x="48" y="213" textLength="283" lengthAdjust="spacing">Your next run is 8 km,</tspan><tspan x="48" y="245" textLength="220" lengthAdjust="spacing">starting at 18:00.</tspan></text>
+        <text font-size="28" font-family="Roboto, sans-serif" font-weight="450" letter-spacing="0.8" fill="#FFFFFF"><tspan x="48" y="213" textLength="284" lengthAdjust="spacing">Your next run is 8 km,</tspan><tspan x="48" y="245" textLength="223" lengthAdjust="spacing">starting at 18:00.</tspan></text>
       </g>
     </g>
   </g>

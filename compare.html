@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Horologist — PNG vs SVG compare</title>
+<title>Horologist — SVG vs PNG compare</title>
 <style>
   :root { color-scheme: light dark; --bg:#0f0f10; --panel:#1b1b1d; --fg:#e8e8ea; --muted:#9b9ba1; --line:#2a2a2d;
     --good:#7dd87d; --warn:#e0c060; --bad:#e08080; --accent:#6ea8fe; }
@@ -76,8 +76,8 @@
 </head>
 <body>
 <header class="top">
-  <h1>Horologist — PNG vs SVG</h1>
-  <div class="subtitle">system <code>horologist</code> · rendered by compose-preview 1.9.0 · 80 components · 80 comparable</div>
+  <h1>Horologist — SVG vs PNG</h1>
+  <div class="subtitle">system <code>horologist</code> · rendered by compose-preview 1.21.0 · 80 components · 80 comparable</div>
   <div class="summary">
     <span><span class="k">avg structural match</span> <b id="avg">…</b></span>
     <span><span class="k">scored</span> <b id="done">0</b> / 80</span>
@@ -92,8 +92,8 @@
     <button type="button" id="ov-reset">Reset</button>
     <span class="ov-active" id="ov-active" hidden></span>
   </div>
-  <p class="note">Each row pairs the rendered <strong>PNG</strong> (raster source of truth) with the editable
-  <strong>figma-svg</strong> re-rasterized <em>by your browser</em>. The match column is a windowed
+  <p class="note">Each row pairs the editable <strong>figma-svg</strong> re-rasterized <em>by your browser</em>
+  with the rendered <strong>PNG</strong> (raster source of truth) it is measured against. The match column is a windowed
   <strong>SSIM</strong> (structural similarity) computed live in the page — pre-blurred and downscaled so a
   half-pixel offset between the two rasterizers barely moves the score, unlike a per-pixel diff. The SVG is
   aligned to the PNG first (its export padding + root <code>translate</code> are cropped back out, matching the
@@ -115,489 +115,489 @@
     <thead>
       <tr>
         <th scope="col">Component</th>
-        <th scope="col">PNG</th>
         <th scope="col">SVG (browser-rendered)</th>
+        <th scope="col">PNG</th>
         <th scope="col" class="col-score">Match ↑</th>
       </tr>
     </thead>
     <tbody id="rows"><tr class="crow" data-png="images/materialbutton/ideal__default__compact.png" data-svg="figma/materialbutton/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MaterialButton</span><span class="grp">Material</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialbutton/ideal__default__compact.png" alt="MaterialButton PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/materialbutton/ideal__default__compact.svg" alt="MaterialButton SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialbutton/ideal__default__compact.png" alt="MaterialButton PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/materialbuttonlarge/ideal__default__compact.png" data-svg="figma/materialbuttonlarge/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MaterialButtonLarge</span><span class="grp">Material</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialbuttonlarge/ideal__default__compact.png" alt="MaterialButtonLarge PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/materialbuttonlarge/ideal__default__compact.svg" alt="MaterialButtonLarge SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialbuttonlarge/ideal__default__compact.png" alt="MaterialButtonLarge PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/materialchip/ideal__default__compact.png" data-svg="figma/materialchip/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MaterialChip</span><span class="grp">Material</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialchip/ideal__default__compact.png" alt="MaterialChip PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/materialchip/ideal__default__compact.svg" alt="MaterialChip SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialchip/ideal__default__compact.png" alt="MaterialChip PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/materialchipdisabled/ideal__default__compact.png" data-svg="figma/materialchipdisabled/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MaterialChipDisabled</span><span class="grp">Material</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialchipdisabled/ideal__default__compact.png" alt="MaterialChipDisabled PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/materialchipdisabled/ideal__default__compact.svg" alt="MaterialChipDisabled SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialchipdisabled/ideal__default__compact.png" alt="MaterialChipDisabled PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/materialchiptruncated/ideal__default__compact.png" data-svg="figma/materialchiptruncated/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MaterialChipTruncated</span><span class="grp">Material</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialchiptruncated/ideal__default__compact.png" alt="MaterialChipTruncated PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/materialchiptruncated/ideal__default__compact.svg" alt="MaterialChipTruncated SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialchiptruncated/ideal__default__compact.png" alt="MaterialChipTruncated PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/materialchipwithsecondarylabel/ideal__default__compact.png" data-svg="figma/materialchipwithsecondarylabel/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MaterialChipWithSecondaryLabel</span><span class="grp">Material</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialchipwithsecondarylabel/ideal__default__compact.png" alt="MaterialChipWithSecondaryLabel PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/materialchipwithsecondarylabel/ideal__default__compact.svg" alt="MaterialChipWithSecondaryLabel SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialchipwithsecondarylabel/ideal__default__compact.png" alt="MaterialChipWithSecondaryLabel PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/materialcompactchip/ideal__default__compact.png" data-svg="figma/materialcompactchip/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MaterialCompactChip</span><span class="grp">Material</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialcompactchip/ideal__default__compact.png" alt="MaterialCompactChip PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/materialcompactchip/ideal__default__compact.svg" alt="MaterialCompactChip SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialcompactchip/ideal__default__compact.png" alt="MaterialCompactChip PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/materialoutlinedchip/ideal__default__compact.png" data-svg="figma/materialoutlinedchip/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MaterialOutlinedChip</span><span class="grp">Material</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialoutlinedchip/ideal__default__compact.png" alt="MaterialOutlinedChip PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/materialoutlinedchip/ideal__default__compact.svg" alt="MaterialOutlinedChip SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialoutlinedchip/ideal__default__compact.png" alt="MaterialOutlinedChip PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/materialoutlinedcompactchip/ideal__default__compact.png" data-svg="figma/materialoutlinedcompactchip/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MaterialOutlinedCompactChip</span><span class="grp">Material</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialoutlinedcompactchip/ideal__default__compact.png" alt="MaterialOutlinedCompactChip PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/materialoutlinedcompactchip/ideal__default__compact.svg" alt="MaterialOutlinedCompactChip SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialoutlinedcompactchip/ideal__default__compact.png" alt="MaterialOutlinedCompactChip PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/materialresponsivelistheader/ideal__default__compact.png" data-svg="figma/materialresponsivelistheader/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MaterialResponsiveListHeader</span><span class="grp">Material</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialresponsivelistheader/ideal__default__compact.png" alt="MaterialResponsiveListHeader PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/materialresponsivelistheader/ideal__default__compact.svg" alt="MaterialResponsiveListHeader SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialresponsivelistheader/ideal__default__compact.png" alt="MaterialResponsiveListHeader PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/materialsecondarytitle/ideal__default__compact.png" data-svg="figma/materialsecondarytitle/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MaterialSecondaryTitle</span><span class="grp">Material</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialsecondarytitle/ideal__default__compact.png" alt="MaterialSecondaryTitle PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/materialsecondarytitle/ideal__default__compact.svg" alt="MaterialSecondaryTitle SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialsecondarytitle/ideal__default__compact.png" alt="MaterialSecondaryTitle PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/materialsplittogglechip/ideal__default__compact.png" data-svg="figma/materialsplittogglechip/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MaterialSplitToggleChip</span><span class="grp">Material</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialsplittogglechip/ideal__default__compact.png" alt="MaterialSplitToggleChip PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/materialsplittogglechip/ideal__default__compact.svg" alt="MaterialSplitToggleChip SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialsplittogglechip/ideal__default__compact.png" alt="MaterialSplitToggleChip PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/materialtitle/ideal__default__compact.png" data-svg="figma/materialtitle/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MaterialTitle</span><span class="grp">Material</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialtitle/ideal__default__compact.png" alt="MaterialTitle PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/materialtitle/ideal__default__compact.svg" alt="MaterialTitle SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialtitle/ideal__default__compact.png" alt="MaterialTitle PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/materialtogglebutton/ideal__default__compact.png" data-svg="figma/materialtogglebutton/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MaterialToggleButton</span><span class="grp">Material</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialtogglebutton/ideal__default__compact.png" alt="MaterialToggleButton PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/materialtogglebutton/ideal__default__compact.svg" alt="MaterialToggleButton SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialtogglebutton/ideal__default__compact.png" alt="MaterialToggleButton PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/materialtogglechipradio/ideal__default__compact.png" data-svg="figma/materialtogglechipradio/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MaterialToggleChipRadio</span><span class="grp">Material</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialtogglechipradio/ideal__default__compact.png" alt="MaterialToggleChipRadio PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/materialtogglechipradio/ideal__default__compact.svg" alt="MaterialToggleChipRadio SVG" /><span class="badge" title="hybrid sticker: opaque layers are raster crops, inlined for scoring">hybrid</span></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialtogglechipradio/ideal__default__compact.png" alt="MaterialToggleChipRadio PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/materialtogglechipswitch/ideal__default__compact.png" data-svg="figma/materialtogglechipswitch/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MaterialToggleChipSwitch</span><span class="grp">Material</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialtogglechipswitch/ideal__default__compact.png" alt="MaterialToggleChipSwitch PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/materialtogglechipswitch/ideal__default__compact.svg" alt="MaterialToggleChipSwitch SVG" /><span class="badge" title="hybrid sticker: opaque layers are raster crops, inlined for scoring">hybrid</span></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/materialtogglechipswitch/ideal__default__compact.png" alt="MaterialToggleChipSwitch PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/mediaartwork/ideal__default__compact.png" data-svg="figma/mediaartwork/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MediaArtwork</span><span class="grp">Media</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediaartwork/ideal__default__compact.png" alt="MediaArtwork PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/mediaartwork/ideal__default__compact.svg" alt="MediaArtwork SVG" /><span class="badge" title="hybrid sticker: opaque layers are raster crops, inlined for scoring">hybrid</span></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediaartwork/ideal__default__compact.png" alt="MediaArtwork PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/mediacontrolbuttonspausedatqueueend/ideal__default__compact.png" data-svg="figma/mediacontrolbuttonspausedatqueueend/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MediaControlButtonsPausedAtQueueEnd</span><span class="grp">Media</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediacontrolbuttonspausedatqueueend/ideal__default__compact.png" alt="MediaControlButtonsPausedAtQueueEnd PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/mediacontrolbuttonspausedatqueueend/ideal__default__compact.svg" alt="MediaControlButtonsPausedAtQueueEnd SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediacontrolbuttonspausedatqueueend/ideal__default__compact.png" alt="MediaControlButtonsPausedAtQueueEnd PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/mediacontrolbuttonsplaying/ideal__default__compact.png" data-svg="figma/mediacontrolbuttonsplaying/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MediaControlButtonsPlaying</span><span class="grp">Media</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediacontrolbuttonsplaying/ideal__default__compact.png" alt="MediaControlButtonsPlaying PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/mediacontrolbuttonsplaying/ideal__default__compact.svg" alt="MediaControlButtonsPlaying SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediacontrolbuttonsplaying/ideal__default__compact.png" alt="MediaControlButtonsPlaying PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/mediadetailsbutton/ideal__default__compact.png" data-svg="figma/mediadetailsbutton/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MediaDetailsButton</span><span class="grp">Media</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediadetailsbutton/ideal__default__compact.png" alt="MediaDetailsButton PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/mediadetailsbutton/ideal__default__compact.svg" alt="MediaDetailsButton SVG" /><span class="badge" title="hybrid sticker: opaque layers are raster crops, inlined for scoring">hybrid</span></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediadetailsbutton/ideal__default__compact.png" alt="MediaDetailsButton PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/mediadetailsbuttonwithartwork/ideal__default__compact.png" data-svg="figma/mediadetailsbuttonwithartwork/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MediaDetailsButtonWithArtwork</span><span class="grp">Media</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediadetailsbuttonwithartwork/ideal__default__compact.png" alt="MediaDetailsButtonWithArtwork PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/mediadetailsbuttonwithartwork/ideal__default__compact.svg" alt="MediaDetailsButtonWithArtwork SVG" /><span class="badge" title="hybrid sticker: opaque layers are raster crops, inlined for scoring">hybrid</span></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediadetailsbuttonwithartwork/ideal__default__compact.png" alt="MediaDetailsButtonWithArtwork PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/mediaentityscreen/ideal__default__compact.png" data-svg="figma/mediaentityscreen/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MediaEntityScreen</span><span class="grp">Media</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediaentityscreen/ideal__default__compact.png" alt="MediaEntityScreen PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/mediaentityscreen/ideal__default__compact.svg" alt="MediaEntityScreen SVG" /><span class="badge" title="hybrid sticker: opaque layers are raster crops, inlined for scoring">hybrid</span></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediaentityscreen/ideal__default__compact.png" alt="MediaEntityScreen PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/mediaentityscreenwithartwork/ideal__default__compact.png" data-svg="figma/mediaentityscreenwithartwork/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MediaEntityScreenWithArtwork</span><span class="grp">Media</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediaentityscreenwithartwork/ideal__default__compact.png" alt="MediaEntityScreenWithArtwork PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/mediaentityscreenwithartwork/ideal__default__compact.svg" alt="MediaEntityScreenWithArtwork SVG" /><span class="badge" title="hybrid sticker: opaque layers are raster crops, inlined for scoring">hybrid</span></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediaentityscreenwithartwork/ideal__default__compact.png" alt="MediaEntityScreenWithArtwork PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/medialoadingmediadisplay/ideal__default__compact.png" data-svg="figma/medialoadingmediadisplay/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MediaLoadingMediaDisplay</span><span class="grp">Media</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/medialoadingmediadisplay/ideal__default__compact.png" alt="MediaLoadingMediaDisplay PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/medialoadingmediadisplay/ideal__default__compact.svg" alt="MediaLoadingMediaDisplay SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/medialoadingmediadisplay/ideal__default__compact.png" alt="MediaLoadingMediaDisplay PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/mediamarqueetextmediadisplay/ideal__default__compact.png" data-svg="figma/mediamarqueetextmediadisplay/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MediaMarqueeTextMediaDisplay</span><span class="grp">Media</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediamarqueetextmediadisplay/ideal__default__compact.png" alt="MediaMarqueeTextMediaDisplay PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/mediamarqueetextmediadisplay/ideal__default__compact.svg" alt="MediaMarqueeTextMediaDisplay SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediamarqueetextmediadisplay/ideal__default__compact.png" alt="MediaMarqueeTextMediaDisplay PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/mediamarqueetextmediadisplaylongtitle/ideal__default__compact.png" data-svg="figma/mediamarqueetextmediadisplaylongtitle/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MediaMarqueeTextMediaDisplayLongTitle</span><span class="grp">Media</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediamarqueetextmediadisplaylongtitle/ideal__default__compact.png" alt="MediaMarqueeTextMediaDisplayLongTitle PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/mediamarqueetextmediadisplaylongtitle/ideal__default__compact.svg" alt="MediaMarqueeTextMediaDisplayLongTitle SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediamarqueetextmediadisplaylongtitle/ideal__default__compact.png" alt="MediaMarqueeTextMediaDisplayLongTitle PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/mediamessagemediadisplay/ideal__default__compact.png" data-svg="figma/mediamessagemediadisplay/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MediaMessageMediaDisplay</span><span class="grp">Media</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediamessagemediadisplay/ideal__default__compact.png" alt="MediaMessageMediaDisplay PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/mediamessagemediadisplay/ideal__default__compact.svg" alt="MediaMessageMediaDisplay SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediamessagemediadisplay/ideal__default__compact.png" alt="MediaMessageMediaDisplay PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/medianothingplayingdisplay/ideal__default__compact.png" data-svg="figma/medianothingplayingdisplay/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MediaNothingPlayingDisplay</span><span class="grp">Media</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/medianothingplayingdisplay/ideal__default__compact.png" alt="MediaNothingPlayingDisplay PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/medianothingplayingdisplay/ideal__default__compact.svg" alt="MediaNothingPlayingDisplay SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/medianothingplayingdisplay/ideal__default__compact.png" alt="MediaNothingPlayingDisplay PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/mediaplaceholderbutton/ideal__default__compact.png" data-svg="figma/mediaplaceholderbutton/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MediaPlaceholderButton</span><span class="grp">Media</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediaplaceholderbutton/ideal__default__compact.png" alt="MediaPlaceholderButton PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/mediaplaceholderbutton/ideal__default__compact.svg" alt="MediaPlaceholderButton SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediaplaceholderbutton/ideal__default__compact.png" alt="MediaPlaceholderButton PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/mediaplaypausebuttondisabled/ideal__default__compact.png" data-svg="figma/mediaplaypausebuttondisabled/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MediaPlayPauseButtonDisabled</span><span class="grp">Media</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediaplaypausebuttondisabled/ideal__default__compact.png" alt="MediaPlayPauseButtonDisabled PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/mediaplaypausebuttondisabled/ideal__default__compact.svg" alt="MediaPlayPauseButtonDisabled SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediaplaypausebuttondisabled/ideal__default__compact.png" alt="MediaPlayPauseButtonDisabled PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/mediaplaypausebuttonpaused/ideal__default__compact.png" data-svg="figma/mediaplaypausebuttonpaused/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MediaPlayPauseButtonPaused</span><span class="grp">Media</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediaplaypausebuttonpaused/ideal__default__compact.png" alt="MediaPlayPauseButtonPaused PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/mediaplaypausebuttonpaused/ideal__default__compact.svg" alt="MediaPlayPauseButtonPaused SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediaplaypausebuttonpaused/ideal__default__compact.png" alt="MediaPlayPauseButtonPaused PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/mediaplaypausebuttonplaying/ideal__default__compact.png" data-svg="figma/mediaplaypausebuttonplaying/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">MediaPlayPauseButtonPlaying</span><span class="grp">Media</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediaplaypausebuttonplaying/ideal__default__compact.png" alt="MediaPlayPauseButtonPlaying PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/mediaplaypausebuttonplaying/ideal__default__compact.svg" alt="MediaPlayPauseButtonPlaying SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/mediaplaypausebuttonplaying/ideal__default__compact.png" alt="MediaPlayPauseButtonPlaying PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/authwearguestmodebutton/ideal__default__compact.png" data-svg="figma/authwearguestmodebutton/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AuthWearGuestModeButton</span><span class="grp">Auth Wear</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearguestmodebutton/ideal__default__compact.png" alt="AuthWearGuestModeButton PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/authwearguestmodebutton/ideal__default__compact.svg" alt="AuthWearGuestModeButton SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearguestmodebutton/ideal__default__compact.png" alt="AuthWearGuestModeButton PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/authwearselectaccountscreen/ideal__default__compact.png" data-svg="figma/authwearselectaccountscreen/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AuthWearSelectAccountScreen</span><span class="grp">Auth Wear</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearselectaccountscreen/ideal__default__compact.png" alt="AuthWearSelectAccountScreen PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/authwearselectaccountscreen/ideal__default__compact.svg" alt="AuthWearSelectAccountScreen SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearselectaccountscreen/ideal__default__compact.png" alt="AuthWearSelectAccountScreen PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/authwearselectaccountscreenemailonly/ideal__default__compact.png" data-svg="figma/authwearselectaccountscreenemailonly/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AuthWearSelectAccountScreenEmailOnly</span><span class="grp">Auth Wear</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearselectaccountscreenemailonly/ideal__default__compact.png" alt="AuthWearSelectAccountScreenEmailOnly PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/authwearselectaccountscreenemailonly/ideal__default__compact.svg" alt="AuthWearSelectAccountScreenEmailOnly SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearselectaccountscreenemailonly/ideal__default__compact.png" alt="AuthWearSelectAccountScreenEmailOnly PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/authwearselectaccountscreenlongemail/ideal__default__compact.png" data-svg="figma/authwearselectaccountscreenlongemail/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AuthWearSelectAccountScreenLongEmail</span><span class="grp">Auth Wear</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearselectaccountscreenlongemail/ideal__default__compact.png" alt="AuthWearSelectAccountScreenLongEmail PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/authwearselectaccountscreenlongemail/ideal__default__compact.svg" alt="AuthWearSelectAccountScreenLongEmail SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearselectaccountscreenlongemail/ideal__default__compact.png" alt="AuthWearSelectAccountScreenLongEmail PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/authwearselectaccountscreensingle/ideal__default__compact.png" data-svg="figma/authwearselectaccountscreensingle/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AuthWearSelectAccountScreenSingle</span><span class="grp">Auth Wear</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearselectaccountscreensingle/ideal__default__compact.png" alt="AuthWearSelectAccountScreenSingle PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/authwearselectaccountscreensingle/ideal__default__compact.svg" alt="AuthWearSelectAccountScreenSingle SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearselectaccountscreensingle/ideal__default__compact.png" alt="AuthWearSelectAccountScreenSingle PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/authwearsigninbutton/ideal__default__compact.png" data-svg="figma/authwearsigninbutton/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AuthWearSignInButton</span><span class="grp">Auth Wear</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearsigninbutton/ideal__default__compact.png" alt="AuthWearSignInButton PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/authwearsigninbutton/ideal__default__compact.svg" alt="AuthWearSignInButton SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearsigninbutton/ideal__default__compact.png" alt="AuthWearSignInButton PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/authwearsigninbuttondisabled/ideal__default__compact.png" data-svg="figma/authwearsigninbuttondisabled/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AuthWearSignInButtonDisabled</span><span class="grp">Auth Wear</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearsigninbuttondisabled/ideal__default__compact.png" alt="AuthWearSignInButtonDisabled PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/authwearsigninbuttondisabled/ideal__default__compact.svg" alt="AuthWearSignInButtonDisabled SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearsigninbuttondisabled/ideal__default__compact.png" alt="AuthWearSignInButtonDisabled PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/authwearsigninplaceholderscreen/ideal__default__compact.png" data-svg="figma/authwearsigninplaceholderscreen/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AuthWearSignInPlaceholderScreen</span><span class="grp">Auth Wear</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearsigninplaceholderscreen/ideal__default__compact.png" alt="AuthWearSignInPlaceholderScreen PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/authwearsigninplaceholderscreen/ideal__default__compact.svg" alt="AuthWearSignInPlaceholderScreen SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearsigninplaceholderscreen/ideal__default__compact.png" alt="AuthWearSignInPlaceholderScreen PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/authwearsigninpromptscreen/ideal__default__compact.png" data-svg="figma/authwearsigninpromptscreen/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AuthWearSignInPromptScreen</span><span class="grp">Auth Wear</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearsigninpromptscreen/ideal__default__compact.png" alt="AuthWearSignInPromptScreen PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/authwearsigninpromptscreen/ideal__default__compact.svg" alt="AuthWearSignInPromptScreen SVG" /><span class="badge" title="hybrid sticker: opaque layers are raster crops, inlined for scoring">hybrid</span></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearsigninpromptscreen/ideal__default__compact.png" alt="AuthWearSignInPromptScreen PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/authwearsigninpromptscreenloading/ideal__default__compact.png" data-svg="figma/authwearsigninpromptscreenloading/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AuthWearSignInPromptScreenLoading</span><span class="grp">Auth Wear</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearsigninpromptscreenloading/ideal__default__compact.png" alt="AuthWearSignInPromptScreenLoading PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/authwearsigninpromptscreenloading/ideal__default__compact.svg" alt="AuthWearSignInPromptScreenLoading SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearsigninpromptscreenloading/ideal__default__compact.png" alt="AuthWearSignInPromptScreenLoading PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/authwearsignedinconfirmationdialog/ideal__default__compact.png" data-svg="figma/authwearsignedinconfirmationdialog/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AuthWearSignedInConfirmationDialog</span><span class="grp">Auth Wear</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearsignedinconfirmationdialog/ideal__default__compact.png" alt="AuthWearSignedInConfirmationDialog PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/authwearsignedinconfirmationdialog/ideal__default__compact.svg" alt="AuthWearSignedInConfirmationDialog SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearsignedinconfirmationdialog/ideal__default__compact.png" alt="AuthWearSignedInConfirmationDialog PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/authwearsignedinconfirmationdialogemailonly/ideal__default__compact.png" data-svg="figma/authwearsignedinconfirmationdialogemailonly/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AuthWearSignedInConfirmationDialogEmailOnly</span><span class="grp">Auth Wear</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearsignedinconfirmationdialogemailonly/ideal__default__compact.png" alt="AuthWearSignedInConfirmationDialogEmailOnly PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/authwearsignedinconfirmationdialogemailonly/ideal__default__compact.svg" alt="AuthWearSignedInConfirmationDialogEmailOnly SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearsignedinconfirmationdialogemailonly/ideal__default__compact.png" alt="AuthWearSignedInConfirmationDialogEmailOnly PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/authwearsignedinconfirmationdialogtruncated/ideal__default__compact.png" data-svg="figma/authwearsignedinconfirmationdialogtruncated/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AuthWearSignedInConfirmationDialogTruncated</span><span class="grp">Auth Wear</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearsignedinconfirmationdialogtruncated/ideal__default__compact.png" alt="AuthWearSignedInConfirmationDialogTruncated PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/authwearsignedinconfirmationdialogtruncated/ideal__default__compact.svg" alt="AuthWearSignedInConfirmationDialogTruncated SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authwearsignedinconfirmationdialogtruncated/ideal__default__compact.png" alt="AuthWearSignedInConfirmationDialogTruncated PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/authmobilesigninbottomsheet/ideal__default__compact.png" data-svg="figma/authmobilesigninbottomsheet/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AuthMobileSignInBottomSheet</span><span class="grp">Auth Mobile</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authmobilesigninbottomsheet/ideal__default__compact.png" alt="AuthMobileSignInBottomSheet PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/authmobilesigninbottomsheet/ideal__default__compact.svg" alt="AuthMobileSignInBottomSheet SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authmobilesigninbottomsheet/ideal__default__compact.png" alt="AuthMobileSignInBottomSheet PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/authmobilesigninbottomsheetcustomlabels/ideal__default__compact.png" data-svg="figma/authmobilesigninbottomsheetcustomlabels/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AuthMobileSignInBottomSheetCustomLabels</span><span class="grp">Auth Mobile</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authmobilesigninbottomsheetcustomlabels/ideal__default__compact.png" alt="AuthMobileSignInBottomSheetCustomLabels PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/authmobilesigninbottomsheetcustomlabels/ideal__default__compact.svg" alt="AuthMobileSignInBottomSheetCustomLabels SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/authmobilesigninbottomsheetcustomlabels/ideal__default__compact.png" alt="AuthMobileSignInBottomSheetCustomLabels PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/datalayermobileinstallappbottomsheet/ideal__default__compact.png" data-svg="figma/datalayermobileinstallappbottomsheet/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">DataLayerMobileInstallAppBottomSheet</span><span class="grp">DataLayer Mobile</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/datalayermobileinstallappbottomsheet/ideal__default__compact.png" alt="DataLayerMobileInstallAppBottomSheet PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/datalayermobileinstallappbottomsheet/ideal__default__compact.svg" alt="DataLayerMobileInstallAppBottomSheet SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/datalayermobileinstallappbottomsheet/ideal__default__compact.png" alt="DataLayerMobileInstallAppBottomSheet PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/datalayermobileinstalltilebottomsheet/ideal__default__compact.png" data-svg="figma/datalayermobileinstalltilebottomsheet/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">DataLayerMobileInstallTileBottomSheet</span><span class="grp">DataLayer Mobile</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/datalayermobileinstalltilebottomsheet/ideal__default__compact.png" alt="DataLayerMobileInstallTileBottomSheet PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/datalayermobileinstalltilebottomsheet/ideal__default__compact.svg" alt="DataLayerMobileInstallTileBottomSheet SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/datalayermobileinstalltilebottomsheet/ideal__default__compact.png" alt="DataLayerMobileInstallTileBottomSheet PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/datalayermobilereengagebottomsheet/ideal__default__compact.png" data-svg="figma/datalayermobilereengagebottomsheet/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">DataLayerMobileReEngageBottomSheet</span><span class="grp">DataLayer Mobile</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/datalayermobilereengagebottomsheet/ideal__default__compact.png" alt="DataLayerMobileReEngageBottomSheet PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/datalayermobilereengagebottomsheet/ideal__default__compact.svg" alt="DataLayerMobileReEngageBottomSheet SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/datalayermobilereengagebottomsheet/ideal__default__compact.png" alt="DataLayerMobileReEngageBottomSheet PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/composablesdatepicker/ideal__default__compact.png" data-svg="figma/composablesdatepicker/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">ComposablesDatePicker</span><span class="grp">Composables</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/composablesdatepicker/ideal__default__compact.png" alt="ComposablesDatePicker PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/composablesdatepicker/ideal__default__compact.svg" alt="ComposablesDatePicker SVG" /><span class="badge" title="hybrid sticker: opaque layers are raster crops, inlined for scoring">hybrid</span></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/composablesdatepicker/ideal__default__compact.png" alt="ComposablesDatePicker PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/composablesmarqueetext/ideal__default__compact.png" data-svg="figma/composablesmarqueetext/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">ComposablesMarqueeText</span><span class="grp">Composables</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/composablesmarqueetext/ideal__default__compact.png" alt="ComposablesMarqueeText PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/composablesmarqueetext/ideal__default__compact.svg" alt="ComposablesMarqueeText SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/composablesmarqueetext/ideal__default__compact.png" alt="ComposablesMarqueeText PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/composablesplaceholderchip/ideal__default__compact.png" data-svg="figma/composablesplaceholderchip/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">ComposablesPlaceholderChip</span><span class="grp">Composables</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/composablesplaceholderchip/ideal__default__compact.png" alt="ComposablesPlaceholderChip PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/composablesplaceholderchip/ideal__default__compact.svg" alt="ComposablesPlaceholderChip SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/composablesplaceholderchip/ideal__default__compact.png" alt="ComposablesPlaceholderChip PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/composablessegmentedprogressindicator/ideal__default__compact.png" data-svg="figma/composablessegmentedprogressindicator/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">ComposablesSegmentedProgressIndicator</span><span class="grp">Composables</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/composablessegmentedprogressindicator/ideal__default__compact.png" alt="ComposablesSegmentedProgressIndicator PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/composablessegmentedprogressindicator/ideal__default__compact.svg" alt="ComposablesSegmentedProgressIndicator SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/composablessegmentedprogressindicator/ideal__default__compact.png" alt="ComposablesSegmentedProgressIndicator PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/composablessegmentedprogressindicatorcomplete/ideal__default__compact.png" data-svg="figma/composablessegmentedprogressindicatorcomplete/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">ComposablesSegmentedProgressIndicatorComplete</span><span class="grp">Composables</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/composablessegmentedprogressindicatorcomplete/ideal__default__compact.png" alt="ComposablesSegmentedProgressIndicatorComplete PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/composablessegmentedprogressindicatorcomplete/ideal__default__compact.svg" alt="ComposablesSegmentedProgressIndicatorComplete SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/composablessegmentedprogressindicatorcomplete/ideal__default__compact.png" alt="ComposablesSegmentedProgressIndicatorComplete PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/composablessegmentedprogressindicatorempty/ideal__default__compact.png" data-svg="figma/composablessegmentedprogressindicatorempty/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">ComposablesSegmentedProgressIndicatorEmpty</span><span class="grp">Composables</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/composablessegmentedprogressindicatorempty/ideal__default__compact.png" alt="ComposablesSegmentedProgressIndicatorEmpty PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/composablessegmentedprogressindicatorempty/ideal__default__compact.svg" alt="ComposablesSegmentedProgressIndicatorEmpty SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/composablessegmentedprogressindicatorempty/ideal__default__compact.png" alt="ComposablesSegmentedProgressIndicatorEmpty PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/composablessquaresegmentedprogressindicator/ideal__default__compact.png" data-svg="figma/composablessquaresegmentedprogressindicator/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">ComposablesSquareSegmentedProgressIndicator</span><span class="grp">Composables</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/composablessquaresegmentedprogressindicator/ideal__default__compact.png" alt="ComposablesSquareSegmentedProgressIndicator PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/composablessquaresegmentedprogressindicator/ideal__default__compact.svg" alt="ComposablesSquareSegmentedProgressIndicator SVG" /><span class="badge" title="hybrid sticker: opaque layers are raster crops, inlined for scoring">hybrid</span></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/composablessquaresegmentedprogressindicator/ideal__default__compact.png" alt="ComposablesSquareSegmentedProgressIndicator PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/composablestimepicker/ideal__default__compact.png" data-svg="figma/composablestimepicker/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">ComposablesTimePicker</span><span class="grp">Composables</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/composablestimepicker/ideal__default__compact.png" alt="ComposablesTimePicker PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/composablestimepicker/ideal__default__compact.svg" alt="ComposablesTimePicker SVG" /><span class="badge" title="hybrid sticker: opaque layers are raster crops, inlined for scoring">hybrid</span></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/composablestimepicker/ideal__default__compact.png" alt="ComposablesTimePicker PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/composablestimepickernoseconds/ideal__default__compact.png" data-svg="figma/composablestimepickernoseconds/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">ComposablesTimePickerNoSeconds</span><span class="grp">Composables</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/composablestimepickernoseconds/ideal__default__compact.png" alt="ComposablesTimePickerNoSeconds PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/composablestimepickernoseconds/ideal__default__compact.svg" alt="ComposablesTimePickerNoSeconds SVG" /><span class="badge" title="hybrid sticker: opaque layers are raster crops, inlined for scoring">hybrid</span></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/composablestimepickernoseconds/ideal__default__compact.png" alt="ComposablesTimePickerNoSeconds PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/composablestimepickerwith12hourclock/ideal__default__compact.png" data-svg="figma/composablestimepickerwith12hourclock/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">ComposablesTimePickerWith12HourClock</span><span class="grp">Composables</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/composablestimepickerwith12hourclock/ideal__default__compact.png" alt="ComposablesTimePickerWith12HourClock PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/composablestimepickerwith12hourclock/ideal__default__compact.svg" alt="ComposablesTimePickerWith12HourClock SVG" /><span class="badge" title="hybrid sticker: opaque layers are raster crops, inlined for scoring">hybrid</span></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/composablestimepickerwith12hourclock/ideal__default__compact.png" alt="ComposablesTimePickerWith12HourClock PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/healthformatteddurationtext/ideal__default__compact.png" data-svg="figma/healthformatteddurationtext/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">HealthFormattedDurationText</span><span class="grp">Health</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/healthformatteddurationtext/ideal__default__compact.png" alt="HealthFormattedDurationText PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/healthformatteddurationtext/ideal__default__compact.svg" alt="HealthFormattedDurationText SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/healthformatteddurationtext/ideal__default__compact.png" alt="HealthFormattedDurationText PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/healthformatteddurationtextsubminute/ideal__default__compact.png" data-svg="figma/healthformatteddurationtextsubminute/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">HealthFormattedDurationTextSubMinute</span><span class="grp">Health</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/healthformatteddurationtextsubminute/ideal__default__compact.png" alt="HealthFormattedDurationTextSubMinute PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/healthformatteddurationtextsubminute/ideal__default__compact.svg" alt="HealthFormattedDurationTextSubMinute SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/healthformatteddurationtextsubminute/ideal__default__compact.png" alt="HealthFormattedDurationTextSubMinute PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/healthmetricdisplay/ideal__default__compact.png" data-svg="figma/healthmetricdisplay/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">HealthMetricDisplay</span><span class="grp">Health</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/healthmetricdisplay/ideal__default__compact.png" alt="HealthMetricDisplay PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/healthmetricdisplay/ideal__default__compact.svg" alt="HealthMetricDisplay SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/healthmetricdisplay/ideal__default__compact.png" alt="HealthMetricDisplay PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/healthmetricsscreenfour/ideal__default__compact.png" data-svg="figma/healthmetricsscreenfour/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">HealthMetricsScreenFour</span><span class="grp">Health</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/healthmetricsscreenfour/ideal__default__compact.png" alt="HealthMetricsScreenFour PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/healthmetricsscreenfour/ideal__default__compact.svg" alt="HealthMetricsScreenFour SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/healthmetricsscreenfour/ideal__default__compact.png" alt="HealthMetricsScreenFour PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/healthmetricsscreensingle/ideal__default__compact.png" data-svg="figma/healthmetricsscreensingle/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">HealthMetricsScreenSingle</span><span class="grp">Health</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/healthmetricsscreensingle/ideal__default__compact.png" alt="HealthMetricsScreenSingle PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/healthmetricsscreensingle/ideal__default__compact.svg" alt="HealthMetricsScreenSingle SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/healthmetricsscreensingle/ideal__default__compact.png" alt="HealthMetricsScreenSingle PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/healthmetricsscreentwo/ideal__default__compact.png" data-svg="figma/healthmetricsscreentwo/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">HealthMetricsScreenTwo</span><span class="grp">Health</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/healthmetricsscreentwo/ideal__default__compact.png" alt="HealthMetricsScreenTwo PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/healthmetricsscreentwo/ideal__default__compact.svg" alt="HealthMetricsScreenTwo SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/healthmetricsscreentwo/ideal__default__compact.png" alt="HealthMetricsScreenTwo PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/healthmetricsscreenwidevalues/ideal__default__compact.png" data-svg="figma/healthmetricsscreenwidevalues/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">HealthMetricsScreenWideValues</span><span class="grp">Health</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/healthmetricsscreenwidevalues/ideal__default__compact.png" alt="HealthMetricsScreenWideValues PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/healthmetricsscreenwidevalues/ideal__default__compact.svg" alt="HealthMetricsScreenWideValues SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/healthmetricsscreenwidevalues/ideal__default__compact.png" alt="HealthMetricsScreenWideValues PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/audiovolumelevelindicator/ideal__default__compact.png" data-svg="figma/audiovolumelevelindicator/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AudioVolumeLevelIndicator</span><span class="grp">Audio</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/audiovolumelevelindicator/ideal__default__compact.png" alt="AudioVolumeLevelIndicator PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/audiovolumelevelindicator/ideal__default__compact.svg" alt="AudioVolumeLevelIndicator SVG" /><span class="badge" title="hybrid sticker: opaque layers are raster crops, inlined for scoring">hybrid</span></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/audiovolumelevelindicator/ideal__default__compact.png" alt="AudioVolumeLevelIndicator PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/audiovolumescreen/ideal__default__compact.png" data-svg="figma/audiovolumescreen/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AudioVolumeScreen</span><span class="grp">Audio</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/audiovolumescreen/ideal__default__compact.png" alt="AudioVolumeScreen PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/audiovolumescreen/ideal__default__compact.svg" alt="AudioVolumeScreen SVG" /><span class="badge" title="hybrid sticker: opaque layers are raster crops, inlined for scoring">hybrid</span></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/audiovolumescreen/ideal__default__compact.png" alt="AudioVolumeScreen PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/audiovolumescreenmax/ideal__default__compact.png" data-svg="figma/audiovolumescreenmax/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AudioVolumeScreenMax</span><span class="grp">Audio</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/audiovolumescreenmax/ideal__default__compact.png" alt="AudioVolumeScreenMax PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/audiovolumescreenmax/ideal__default__compact.svg" alt="AudioVolumeScreenMax SVG" /><span class="badge" title="hybrid sticker: opaque layers are raster crops, inlined for scoring">hybrid</span></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/audiovolumescreenmax/ideal__default__compact.png" alt="AudioVolumeScreenMax PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/audiovolumescreenmuted/ideal__default__compact.png" data-svg="figma/audiovolumescreenmuted/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AudioVolumeScreenMuted</span><span class="grp">Audio</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/audiovolumescreenmuted/ideal__default__compact.png" alt="AudioVolumeScreenMuted PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/audiovolumescreenmuted/ideal__default__compact.svg" alt="AudioVolumeScreenMuted SVG" /><span class="badge" title="hybrid sticker: opaque layers are raster crops, inlined for scoring">hybrid</span></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/audiovolumescreenmuted/ideal__default__compact.png" alt="AudioVolumeScreenMuted PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/audiovolumescreennotconnected/ideal__default__compact.png" data-svg="figma/audiovolumescreennotconnected/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AudioVolumeScreenNotConnected</span><span class="grp">Audio</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/audiovolumescreennotconnected/ideal__default__compact.png" alt="AudioVolumeScreenNotConnected PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/audiovolumescreennotconnected/ideal__default__compact.svg" alt="AudioVolumeScreenNotConnected SVG" /><span class="badge" title="hybrid sticker: opaque layers are raster crops, inlined for scoring">hybrid</span></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/audiovolumescreennotconnected/ideal__default__compact.png" alt="AudioVolumeScreenNotConnected PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/aifailedresponsechip/ideal__default__compact.png" data-svg="figma/aifailedresponsechip/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AiFailedResponseChip</span><span class="grp">AI</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/aifailedresponsechip/ideal__default__compact.png" alt="AiFailedResponseChip PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/aifailedresponsechip/ideal__default__compact.svg" alt="AiFailedResponseChip SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/aifailedresponsechip/ideal__default__compact.png" alt="AiFailedResponseChip PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/airesponseinprogresscard/ideal__default__compact.png" data-svg="figma/airesponseinprogresscard/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AiResponseInProgressCard</span><span class="grp">AI</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/airesponseinprogresscard/ideal__default__compact.png" alt="AiResponseInProgressCard PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/airesponseinprogresscard/ideal__default__compact.svg" alt="AiResponseInProgressCard SVG" /><span class="badge" title="hybrid sticker: opaque layers are raster crops, inlined for scoring">hybrid</span></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/airesponseinprogresscard/ideal__default__compact.png" alt="AiResponseInProgressCard PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/aitextpromptdisplay/ideal__default__compact.png" data-svg="figma/aitextpromptdisplay/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AiTextPromptDisplay</span><span class="grp">AI</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/aitextpromptdisplay/ideal__default__compact.png" alt="AiTextPromptDisplay PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/aitextpromptdisplay/ideal__default__compact.svg" alt="AiTextPromptDisplay SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/aitextpromptdisplay/ideal__default__compact.png" alt="AiTextPromptDisplay PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/aitextresponsecard/ideal__default__compact.png" data-svg="figma/aitextresponsecard/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AiTextResponseCard</span><span class="grp">AI</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/aitextresponsecard/ideal__default__compact.png" alt="AiTextResponseCard PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/aitextresponsecard/ideal__default__compact.svg" alt="AiTextResponseCard SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/aitextresponsecard/ideal__default__compact.png" alt="AiTextResponseCard PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/aitextresponsecardlong/ideal__default__compact.png" data-svg="figma/aitextresponsecardlong/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">AiTextResponseCardLong</span><span class="grp">AI</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/aitextresponsecardlong/ideal__default__compact.png" alt="AiTextResponseCardLong PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/aitextresponsecardlong/ideal__default__compact.svg" alt="AiTextResponseCardLong SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/aitextresponsecardlong/ideal__default__compact.png" alt="AiTextResponseCardLong PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/layoutfillmaxrectangle/ideal__default__compact.png" data-svg="figma/layoutfillmaxrectangle/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">LayoutFillMaxRectangle</span><span class="grp">Layout</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/layoutfillmaxrectangle/ideal__default__compact.png" alt="LayoutFillMaxRectangle PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/layoutfillmaxrectangle/ideal__default__compact.svg" alt="LayoutFillMaxRectangle SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/layoutfillmaxrectangle/ideal__default__compact.png" alt="LayoutFillMaxRectangle PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/layoutpagerscreen/ideal__default__compact.png" data-svg="figma/layoutpagerscreen/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">LayoutPagerScreen</span><span class="grp">Layout</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/layoutpagerscreen/ideal__default__compact.png" alt="LayoutPagerScreen PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/layoutpagerscreen/ideal__default__compact.svg" alt="LayoutPagerScreen SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/layoutpagerscreen/ideal__default__compact.png" alt="LayoutPagerScreen PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr>
 <tr class="crow" data-png="images/layoutscalinglazycolumn/ideal__default__compact.png" data-svg="figma/layoutscalinglazycolumn/ideal__default__compact.svg">
   <th scope="row" class="rowhead"><span class="cid">LayoutScalingLazyColumn</span><span class="grp">Layout</span></th>
-  <td class="col-png"><div class="shot"><img loading="lazy" src="images/layoutscalinglazycolumn/ideal__default__compact.png" alt="LayoutScalingLazyColumn PNG" /></div></td>
   <td class="col-svg"><div class="shot"><img loading="lazy" src="figma/layoutscalinglazycolumn/ideal__default__compact.svg" alt="LayoutScalingLazyColumn SVG" /></div></td>
+  <td class="col-png"><div class="shot"><img loading="lazy" src="images/layoutscalinglazycolumn/ideal__default__compact.png" alt="LayoutScalingLazyColumn PNG" /></div></td>
   <td class="score" aria-label="structural similarity">…</td>
 </tr></tbody>
   </table>
@@ -782,27 +782,41 @@
     return m ? { tx: parseInt(m[1], 10), ty: parseInt(m[2], 10) } : { tx: 0, ty: 0 };
   }
 
-  // Draw into a tw×th canvas over white via the caller's draw(ctx) and return the
-  // grayscale (luma over white) plane as a Float32Array.
-  function grayFromDraw(draw, tw, th) {
+  // The grounds a comparison is scored on, worst result winning. One opaque ground is not a
+  // neutral choice: it ANNIHILATES ink that matches it, and two planes flattened to the same
+  // uniform field are identical — so SSIM answers 1.0 and the row reports a perfect match for a
+  // pair that shares nothing but the colour of its ink. A dark-first system draws light ink onto a
+  // transparent sticker, which is exactly that case. White and black together make it structural:
+  // a pixel can only vanish on both when its alpha is zero on both sides, which is the one case
+  // where "no evidence" is the honest answer. Same rule as the serve scorer's COMPARISON_GROUNDS.
+  const GROUNDS = ["#ffffff", "#000000"];
+
+  // Draw into a tw×th canvas over the given ground via the caller's draw(ctx), returning the
+  // grayscale plane as a Float32Array. The canvas is filled edge to edge before drawing, so every
+  // pixel read back is opaque and the luma is the composited colour outright.
+  function grayFromDraw(draw, tw, th, ground) {
     const c = document.createElement("canvas");
     c.width = tw; c.height = th;
     const ctx = c.getContext("2d", { willReadFrequently: true });
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = "high";
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = ground;
     ctx.fillRect(0, 0, tw, th);
     draw(ctx);
     const { data } = ctx.getImageData(0, 0, tw, th);
     const g = new Float32Array(tw * th);
     for (let i = 0; i < tw * th; i++) {
-      const a = data[i * 4 + 3] / 255;
-      const r = data[i * 4] * a + 255 * (1 - a);
-      const gr = data[i * 4 + 1] * a + 255 * (1 - a);
-      const b = data[i * 4 + 2] * a + 255 * (1 - a);
-      g[i] = 0.299 * r + 0.587 * gr + 0.114 * b;
+      g[i] = 0.299 * data[i * 4] + 0.587 * data[i * 4 + 1] + 0.114 * data[i * 4 + 2];
     }
     return g;
+  }
+
+  // Whether two planes are the same picture. The tolerance is for a nearly-opaque pixel: alpha 254
+  // lets a sliver of ground through and moves a luminance by well under one unit.
+  function samePlane(a, b) {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) if (Math.abs(a[i] - b[i]) > 1) return false;
+    return true;
   }
 
   // Separable 3-tap [1,2,1]/4 blur — a light Gaussian that, together with the
@@ -947,7 +961,7 @@
       const tw = Math.max(1, Math.round(rw * scale));
       const th = Math.max(1, Math.round(rh * scale));
       // PNG: drawn 1:1 into the canvas (only the shared downscale applied).
-      const ga = blur(grayFromDraw((ctx) => ctx.drawImage(png, 0, 0, rw * scale, rh * scale), tw, th), tw, th);
+      const drawPng = (ctx) => ctx.drawImage(png, 0, 0, rw * scale, rh * scale);
       // SVG: drawn at its native px size but offset by (-tx, -ty) so its content origin
       // lands at (0,0) and the export's transparent padding is cropped — the same align
       // the daemon's FigmaSvgFidelity does before scoring. No independent scaling: SVG px
@@ -955,16 +969,26 @@
       // rather than being hidden by a fit-to-box rescale.
       const { tx, ty } = translateOf(rawSvg);
       const sw = svg.naturalWidth || svg.width, sh = svg.naturalHeight || svg.height;
-      const gb = blur(
-        grayFromDraw(
-          (ctx) => ctx.drawImage(svg, -tx * scale, -ty * scale, sw * scale, sh * scale),
-          tw,
-          th,
-        ),
-        tw,
-        th,
-      );
-      const pct = Math.max(0, Math.min(100, ssim(ga, gb, tw, th) * 100));
+      const drawSvg = (ctx) => ctx.drawImage(svg, -tx * scale, -ty * scale, sw * scale, sh * scale);
+      // Every ground rasterised BEFORE any is scored, then the worst kept. The gate below is why
+      // both are rasterised rather than scored one at a time: an opaque frame composites
+      // identically onto every ground, so equal planes are how opacity is detected, for free.
+      const planes = GROUNDS.map((ground) => ({
+        a: blur(grayFromDraw(drawPng, tw, th, ground), tw, th),
+        b: blur(grayFromDraw(drawSvg, tw, th, ground), tw, th),
+      }));
+      // A second ground only means something when there is alpha for it to show through. On a
+      // MIXED pair — an opaque Figma export against a render with a transparent surround — nothing
+      // about the export moves between grounds while all of the render's surround does, so the
+      // black pass would report a difference that lives in the grounds rather than in the artwork,
+      // and the minimum would take it.
+      const varies = (side) => planes.some((p) => !samePlane(p[side], planes[0][side]));
+      const scored = varies("a") && varies("b") ? planes : [planes[0]];
+      let worst = 100;
+      for (const p of scored) {
+        worst = Math.min(worst, Math.max(0, Math.min(100, ssim(p.a, p.b, tw, th) * 100)));
+      }
+      const pct = worst;
       // A newer control change may have started while this row was awaiting its fetch /
       // decode. Everything above only read; from here down mutates the row, so bail now
       // if superseded — otherwise a stale pass could overwrite the current one's image

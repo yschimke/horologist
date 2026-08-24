@@ -1,15 +1,15 @@
 {
   "schema": "compose-preview-activity/v1",
-  "generatedAt": "2026-08-16T18:55:00.030Z",
+  "generatedAt": "2026-08-24T07:27:41.849Z",
   "windowDays": 30,
   "code": {
     "repo": "yschimke/horologist",
-    "ref": "previews",
+    "ref": "main",
     "events": [
       {
-        "sha": "31f824bd3c81b42deb6ac5cab943b0d987389f28",
-        "subject": "Merge pull request #27 from yschimke/agent/bump-compose-ai-tools-1.9.0",
-        "at": "2026-08-16T19:45:16+01:00",
+        "sha": "10cfa9e5cd8ba7c73b71e8f8733ef2afd517f894",
+        "subject": "Merge pull request #32 from yschimke/agent/horologist-previews-compose-ai-tools-1.21.0",
+        "at": "2026-08-19T22:56:09+01:00",
         "author": "Yuri Schimke",
         "previewIds": [],
         "components": []

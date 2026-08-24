@@ -20,28 +20,28 @@
           <g id="Spacer">
           </g>
           <g id="Empty">
-            <text font-size="28" font-family="Roboto, sans-serif" font-weight="450" letter-spacing="0.8" fill="#FFFFFF"><tspan x="50" y="130" textLength="354" lengthAdjust="spacing">Send messages and create</tspan><tspan x="85" y="162" textLength="284" lengthAdjust="spacing">chat groups with your</tspan><tspan x="182" y="194" textLength="90" lengthAdjust="spacing">friends</tspan></text>
+            <text font-size="28" font-family="Roboto, sans-serif" font-weight="450" letter-spacing="0.8" fill="#FFFFFF"><tspan x="49" y="130" textLength="356" lengthAdjust="spacing">Send messages and create</tspan><tspan x="84" y="162" textLength="286" lengthAdjust="spacing">chat groups with your</tspan><tspan x="181" y="194" textLength="92" lengthAdjust="spacing">friends</tspan></text>
           </g>
         </g>
         <g id="Spacer">
         </g>
         <g id="Row">
-          <rect x="119" y="233" width="217" height="104" rx="52" ry="52" fill="#303133"/>
+          <rect x="118" y="233" width="218" height="104" rx="52" ry="52" fill="#303133"/>
           <g id="BoxKt" data-material-icon="account_circle" data-material-icon-style="Outlined" data-material-icon-url="https://fonts.gstatic.com/s/i/materialiconsoutlined/account_circle/v1/24px.svg">
-            <g transform="translate(147 259) scale(2.16 2.16)">
+            <g transform="translate(146 259) scale(2.16 2.16)">
               <use href="#material-icon-materialiconsoutlined-account_circle" xlink:href="#material-icon-materialiconsoutlined-account_circle"/>
             </g>
           </g>
           <g id="Spacer">
           </g>
           <g id="Empty">
-            <text x="211" y="295.35" font-size="30" font-family="Roboto, sans-serif" font-weight="500" letter-spacing="0.8" fill="#FFFFFF">Sign in</text>
+            <text x="210" y="295.35" font-size="30" font-family="Roboto, sans-serif" font-weight="500" letter-spacing="0.8" fill="#FFFFFF">Sign in</text>
           </g>
         </g>
         <g id="Row">
-          <rect x="55" y="345" width="344" height="104" rx="52" ry="52" fill="#303133"/>
+          <rect x="54" y="345" width="346" height="104" rx="52" ry="52" fill="#303133"/>
           <g id="Empty">
-            <text x="83" y="407.35" font-size="30" font-family="Roboto, sans-serif" font-weight="500" letter-spacing="0.8" fill="#FFFFFF">Use without account</text>
+            <text x="82" y="407.35" font-size="30" font-family="Roboto, sans-serif" font-weight="500" letter-spacing="0.8" fill="#FFFFFF">Use without account</text>
           </g>
         </g>
       </g>
