@@ -48,7 +48,7 @@ Following the project's Spec-Driven Execution Protocol:
 
 - [ ] [Phase 1: Critical Bug Fixes & Serialization Hardening](#PL_LOTTIE_SPEC_PARITY_P1)
   - [x] [Task 1.1: AST Model Defaults & Fractional Framerate](#PL_LOTTIE_SPEC_PARITY_T1_1)
-  - [ ] [Task 1.2: GradientStroke Annotations & Keyframe Hold Flag Parsing](#PL_LOTTIE_SPEC_PARITY_T1_2)
+  - [x] [Task 1.2: GradientStroke Annotations & Keyframe Hold Flag Parsing](#PL_LOTTIE_SPEC_PARITY_T1_2)
   - [ ] [Task 1.3: Transform Inversion Singularities & Compounded Ancestor Layer Opacity](#PL_LOTTIE_SPEC_PARITY_T1_3)
   - [ ] [Task 1.4: PolyStar Dynamic RemoteLottiePath Refactoring](#PL_LOTTIE_SPEC_PARITY_T1_4)
   - [ ] [Task 1.5: Hierarchy Cycle Guard & Dynamic Track Matte Path Builder](#PL_LOTTIE_SPEC_PARITY_T1_5)

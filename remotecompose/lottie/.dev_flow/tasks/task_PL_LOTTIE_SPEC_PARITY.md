@@ -2,7 +2,7 @@
 
 > **Task ID:** `task_PL_LOTTIE_SPEC_PARITY`
 > **Created:** 2026-08-24 17:45
-> **Last updated:** 2026-08-24 18:06
+> **Last updated:** 2026-08-24 18:55
 > **Status:** `in-progress`
 > **Contributors:** dev-flow-orchestrator
 
@@ -28,7 +28,7 @@ Execute the 4-phase implementation plan defined in `docs/lottie_spec_parity.plan
 ## Subtasks
 
 ### Subtask: Execute Phase 1 (Critical Bug Fixes & Hardening)
-> Author: `dev-flow-orchestrator` — Created: 17:45 — Last updated: 18:06 — Status: `in-progress`
+> Author: `dev-flow-orchestrator` — Created: 17:45 — Last updated: 18:55 — Status: `in-progress`
 
 **Goal:** Implement Phase 1 critical bug fixes (AST model defaults, serial name annotations, hold flag parsing, transform singularities, PolyStar dynamic path, and hierarchy cycle guards).
 
@@ -37,17 +37,19 @@ Execute the 4-phase implementation plan defined in `docs/lottie_spec_parity.plan
 - [x] Create formal implementation plan `docs/lottie_spec_parity.plan.md`
 - [x] Initialize `.dev_flow/` task context and dashboard
 - [x] [Task 1.1: AST Model Defaults & Fractional Framerate (`PL_LOTTIE_SPEC_PARITY_T1_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T1_1)
-- [ ] **Next:** [Task 1.2: GradientStroke Annotations & Keyframe Hold Flag Parsing (`PL_LOTTIE_SPEC_PARITY_T1_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T1_2)
-- [ ] Task 1.3: Transform Inversion Singularities & Compounded Ancestor Layer Opacity
+- [x] [Task 1.2: GradientStroke Annotations & Keyframe Hold Flag Parsing (`PL_LOTTIE_SPEC_PARITY_T1_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T1_2)
+- [ ] **Next:** [Task 1.3: Transform Inversion Singularities & Compounded Ancestor Layer Opacity (`PL_LOTTIE_SPEC_PARITY_T1_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T1_3)
 - [ ] Task 1.4: PolyStar Dynamic RemoteLottiePath Refactoring
 - [ ] Task 1.5: Hierarchy Cycle Guard & Dynamic Track Matte Path Safety
 
 **Activity:**
 - 17:45 — Created task and initialized plan for Phase 1.
 - 18:06 — Completed Task 1.1: AST Model Defaults & Fractional Framerate with tests and full verification.
+- 18:55 — Completed Task 1.2: GradientStroke Annotations & Keyframe Hold Flag Parsing with clean pre-commit review.
 
 ## Coordination Notes
 
+- 18:55 [dev-flow-orchestrator] — Completed Task 1.2. Verified with unit tests, metalava, Roborazzi screenshot verification, and clean-context review.
 - 18:06 [dev-flow-orchestrator] — Completed Task 1.1. Verified with unit tests, metalava, and Roborazzi screenshot verification.
 - 17:45 [dev-flow-orchestrator] — Plan authored and task initialized. Ready for Phase 1 Task 1.1 execution.
 
@@ -64,5 +66,6 @@ Execute the 4-phase implementation plan defined in `docs/lottie_spec_parity.plan
 
 ## Shared Activity Log
 
+- 18:55 [dev-flow-orchestrator] — completed Task 1.2 GradientStroke Annotations & Keyframe Hold Flag Parsing
 - 18:06 [dev-flow-orchestrator] — completed Task 1.1 AST Model Defaults & Fractional Framerate
 - 17:45 [dev-flow-orchestrator] — created task

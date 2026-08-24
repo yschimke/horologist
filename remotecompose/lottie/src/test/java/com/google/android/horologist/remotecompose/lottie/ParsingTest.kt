@@ -1454,4 +1454,110 @@ class ParsingTest {
     assertThat(LottieDecoder.json.decodeFromString(MatteModeSerializer, "99"))
       .isEqualTo(MatteMode.Normal)
   }
+
+  @Test
+  fun gradientStroke_withHighlightLengthAndAngle_deserializes() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "GradientStrokeHighlightLayer",
+            "shapes": [
+              {
+                "ty": "gs",
+                "nm": "RadialGradientStroke",
+                "t": 2,
+                "s": { "k": [50.0, 50.0] },
+                "e": { "k": [100.0, 100.0] },
+                "w": { "k": 2.0 },
+                "g": {
+                  "p": 2,
+                  "k": [0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0]
+                },
+                "h": { "k": 25.0 },
+                "a": { "k": 60.0 }
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+    val shapeLayer = animation.layers[0] as ShapeLayer
+    val gs = shapeLayer.shapes[0] as GradientStroke
+    assertThat(gs.highlightLength).isNotNull()
+    assertThat((gs.highlightLength as StaticScalarProperty).value).isEqualTo(25f)
+    assertThat(gs.highlightAngle).isNotNull()
+    assertThat((gs.highlightAngle as StaticScalarProperty).value).isEqualTo(60f)
+  }
+
+  @Test
+  fun colorProperty_withBooleanAndIntegerHold_deserializes() {
+    val json =
+      """
+      {
+        "a": 1,
+        "k": [
+          {
+            "t": 0,
+            "s": [1.0, 0.0, 0.0, 1.0],
+            "h": true
+          },
+          {
+            "t": 10,
+            "s": [0.0, 1.0, 0.0, 1.0],
+            "h": 1
+          },
+          {
+            "t": 20,
+            "s": [0.0, 0.0, 1.0, 1.0],
+            "h": false
+          },
+          {
+            "t": 30,
+            "s": [1.0, 1.0, 0.0, 1.0],
+            "h": 0
+          },
+          {
+            "t": 40,
+            "s": [1.0, 0.0, 1.0, 1.0]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val colorProp =
+      LottieDecoder.json.decodeFromString(
+        com.google.android.horologist.remotecompose.lottie.format.properties.BaseColorProperty
+          .serializer(),
+        json,
+      )
+    assertThat(colorProp)
+      .isInstanceOf(
+        com.google.android.horologist.remotecompose.lottie.format.properties
+            .AnimatedColorProperty::class
+          .java
+      )
+    val animatedColor =
+      colorProp
+        as
+        com.google.android.horologist.remotecompose.lottie.format.properties.AnimatedColorProperty
+    assertThat(animatedColor.keyframes).hasSize(5)
+    assertThat(animatedColor.keyframes[0].hold).isTrue()
+    assertThat(animatedColor.keyframes[1].hold).isTrue()
+    assertThat(animatedColor.keyframes[2].hold).isFalse()
+    assertThat(animatedColor.keyframes[3].hold).isFalse()
+    assertThat(animatedColor.keyframes[4].hold).isFalse()
+  }
 }
