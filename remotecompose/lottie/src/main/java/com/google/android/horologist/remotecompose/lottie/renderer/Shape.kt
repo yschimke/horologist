@@ -130,9 +130,9 @@ private fun gatherShapes(
         val remoteShape =
           when (shape) {
             is Path -> evaluatePath(shape, animationSettings, activeTrimPath)
-            is Rectangle -> evaluateRectangle(shape, animationSettings)
-            is Ellipse -> evaluateEllipse(shape, animationSettings)
-            is PolyStar -> evaluatePolyStar(shape, animationSettings)
+            is Rectangle -> evaluateRectangle(shape, animationSettings, activeTrimPath)
+            is Ellipse -> evaluateEllipse(shape, animationSettings, activeTrimPath)
+            is PolyStar -> evaluatePolyStar(shape, animationSettings, activeTrimPath)
           }
         currentGeometries.addIfNotNull(remoteShape)
       }
@@ -405,7 +405,7 @@ private fun createPolygonPath(
 }
 
 private fun fill(fill: Fill, animationSettings: LottieSettings): RemoteFill {
-  return RemoteFill(animateColor(fill.color, animationSettings))
+  return RemoteFill(animateColor(fill.color, animationSettings), fill.fillRule)
 }
 
 @SuppressLint("RestrictedApi")
@@ -442,6 +442,7 @@ private fun gradientFill(
     endPoint = endPoint,
     gradientType = fill.gradientType,
     opacity = opacity,
+    fillRule = fill.fillRule,
   )
 }
 

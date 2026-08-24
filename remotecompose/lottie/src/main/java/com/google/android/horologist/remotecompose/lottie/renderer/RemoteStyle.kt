@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.TileMode
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
+import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.FillRule
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.GradientType
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.LineCap
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.LineJoin
@@ -51,7 +52,8 @@ internal interface RemoteStyle {
 }
 
 @SuppressLint("RestrictedApi")
-internal class RemoteFill(val fillColor: RemoteColor) : RemoteStyle {
+internal class RemoteFill(val fillColor: RemoteColor, val fillRule: FillRule = FillRule.NonZero) :
+  RemoteStyle {
   override fun getPaint(inheritedOpacity: RemoteFloat): RemotePaint {
     return RemotePaint { this.color = fillColor.copy(alpha = fillColor.alpha * inheritedOpacity) }
   }
@@ -100,6 +102,7 @@ internal class RemoteGradientFill(
   val endPoint: Point,
   val gradientType: GradientType,
   val opacity: RemoteFloat,
+  val fillRule: FillRule = FillRule.NonZero,
 ) : RemoteStyle {
   override fun getPaint(inheritedOpacity: RemoteFloat): RemotePaint {
     return RemotePaint {

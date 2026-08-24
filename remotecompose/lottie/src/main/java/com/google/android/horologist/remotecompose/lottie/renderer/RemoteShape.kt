@@ -32,7 +32,8 @@ internal interface RemoteShape {
 }
 
 @SuppressLint("RestrictedApi")
-internal class RemoteCompiledPath(val path: RemotePath) : RemoteShape {
+internal class RemoteCompiledPath(val path: RemotePath, val fillRule: FillRule = FillRule.NonZero) :
+  RemoteShape {
   override fun draw(
     drawScope: RemoteDrawScope,
     canvas: RemoteCanvas,
@@ -43,7 +44,10 @@ internal class RemoteCompiledPath(val path: RemotePath) : RemoteShape {
 }
 
 @SuppressLint("RestrictedApi")
-internal class RemoteLottiePath(val path: List<RemoteBezierValue>) : RemoteShape {
+internal class RemoteLottiePath(
+  val path: List<RemoteBezierValue>,
+  val fillRule: FillRule = FillRule.NonZero,
+) : RemoteShape {
   override fun draw(
     drawScope: RemoteDrawScope,
     canvas: RemoteCanvas,

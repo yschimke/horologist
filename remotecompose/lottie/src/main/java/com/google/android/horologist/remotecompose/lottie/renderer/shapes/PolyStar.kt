@@ -22,6 +22,9 @@ import androidx.compose.remote.creation.compose.state.rf
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.PolyStar
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.PolyStarType
+import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.TrimPath
+import com.google.android.horologist.remotecompose.lottie.format.properties.StaticBezierProperty
+import com.google.android.horologist.remotecompose.lottie.format.values.BezierValue
 import com.google.android.horologist.remotecompose.lottie.renderer.RemoteLottiePath
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.RemoteBezierValue
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animatePosition
@@ -49,6 +52,7 @@ import kotlin.math.sin
 internal fun evaluatePolyStar(
   star: PolyStar,
   animationSettings: LottieSettings,
+  trimPath: TrimPath? = null,
 ): RemoteLottiePath? {
   if (star.hidden == true) return null
 
@@ -92,6 +96,19 @@ internal fun evaluatePolyStar(
         )
       }
     }
+
+  if (trimPath != null && trimPath.hidden != true) {
+    val bezierValue =
+      BezierValue(
+        closed = subpath.closed,
+        vertices = subpath.vertices.map { pt -> pt.map { it.constantValueOrNull ?: 0f } },
+        inTangents = subpath.inTangents.map { pt -> pt.map { it.constantValueOrNull ?: 0f } },
+        outTangents = subpath.outTangents.map { pt -> pt.map { it.constantValueOrNull ?: 0f } },
+      )
+    val trimmed =
+      evaluateTrimmedBezier(StaticBezierProperty(value = bezierValue), trimPath, animationSettings)
+    return RemoteLottiePath(trimmed)
+  }
 
   return RemoteLottiePath(listOf(subpath))
 }
