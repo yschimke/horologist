@@ -52,7 +52,7 @@ Eliminate all visual rendering regressions and mathematical defects across `:rem
   - [x] [Task 2.1: Animated Primitive Keyframe Evaluation in Rectangle, Ellipse, PolyStar](#PL_LOTTIE_REMED_T2_1)
   - [x] [Task 2.2: Scale-Zero Singularity Matrix Symmetry in Transform.kt](#PL_LOTTIE_REMED_T2_2)
   - [x] [Task 2.3: ImageLayer Native Bitmap Bounds Scaling](#PL_LOTTIE_REMED_T2_3)
-  - [ ] [Task 2.4: Multi-Mask Add Mode Composite Path Union](#PL_LOTTIE_REMED_T2_4)
+  - [x] [Task 2.4: Multi-Mask Add Mode Composite Path Union](#PL_LOTTIE_REMED_T2_4)
   - [ ] [Task 2.5: Canvas Skew Axis Rotation Ordering & Repeater Group Compounding](#PL_LOTTIE_REMED_T2_5)
 - [ ] [Phase 3: Extended Parity, Typography & Verification Hardening](#PL_LOTTIE_REMED_P3)
   - [ ] [Task 3.1: Multiline Text, Line Height & Stroke-Over-Fill in TextLayer](#PL_LOTTIE_REMED_T3_1)
