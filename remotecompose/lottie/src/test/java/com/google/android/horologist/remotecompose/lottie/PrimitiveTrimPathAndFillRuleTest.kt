@@ -38,9 +38,11 @@ import com.google.android.horologist.remotecompose.lottie.format.properties.Stat
 import com.google.android.horologist.remotecompose.lottie.format.properties.StaticScalarProperty
 import com.google.android.horologist.remotecompose.lottie.format.properties.StaticVectorProperty
 import com.google.android.horologist.remotecompose.lottie.format.values.GradientValue
+import com.google.android.horologist.remotecompose.lottie.renderer.RemoteCompiledPath
 import com.google.android.horologist.remotecompose.lottie.renderer.RemoteFill
 import com.google.android.horologist.remotecompose.lottie.renderer.RemoteGradientFill
 import com.google.android.horologist.remotecompose.lottie.renderer.RemoteLottiePath
+import com.google.android.horologist.remotecompose.lottie.renderer.gatherShapesForTest
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.Point
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.RemoteGradientValue
 import com.google.android.horologist.remotecompose.lottie.renderer.shapes.evaluateEllipse
@@ -219,5 +221,88 @@ class PrimitiveTrimPathAndFillRuleTest {
   fun remoteLottiePath_and_remoteCompiledPath_holdFillRule() {
     val lottiePath = RemoteLottiePath(path = emptyList(), fillRule = FillRule.EvenOdd)
     assertThat(lottiePath.fillRule).isEqualTo(FillRule.EvenOdd)
+
+    val compiledPath =
+      RemoteCompiledPath(
+        path = androidx.compose.remote.creation.RemotePath(),
+        fillRule = FillRule.EvenOdd,
+      )
+    assertThat(compiledPath.fillRule).isEqualTo(FillRule.EvenOdd)
+  }
+
+  @Test
+  fun remoteShape_withFillRule_updatesFillRuleCorrectly() {
+    val lottiePath = RemoteLottiePath(path = emptyList(), fillRule = FillRule.NonZero)
+    val updatedLottiePath = lottiePath.withFillRule(FillRule.EvenOdd)
+    assertThat((updatedLottiePath as RemoteLottiePath).fillRule).isEqualTo(FillRule.EvenOdd)
+
+    val compiledPath =
+      RemoteCompiledPath(
+        path = androidx.compose.remote.creation.RemotePath(),
+        fillRule = FillRule.NonZero,
+      )
+    val updatedCompiledPath = compiledPath.withFillRule(FillRule.EvenOdd)
+    assertThat((updatedCompiledPath as RemoteCompiledPath).fillRule).isEqualTo(FillRule.EvenOdd)
+
+    val group =
+      com.google.android.horologist.remotecompose.lottie.renderer.RemoteGroup(
+        childShapes =
+          listOf(
+            com.google.android.horologist.remotecompose.lottie.renderer.StyledShapes(
+              listOf(lottiePath),
+              com.google.android.horologist.remotecompose.lottie.renderer.NoopStyle(),
+            )
+          ),
+        animationSettings = settings,
+        transform = null,
+      )
+    val updatedGroup = group.withFillRule(FillRule.EvenOdd)
+    val updatedInnerShape = updatedGroup.childShapes.first().shapes.first()
+    assertThat((updatedInnerShape as RemoteLottiePath).fillRule).isEqualTo(FillRule.EvenOdd)
+  }
+
+  @Test
+  fun gatherShapes_withEvenOddFill_propagatesFillRuleToGeometries() {
+    val rect =
+      Rectangle(
+        position = StaticPositionProperty(value = listOf(0f, 0f)),
+        size = StaticVectorProperty(value = listOf(100f, 100f)),
+      )
+    val fill = Fill(color = StaticColorProperty(value = Color.Red.rc), fillRule = FillRule.EvenOdd)
+
+    val styledShapes = gatherShapesForTest(listOf(rect, fill), settings)
+    assertThat(styledShapes).isNotEmpty()
+
+    val shapeGroup = styledShapes.first()
+    assertThat(shapeGroup.shapes).isNotEmpty()
+    val evaluatedShape = shapeGroup.shapes.first()
+    assertThat((evaluatedShape as RemoteLottiePath).fillRule).isEqualTo(FillRule.EvenOdd)
+  }
+
+  @Test
+  fun gatherShapes_withEvenOddGradientFill_propagatesFillRuleToGeometries() {
+    val rect =
+      Rectangle(
+        position = StaticPositionProperty(value = listOf(0f, 0f)),
+        size = StaticVectorProperty(value = listOf(100f, 100f)),
+      )
+    val gradientFill =
+      GradientFill(
+        colors =
+          StaticGradientProperty(
+            value = GradientValue(numberOfColors = 1, values = listOf(0f, 1f, 0f, 0f))
+          ),
+        startPoint = StaticPositionProperty(value = listOf(0f, 0f)),
+        endPoint = StaticPositionProperty(value = listOf(100f, 0f)),
+        fillRule = FillRule.EvenOdd,
+      )
+
+    val styledShapes = gatherShapesForTest(listOf(rect, gradientFill), settings)
+    assertThat(styledShapes).isNotEmpty()
+
+    val shapeGroup = styledShapes.first()
+    assertThat(shapeGroup.shapes).isNotEmpty()
+    val evaluatedShape = shapeGroup.shapes.first()
+    assertThat((evaluatedShape as RemoteLottiePath).fillRule).isEqualTo(FillRule.EvenOdd)
   }
 }

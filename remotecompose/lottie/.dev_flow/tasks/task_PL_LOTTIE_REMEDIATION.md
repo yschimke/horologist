@@ -39,7 +39,7 @@ Execute the 3-phase remediation plan defined in `docs/lottie_remediation.plan.md
 - [x] Initialize `.dev_flow/` task context and dashboard
 - [x] [Task 1.1: Solid Fill Opacity Compounding in RemoteFill & Shape.kt (`PL_LOTTIE_REMED_T1_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T1_1)
 - [x] [Task 1.2: TextLayer Vector Glyph Harvesting in gatherShapes (`PL_LOTTIE_REMED_T1_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T1_2)
-- [ ] [Task 1.3: EvenOdd Fill Rule Canvas Path Dispatch (`PL_LOTTIE_REMED_T1_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T1_3)
+- [x] [Task 1.3: EvenOdd Fill Rule Canvas Path Dispatch (`PL_LOTTIE_REMED_T1_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T1_3)
 - [ ] [Task 1.4: Sub-Frame Look-Up Table Easing Linear Interpolation (`PL_LOTTIE_REMED_T1_4`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T1_4)
 - [ ] [Task 1.5: Inverted Alpha Track Mattes & Non-Adjacent Matte Parent Routing (`PL_LOTTIE_REMED_T1_5`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T1_5)
 
