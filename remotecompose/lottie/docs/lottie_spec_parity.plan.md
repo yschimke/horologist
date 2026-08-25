@@ -65,7 +65,7 @@ Following the project's Spec-Driven Execution Protocol:
   - [x] [Task 3.4: Precomposition Time Remapping (tm) & Timeline Markers](#PL_LOTTIE_SPEC_PARITY_T3_4)
 - [ ] [Phase 4: Advanced Modifiers, Typography & Bitmap Assets](#PL_LOTTIE_SPEC_PARITY_P4)
   - [x] [Task 4.1: Repeater Modifier Geometry Engine](#PL_LOTTIE_SPEC_PARITY_T4_1)
-  - [ ] [Task 4.2: RoundedCorners Modifier on RemoteBezierValue](#PL_LOTTIE_SPEC_PARITY_T4_2)
+  - [x] [Task 4.2: RoundedCorners Modifier on RemoteBezierValue](#PL_LOTTIE_SPEC_PARITY_T4_2)
   - [ ] [Task 4.3: MergePaths Boolean Operations Engine](#PL_LOTTIE_SPEC_PARITY_T4_3)
   - [ ] [Task 4.4: Bitmap Asset Loading & ImageLayer Rendering](#PL_LOTTIE_SPEC_PARITY_T4_4)
   - [ ] [Task 4.5: Vector Typography (TextLayer) Data Structures](#PL_LOTTIE_SPEC_PARITY_T4_5)
