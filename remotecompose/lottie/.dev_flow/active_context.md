@@ -6,7 +6,7 @@ This file is a **dashboard** — a thin index over the task files in [`tasks/`](
 
 | Task | Phase | Status | Contributors | Updated |
 |---|---|---|---|---|
-| [task_PL_LOTTIE_REMEDIATION](tasks/task_PL_LOTTIE_REMEDIATION.md) — Lottie 1.0.1 Specification Parity Remediation & Hardening | plan | in-progress | dev-flow-orchestrator | 2026-08-25 17:45 |
+| [task_PL_LOTTIE_REMEDIATION](tasks/task_PL_LOTTIE_REMEDIATION.md) — Lottie 1.0.1 Specification Parity Remediation & Hardening | plan | in-progress | dev-flow-orchestrator | 2026-08-25 19:15 |
 
 ## Recently Completed
 
@@ -18,4 +18,4 @@ This file is a **dashboard** — a thin index over the task files in [`tasks/`](
 
 ## Notes
 
-Remediation plan created covering Phase 1 (Critical Rendering Fixes), Phase 2 (Math Safety & Modifiers), and Phase 3 (Typography & Hardening).
+Phase 1 (Critical Rendering & Data Loss Fixes, Tasks 1.1-1.5) complete. Commencing Phase 2 (Core Algorithm, Math Safety & Modifier Compounding).

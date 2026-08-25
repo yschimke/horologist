@@ -28,7 +28,7 @@ Execute the 3-phase remediation plan defined in `docs/lottie_remediation.plan.md
 ## Subtasks
 
 ### Subtask: Execute Phase 1 (Critical Rendering & Data Loss Fixes)
-> Author: `dev-flow-orchestrator` — Created: 17:45 — Last updated: 17:45 — Status: `in-progress`
+> Author: `dev-flow-orchestrator` — Created: 17:45 — Last updated: 19:15 — Status: `completed`
 
 **Goal:** Implement Phase 1 critical fixes: `RemoteFill` opacity compounding, `TextLayer` vector glyph harvesting, `FillRule.EvenOdd` canvas dispatch, sub-frame Look-Up Table easing linear interpolation, and inverted alpha/non-adjacent track mattes.
 
@@ -41,10 +41,10 @@ Execute the 3-phase remediation plan defined in `docs/lottie_remediation.plan.md
 - [x] [Task 1.2: TextLayer Vector Glyph Harvesting in gatherShapes (`PL_LOTTIE_REMED_T1_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T1_2)
 - [x] [Task 1.3: EvenOdd Fill Rule Canvas Path Dispatch (`PL_LOTTIE_REMED_T1_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T1_3)
 - [x] [Task 1.4: Sub-Frame Look-Up Table Easing Linear Interpolation (`PL_LOTTIE_REMED_T1_4`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T1_4)
-- [ ] [Task 1.5: Inverted Alpha Track Mattes & Non-Adjacent Matte Parent Routing (`PL_LOTTIE_REMED_T1_5`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T1_5)
+- [x] [Task 1.5: Inverted Alpha Track Mattes & Non-Adjacent Matte Parent Routing (`PL_LOTTIE_REMED_T1_5`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T1_5)
 
 ### Subtask: Execute Phase 2 (Core Algorithm, Math Safety & Modifier Compounding)
-> Author: `dev-flow-orchestrator` — Created: 17:45 — Last updated: 17:45 — Status: `planned`
+> Author: `dev-flow-orchestrator` — Created: 17:45 — Last updated: 19:15 — Status: `in-progress`
 
 **Goal:** Implement Phase 2 core algorithm and math safety fixes: dynamic primitive keyframe evaluation in `Rectangle`/`Ellipse`/`PolyStar`, symmetric scale-zero transform clamping, native `ImageLayer` bitmap source rect scaling, multi-mask `Add` mode union merging, canvas skew axis rotation ordering, and `Repeater` group compounding.
 
