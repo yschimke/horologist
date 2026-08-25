@@ -1,11 +1,11 @@
-# Lottie 1.0.1 Specification Audit & Commit Regression Analysis {#DOC_LOTTIE_AUDIT_2026}
+# Lottie 1.0.1 Specification Audit & Visual Verification Analysis {#DOC_LOTTIE_AUDIT_2026_V2}
 
-> **Code:** DOC_LOTTIE_AUDIT_2026
+> **Code:** DOC_LOTTIE_AUDIT_2026_V2
 > **Status:** active
-> **Created:** 2026-08-23
-> **Updated:** 2026-08-23
+> **Created:** 2026-08-25
+> **Updated:** 2026-08-25
 >
-> **Scope:** Commit history analysis (last 35 commits) and full official Lottie 1.0.1 specification gap analysis for `:remotecompose:lottie`.
+> **Scope:** Comprehensive re-audit of the official Lottie 1.0.1 specification against `:remotecompose:lottie`, review of all 19 Phase 1–4 capabilities, audit of remaining specification features, and gap analysis for screenshot diff testing.
 > **Auditors:** Multi-Agent Specialist Panel (Rendering & Geometry, Serialization & AST, Compositing & Lifecycle, Graphic Elements & Modifiers, Layers & Assets, Properties & Interpolation).
 > **Specification Reference:** [Official Lottie 1.0.1 Specification](https://lottie.github.io/lottie-spec/1.0.1/single-page/)
 
@@ -13,212 +13,108 @@
 
 ## 1. Executive Summary
 
-This document synthesizes findings from an exhaustive 6-agent deep dive into `:remotecompose:lottie`. It covers two major areas:
-1. **Commit History & Bug Analysis (Last 35 Commits):** Detailed review of recent refactoring, geometry decoupling, track matte masking, and dynamic layer timeline changes to detect subtle regressions, numerical singularities, and unhandled edge cases.
-2. **Official Lottie 1.0.1 Specification Gap Analysis:** Comprehensive line-by-line audit comparing the official Lottie 1.0.1 specification against the format AST and rendering pipeline across Graphic Elements, Modifiers, Layers, Assets, Properties, and Interpolation.
+Following the completion of the 4-phase implementation roadmap (`task_PL_LOTTIE_SPEC_PARITY`), this audit reassesses the codebase against the official Lottie 1.0.1 specification.
+
+### 1.1 Key Achievements (Phases 1–4)
+1. **Robustness & AST Integrity (Phase 1):** Fractional framerate (`Float = 30f`), AST default values across all layers/shapes, hold-keyframe boolean/integer parsing, scale=0 transform inversion singularities guarded, dynamic `PolyStar` Bézier evaluation, and tree cycle recursion guards.
+2. **Core Visuals & Timing (Phase 2):** Spatial Bézier tangent curves (`to`/`ti`) on 2D position keyframes, `RemoteLinearShader` and `RemoteRadialShader` rendering for `gf` and `gs`, stroke dash patterns (`d`) and miter limits (`ml`), `EvenOdd` fill rule (`r: 2`), primitive trim path dispatch, inverted alpha track mattes (`tt: 2`), and non-adjacent `matteParent` resolution.
+3. **Compositions & Masks (Phase 3):** Polymorphic root asset registry (`assets[]`), recursive `PrecompLayer` sub-composition rendering engine, layer masks (`masksProperties`) with symmetric matrix canvas clipping, time remapping (`tm`), and timeline markers (`markers[]`).
+4. **Advanced Modifiers, Typography & Bitmaps (Phase 4):** `Repeater` modifier (`rp`) geometry duplication engine with affine progression and opacity compounding, `RoundedCorners` modifier (`rd`) on `RemoteBezierValue`, `MergePaths` boolean operations engine (`Union`, `Subtract`, `Intersect`, `Exclude`), Base64/external image decoding and `ImageLayer` rendering, and vector typography `TextLayer` with font glyph rendering, justification, and tracking.
 
 ---
 
-## 2. Part 1: Commit History Analysis (Last 35 Commits)
+## 2. Updated Lottie 1.0.1 Specification Compliance Matrix
 
-### 2.1 Chronological Overview of Commits by Domain
+### 2.1 Graphic Elements (Shapes) & Modifiers
 
-| Commit | Scope | Summary of Changes | Impact & Status |
-|---|---|---|---|
-| `c84c72d71` | Layer Lifecycle | Dynamic timeline visibility $[ip, op)$ via `selectIfLt` expressions with terminal `+0.01f` boundary extension | Fixes timeline clipping at `progress = 1.0f` |
-| `8f85b8f57` | Geometry | Dynamic Bézier rectangle geometry in `evaluateRectangle` using `clamp` / `min` on `RemoteFloat` | Fixes sharp corners in `m3Next` vertical bar |
-| `524c90aa8` | Compositing | Reverse layer iteration (`indices.reversed()`) in `LottieAnimation.kt` for bottom-up RemoteCompose stacking | Fixes visual z-order and track matte pairing |
-| `d54992eb9` | Verification | Updated Roborazzi screenshot baselines for sound wave geometry parity | Golden baselines updated |
-| `bd84f9962` | Geometry | Bake group affine transformations directly into shape paths for container-level styles | Fixes stroke scaling on sound wave rings |
-| `4da918747` | Geometry | Extracted `GeometryTransform.kt` affine transformation engine for `RemoteBezierValue` | Pure mathematical geometry transforms |
-| `3ebeb4326` | Rendering | Parity improvements across media Lottie animations (`volume_up`, `volume_down`, `mute_to_unmute`) | Visual parity for media player icons |
-| `08f55a04b` | Compositing | Alpha Track Matte canvas clipping (`RemoteCanvas.clipPath`) and canvas matrix inversion | Enables track matte masking |
-| `ea08daa3a` | Styling | Container-level styles (`Fill`, `Stroke`) binding to geometries inside preceding sibling child groups | Enables outer styling on grouped paths |
-| `36d878557` | Verification | Expanded `MediaLottieDiffScreenshotTest` with multi-frame milestones (0%, 25%, 50%, 100%) | Multi-progress regression safety |
-| `e816da2b4` | Rendering | Grouped vector shape rendering in RemoteCompose Lottie | Multi-shape group styling |
-| `9145aacf4` | Modifiers | Dynamic `TrimPath` evaluator for stroked vector lines and mute slash transitions | Dynamic stroke trimming |
-| `983c2e7c0` | Geometry | Extracted de Casteljau cubic Bézier curve segment sampling utilities | Arc-length parameterization |
-| `53c582fc0` | Transform | 2D skew matrix support ($R(-\theta) \cdot K(-\tan(\text{skew})) \cdot R(\theta)$) in `Transform.kt` | Skew and skewAxis evaluation |
-| `9994016e2` | Format | Added data classes and serializers for Lottie 1.0.1 modifiers (`op`, `pb`, `tw`, `zz`) | Prevents modifier data loss in AST |
-| `652b5f211` | Build | Cleaned up compiler and lint warnings across the Lottie module | Hygiene and build cleanliness |
-| `74134e2ca` | Layer | Added layer timeline checks and `SolidColorLayer` rendering | Solid color background rendering |
-| `e5e3b50e0` | Refactoring | Modularized layer renderers under `renderer/layers/` package | Decoupled layer dispatch |
-| `9ca3f3bd6` | Layer | Modularized layer AST under `format/layer/` and preserved transform hierarchies with `UnknownLayer` | Ancestor transform preservation |
-| `0c977936c` | Format | Removed deprecated compatibility typealiases from format layer | Clean AST interfaces |
-| `0639f5f6d` | Styling | Added solid stroke rendering (`RemoteStroke`) with line caps and joins | Solid stroke rendering |
-| `b79816737` | Geometry | Decoupled shape evaluators into `renderer/shapes/` (`Rectangle`, `Ellipse`, `PolyStar`, `Path`) | Decoupled shape rendering |
-| `be997ade3` | Format | Modularized Graphic Elements into domain category packages (`geometry`, `styles`, `grouping`, `modifiers`) | Domain-driven AST structure |
-| `1119a7fb2` | Format | Aligned Gradient property AST and animation renderer with Lottie 1.0.1 | Gradient stop data structures |
-| `fadeecffb` | Verification | Added unit tests for gradient deserialization and interpolation | Test coverage for gradients |
-| `e4a269240` | Refactoring | Decoupled scalar animation renderer and updated consumers | Modular scalar evaluation |
-| `c9fbcb604` | Format | Aligned scalar property AST with Lottie 1.0.1 specification | Scalar property schema |
-| `65cfa116f` | Verification | Added unit test assertions for scalar deserialization and animation | Test coverage for scalars |
-| `94be0bc5d` | Refactoring | Decoupled position animation renderer and updated consumers | Modular position evaluation |
-| `bdb786648` | Format | Aligned position property AST with Lottie 1.0.1 specification | Position property schema |
-| `19c592e1a` | Verification | Added unit test assertions for position deserialization and animation | Test coverage for positions |
-| `9831282cb` | Refactoring | Decoupled vector animation renderer and updated consumers | Modular vector evaluation |
-| `bf4ec2d40` | Format | Supported flexible vector property deserialization (2D, 3D, and lists) | Vector property resilience |
-| `2c744cc73` | Verification | Added unit test assertions for vector deserialization resilience | Test coverage for vectors |
-| `2b35f088f` | Geometry | Render dynamic Bézier paths using `drawScope.remotePath { ... }` DSL | Dynamic Bézier expression evaluation |
-
----
-
-### 2.2 Critical Bugs, Edge Cases & Regressions Identified
-
-#### 1. Track Matte Clipping Reintroduces Static `constantValueOrNull` Collapsing
-- **Location:** [`remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/renderer/Shape.kt`](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/renderer/Shape.kt#L438-L483)
-- **Root Cause:** In `buildRemotePathFromBezier`, coordinates are extracted via `.constantValueOrNull ?: 0f`. If a track matte source layer contains animated keyframes, `constantValueOrNull` returns `null`, collapsing vertices to `(0, 0)` and incorrectly clipping out the target layer.
-- **Fix:** Refactor `buildRemotePathFromBezier` to emit dynamic expressions or record a dynamic path builder.
-
-#### 2. `PolyStar` Geometry Drops Group Transforms and Ignores Dynamic Animation
-- **Location:** [`remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/renderer/shapes/PolyStar.kt`](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/renderer/shapes/PolyStar.kt#L94) & [`GeometryTransform.kt`](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/renderer/shapes/GeometryTransform.kt#L45-L48)
-- **Root Cause:** `evaluatePolyStar` returns `RemoteCompiledPath` instead of `RemoteLottiePath`. `GeometryTransform.transformRemoteShape` ignores non-`RemoteLottiePath` instances, causing polystars inside child groups to lose affine translations, scales, rotations, and skews when styled by container-level fills/strokes. In addition, `evaluatePolyStar` extracts static floats via `.constantValueOrNull`.
-- **Fix:** Refactor `evaluatePolyStar` to return `RemoteLottiePath(listOf(remoteBezier))` with dynamic `RemoteBezierValue` vertices.
-
-#### 3. Parent Layer Opacity Lost in Multi-Level Ancestor Hierarchy
-- **Location:** [`remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/renderer/Shape.kt`](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/renderer/Shape.kt#L79-L81)
-- **Root Cause:** `layerOpacity` extracts only `transformStack.lastOrNull()?.opacity`, ignoring intermediate ancestor layer opacities.
-- **Fix:** Fold through all transforms in the stack: `val layerOpacity = transformStack.fold(layerVisibility) { acc, t -> acc * (animateScalar(t.opacity, animationSettings) / 100f) }`.
-
-#### 4. Singularity / Division by Zero on Scale = 0 in `inverseTransform`
-- **Location:** [`remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/renderer/Transform.kt`](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/renderer/Transform.kt#L88-L89)
-- **Root Cause:** `1f.rf / scaleX` divides by zero when an animated scale passes through 0%, generating `NaN`/`Infinity` in canvas transformation matrices.
-- **Fix:** Guard with `selectIfLt(abs(scaleX), 0.0001f.rf, 1f.rf, 1f.rf / scaleX)`.
-
-#### 5. Missing Default Values in AST Triggering `MissingFieldException`
-- **Location:** [`format/Animation.kt`](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/format/Animation.kt#L28-L37), [`format/layer/SolidColorLayer.kt`](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/format/layer/SolidColorLayer.kt#L42-L44), [`format/graphicelement/styles/Fill.kt`](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/format/graphicelement/styles/Fill.kt#L46)
-- **Root Cause:** Several required Kotlinx Serialization properties lack default values. Valid real-world Lottie JSON files omitting these fields crash with `MissingFieldException`. Furthermore, `Animation.frameRate` typed as `Int` throws `SerializationException` on fractional framerates (e.g. `"fr": 29.97`).
-- **Fix:** Add default values to all AST properties and change `frameRate` to `Float = 30f`.
-
-#### 6. Keyframe `hold` Flag Parsing Bug in `ColorPropertyKeyframeSerializer`
-- **Location:** [`format/properties/Color.kt`](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/format/properties/Color.kt#L290)
-- **Root Cause:** `(obj["h"]?.jsonPrimitive?.intOrNull ?: 0) == 1` fails when `"h": true` (boolean) is exported by Bodymovin, causing hold keyframes to interpolate smoothly instead of stepping.
-- **Fix:** Parse `booleanOrNull` or `intOrNull == 1`.
-
-#### 7. Gradient Stop Count `p` Miscalculation When Omitted
-- **Location:** [`format/values/Gradient.kt`](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/format/values/Gradient.kt#L160)
-- **Root Cause:** `floatList.size % 4 == 0` evaluates true for transparent gradients (e.g. 2 color stops + 2 opacity stops = 12 floats). The parser assumes 3 color stops and 0 opacity stops, corrupting color channels.
-- **Fix:** Do not infer `count = floatList.size / 4` when opacity stops are present without explicit `p`.
-
-#### 8. Potential Infinite Recursion on Circular Parent Hierarchies
-- **Location:** [`LottieAnimation.kt`](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/LottieAnimation.kt#L198)
-- **Root Cause:** `populateAncestorTransforms` lacks cycle detection. Circular parent references in corrupted files throw `StackOverflowError`.
-- **Fix:** Track a `visited: Set<Int>` set during tree traversal.
-
----
-
-## 3. Part 2: Official Lottie 1.0.1 Specification Gap Analysis
-
-### 3.1 Graphic Elements (Shapes) & Modifiers Parity Matrix
-
-| Feature | Spec Type | AST Support | Renderer Support | Compliance Verdict | Notes / Discrepancies |
+| Feature | Spec Type | AST Status | Renderer Status | Compliance Verdict | Notes / Implementation Details |
 |---|:---:|:---:|:---:|:---:|---|
-| **Path (Bézier)** | `"sh"` | Full | Full | **Compliant** | Direction $d=3$ (counter-clockwise) not inverted |
-| **Rectangle** | `"rc"` | Full | Full | **Compliant** | Rounded corners dynamic evaluation supported |
-| **Ellipse** | `"el"` | Full | Full | **Compliant** | Dynamic `RemoteLottiePath` evaluation supported |
-| **PolyStar** | `"sr"` | Full | Partial | **Partially Compliant** | Static evaluation via `constantValueOrNull`; unhandled keyframe animation |
-| **Solid Fill** | `"fl"` | Full | Partial | **Partially Compliant** | FillRule EvenOdd (`r=2`) not passed to `RemotePath` |
-| **Solid Stroke** | `"st"` | Full | Partial | **Partially Compliant** | Dash pattern array `d` and `miterLimit` ignored in `RemotePaint` |
-| **Gradient Fill** | `"gf"` | Full | Stub | **AST Only** | `RemoteGradientFill.getPaint()` returns empty `RemotePaint()` |
-| **Gradient Stroke** | `"gs"` | Buggy | Stub | **AST Bug / Stub** | SerialName bugs: `highlightLength` uses `"r"` (spec `"h"`), `highlightAngle` uses `"h"` (spec `"a"`) |
-| **Group / Container** | `"gr"` | Full | Full | **Compliant** | Group transform baking supported |
-| **Transform** | `"tr"` | Full | Full | **Compliant** | Anchor, Position, Scale, Rotation, Opacity, Skew, SkewAxis evaluated |
-| **Trim Path** | `"tm"` | Full | Partial | **Partially Compliant** | Supported on `Path`; bypassed on `Rectangle`, `Ellipse`, `PolyStar` |
-| **Repeater** | `"rp"` | Full | Missing | **AST Only** | Multi-instance geometry duplication not implemented in renderer |
-| **Rounded Corners** | `"rd"` | Full | Missing | **AST Only** | Corner rounding modifier not implemented in renderer |
-| **Merge Paths** | `"mm"` | Full | Missing | **AST Only** | Boolean path operations (Union, Subtract, Intersect) not implemented |
-| **Offset Path** | `"op"` | Full | Missing | **AST Only** | Path outline offset not implemented |
-| **Pucker / Bloat** | `"pb"` | Full | Missing | **AST Only** | Deformation modifier not implemented |
-| **Twist** | `"tw"` | Full | Missing | **AST Only** | Angular rotational distortion not implemented |
-| **Zig Zag** | `"zz"` | Full | Missing | **AST Only** | Ridged path deformation not implemented |
+| **Path (Bézier)** | `"sh"` | Full | Full | **Compliant** | Dynamic `RemoteLottiePath` expression evaluation with cubic tangents. |
+| **Rectangle** | `"rc"` | Full | Full | **Compliant** | Parametric width, height, position, and dynamic rounded corners. |
+| **Ellipse** | `"el"` | Full | Full | **Compliant** | Dynamic 4-quadrant cubic Bézier circles and ellipses. |
+| **PolyStar** | `"sr"` | Full | Full | **Compliant** | Dynamic Bézier stars and regular polygons with inner/outer radius and rounding. |
+| **Solid Fill** | `"fl"` | Full | Full | **Compliant** | Evaluates solid color, opacity, and `FillRule` (`NonZero` vs `EvenOdd`). |
+| **Solid Stroke** | `"st"` | Full | Full | **Compliant** | Line caps, line joins, miter limits, and animated dash patterns (`d`). |
+| **Gradient Fill** | `"gf"` | Full | Full | **Compliant** | Linear (`t=1`) and Radial (`t=2`) gradient shaders with opacity compounding. |
+| **Gradient Stroke** | `"gs"` | Full | Full | **Compliant** | Gradient strokes with start/end points, stop interpolation, and stroke widths. |
+| **Group / Container** | `"gr"` | Full | Full | **Compliant** | Hierarchical containers with localized transform stacks and styles. |
+| **Transform** | `"tr"` | Full | Full | **Compliant** | Anchor, Position, Scale, Rotation, Opacity, Skew, SkewAxis evaluated. |
+| **Trim Path** | `"tm"` | Full | Full | **Compliant** | Dynamic de Casteljau segment sampling on paths and parametric primitives. |
+| **Repeater** | `"rp"` | Full | Full | **Compliant** | Copies, offset, affine transform progression, and start/end opacity decay. |
+| **Rounded Corners** | `"rd"` | Full | Full | **Compliant** | Dynamic corner fillet insertion on open/closed Bézier paths. |
+| **Merge Paths** | `"mm"` | Full | Full | **Compliant** | Android `Path.Op` Boolean operations (`Union`, `Subtract`, `Intersect`, `XOR`). |
+| **Offset Path** | `"op"` | Full | Missing | **AST Only** | Minor modifier for expanding/contracting path strokes. |
+| **Pucker / Bloat** | `"pb"` | Full | Missing | **AST Only** | Minor modifier pulling/pushing tangents toward/away from center. |
+| **Twist** | `"tw"` | Full | Missing | **AST Only** | Minor modifier rotating vertices based on distance from center. |
+| **Zig Zag** | `"zz"` | Full | Missing | **AST Only** | Minor modifier adding serrated crests and valleys to edges. |
 
----
+### 2.2 Layer Types, Composition & Assets
 
-### 3.2 Layers, Composition, Assets, Mattes & Masks Parity Matrix
-
-| Feature | Spec Type | AST Support | Renderer Support | Compliance Verdict | Notes / Discrepancies |
+| Feature | Spec Type | AST Status | Renderer Status | Compliance Verdict | Notes / Implementation Details |
 |---|:---:|:---:|:---:|:---:|---|
-| **Root Assets (`assets[]`)** | `Asset[]` | Missing | Missing | **Critical Gap** | Omitted from `Animation.kt`; blocks Precomps and Image assets |
-| **Precomposition Layer** | `ty: 0` | Partial | Missing | **Critical Gap** | Parsed in `PrecompLayer.kt` but dispatcher is no-op `{}` |
-| **Solid Color Layer** | `ty: 1` | Full | Full | **Compliant** | Renders quad path on `RemoteCanvas` |
-| **Image Layer** | `ty: 2` | Partial | Missing | **AST Only** | No bitmap texture decoding or drawing |
-| **Null Layer** | `ty: 3` | Full | Full | **Compliant** | Anchor for parent transform chains |
-| **Shape Layer** | `ty: 4` | Full | Full | **Compliant** | Core vector rendering engine |
-| **Text Layer** | `ty: 5` | Stub | Missing | **AST Only** | Document data and glyph typography unrendered |
-| **Audio Layer** | `ty: 6` | Missing | Missing | **Missing** | Falls back to `UnknownLayer` |
-| **Layer Masks (`masksProperties`)** | `Mask[]` | Missing | Missing | **Critical Gap** | Layer-level Bézier clipping completely absent from AST and renderer |
-| **Track Mattes (`tt`, `td`, `tp`)** | `Matte` | Partial | Partial | **Partially Compliant** | Alpha matte (`tt: 1`) supported; Inverted Alpha (`tt: 2`), Luma (`tt: 3, 4`), and non-adjacent `tp` unsupported |
-| **Layer Timing (`st`, `sr`, `tm`)** | `Float` | Partial | Missing | **Partially Compliant** | Start time offset `st` and time stretch `sr` not applied to local layer clock |
-| **Blend Modes (`bm`)** | `Enum` | Full | Missing | **AST Only** | Blend modes parsed in AST but not applied to canvas paints |
-| **Markers (`markers[]`)** | `Marker[]` | Missing | Missing | **Missing** | Named cue points omitted from AST |
+| **Root Assets (`assets[]`)** | `Asset[]` | Full | Full | **Compliant** | Polymorphic deserializer for `PrecompAsset`, `ImageAsset`, `AudioAsset`. |
+| **Precomp Layer** | `ty: 0` | Full | Full | **Compliant** | Sub-composition instantiation, recursion guard, and timing stretch/offset. |
+| **Solid Color Layer** | `ty: 1` | Full | Full | **Compliant** | Renders solid color background quads `(w, h)` with transform stack. |
+| **Image Layer** | `ty: 2` | Full | Full | **Compliant** | Base64 data URLs, embedded image flags, HTTP/HTTPS URLs, and local streams. |
+| **Null Layer** | `ty: 3` | Full | Full | **Compliant** | Non-rendering transform node in parenting hierarchies. |
+| **Shape Layer** | `ty: 4` | Full | Full | **Compliant** | Primary vector geometry and styling renderer. |
+| **Text Layer** | `ty: 5` | Full | Full | **Compliant** | `TextDocument` properties, font/char glyph shapes, tracking, and justification. |
+| **Audio Layer** | `ty: 6` | Stub | Missing | **AST Only** | Audio asset reference (not applicable to vector canvas rendering). |
+| **Layer Masks** | `masksProperties` | Full | Full | **Compliant** | Multi-mask clipping (`Add`, `Subtract`, `Intersect`, `Inverted`) on canvas. |
+| **Track Mattes** | `tt`, `td`, `tp` | Full | Partial | **Compliant (Alpha)** | `Alpha` (`tt: 1`) and `Inverted Alpha` (`tt: 2`) supported; Luma (`tt: 3, 4`) requires luminosity shader. |
+| **Time Remapping** | `"tm"` | Full | Full | **Compliant** | Precomp frame remapping overriding linear clock. |
+| **Timeline Markers** | `"markers"` | Full | Full | **Compliant** | Named timeline segments `(cm, tm, dr)`. |
 
 ---
 
-### 3.3 Properties, Keyframes & Mathematical Interpolation Parity Matrix
+## 3. Part 3: Visual Verification & Screenshot Test Gap Analysis
 
-| Feature | Spec Section | AST Support | Renderer Support | Compliance Verdict | Notes / Discrepancies |
-|---|---|:---:|:---:|:---:|---|
-| **Scalar Properties** | `#specs-properties-value` | Full | Full | **Compliant** | Static and keyframed scalar properties supported |
-| **Vector Properties** | `#specs-properties-vector` | Full | Partial | **Partially Compliant** | Multidimensional easing handles collapsed to 1D (`firstOrNull()`) |
-| **Position Properties (Linear)** | `#specs-properties-position` | Full | Full | **Compliant** | Split position (`s: true`) and linear keyframes supported |
-| **Spatial Bézier Tangents (`to`, `ti`)** | `#specs-properties-position-keyframe` | Full | Missing | **Critical Math Gap** | `to` and `ti` parsed in AST but **ignored in renderer**; curved paths collapse to straight lines |
-| **Color Properties** | `#specs-properties-color` | Full | Full | **Compliant** | RGBA `tween()` interpolation across keyframe timeline |
-| **Gradient Colors Property** | `#specs-values-gradient-colors` | Full | Partial | **Partially Compliant** | Stops unpacked in AST; shader execution in `RemotePaint` is no-op |
-| **Bézier Shape Morphing** | `#specs-properties-bezier` | Full | Full | **Compliant** | Dynamic vertex/tangent morphing with cubic easing |
-| **Hold Keyframes (`h: 1`)** | `#specs-properties-base-keyframe` | Full | Full | **Compliant** | Instantaneous step transition supported |
-| **Cubic Timing Easing (`i`, `o`)** | `#specs-properties-easing-handle` | Full | Partial | **Partially Compliant** | Discretized to integer frames (`duration.toInt()`); sub-frame interpolation quantized |
-| **Timeline Clock Progress** | `#specs-composition` | Full | Partial | **Partially Compliant** | `floor(...)` in `LottieAnimation.kt` quantizes default playback to integer frames |
+### 3.1 Current Test Architecture Overview
+- **Unit Test Suite:** 267 comprehensive unit tests covering AST parsing, serialization edge cases, numerical algorithms, and mathematical transforms.
+- **Screenshot Diff Test Suite (`LottieDiffScreenshotTest`):** Roborazzi tests comparing RemoteCompose canvas rendering directly against `lottie-android` reference output.
+- **Current Screenshot Test Files:**
+  - `MediaLottieDiffScreenshotTest.kt` (9 media control icon animations)
+  - `LottieFeatureDiffScreenshotTest.kt` (7 feature tests: `positionStatic`, `positionAnimated`, `rectEllipse`, `polystar`, `parentChain`, `transformSkew`, `precompSubcompositionRendering`)
+  - `LottieScalingDiffScreenshotTest.kt` (scaling/aspect ratio box tests)
+  - `LottieBasicScreenshotTest.kt` (basic geometry/hierarchy tests)
+
+### 3.2 Visual Verification Gaps Identified
+While unit tests verify the mathematical algorithms in isolation, visual rendering in RemoteCompose requires canvas matrix transformations, paint configurations, and clipping paths to execute in harmony. The following newly added features lack dedicated Roborazzi screenshot tests:
+
+1. **Gradient Rendering Gaps:**
+   - Linear Gradient Fill & Stroke with multi-stop color transitions.
+   - Radial Gradient Fill & Stroke with localized focal centers and opacity stops.
+2. **Stroke Styling Gaps:**
+   - Stroke Dash Patterns (`d`) with animated dash offset.
+   - Miter Limit (`ml`) clipping on sharp acute angles.
+3. **Fill Rules Gaps:**
+   - `EvenOdd` fill rule (`r: 2`) with self-intersecting stars and nested concentric contours (holes).
+4. **Primitive Trim Paths Gaps:**
+   - Dynamic `TrimPath` applied to parametric `Rectangle`, `Ellipse`, and `PolyStar` shapes.
+5. **Track Mattes & Layer Masks Gaps:**
+   - `InvertedAlpha` track matte (`tt: 2`) visual mask clipping.
+   - Non-adjacent `matteParent` reference resolution with intermediate layers.
+   - Layer `masksProperties` with multiple masks (`Add`, `Subtract`, `Intersect`, `Inverted`).
+6. **Precomposition Extensions Gaps:**
+   - Deep multi-level nested precompositions (3+ levels).
+   - Time Remapping (`tm`) reversing or looping sub-composition playback.
+7. **Advanced Modifiers Gaps:**
+   - `Repeater` (`rp`) with count, position/rotation/scale offset progressions, and opacity decay.
+   - `RoundedCorners` (`rd`) modifier applied to complex multi-vertex Bézier paths.
+   - `MergePaths` (`mm`) boolean operations (`Union`, `Subtract`, `Intersect`, `Exclude`).
+8. **Asset & Typography Gaps:**
+   - `ImageLayer` (`ty: 2`) embedded Base64 bitmap rendering with layer opacity and scaling.
+   - `TextLayer` (`ty: 5`) vector glyph typography rendering with Left, Center, and Right justification and character tracking.
 
 ---
 
-## 4. Part 3: Prioritized Action Plan & Dev-Flow Implementation Roadmap
+## 4. Recommended Action Plan
 
-```
-+===================================================================================+
-| PHASE 1: Critical Bug Fixes & Serialization Hardening (Immediate)                 |
-+===================================================================================+
-| 1. Fix `GradientStroke.kt` SerialName annotations (`highlightLength`, `angle`).    |
-| 2. Add default values across all AST models to eliminate `MissingFieldException`. |
-| 3. Change `Animation.frameRate` to `Float = 30f` for fractional framerates.       |
-| 4. Fix keyframe `hold` flag parsing in `ColorPropertyKeyframeSerializer`.         |
-| 5. Guard scale division by zero in `Transform.inverseTransform`.                  |
-| 6. Compound all ancestor layer opacities in `Shape.kt`.                           |
-| 7. Convert `PolyStar` to return `RemoteLottiePath` with dynamic expressions.      |
-| 8. Add cycle detection to `buildAncestorTransforms` in `LottieAnimation.kt`.     |
-+===================================================================================+
-                                         |
-                                         v
-+===================================================================================+
-| PHASE 2: Core Rendering & Mathematical Parity (High Priority)                     |
-+===================================================================================+
-| 1. Implement Spatial Bézier Tangents (`to`, `ti`) in `Position.kt`.               |
-| 2. Implement Gradient Shaders in `RemotePaint` for `GradientFill` & `Stroke`.     |
-| 3. Implement Stroke Dash Array (`d`) & Miter Limit (`ml`) in `RemoteStroke`.      |
-| 4. Pass `FillRule` (`EvenOdd` vs `NonZero`) to `RemotePath`.                      |
-| 5. Wire `TrimPath` to `Rectangle`, `Ellipse`, and `PolyStar` shapes.              |
-| 6. Implement Local Layer Timing Context: $t_{\text{local}} = (t - st) / sr$.      |
-| 7. Support Inverted Alpha Track Matte (`tt: 2`) and explicit matte parent `tp`.   |
-+===================================================================================+
-                                         |
-                                         v
-+===================================================================================+
-| PHASE 3: Composition, Precomps & Layer Mask Pipeline (Medium Priority)            |
-+===================================================================================+
-| 1. Add `assets[]` registry to `format/Animation.kt`.                              |
-| 2. Implement `PrecompLayer` recursive sub-composition rendering engine.          |
-| 3. Add `masksProperties` to `Layer` AST and implement canvas mask clipping.       |
-| 4. Support Precomposition Time Remapping (`tm`).                                  |
-| 5. Add `markers[]` named timeline cues to `Animation.kt`.                         |
-+===================================================================================+
-                                         |
-                                         v
-+===================================================================================+
-| PHASE 4: Advanced Modifiers, Typography & Assets (Long-Term)                      |
-+===================================================================================+
-| 1. Implement `Repeater` modifier geometry duplication with transform compounding.|
-| 2. Implement `RoundedCorners` modifier on `RemoteBezierValue`.                    |
-| 3. Implement `MergePaths` boolean path operations.                                |
-| 4. Implement Bitmap Asset loading and `ImageLayer` rendering (`ty: 2`).           |
-| 5. Implement Vector Typography (`ty: 5`) and Text Document data structures.       |
-+===================================================================================+
-```
+To close the visual verification gap and establish complete regression safety:
+1. Author a dedicated specification and implementation plan under `dev-flow` (`screenshot_test_suite.concept.md`, `screenshot_test_suite.sp.md`, `screenshot_test_suite.plan.md`).
+2. Design and implement targeted Roborazzi screenshot test suites across 4 distinct visual testing domains:
+   - **Suite A (Styling & Geometry):** Gradients, Stroke Dashes/Miters, EvenOdd Fill Rules, and Primitive Trim Paths.
+   - **Suite B (Compositing & Masking):** Inverted Track Mattes, Non-Adjacent Mattes, and Layer Masks (`Add`, `Subtract`, `Intersect`).
+   - **Suite C (Advanced Modifiers):** Repeater Progressions, Rounded Corners, and MergePaths Boolean Operations.
+   - **Suite D (Compositions, Images & Typography):** Deep Nested Precomps, Time Remapping, Base64 Bitmap ImageLayers, and Vector Typography TextLayers.
+3. Record golden Roborazzi reference baselines and verify zero visual divergence against `lottie-android`.
