@@ -42,11 +42,11 @@ class ImageLayerTest {
   @Test
   fun decodeImageAsset_dataUrlPng_returnsRemoteBitmap() {
     val asset = ImageAsset(id = "image_0", width = 100f, height = 100f, path = sample1x1PngDataUrl)
-    val bitmap = decodeImageAsset(asset, ApplicationProvider.getApplicationContext())
-    assertThat(bitmap).isNotNull()
-    assertThat(bitmap?.constantValueOrNull).isNotNull()
-    assertThat(bitmap?.constantValueOrNull?.width).isEqualTo(1)
-    assertThat(bitmap?.constantValueOrNull?.height).isEqualTo(1)
+    val decoded = decodeImageAsset(asset, ApplicationProvider.getApplicationContext())
+    assertThat(decoded).isNotNull()
+    assertThat(decoded?.bitmap).isNotNull()
+    assertThat(decoded?.nativeWidth).isEqualTo(1f)
+    assertThat(decoded?.nativeHeight).isEqualTo(1f)
   }
 
   @Test
@@ -59,11 +59,11 @@ class ImageLayerTest {
         path = sampleRawBase64Png,
         embedded = 1,
       )
-    val bitmap = decodeImageAsset(asset, ApplicationProvider.getApplicationContext())
-    assertThat(bitmap).isNotNull()
-    assertThat(bitmap?.constantValueOrNull).isNotNull()
-    assertThat(bitmap?.constantValueOrNull?.width).isEqualTo(1)
-    assertThat(bitmap?.constantValueOrNull?.height).isEqualTo(1)
+    val decoded = decodeImageAsset(asset, ApplicationProvider.getApplicationContext())
+    assertThat(decoded).isNotNull()
+    assertThat(decoded?.bitmap).isNotNull()
+    assertThat(decoded?.nativeWidth).isEqualTo(1f)
+    assertThat(decoded?.nativeHeight).isEqualTo(1f)
   }
 
   @Test

@@ -46,11 +46,17 @@ import com.google.android.horologist.remotecompose.lottie.renderer.inverseTransf
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateScalar
 import com.google.android.horologist.remotecompose.lottie.renderer.transform
 
+internal data class DecodedImage(
+  val bitmap: RemoteImageBitmap,
+  val nativeWidth: Float,
+  val nativeHeight: Float,
+)
+
 /**
- * Decodes an [ImageAsset] into a [RemoteImageBitmap] supporting Base64 data URLs, HTTP/HTTPS URLs,
- * and local assets.
+ * Decodes an [ImageAsset] into a [DecodedImage] supporting Base64 data URLs, HTTP/HTTPS URLs, and
+ * local assets with native bitmap dimensions.
  */
-internal fun decodeImageAsset(asset: ImageAsset, context: Context? = null): RemoteImageBitmap? {
+internal fun decodeImageAsset(asset: ImageAsset, context: Context? = null): DecodedImage? {
   val path = asset.path.orEmpty()
   val dir = asset.directory.orEmpty()
   if (path.isEmpty() && dir.isEmpty()) {
@@ -80,7 +86,13 @@ internal fun decodeImageAsset(asset: ImageAsset, context: Context? = null): Remo
       val bytes = Base64.decode(base64Data, Base64.DEFAULT)
       if (bytes == null || bytes.isEmpty()) return null
       val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-      if (bitmap != null) return bitmap.asImageBitmap().rb
+      if (bitmap != null) {
+        return DecodedImage(
+          bitmap = bitmap.asImageBitmap().rb,
+          nativeWidth = bitmap.width.toFloat(),
+          nativeHeight = bitmap.height.toFloat(),
+        )
+      }
     } catch (_: Exception) {
       return null
     }
@@ -91,20 +103,38 @@ internal fun decodeImageAsset(asset: ImageAsset, context: Context? = null): Remo
     fullPath.startsWith("http://", ignoreCase = true) ||
       fullPath.startsWith("https://", ignoreCase = true)
   ) {
-    return RemoteImageBitmap(fullPath)
+    val declaredWidth = asset.width ?: 0f
+    val declaredHeight = asset.height ?: 0f
+    return DecodedImage(
+      bitmap = RemoteImageBitmap(fullPath),
+      nativeWidth = declaredWidth,
+      nativeHeight = declaredHeight,
+    )
   }
 
   if (context != null && fullPath.isNotEmpty()) {
     try {
       context.assets.open(fullPath).use { stream ->
         val bitmap = BitmapFactory.decodeStream(stream)
-        if (bitmap != null) return bitmap.asImageBitmap().rb
+        if (bitmap != null) {
+          return DecodedImage(
+            bitmap = bitmap.asImageBitmap().rb,
+            nativeWidth = bitmap.width.toFloat(),
+            nativeHeight = bitmap.height.toFloat(),
+          )
+        }
       }
     } catch (_: Exception) {}
 
     try {
       val bitmap = BitmapFactory.decodeFile(fullPath)
-      if (bitmap != null) return bitmap.asImageBitmap().rb
+      if (bitmap != null) {
+        return DecodedImage(
+          bitmap = bitmap.asImageBitmap().rb,
+          nativeWidth = bitmap.width.toFloat(),
+          nativeHeight = bitmap.height.toFloat(),
+        )
+      }
     } catch (_: Exception) {}
   }
 
@@ -129,7 +159,12 @@ internal fun ImageLayer(
   val asset = animationSettings.assets[layer.refId] as? ImageAsset ?: return
   val context = LocalContext.current
 
-  val remoteBitmap = remember(asset) { decodeImageAsset(asset, context) } ?: return
+  val decodedImage = remember(asset) { decodeImageAsset(asset, context) } ?: return
+  val remoteBitmap = decodedImage.bitmap
+  val nativeWidth =
+    if (decodedImage.nativeWidth > 0f) decodedImage.nativeWidth else (asset.width ?: 0f)
+  val nativeHeight =
+    if (decodedImage.nativeHeight > 0f) decodedImage.nativeHeight else (asset.height ?: 0f)
 
   val updatedTransformStack =
     if (layer.transform != null) transformStack + layer.transform else transformStack
@@ -176,8 +211,8 @@ internal fun ImageLayer(
         bitmap = remoteBitmap,
         srcLeft = 0f.rf,
         srcTop = 0f.rf,
-        srcRight = imageWidth.rf,
-        srcBottom = imageHeight.rf,
+        srcRight = nativeWidth.rf,
+        srcBottom = nativeHeight.rf,
         dstLeft = 0f.rf,
         dstTop = 0f.rf,
         dstRight = imageWidth.rf,
