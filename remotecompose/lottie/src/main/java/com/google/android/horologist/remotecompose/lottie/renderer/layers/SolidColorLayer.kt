@@ -32,6 +32,9 @@ import androidx.core.graphics.toColorInt
 import com.google.android.horologist.remotecompose.lottie.LocalAnimationSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
 import com.google.android.horologist.remotecompose.lottie.format.layer.SolidColorLayer
+import com.google.android.horologist.remotecompose.lottie.format.mask.MaskMode
+import com.google.android.horologist.remotecompose.lottie.renderer.applyLayerMasks
+import com.google.android.horologist.remotecompose.lottie.renderer.inverseTransform
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateScalar
 import com.google.android.horologist.remotecompose.lottie.renderer.transform
 

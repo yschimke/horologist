@@ -17,6 +17,7 @@
 package com.google.android.horologist.remotecompose.lottie.format.layer
 
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
+import com.google.android.horologist.remotecompose.lottie.format.mask.Mask
 import com.google.android.horologist.remotecompose.lottie.format.properties.BaseScalarProperty
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -40,6 +41,7 @@ internal data class PrecompLayer(
   @SerialName("tp") override val matteParent: Int? = null,
   @SerialName("td") override val matteTarget: Int? = 0,
   @SerialName("ddd") override val is3d: Int? = 0,
+  @SerialName("masksProperties") override val masksProperties: List<Mask> = emptyList(),
   @SerialName("refId") val refId: String = "",
   @SerialName("w") val width: Float? = null,
   @SerialName("h") val height: Float? = null,

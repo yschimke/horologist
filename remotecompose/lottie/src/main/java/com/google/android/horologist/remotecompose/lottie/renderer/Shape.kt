@@ -63,6 +63,7 @@ internal fun RenderShapes(
   transformStack: List<Transform>,
   matteContext: MatteContext? = null,
   layerVisibility: RemoteFloat = 1f.rf,
+  masks: List<Mask> = emptyList(),
 ) {
   val animationSettings = LocalAnimationSettings.current
   val shapeGroups = gatherShapes(shapes, animationSettings)
@@ -70,9 +71,24 @@ internal fun RenderShapes(
   // Aspect-ratio scaling and centering is applied once, at the top level, by the
   // drawWithContent modifier in LottieAnimation - shapes draw in raw Lottie coordinates here.
   RemoteCanvas(modifier = RemoteModifier.fillMaxSize()) {
-    if (matteContext != null) {
+    val hasMasks = masks.any { it.mode != MaskMode.None && it.path != null }
+    val needsSave = matteContext != null || hasMasks
+    if (needsSave) {
       remoteCanvas.save()
+    }
+
+    if (matteContext != null) {
       applyMatteClip(matteContext, animationSettings, remoteCanvas)
+    }
+
+    if (hasMasks) {
+      for (transform in transformStack) {
+        transform(transform, null, animationSettings, remoteCanvas)
+      }
+      applyLayerMasks(masks, animationSettings, remoteCanvas)
+      for (transform in transformStack.reversed()) {
+        inverseTransform(transform, animationSettings, remoteCanvas)
+      }
     }
 
     val layerOpacity =
@@ -98,7 +114,7 @@ internal fun RenderShapes(
       }
     }
 
-    if (matteContext != null) {
+    if (needsSave) {
       remoteCanvas.restore()
     }
   }
@@ -476,6 +492,35 @@ private fun gradientStroke(
 private fun MutableList<RemoteShape>.addIfNotNull(shape: RemoteShape?) {
   if (shape != null) {
     this.add(shape)
+  }
+}
+
+@SuppressLint("RestrictedApi")
+internal fun applyLayerMasks(
+  masks: List<Mask>,
+  animationSettings: LottieSettings,
+  canvas: RemoteCanvas,
+) {
+  for (mask in masks) {
+    if (mask.mode == MaskMode.None) continue
+    val maskPath = mask.path ?: continue
+    val bezierList = animateBezier(maskPath, animationSettings)
+    if (bezierList.isEmpty()) continue
+    val rcPath = buildRemotePathFromBezier(bezierList)
+
+    val clipOp =
+      when (mask.mode) {
+        MaskMode.Subtract -> if (mask.inverted) ClipOp.Intersect else ClipOp.Difference
+        MaskMode.Add,
+        MaskMode.Intersect -> if (mask.inverted) ClipOp.Difference else ClipOp.Intersect
+        MaskMode.Difference -> ClipOp.Difference
+        MaskMode.Lighten,
+        MaskMode.Darken,
+        MaskMode.None,
+        MaskMode.Unknown -> continue
+      }
+
+    canvas.clipPath(rcPath, clipOp)
   }
 }
 
