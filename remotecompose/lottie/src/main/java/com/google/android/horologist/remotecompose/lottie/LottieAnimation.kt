@@ -49,6 +49,7 @@ import com.google.android.horologist.remotecompose.lottie.renderer.layers.MatteC
  * @property assets Mapping of asset IDs to root assets.
  * @property visibility Compound layer visibility multiplier.
  * @property activePrecomps Set of precomposition asset IDs currently rendering (recursion guard).
+ * @property frameRate The composition frame rate in frames per second.
  */
 internal data class LottieSettings(
   val currentFrame: RemoteFloat,
@@ -59,6 +60,7 @@ internal data class LottieSettings(
   val assets: Map<String, Asset> = emptyMap(),
   val visibility: RemoteFloat = 1f.rf,
   val activePrecomps: Set<String> = emptySet(),
+  val frameRate: Float = 30f,
 )
 
 /** CompositionLocal for [LottieSettings]. */
@@ -149,6 +151,7 @@ internal fun LottieAnimation(
       height = animation.height.toFloat(),
       endFrame = animation.endFrame,
       assets = assetMap,
+      frameRate = animation.frameRate,
     )
 
   CompositionLocalProvider(LocalAnimationSettings provides animationSettings) {

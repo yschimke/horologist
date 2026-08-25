@@ -178,4 +178,111 @@ class PrecompLayerTest {
     val resolvedMatte = precompAsset.layers.firstOrNull { it.index == maskedLayer.matteParent }
     assertThat(resolvedMatte).isEqualTo(matteLayer)
   }
+
+  @Test
+  fun animation_withMarkers_decodesMarkersList() {
+    val json =
+      """
+      {
+        "v": "5.9.6",
+        "fr": 60.0,
+        "ip": 0.0,
+        "op": 120.0,
+        "w": 300,
+        "h": 300,
+        "markers": [
+          {
+            "cm": "intro",
+            "tm": 0.0,
+            "dr": 30.0
+          },
+          {
+            "cm": "loop_start",
+            "tm": 30.0,
+            "dr": 60.0
+          },
+          {
+            "cm": "outro",
+            "tm": 90.0,
+            "dr": 30.0
+          }
+        ],
+        "layers": []
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+    assertThat(animation.markers).hasSize(3)
+    assertThat(animation.markers[0].name).isEqualTo("intro")
+    assertThat(animation.markers[0].time).isEqualTo(0f)
+    assertThat(animation.markers[0].duration).isEqualTo(30f)
+    assertThat(animation.markers[1].name).isEqualTo("loop_start")
+    assertThat(animation.markers[1].time).isEqualTo(30f)
+    assertThat(animation.markers[1].duration).isEqualTo(60f)
+    assertThat(animation.markers[2].name).isEqualTo("outro")
+    assertThat(animation.markers[2].time).isEqualTo(90f)
+    assertThat(animation.markers[2].duration).isEqualTo(30f)
+  }
+
+  @Test
+  fun animation_withoutMarkers_defaultsToEmptyList() {
+    val json =
+      """
+      {
+        "v": "5.9.6",
+        "fr": 30.0,
+        "ip": 0.0,
+        "op": 60.0,
+        "w": 100,
+        "h": 100,
+        "layers": []
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+    assertThat(animation.markers).isEmpty()
+  }
+
+  @Test
+  fun precompLayer_decodesTimeRemappingProperty() {
+    val json =
+      """
+      {
+        "v": "5.9.6",
+        "fr": 30.0,
+        "ip": 0.0,
+        "op": 60.0,
+        "w": 200,
+        "h": 200,
+        "assets": [
+          {
+            "id": "comp_1",
+            "layers": []
+          }
+        ],
+        "layers": [
+          {
+            "ty": 0,
+            "refId": "comp_1",
+            "ip": 0.0,
+            "op": 60.0,
+            "tm": {
+              "a": 1,
+              "k": [
+                { "t": 0.0, "s": [0.0] },
+                { "t": 60.0, "s": [2.0] }
+              ]
+            }
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+    val precompLayer = animation.layers[0] as PrecompLayer
+    assertThat(precompLayer.timeRemap).isNotNull()
+  }
 }

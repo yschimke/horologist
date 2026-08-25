@@ -36,6 +36,7 @@ internal data class Animation(
   @SerialName("h") val height: Int = 0,
   @SerialName("assets") val assets: List<Asset> = emptyList(),
   @SerialName("layers") val layers: List<Layer> = emptyList(),
+  @SerialName("markers") val markers: List<Marker> = emptyList(),
 ) {
   companion object {
     /** Decodes an [Animation] from a JSON string using [LottieDecoder]. */
