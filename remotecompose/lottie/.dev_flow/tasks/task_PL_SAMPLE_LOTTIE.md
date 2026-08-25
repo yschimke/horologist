@@ -2,8 +2,8 @@
 
 > **Task ID:** `task_PL_SAMPLE_LOTTIE`
 > **Created:** 2026-08-25 14:30
-> **Last updated:** 2026-08-25 16:15
-> **Status:** `in-progress`
+> **Last updated:** 2026-08-25 16:36
+> **Status:** `done`
 > **Contributors:** dev-flow-orchestrator
 
 ## Current Work Item
@@ -23,7 +23,7 @@
 
 ## Description
 
-Expand `docs/sample_lottie_gallery.plan.md` to add Phase 4 (Dual Regimes & Keying Fix), Phase 5 (Top-Level Demo Mode), and Phase 6 (Build & Checks). — dev-flow-orchestrator
+Expand `docs/sample_lottie_gallery.plan.md` to add Phase 4 (Dual Regimes & Keying Fix), Phase 5 (Top-Level Demo Mode), and Phase 6 (Build & Checks). All phases successfully implemented and verified. — dev-flow-orchestrator
 
 ## Subtasks
 
@@ -61,43 +61,44 @@ Expand `docs/sample_lottie_gallery.plan.md` to add Phase 4 (Dual Regimes & Keyin
 - [x] [Task 3.3: Run Sample Module Checks (`PL_SAMPLE_LOTTIE_T3_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/sample_lottie_gallery.plan.md#PL_SAMPLE_LOTTIE_T3_3)
 
 ### Subtask: Execute Phase 4 (Fix Next/Prev Keying & Dual Playback Regimes)
-> Author: `dev-flow-orchestrator` — Created: 16:15 — Last updated: 16:15 — Status: `todo`
+> Author: `dev-flow-orchestrator` — Created: 16:15 — Last updated: 16:36 — Status: `completed`
 
 **Goal:** Fix stale document on Next/Prev navigation using `key(item.rawRes)` and implement Time vs Rotary Crown Scrubbing playback regimes.
 
 **Progress:**
-- [ ] [Task 4.1: Key Detail Player animation viewport (`PL_SAMPLE_LOTTIE_T4_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/sample_lottie_gallery.plan.md#PL_SAMPLE_LOTTIE_T4_1)
-- [ ] [Task 4.2: Implement PlaybackRegime selector in LottieDetailPlayer (`PL_SAMPLE_LOTTIE_T4_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/sample_lottie_gallery.plan.md#PL_SAMPLE_LOTTIE_T4_2)
-- [ ] [Task 4.3: Implement Rotary Crown scrolling progress scrubber (`PL_SAMPLE_LOTTIE_T4_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/sample_lottie_gallery.plan.md#PL_SAMPLE_LOTTIE_T4_3)
+- [x] [Task 4.1: Key Detail Player animation viewport (`PL_SAMPLE_LOTTIE_T4_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/sample_lottie_gallery.plan.md#PL_SAMPLE_LOTTIE_T4_1)
+- [x] [Task 4.2: Implement PlaybackRegime selector in LottieDetailPlayer (`PL_SAMPLE_LOTTIE_T4_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/sample_lottie_gallery.plan.md#PL_SAMPLE_LOTTIE_T4_2)
+- [x] [Task 4.3: Implement Rotary Crown scrolling progress scrubber (`PL_SAMPLE_LOTTIE_T4_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/sample_lottie_gallery.plan.md#PL_SAMPLE_LOTTIE_T4_3)
 
 ### Subtask: Execute Phase 5 (Top-Level Kiosk Demo Mode Auto-Cycling)
-> Author: `dev-flow-orchestrator` — Created: 16:15 — Last updated: 16:15 — Status: `todo`
+> Author: `dev-flow-orchestrator` — Created: 16:15 — Last updated: 16:36 — Status: `completed`
 
 **Goal:** Add prominent top-level Demo Mode button and auto-cycling player.
 
 **Progress:**
-- [ ] [Task 5.1: Add "Start Demo Mode" button at top of Gallery (`PL_SAMPLE_LOTTIE_T5_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/sample_lottie_gallery.plan.md#PL_SAMPLE_LOTTIE_T5_1)
-- [ ] [Task 5.2: Implement LottieDemoModePlayer with 3s auto-cycle timer (`PL_SAMPLE_LOTTIE_T5_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/sample_lottie_gallery.plan.md#PL_SAMPLE_LOTTIE_T5_2)
-- [ ] [Task 5.3: Wire LottieViewMode navigation in LottieScreen (`PL_SAMPLE_LOTTIE_T5_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/sample_lottie_gallery.plan.md#PL_SAMPLE_LOTTIE_T5_3)
+- [x] [Task 5.1: Add "Start Demo Mode" button at top of Gallery (`PL_SAMPLE_LOTTIE_T5_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/sample_lottie_gallery.plan.md#PL_SAMPLE_LOTTIE_T5_1)
+- [x] [Task 5.2: Implement LottieDemoModePlayer with 3s auto-cycle timer (`PL_SAMPLE_LOTTIE_T5_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/sample_lottie_gallery.plan.md#PL_SAMPLE_LOTTIE_T5_2)
+- [x] [Task 5.3: Wire LottieViewMode navigation in LottieScreen (`PL_SAMPLE_LOTTIE_T5_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/sample_lottie_gallery.plan.md#PL_SAMPLE_LOTTIE_T5_3)
 
 ### Subtask: Execute Phase 6 (Build Verification & Code Quality)
-> Author: `dev-flow-orchestrator` — Created: 16:15 — Last updated: 16:15 — Status: `todo`
+> Author: `dev-flow-orchestrator` — Created: 16:15 — Last updated: 16:36 — Status: `completed`
 
 **Goal:** Format code and run all checks.
 
 **Progress:**
-- [ ] [Task 6.1: Format Source Code (`PL_SAMPLE_LOTTIE_T6_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/sample_lottie_gallery.plan.md#PL_SAMPLE_LOTTIE_T6_1)
-- [ ] [Task 6.2: Compile Kotlin & Assemble APK (`PL_SAMPLE_LOTTIE_T6_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/sample_lottie_gallery.plan.md#PL_SAMPLE_LOTTIE_T6_2)
-- [ ] [Task 6.3: Run Sample Module Checks (`PL_SAMPLE_LOTTIE_T6_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/sample_lottie_gallery.plan.md#PL_SAMPLE_LOTTIE_T6_3)
+- [x] [Task 6.1: Format Source Code (`PL_SAMPLE_LOTTIE_T6_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/sample_lottie_gallery.plan.md#PL_SAMPLE_LOTTIE_T6_1)
+- [x] [Task 6.2: Compile Kotlin & Assemble APK (`PL_SAMPLE_LOTTIE_T6_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/sample_lottie_gallery.plan.md#PL_SAMPLE_LOTTIE_T6_2)
+- [x] [Task 6.3: Run Sample Module Checks (`PL_SAMPLE_LOTTIE_T6_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/sample_lottie_gallery.plan.md#PL_SAMPLE_LOTTIE_T6_3)
 
 ## Coordination Notes
 
+- 16:36 [dev-flow-orchestrator] — Completed all phases (Phases 1-6). Dual playback regimes (Time vs Crown Scrubbing), top-level kiosk Demo Mode, and Compose keying for detail animations are all implemented, tested with Robolectric Compose unit tests, formatted, and verified with clean `./gradlew :sample:check` and `./gradlew :remotecompose:lottie:check`.
 - 16:15 [dev-flow-orchestrator] — Updated concept, specification, and plan to add dual playback regimes (Time vs Rotary Crown progress scrubbing), top-level auto-cycling Demo Mode, and fix for Next/Prev recomposition keying bug. Ready for Phase 4.
 - 15:00 [dev-flow-orchestrator] — Executed initial 3 phases: Consolidated raw JSON assets into `sample/src/main/res/raw/`, implemented self-contained `LottieScreen` with 26 animations.
 
 ## Blocking Issues
 
-[No blockers yet.]
+[No blockers.]
 
 ## Relevant Context
 
@@ -109,8 +110,10 @@ Expand `docs/sample_lottie_gallery.plan.md` to add Phase 4 (Dual Regimes & Keyin
 
 ## Shared Activity Log
 
+- 16:36 [dev-flow-orchestrator] — verified and completed Phase 4, Phase 5, and Phase 6 with full test suite passing
 - 16:15 [dev-flow-orchestrator] — added Phase 4 (Dual Regimes & Keying Fix), Phase 5 (Demo Mode), and Phase 6 (Verification)
 - 15:00 [dev-flow-orchestrator] — completed Phase 1, Phase 2, and Phase 3 for self-contained LottieScreen showcase gallery
 - 14:37 [dev-flow-orchestrator] — updated plan and task context to self-contained single-file LottieScreen architecture
+
 
 

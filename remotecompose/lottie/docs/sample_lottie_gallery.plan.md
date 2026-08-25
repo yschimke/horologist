@@ -1,7 +1,7 @@
 # Implementation Plan: Self-Contained LottieScreen Animation Showcase & Real-Device Testing Gallery  {#PL_SAMPLE_LOTTIE}
 
 > **Code:** PL_SAMPLE_LOTTIE
-> **Status:** in-progress
+> **Status:** completed
 > **Created:** 2026-08-25
 > **Updated:** 2026-08-25
 >
@@ -36,9 +36,9 @@ Expand `LottieScreen.kt` in `:sample` into a self-contained, interactive multi-a
 - [x] [Phase 1 — Raw Animation Asset Consolidation](#PL_SAMPLE_LOTTIE_P1)
 - [x] [Phase 2 — Self-Contained LottieScreen Showcase Implementation](#PL_SAMPLE_LOTTIE_P2)
 - [x] [Phase 3 — Code Formatting & Build Verification](#PL_SAMPLE_LOTTIE_P3)
-- [ ] [Phase 4 — Fix Next/Prev Keying & Dual Playback Regimes (Time vs Crown)](#PL_SAMPLE_LOTTIE_P4)
-- [ ] [Phase 5 — Top-Level Kiosk Demo Mode Auto-Cycling](#PL_SAMPLE_LOTTIE_P5)
-- [ ] [Phase 6 — Build Verification & Code Quality](#PL_SAMPLE_LOTTIE_P6)
+- [x] [Phase 4 — Fix Next/Prev Keying & Dual Playback Regimes (Time vs Crown)](#PL_SAMPLE_LOTTIE_P4)
+- [x] [Phase 5 — Top-Level Kiosk Demo Mode Auto-Cycling](#PL_SAMPLE_LOTTIE_P5)
+- [x] [Phase 6 — Build Verification & Code Quality](#PL_SAMPLE_LOTTIE_P6)
 
 ## Phases
 
@@ -74,37 +74,38 @@ Tasks:
 - [x] [Task 3.2 (`PL_SAMPLE_LOTTIE_T3_2`)]: Compile Kotlin and assemble application (`./gradlew :sample:compileDebugKotlin`, `./gradlew :sample:assembleDebug`).
 - [x] [Task 3.3 (`PL_SAMPLE_LOTTIE_T3_3`)]: Run all sample module checks (`./gradlew :sample:check`).
 
-### Phase 4 — Fix Next/Prev Keying & Dual Playback Regimes (Time vs Crown) [TODO]  {#PL_SAMPLE_LOTTIE_P4}
+### Phase 4 — Fix Next/Prev Keying & Dual Playback Regimes (Time vs Crown) [DONE]  {#PL_SAMPLE_LOTTIE_P4}
 
 **Depends on:** Phase 3
 **Implements:** [SP_SAMPLE_LOTTIE_01_01](./sample_lottie_gallery.sp.md#SP_SAMPLE_LOTTIE_01_01), [SP_SAMPLE_LOTTIE_03](./sample_lottie_gallery.sp.md#SP_SAMPLE_LOTTIE_03)
 **Verify:** [SP_SAMPLE_LOTTIE_05_04](./sample_lottie_gallery.sp.md#SP_SAMPLE_LOTTIE_05_04), [SP_SAMPLE_LOTTIE_05_05](./sample_lottie_gallery.sp.md#SP_SAMPLE_LOTTIE_05_05) — Instant Next/Prev animation updates and smooth rotary crown progress scrubbing
 
 Tasks:
-- [Task 4.1 (`PL_SAMPLE_LOTTIE_T4_1`)]: Enforce Compose `key(item.rawRes)` around the animation viewport in `LottieDetailPlayer` so switching items immediately recompiles and renders the new document without requiring a Play/Pause toggle.
-- [Task 4.2 (`PL_SAMPLE_LOTTIE_T4_2`)]: Implement `PlaybackRegime` selector (`TIME` vs `CROWN`) with compact toggle buttons in `LottieDetailPlayer`.
-- [Task 4.3 (`PL_SAMPLE_LOTTIE_T4_3`)]: Implement Rotary Crown scrolling progress scrubber using `Modifier.onRotaryScrollEvent` with `FocusRequester` in Crown mode, driving normalized `progress` (`0.0f..1.0f`) on `LottiePreview`.
+- [x] [Task 4.1 (`PL_SAMPLE_LOTTIE_T4_1`)]: Enforce Compose `key(item.rawRes)` around the animation viewport in `LottieDetailPlayer` so switching items immediately recompiles and renders the new document without requiring a Play/Pause toggle.
+- [x] [Task 4.2 (`PL_SAMPLE_LOTTIE_T4_2`)]: Implement `PlaybackRegime` selector (`TIME` vs `CROWN`) with compact toggle buttons in `LottieDetailPlayer`.
+- [x] [Task 4.3 (`PL_SAMPLE_LOTTIE_T4_3`)]: Implement Rotary Crown scrolling progress scrubber using `Modifier.onRotaryScrollEvent` with `FocusRequester` in Crown mode, driving normalized `progress` (`0.0f..1.0f`) on `LottiePreview`.
 
-### Phase 5 — Top-Level Kiosk Demo Mode Auto-Cycling [TODO]  {#PL_SAMPLE_LOTTIE_P5}
+### Phase 5 — Top-Level Kiosk Demo Mode Auto-Cycling [DONE]  {#PL_SAMPLE_LOTTIE_P5}
 
 **Depends on:** Phase 4
 **Implements:** [SP_SAMPLE_LOTTIE_02_02](./sample_lottie_gallery.sp.md#SP_SAMPLE_LOTTIE_02_02), [SP_SAMPLE_LOTTIE_04](./sample_lottie_gallery.sp.md#SP_SAMPLE_LOTTIE_04)
 **Verify:** [SP_SAMPLE_LOTTIE_05_03](./sample_lottie_gallery.sp.md#SP_SAMPLE_LOTTIE_05_03) — Demo mode button at top of list auto-cycles through all 26 animations every 3 seconds
 
 Tasks:
-- [Task 5.1 (`PL_SAMPLE_LOTTIE_T5_1`)]: Add prominent "▶ Start Demo Mode" button at the very top of `LottieGalleryList`.
-- [Task 5.2 (`PL_SAMPLE_LOTTIE_T5_2`)]: Implement `LottieDemoModePlayer` nested composable with 3-second auto-cycle timer (`LaunchedEffect`), live animation, counter badge, and tap/back exit controls.
-- [Task 5.3 (`PL_SAMPLE_LOTTIE_T5_3`)]: Wire `LottieViewMode` (Gallery, Detail, Demo) state machine in root `LottieScreen`.
+- [x] [Task 5.1 (`PL_SAMPLE_LOTTIE_T5_1`)]: Add prominent "▶ Start Demo Mode" button at the very top of `LottieGalleryList`.
+- [x] [Task 5.2 (`PL_SAMPLE_LOTTIE_T5_2`)]: Implement `LottieDemoModePlayer` nested composable with 3-second auto-cycle timer (`LaunchedEffect`), live animation, counter badge, and tap/back exit controls.
+- [x] [Task 5.3 (`PL_SAMPLE_LOTTIE_T5_3`)]: Wire `LottieViewMode` (Gallery, Detail, Demo) state machine in root `LottieScreen`.
 
-### Phase 6 — Build Verification & Code Quality [TODO]  {#PL_SAMPLE_LOTTIE_P6}
+### Phase 6 — Build Verification & Code Quality [DONE]  {#PL_SAMPLE_LOTTIE_P6}
 
 **Depends on:** Phase 5
 **Implements:** [SP_SAMPLE_LOTTIE_05_01](./sample_lottie_gallery.sp.md#SP_SAMPLE_LOTTIE_05_01), [SP_SAMPLE_LOTTIE_05_02](./sample_lottie_gallery.sp.md#SP_SAMPLE_LOTTIE_05_02)
 **Verify:** `./gradlew :sample:check` and `./gradlew :remotecompose:lottie:check` pass cleanly
 
 Tasks:
-- [Task 6.1 (`PL_SAMPLE_LOTTIE_T6_1`)]: Format Kotlin source code with `./gradlew :sample:ktfmtFormat`.
-- [Task 6.2 (`PL_SAMPLE_LOTTIE_T6_2`)]: Compile Kotlin and assemble APK (`./gradlew :sample:compileDebugKotlin`, `./gradlew :sample:assembleDebug`).
-- [Task 6.3 (`PL_SAMPLE_LOTTIE_T6_3`)]: Run all sample and module checks (`./gradlew :sample:check`).
+- [x] [Task 6.1 (`PL_SAMPLE_LOTTIE_T6_1`)]: Format Kotlin source code with `./gradlew :sample:ktfmtFormat`.
+- [x] [Task 6.2 (`PL_SAMPLE_LOTTIE_T6_2`)]: Compile Kotlin and assemble APK (`./gradlew :sample:compileDebugKotlin`, `./gradlew :sample:assembleDebug`).
+- [x] [Task 6.3 (`PL_SAMPLE_LOTTIE_T6_3`)]: Run all sample and module checks (`./gradlew :sample:check`).
+
 
 
