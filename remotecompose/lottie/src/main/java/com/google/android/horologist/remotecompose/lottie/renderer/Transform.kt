@@ -74,13 +74,10 @@ internal fun transform(
   val skew = transform.skew?.let { animateScalar(it, animationSettings) }
   val skewAxis = transform.skewAxis?.let { animateScalar(it, animationSettings) }
   if (skew != null) {
-    if (skewAxis != null) {
-      canvas.rotate(-skewAxis)
-    }
-    canvas.internalCanvas.skew(-tan(toRad(skew)), 0f.rf)
-    if (skewAxis != null) {
-      canvas.rotate(skewAxis)
-    }
+    val axis = skewAxis ?: 0f.rf
+    canvas.rotate(90f.rf - axis)
+    canvas.internalCanvas.skew(0f.rf, tan(toRad(skew)))
+    canvas.rotate(axis - 90f.rf)
   }
 
   canvas.scale(safeScaleX, safeScaleY)
@@ -116,13 +113,10 @@ internal fun inverseTransform(
   val skew = transform.skew?.let { animateScalar(it, animationSettings) }
   val skewAxis = transform.skewAxis?.let { animateScalar(it, animationSettings) }
   if (skew != null) {
-    if (skewAxis != null) {
-      canvas.rotate(-skewAxis)
-    }
-    canvas.internalCanvas.skew(tan(toRad(skew)), 0f.rf)
-    if (skewAxis != null) {
-      canvas.rotate(skewAxis)
-    }
+    val axis = skewAxis ?: 0f.rf
+    canvas.rotate(90f.rf - axis)
+    canvas.internalCanvas.skew(0f.rf, -tan(toRad(skew)))
+    canvas.rotate(axis - 90f.rf)
   }
 
   canvas.rotate(-rotation)

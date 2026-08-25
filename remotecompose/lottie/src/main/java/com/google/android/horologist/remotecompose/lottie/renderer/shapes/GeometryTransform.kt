@@ -151,19 +151,16 @@ private fun transformPoint(
   py = py * scaleY
 
   if (skew != null) {
-    if (skewAxis != null) {
-      val radAxis = toRad(skewAxis)
-      val cosA = cos(radAxis)
-      val sinA = sin(radAxis)
-      val rx = px * cosA + py * sinA
-      val ry = -px * sinA + py * cosA
-      val skX = rx - ry * tan(toRad(skew))
-      val skY = ry
-      px = skX * cosA - skY * sinA
-      py = skX * sinA + skY * cosA
-    } else {
-      px = px - py * tan(toRad(skew))
-    }
+    val axis = skewAxis ?: 0f.rf
+    val radAxis = toRad(90f.rf - axis)
+    val cosA = cos(radAxis)
+    val sinA = sin(radAxis)
+    val rx = px * cosA + py * sinA
+    val ry = -px * sinA + py * cosA
+    val skX = rx
+    val skY = rx * tan(toRad(skew)) + ry
+    px = skX * cosA - skY * sinA
+    py = skX * sinA + skY * cosA
   }
 
   val rad = toRad(rotation)
@@ -192,19 +189,16 @@ private fun transformTangent(
   var py = dy * scaleY
 
   if (skew != null) {
-    if (skewAxis != null) {
-      val radAxis = toRad(skewAxis)
-      val cosA = cos(radAxis)
-      val sinA = sin(radAxis)
-      val rx = px * cosA + py * sinA
-      val ry = -px * sinA + py * cosA
-      val skX = rx - ry * tan(toRad(skew))
-      val skY = ry
-      px = skX * cosA - skY * sinA
-      py = skX * sinA + skY * cosA
-    } else {
-      px = px - py * tan(toRad(skew))
-    }
+    val axis = skewAxis ?: 0f.rf
+    val radAxis = toRad(90f.rf - axis)
+    val cosA = cos(radAxis)
+    val sinA = sin(radAxis)
+    val rx = px * cosA + py * sinA
+    val ry = -px * sinA + py * cosA
+    val skX = rx
+    val skY = rx * tan(toRad(skew)) + ry
+    px = skX * cosA - skY * sinA
+    py = skX * sinA + skY * cosA
   }
 
   val rad = toRad(rotation)

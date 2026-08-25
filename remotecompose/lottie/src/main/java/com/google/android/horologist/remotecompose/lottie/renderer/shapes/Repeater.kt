@@ -116,8 +116,18 @@ internal fun transformRepeaterShape(
   return when (shape) {
     is RemoteLottiePath -> transformRepeaterLottiePath(shape, transform, k, animationSettings)
     is RemoteGroup -> {
+      val newChildShapes =
+        shape.childShapes.map { styledShapes ->
+          com.google.android.horologist.remotecompose.lottie.renderer.StyledShapes(
+            shapes =
+              styledShapes.shapes.map { child ->
+                transformRepeaterShape(child, transform, k, animationSettings)
+              },
+            style = styledShapes.style,
+          )
+        }
       RemoteGroup(
-        childShapes = shape.childShapes,
+        childShapes = newChildShapes,
         animationSettings = shape.animationSettings,
         transform = shape.transform,
       )
@@ -239,19 +249,16 @@ private fun transformRepeaterPoint(
   var py = (y - anchorY) * scaleYK
 
   if (skewK != null) {
-    if (skewAxis != null) {
-      val radAxis = toRad(skewAxis)
-      val cosA = cos(radAxis)
-      val sinA = sin(radAxis)
-      val rx = px * cosA + py * sinA
-      val ry = -px * sinA + py * cosA
-      val skX = rx - ry * tan(toRad(skewK))
-      val skY = ry
-      px = skX * cosA - skY * sinA
-      py = skX * sinA + skY * cosA
-    } else {
-      px = px - py * tan(toRad(skewK))
-    }
+    val axis = skewAxis ?: 0f.rf
+    val radAxis = toRad(90f.rf - axis)
+    val cosA = cos(radAxis)
+    val sinA = sin(radAxis)
+    val rx = px * cosA + py * sinA
+    val ry = -px * sinA + py * cosA
+    val skX = rx
+    val skY = rx * tan(toRad(skewK)) + ry
+    px = skX * cosA - skY * sinA
+    py = skX * sinA + skY * cosA
   }
 
   val rad = toRad(rotK)
@@ -280,19 +287,16 @@ private fun transformRepeaterTangent(
   var py = dy * scaleYK
 
   if (skewK != null) {
-    if (skewAxis != null) {
-      val radAxis = toRad(skewAxis)
-      val cosA = cos(radAxis)
-      val sinA = sin(radAxis)
-      val rx = px * cosA + py * sinA
-      val ry = -px * sinA + py * cosA
-      val skX = rx - ry * tan(toRad(skewK))
-      val skY = ry
-      px = skX * cosA - skY * sinA
-      py = skX * sinA + skY * cosA
-    } else {
-      px = px - py * tan(toRad(skewK))
-    }
+    val axis = skewAxis ?: 0f.rf
+    val radAxis = toRad(90f.rf - axis)
+    val cosA = cos(radAxis)
+    val sinA = sin(radAxis)
+    val rx = px * cosA + py * sinA
+    val ry = -px * sinA + py * cosA
+    val skX = rx
+    val skY = rx * tan(toRad(skewK)) + ry
+    px = skX * cosA - skY * sinA
+    py = skX * sinA + skY * cosA
   }
 
   val rad = toRad(rotK)
