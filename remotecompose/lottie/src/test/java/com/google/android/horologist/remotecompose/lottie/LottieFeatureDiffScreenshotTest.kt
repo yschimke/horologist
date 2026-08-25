@@ -1086,4 +1086,153 @@ class LottieFeatureDiffScreenshotTest : LottieDiffScreenshotTest() {
 
     runLottieDiffTest(json = json)
   }
+
+  /** Tests SolidColorLayer with Subtract mask (mode: "s") cutting out a hole. */
+  @Test
+  fun layerMaskSolidSubtract() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 1,
+            "nm": "SolidWithMask",
+            "ind": 1,
+            "ip": 0,
+            "op": 30,
+            "sw": 100,
+            "sh": 100,
+            "sc": "#3F51B5",
+            "ks": {
+              "p": { "a": 0, "k": [50.0, 50.0, 0.0] },
+              "a": { "a": 0, "k": [50.0, 50.0, 0.0] },
+              "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+              "r": { "a": 0, "k": 0.0 },
+              "o": { "a": 0, "k": 100.0 }
+            },
+            "masksProperties": [
+              {
+                "nm": "SubtractMask",
+                "mode": "s",
+                "inv": false,
+                "pt": {
+                  "a": 0,
+                  "k": {
+                    "c": true,
+                    "v": [
+                      [50.0, 20.0],
+                      [80.0, 50.0],
+                      [50.0, 80.0],
+                      [20.0, 50.0]
+                    ],
+                    "i": [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
+                    "o": [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]]
+                  }
+                },
+                "o": { "a": 0, "k": 100.0 }
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    runLottieDiffTest(json = json)
+  }
+
+  /** Tests ShapeLayer with Add / Intersect masks clipping vector shapes. */
+  @Test
+  fun layerMaskShapeIntersect() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "MaskedShapeLayer",
+            "ind": 1,
+            "ip": 0,
+            "op": 30,
+            "ks": {
+              "p": { "a": 0, "k": [50.0, 50.0, 0.0] },
+              "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+              "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+              "r": { "a": 0, "k": 0.0 },
+              "o": { "a": 0, "k": 100.0 }
+            },
+            "masksProperties": [
+              {
+                "nm": "IntersectMask",
+                "mode": "a",
+                "inv": false,
+                "pt": {
+                  "a": 0,
+                  "k": {
+                    "c": true,
+                    "v": [
+                      [-30.0, -30.0],
+                      [30.0, -30.0],
+                      [30.0, 10.0],
+                      [-30.0, 10.0]
+                    ],
+                    "i": [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
+                    "o": [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]]
+                  }
+                },
+                "o": { "a": 0, "k": 100.0 }
+              }
+            ],
+            "shapes": [
+              {
+                "ty": "gr",
+                "nm": "StarGroup",
+                "it": [
+                  {
+                    "ty": "sr",
+                    "sy": 1,
+                    "pt": { "a": 0, "k": 5.0 },
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "r": { "a": 0, "k": 0.0 },
+                    "or": { "a": 0, "k": 40.0 },
+                    "os": { "a": 0, "k": 0.0 },
+                    "ir": { "a": 0, "k": 18.0 },
+                    "is": { "a": 0, "k": 0.0 }
+                  },
+                  {
+                    "ty": "fl",
+                    "c": { "a": 0, "k": [0.95, 0.6, 0.1, 1.0] },
+                    "o": { "a": 0, "k": 100.0 }
+                  },
+                  {
+                    "ty": "tr",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "a": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [100.0, 100.0] },
+                    "r": { "a": 0, "k": 0.0 },
+                    "o": { "a": 0, "k": 100.0 }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    runLottieDiffTest(json = json)
+  }
 }
