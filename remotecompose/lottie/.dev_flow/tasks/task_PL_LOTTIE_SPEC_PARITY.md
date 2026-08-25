@@ -55,7 +55,7 @@ Execute the 4-phase implementation plan defined in `docs/lottie_spec_parity.plan
 - [x] [Task 2.5: Local Layer Timing Scaling & Inverted Alpha Track Mattes (`PL_LOTTIE_SPEC_PARITY_T2_5`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T2_5)
 
 ### Subtask: Execute Phase 3 (Composition, Precomps & Layer Mask Pipeline)
-> Author: `dev-flow-orchestrator` — Created: 23:00 — Last updated: 23:30 — Status: `in-progress`
+> Author: `dev-flow-orchestrator` — Created: 23:00 — Last updated: 01:10 — Status: `completed`
 
 **Goal:** Implement Phase 3 composition, precompositions, and layer mask pipeline (Root assets registry, recursive PrecompLayer engine, Layer masks clipping, and time remapping).
 
@@ -63,7 +63,19 @@ Execute the 4-phase implementation plan defined in `docs/lottie_spec_parity.plan
 - [x] [Task 3.1: Root assets[] Asset Registry Model (`PL_LOTTIE_SPEC_PARITY_T3_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T3_1)
 - [x] [Task 3.2: PrecompLayer Recursive Sub-Composition Rendering Engine (`PL_LOTTIE_SPEC_PARITY_T3_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T3_2)
 - [x] [Task 3.3: Layer Masks Pipeline (masksProperties) (`PL_LOTTIE_SPEC_PARITY_T3_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T3_3)
-- [ ] **Next:** [Task 3.4: Precomposition Time Remapping (tm) & Timeline Markers (`PL_LOTTIE_SPEC_PARITY_T3_4`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T3_4)
+- [x] [Task 3.4: Precomposition Time Remapping (tm) & Timeline Markers (`PL_LOTTIE_SPEC_PARITY_T3_4`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T3_4)
+
+### Subtask: Execute Phase 4 (Advanced Modifiers, Typography & Bitmap Assets)
+> Author: `dev-flow-orchestrator` — Created: 01:10 — Last updated: 01:10 — Status: `in-progress`
+
+**Goal:** Implement Phase 4 advanced modifiers, typography, and bitmap assets (Repeater geometry engine, RoundedCorners modifier, MergePaths boolean ops, Bitmap asset loading, and TextLayer AST/rendering).
+
+**Progress:**
+- [ ] **Next:** [Task 4.1: Repeater Modifier Geometry Engine (`PL_LOTTIE_SPEC_PARITY_T4_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T4_1)
+- [ ] [Task 4.2: RoundedCorners Modifier on RemoteBezierValue (`PL_LOTTIE_SPEC_PARITY_T4_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T4_2)
+- [ ] [Task 4.3: MergePaths Boolean Operations Engine (`PL_LOTTIE_SPEC_PARITY_T4_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T4_3)
+- [ ] [Task 4.4: Bitmap Asset Loading & ImageLayer Rendering (`PL_LOTTIE_SPEC_PARITY_T4_4`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T4_4)
+- [ ] [Task 4.5: Vector Typography (TextLayer) Data Structures (`PL_LOTTIE_SPEC_PARITY_T4_5`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T4_5)
 
 **Activity:**
 - 17:45 — Created task and initialized plan for Phase 1.
@@ -80,8 +92,11 @@ Execute the 4-phase implementation plan defined in `docs/lottie_spec_parity.plan
 - 23:30 — Completed Task 3.1: Root assets[] Asset Registry Model with polymorphic deserializer, `AssetTest` suite, and clean pre-commit review.
 - 23:55 — Completed Task 3.2: PrecompLayer Recursive Sub-Composition Rendering Engine with dedicated `PrecompLayerTest` suite, Roborazzi screenshot verification, clean-context pre-commit review, and full check pass.
 - 00:25 — Completed Task 3.3: Layer Masks Pipeline (masksProperties) with Mask AST models, canvas clipping in ShapeLayer and SolidColorLayer, MaskTest suite, and clean pre-commit review.
+- 01:10 — Completed Task 3.4: Precomposition Time Remapping (tm) & Timeline Markers with Marker AST model, frameRate propagation, timeRemap evaluation in Layer.kt, PrecompLayerTest suite, and clean pre-commit review. Phase 3 complete!
 
 ## Coordination Notes
+
+- 01:10 [dev-flow-orchestrator] — Completed Task 3.4 and completed Phase 3. Authored `Marker.kt` AST model, added `markers` to `Animation.kt`, added `frameRate` to `LottieSettings` in `LottieAnimation.kt`, evaluated `timeRemap` in `Layer.kt`, added test cases to `PrecompLayerTest.kt`, passed clean-context review, and passed full Gradle check suite. Phase 3 complete! Ready for Phase 4.
 
 - 00:25 [dev-flow-orchestrator] — Completed Task 3.3. Implemented `Mask.kt` AST model and `MaskMode` deserializer, added `masksProperties` to `Layer` contract and all subclasses, implemented `applyLayerMasks` in `Shape.kt` with symmetric matrix save/restore, wired mask clipping into `ShapeLayer.kt` and `SolidColorLayer.kt`, verified with `MaskTest.kt`, and passed clean-context review and full Gradle checks.
 
