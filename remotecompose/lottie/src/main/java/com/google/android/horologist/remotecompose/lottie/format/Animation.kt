@@ -18,6 +18,7 @@ package com.google.android.horologist.remotecompose.lottie.format
 
 import android.content.Context
 import androidx.annotation.RawRes
+import com.google.android.horologist.remotecompose.lottie.format.asset.Asset
 import com.google.android.horologist.remotecompose.lottie.format.layer.Layer
 import java.io.InputStream
 import kotlinx.serialization.SerialName
@@ -33,6 +34,7 @@ internal data class Animation(
   @SerialName("op") val endFrame: Float = 0f,
   @SerialName("w") val width: Int = 0,
   @SerialName("h") val height: Int = 0,
+  @SerialName("assets") val assets: List<Asset> = emptyList(),
   @SerialName("layers") val layers: List<Layer> = emptyList(),
 ) {
   companion object {
