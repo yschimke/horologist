@@ -191,7 +191,7 @@ internal fun TextLayer(
         val fontScale = if (fontChar.size > 0f) fontSize / fontChar.size else fontSize / 100f
         val shapes = fontChar.shapeData?.shapes.orEmpty()
         if (shapes.isNotEmpty()) {
-          val glyphGroups = gatherShapes(shapes, animationSettings)
+          val glyphGroups = gatherShapes(shapes, animationSettings, inheritedStyle = NoopStyle())
           remoteCanvas.save()
           remoteCanvas.translate(currentX.rf, 0f.rf)
           remoteCanvas.scale(fontScale.rf, fontScale.rf)

@@ -17,15 +17,23 @@
 package com.google.android.horologist.remotecompose.lottie
 
 import android.annotation.SuppressLint
+import androidx.compose.remote.creation.compose.state.rf
 import androidx.compose.ui.graphics.Color
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.android.horologist.remotecompose.lottie.format.Animation
+import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.Rectangle
+import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Group
 import com.google.android.horologist.remotecompose.lottie.format.layer.LayerType
 import com.google.android.horologist.remotecompose.lottie.format.layer.TextDocument
 import com.google.android.horologist.remotecompose.lottie.format.layer.TextDocumentKeyframe
 import com.google.android.horologist.remotecompose.lottie.format.layer.TextDocumentProperty
 import com.google.android.horologist.remotecompose.lottie.format.layer.TextJustify
 import com.google.android.horologist.remotecompose.lottie.format.layer.TextLayer
+import com.google.android.horologist.remotecompose.lottie.format.properties.StaticPositionProperty
+import com.google.android.horologist.remotecompose.lottie.format.properties.StaticVectorProperty
+import com.google.android.horologist.remotecompose.lottie.renderer.NoopStyle
+import com.google.android.horologist.remotecompose.lottie.renderer.RemoteGroup
+import com.google.android.horologist.remotecompose.lottie.renderer.gatherShapes
 import com.google.android.horologist.remotecompose.lottie.renderer.layers.evaluateTextDocument
 import com.google.android.horologist.remotecompose.lottie.renderer.layers.parseColorFromList
 import com.google.common.truth.Truth.assertThat
@@ -222,5 +230,84 @@ class TextLayerTest {
 
     val empty = parseColorFromList(emptyList())
     assertThat(empty).isEqualTo(Color.Black)
+  }
+
+  @Test
+  fun gatherShapes_withInheritedStyle_harvestsUnstyledGeometries() {
+    val rect =
+      Rectangle(
+        position = StaticPositionProperty(value = listOf(0f, 0f)),
+        size = StaticVectorProperty(value = listOf(50f, 50f)),
+      )
+    val settings = LottieSettings(currentFrame = 0f.rf)
+    val styledShapes = gatherShapes(listOf(rect), settings, inheritedStyle = NoopStyle())
+
+    assertThat(styledShapes).hasSize(1)
+    assertThat(styledShapes[0].style).isInstanceOf(NoopStyle::class.java)
+    assertThat(styledShapes[0].shapes).hasSize(1)
+  }
+
+  @Test
+  fun gatherShapes_withInheritedStyle_harvestsUnstyledGroupGeometries() {
+    val rect1 =
+      Rectangle(
+        position = StaticPositionProperty(value = listOf(0f, 0f)),
+        size = StaticVectorProperty(value = listOf(10f, 10f)),
+      )
+    val rect2 =
+      Rectangle(
+        position = StaticPositionProperty(value = listOf(20f, 20f)),
+        size = StaticVectorProperty(value = listOf(10f, 10f)),
+      )
+    val group = Group(shapes = listOf(rect1, rect2), name = "GlyphGroup")
+    val settings = LottieSettings(currentFrame = 0f.rf)
+    val styledShapes = gatherShapes(listOf(group), settings, inheritedStyle = NoopStyle())
+
+    assertThat(styledShapes).hasSize(1)
+    assertThat(styledShapes[0].style).isInstanceOf(NoopStyle::class.java)
+    val remoteGroup = styledShapes[0].shapes[0] as? RemoteGroup
+    assertThat(remoteGroup).isNotNull()
+    assertThat(remoteGroup!!.childShapes).hasSize(1)
+    assertThat(remoteGroup.childShapes[0].shapes).hasSize(2)
+  }
+
+  @Test
+  fun gatherShapes_withoutInheritedStyle_dropsUnstyledGeometries() {
+    val rect =
+      Rectangle(
+        position = StaticPositionProperty(value = listOf(0f, 0f)),
+        size = StaticVectorProperty(value = listOf(50f, 50f)),
+      )
+    val settings = LottieSettings(currentFrame = 0f.rf)
+    val styledShapes = gatherShapes(listOf(rect), settings, inheritedStyle = null)
+
+    assertThat(styledShapes).isEmpty()
+  }
+
+  @Test
+  fun gatherShapes_withMixedGroupAndGeometryAndInheritedStyle_emitsBothWithoutDuplicates() {
+    val groupRect =
+      Rectangle(
+        position = StaticPositionProperty(value = listOf(0f, 0f)),
+        size = StaticVectorProperty(value = listOf(10f, 10f)),
+      )
+    val group = Group(shapes = listOf(groupRect), name = "SubGroup")
+    val trailingRect =
+      Rectangle(
+        position = StaticPositionProperty(value = listOf(20f, 20f)),
+        size = StaticVectorProperty(value = listOf(15f, 15f)),
+      )
+    val settings = LottieSettings(currentFrame = 0f.rf)
+    val styledShapes =
+      gatherShapes(listOf(group, trailingRect), settings, inheritedStyle = NoopStyle())
+
+    // Reversed order: trailingRect emitted first, then group
+    assertThat(styledShapes).hasSize(2)
+    assertThat(styledShapes[0].shapes).hasSize(1) // trailingRect
+    assertThat(styledShapes[1].shapes).hasSize(1) // group
+    val remoteGroup = styledShapes[1].shapes[0] as? RemoteGroup
+    assertThat(remoteGroup).isNotNull()
+    assertThat(remoteGroup!!.childShapes).hasSize(1)
+    assertThat(remoteGroup.childShapes[0].shapes).hasSize(1)
   }
 }

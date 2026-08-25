@@ -129,6 +129,7 @@ internal fun gatherShapes(
   animationSettings: LottieSettings,
   parentTrimPath: TrimPath? = null,
   parentRoundedCorners: RoundedCorners? = null,
+  inheritedStyle: RemoteStyle? = null,
 ): List<StyledShapes> {
   val shapeGroups = mutableListOf<StyledShapes>()
   var currentGeometries = mutableListOf<RepeatedShapeInstance>()
@@ -187,9 +188,10 @@ internal fun gatherShapes(
           currentGroups = mutableListOf()
           hasEmittedStyle = false
         }
-        val groupShape = group(shape, animationSettings, activeTrimPath, activeRoundedCorners)
+        val groupShape =
+          group(shape, animationSettings, activeTrimPath, activeRoundedCorners, inheritedStyle)
         if (groupShape != null) {
-          shapeGroups.add(StyledShapes(listOf(groupShape), NoopStyle()))
+          shapeGroups.add(StyledShapes(listOf(groupShape), inheritedStyle ?: NoopStyle()))
         }
         currentGroups.add(shape)
       }
@@ -213,6 +215,18 @@ internal fun gatherShapes(
     }
   }
 
+  if (inheritedStyle != null && currentGeometries.isNotEmpty()) {
+    emitStyledShapes(
+      shapeGroups,
+      currentGeometries,
+      emptyList(),
+      inheritedStyle,
+      animationSettings,
+      activeTrimPath,
+      activeRoundedCorners,
+    )
+  }
+
   // In Lottie, elements at higher array indices are at the bottom of the stack and drawn first;
   // elements at lower array indices are at the top of the stack and drawn last.
   return shapeGroups.reversed()
@@ -226,7 +240,13 @@ private fun group(group: Group, animationSettings: LottieSettings): RemoteGroup?
   val transform = group.shapes.filterIsInstance<Transform>().firstOrNull()
   val contentShapes = group.shapes.filter { it !is Transform }
   val styledShapes =
-    gatherShapes(contentShapes, animationSettings, parentTrimPath, parentRoundedCorners)
+    gatherShapes(
+      contentShapes,
+      animationSettings,
+      parentTrimPath,
+      parentRoundedCorners,
+      inheritedStyle,
+    )
   if (styledShapes.isEmpty()) {
     return null
   }

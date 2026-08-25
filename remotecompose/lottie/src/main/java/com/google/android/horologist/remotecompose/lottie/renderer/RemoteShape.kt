@@ -123,16 +123,22 @@ internal class RemoteGroup(
       }
 
     for (shapeGroup in childShapes) {
-      val paint = shapeGroup.style.getPaint(groupOpacity)
       canvas.save()
 
       if (transform != null) {
         transform(transform, null, animationSettings, canvas)
       }
 
-      drawScope.usePaint(paint) {
+      if (shapeGroup.style is NoopStyle) {
         for (shape in shapeGroup.shapes) {
           shape.draw(drawScope, canvas, groupOpacity)
+        }
+      } else {
+        val paint = shapeGroup.style.getPaint(groupOpacity)
+        drawScope.usePaint(paint) {
+          for (shape in shapeGroup.shapes) {
+            shape.draw(drawScope, canvas, groupOpacity)
+          }
         }
       }
 
