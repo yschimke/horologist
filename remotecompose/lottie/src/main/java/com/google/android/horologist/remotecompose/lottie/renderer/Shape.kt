@@ -36,6 +36,7 @@ import com.google.android.horologist.remotecompose.lottie.format.graphicelement.
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.Rectangle
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Group
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
+import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.MergePaths
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.Repeater
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.RoundedCorners
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.TrimPath
@@ -151,6 +152,13 @@ private fun gatherShapes(
         if (shape.hidden != true && currentGeometries.isNotEmpty()) {
           val baseShapes = currentGeometries.map { it.shape }
           currentGeometries = evaluateRepeater(baseShapes, shape, animationSettings).toMutableList()
+        }
+      }
+      is MergePaths -> {
+        if (shape.hidden != true && currentGeometries.isNotEmpty()) {
+          val baseShapes = currentGeometries.map { it.shape }
+          val mergedShapes = evaluateMergePaths(baseShapes, shape, animationSettings)
+          currentGeometries = mergedShapes.map { RepeatedShapeInstance(it) }.toMutableList()
         }
       }
       is GeometryShape -> {
