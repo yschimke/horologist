@@ -37,9 +37,8 @@ Execute the 4-phase visual testing plan defined in `docs/screenshot_test_suite.p
 - [x] Create concept document `docs/screenshot_test_suite.concept.md`
 - [x] Create specification document `docs/screenshot_test_suite.sp.md`
 - [x] Create implementation plan `docs/screenshot_test_suite.plan.md`
-- [x] Initialize `.dev_flow/` task context and dashboard
-- [ ] **Next:** [Task 1.1: Linear & Radial Gradient Shaders Screenshot Test (`PL_LOTTIE_SCREENSHOT_TESTS_T1_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/screenshot_test_suite.plan.md#PL_LOTTIE_SCREENSHOT_TESTS_T1_1)
-- [ ] [Task 1.2: Stroke Dash Patterns, Miter Limits & EvenOdd Fill Rules Screenshot Test (`PL_LOTTIE_SCREENSHOT_TESTS_T1_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/screenshot_test_suite.plan.md#PL_LOTTIE_SCREENSHOT_TESTS_T1_2)
+- [x] [Task 1.1: Linear & Radial Gradient Shaders Screenshot Test (`PL_LOTTIE_SCREENSHOT_TESTS_T1_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/screenshot_test_suite.plan.md#PL_LOTTIE_SCREENSHOT_TESTS_T1_1)
+- [ ] **Next:** [Task 1.2: Stroke Dash Patterns, Miter Limits & EvenOdd Fill Rules Screenshot Test (`PL_LOTTIE_SCREENSHOT_TESTS_T1_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/screenshot_test_suite.plan.md#PL_LOTTIE_SCREENSHOT_TESTS_T1_2)
 - [ ] [Task 1.3: Primitive & Dynamic Shape Trim Paths Screenshot Test (`PL_LOTTIE_SCREENSHOT_TESTS_T1_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/screenshot_test_suite.plan.md#PL_LOTTIE_SCREENSHOT_TESTS_T1_3)
 
 ### Subtask: Execute Phase 2 (Compositing, Track Mattes & Layer Masks)

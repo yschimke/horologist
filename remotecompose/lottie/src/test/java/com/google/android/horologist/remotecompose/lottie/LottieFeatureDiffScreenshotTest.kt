@@ -219,4 +219,227 @@ class LottieFeatureDiffScreenshotTest : LottieDiffScreenshotTest() {
 
     runLottieDiffTest(json = json)
   }
+
+  /** Tests linear gradient fill with multi-color stops on parametric shapes. */
+  @Test
+  fun gradientLinearFill() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "LinearGradientLayer",
+            "ind": 1,
+            "ip": 0,
+            "op": 30,
+            "ks": {
+              "p": { "a": 0, "k": [50.0, 50.0, 0.0] },
+              "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+              "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+              "r": { "a": 0, "k": 0.0 },
+              "o": { "a": 0, "k": 100.0 }
+            },
+            "shapes": [
+              {
+                "ty": "gr",
+                "nm": "RectWithLinearGrad",
+                "it": [
+                  {
+                    "ty": "rc",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [70.0, 70.0] },
+                    "r": { "a": 0, "k": 10.0 }
+                  },
+                  {
+                    "ty": "gf",
+                    "nm": "LinearGradFill",
+                    "t": 1,
+                    "o": { "a": 0, "k": 100.0 },
+                    "r": 1,
+                    "s": { "a": 0, "k": [-35.0, -35.0] },
+                    "e": { "a": 0, "k": [35.0, 35.0] },
+                    "g": {
+                      "p": 3,
+                      "k": [
+                        0.0, 1.0, 0.2, 0.2,
+                        0.5, 1.0, 0.8, 0.0,
+                        1.0, 0.2, 0.4, 1.0
+                      ]
+                    }
+                  },
+                  {
+                    "ty": "tr",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "a": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [100.0, 100.0] },
+                    "r": { "a": 0, "k": 0.0 },
+                    "o": { "a": 0, "k": 100.0 }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    runLottieDiffTest(json = json)
+  }
+
+  /** Tests radial gradient fill with color and opacity/alpha stops. */
+  @Test
+  fun gradientRadialFill() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "RadialGradientLayer",
+            "ind": 1,
+            "ip": 0,
+            "op": 30,
+            "ks": {
+              "p": { "a": 0, "k": [50.0, 50.0, 0.0] },
+              "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+              "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+              "r": { "a": 0, "k": 0.0 },
+              "o": { "a": 0, "k": 100.0 }
+            },
+            "shapes": [
+              {
+                "ty": "gr",
+                "nm": "CircleWithRadialGrad",
+                "it": [
+                  {
+                    "ty": "el",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [70.0, 70.0] }
+                  },
+                  {
+                    "ty": "gf",
+                    "nm": "RadialGradFill",
+                    "t": 2,
+                    "o": { "a": 0, "k": 100.0 },
+                    "r": 1,
+                    "s": { "a": 0, "k": [0.0, 0.0] },
+                    "e": { "a": 0, "k": [35.0, 0.0] },
+                    "g": {
+                      "p": 2,
+                      "k": [
+                        0.0, 0.0, 1.0, 0.8,
+                        1.0, 0.8, 0.0, 1.0,
+                        0.0, 1.0,
+                        1.0, 0.3
+                      ]
+                    }
+                  },
+                  {
+                    "ty": "tr",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "a": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [100.0, 100.0] },
+                    "r": { "a": 0, "k": 0.0 },
+                    "o": { "a": 0, "k": 100.0 }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    runLottieDiffTest(json = json)
+  }
+
+  /** Tests gradient stroke with multi-color stops, stroke width, and rounded caps/joins. */
+  @Test
+  fun gradientStroke() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "GradientStrokeLayer",
+            "ind": 1,
+            "ip": 0,
+            "op": 30,
+            "ks": {
+              "p": { "a": 0, "k": [50.0, 50.0, 0.0] },
+              "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+              "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+              "r": { "a": 0, "k": 0.0 },
+              "o": { "a": 0, "k": 100.0 }
+            },
+            "shapes": [
+              {
+                "ty": "gr",
+                "nm": "StrokeGradGroup",
+                "it": [
+                  {
+                    "ty": "rc",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [64.0, 64.0] },
+                    "r": { "a": 0, "k": 12.0 }
+                  },
+                  {
+                    "ty": "gs",
+                    "nm": "LinearGradStroke",
+                    "t": 1,
+                    "o": { "a": 0, "k": 100.0 },
+                    "w": { "a": 0, "k": 8.0 },
+                    "s": { "a": 0, "k": [-32.0, 0.0] },
+                    "e": { "a": 0, "k": [32.0, 0.0] },
+                    "g": {
+                      "p": 2,
+                      "k": [
+                        0.0, 1.0, 0.6, 0.0,
+                        1.0, 0.0, 0.8, 1.0
+                      ]
+                    },
+                    "lc": 2,
+                    "lj": 2
+                  },
+                  {
+                    "ty": "tr",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "a": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [100.0, 100.0] },
+                    "r": { "a": 0, "k": 0.0 },
+                    "o": { "a": 0, "k": 100.0 }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    runLottieDiffTest(json = json)
+  }
 }
