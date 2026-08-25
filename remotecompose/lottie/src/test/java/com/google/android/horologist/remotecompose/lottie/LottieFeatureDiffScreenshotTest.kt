@@ -1758,4 +1758,160 @@ class LottieFeatureDiffScreenshotTest : LottieDiffScreenshotTest() {
       captureFrame(frame = 30f)
     }
   }
+
+  /** Tests ImageLayer (ty: 2) rendering an embedded Base64 bitmap. */
+  @Test
+  fun imageLayerBase64() {
+    val pngDataUrl =
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="
+
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "assets": [
+          {
+            "id": "image_1x1",
+            "w": 60,
+            "h": 60,
+            "p": "$pngDataUrl",
+            "e": 1
+          }
+        ],
+        "layers": [
+          {
+            "ty": 2,
+            "nm": "ImageLayer",
+            "refId": "image_1x1",
+            "ind": 1,
+            "ip": 0,
+            "op": 30,
+            "ks": {
+              "p": { "a": 0, "k": [20.0, 20.0, 0.0] },
+              "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+              "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+              "r": { "a": 0, "k": 0.0 },
+              "o": { "a": 0, "k": 85.0 }
+            }
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    runLottieDiffTest(json = json)
+  }
+
+  /** Tests TextLayer (ty: 5) rendering vector character glyphs and document styling. */
+  @Test
+  fun textLayerVectorGlyphs() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "fonts": {
+          "list": [
+            {
+              "fName": "CustomGlyphFont",
+              "fFamily": "CustomGlyphFont",
+              "fStyle": "Regular",
+              "ascent": 75.0
+            }
+          ]
+        },
+        "chars": [
+          {
+            "ch": "H",
+            "fFamily": "CustomGlyphFont",
+            "style": "Regular",
+            "size": 100.0,
+            "w": 60.0,
+            "data": {
+              "shapes": [
+                {
+                  "ty": "gr",
+                  "nm": "Glyph_H",
+                  "it": [
+                    {
+                      "ty": "rc",
+                      "p": { "a": 0, "k": [10.0, 30.0] },
+                      "s": { "a": 0, "k": [10.0, 60.0] },
+                      "r": { "a": 0, "k": 0.0 }
+                    },
+                    {
+                      "ty": "rc",
+                      "p": { "a": 0, "k": [50.0, 30.0] },
+                      "s": { "a": 0, "k": [10.0, 60.0] },
+                      "r": { "a": 0, "k": 0.0 }
+                    },
+                    {
+                      "ty": "rc",
+                      "p": { "a": 0, "k": [30.0, 30.0] },
+                      "s": { "a": 0, "k": [30.0, 10.0] },
+                      "r": { "a": 0, "k": 0.0 }
+                    },
+                    {
+                      "ty": "tr",
+                      "p": { "a": 0, "k": [0.0, 0.0] },
+                      "a": { "a": 0, "k": [0.0, 0.0] },
+                      "s": { "a": 0, "k": [100.0, 100.0] },
+                      "r": { "a": 0, "k": 0.0 },
+                      "o": { "a": 0, "k": 100.0 }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "layers": [
+          {
+            "ty": 5,
+            "nm": "TextLayer",
+            "ind": 1,
+            "ip": 0,
+            "op": 30,
+            "ks": {
+              "p": { "a": 0, "k": [50.0, 50.0, 0.0] },
+              "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+              "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+              "r": { "a": 0, "k": 0.0 },
+              "o": { "a": 0, "k": 100.0 }
+            },
+            "t": {
+              "d": {
+                "k": [
+                  {
+                    "s": {
+                      "t": "H",
+                      "s": 70.0,
+                      "f": "CustomGlyphFont",
+                      "j": 2,
+                      "tr": 0.0,
+                      "lh": 70.0,
+                      "fc": [0.1, 0.7, 0.9, 1.0]
+                    },
+                    "t": 0.0
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    runLottieDiffTest(json = json)
+  }
 }
