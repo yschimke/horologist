@@ -278,9 +278,16 @@ private fun extractGradientColorsAndPositions(
 ): Pair<List<RemoteColor>, List<RemoteFloat>> {
   val effectiveBaseOpacity = (opacity / 100f) * inheritedOpacity
   val values = gradient.values
-  val colorCount = if (gradient.numberOfColors > 0) gradient.numberOfColors else values.size / 4
+  val requestedCount = if (gradient.numberOfColors > 0) gradient.numberOfColors else values.size / 4
 
-  if (colorCount <= 0 || values.size < 4) {
+  if (requestedCount <= 0 || values.size < 4) {
+    val transparent = Color.Transparent.rc
+    return Pair(listOf(transparent, transparent), listOf(0f.rf, 1f.rf))
+  }
+
+  val maxPossibleColors = values.size / 4
+  val colorCount = requestedCount.coerceAtMost(maxPossibleColors)
+  if (colorCount <= 0) {
     val transparent = Color.Transparent.rc
     return Pair(listOf(transparent, transparent), listOf(0f.rf, 1f.rf))
   }
@@ -300,7 +307,7 @@ private fun extractGradientColorsAndPositions(
 
     val alpha =
       if (alphaCount > 0) {
-        if (alphaCount == colorCount) {
+        if (alphaCount == colorCount && (totalColorFloats + i * 2 + 1) < values.size) {
           values[totalColorFloats + i * 2 + 1]
         } else {
           sampleAlpha(offset, values, totalColorFloats, alphaCount)
@@ -324,27 +331,36 @@ private fun sampleAlpha(
   totalColorFloats: Int,
   alphaCount: Int,
 ): RemoteFloat {
+  if (alphaCount <= 0 || totalColorFloats + 1 >= values.size) {
+    return 1f.rf
+  }
   if (alphaCount <= 1) {
     return values[totalColorFloats + 1]
   }
   val constOffset = offset.constantValueOrNull
   if (constOffset != null) {
     val firstPos = values[totalColorFloats].constantValueOrNull
-    val lastPos = values[totalColorFloats + (alphaCount - 1) * 2].constantValueOrNull
+    val lastPosIndex = totalColorFloats + (alphaCount - 1) * 2
+    if (lastPosIndex + 1 >= values.size) return values[totalColorFloats + 1]
+    val lastPos = values[lastPosIndex].constantValueOrNull
     if (firstPos != null && constOffset <= firstPos) {
       return values[totalColorFloats + 1]
     }
     if (lastPos != null && constOffset >= lastPos) {
-      return values[totalColorFloats + (alphaCount - 1) * 2 + 1]
+      return values[lastPosIndex + 1]
     }
     for (j in 0 until alphaCount - 1) {
-      val p0 = values[totalColorFloats + j * 2].constantValueOrNull
-      val p1 = values[totalColorFloats + (j + 1) * 2].constantValueOrNull
-      if (p0 != null && p1 != null && constOffset >= p0 && constOffset <= p1) {
-        val a0 = values[totalColorFloats + j * 2 + 1]
-        val a1 = values[totalColorFloats + (j + 1) * 2 + 1]
-        val fraction = if (p1 > p0) (constOffset - p0) / (p1 - p0) else 0f
-        return lerp(a0, a1, fraction.rf)
+      val p0Index = totalColorFloats + j * 2
+      val p1Index = totalColorFloats + (j + 1) * 2
+      if (p1Index + 1 < values.size) {
+        val p0 = values[p0Index].constantValueOrNull
+        val p1 = values[p1Index].constantValueOrNull
+        if (p0 != null && p1 != null && constOffset >= p0 && constOffset <= p1) {
+          val a0 = values[p0Index + 1]
+          val a1 = values[p1Index + 1]
+          val fraction = if (p1 > p0) (constOffset - p0) / (p1 - p0) else 0f
+          return lerp(a0, a1, fraction.rf)
+        }
       }
     }
   }
