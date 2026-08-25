@@ -42,6 +42,9 @@ Router catalog for Lottie Remote Compose documentation.
 | [`rectangle_rounded_corners.plan.md`](rectangle_rounded_corners.plan.md) | Plan | Parametric rectangle rounded corners dynamic evaluation plan |
 | [`lottie_audit_and_gap_analysis.md`](lottie_audit_and_gap_analysis.md) | Audit | Lottie 1.0.1 specification compliance audit and commit regression analysis |
 | [`lottie_spec_parity.plan.md`](lottie_spec_parity.plan.md) | Plan | Lottie 1.0.1 specification parity and hardening plan |
+| [`sample_lottie_gallery.concept.md`](sample_lottie_gallery.concept.md) | Concept | Wear OS Demo Sample App Lottie Showcase & Device Testing Gallery concept |
+| [`sample_lottie_gallery.sp.md`](sample_lottie_gallery.sp.md) | Specification | Sample Lottie showcase data structures, contracts & inspection rules |
+| [`sample_lottie_gallery.plan.md`](sample_lottie_gallery.plan.md) | Plan | Sample Lottie showcase implementation plan |
 
 ## ID Prefix Mapping
 
@@ -49,7 +52,11 @@ Router catalog for Lottie Remote Compose documentation.
 |---|---|
 | `DOC_LOTTIE_AUDIT` | [`lottie_audit_and_gap_analysis.md`](lottie_audit_and_gap_analysis.md) |
 | `PL_LOTTIE_SPEC_PARITY` | [`lottie_spec_parity.plan.md`](lottie_spec_parity.plan.md) |
+| `C_SAMPLE_LOTTIE` | [`sample_lottie_gallery.concept.md`](sample_lottie_gallery.concept.md) |
+| `SP_SAMPLE_LOTTIE` | [`sample_lottie_gallery.sp.md`](sample_lottie_gallery.sp.md) |
+| `PL_SAMPLE_LOTTIE` | [`sample_lottie_gallery.plan.md`](sample_lottie_gallery.plan.md) |
 | `C_FMT` | [`format.concept.md`](format.concept.md) |
+
 | `SP_FMT` | [`format.sp.md`](format.sp.md) |
 | `PL_FMT` | [`format.plan.md`](format.plan.md) |
 | `C_RND` | [`renderer.concept.md`](renderer.concept.md) |
