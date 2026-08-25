@@ -553,7 +553,7 @@ internal fun applyLayerMasks(
 }
 
 @SuppressLint("RestrictedApi")
-private fun applyMatteClip(
+internal fun applyMatteClip(
   matteContext: MatteContext,
   animationSettings: LottieSettings,
   canvas: RemoteCanvas,

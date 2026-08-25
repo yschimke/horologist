@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import com.google.android.horologist.remotecompose.lottie.LocalAnimationSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
+import com.google.android.horologist.remotecompose.lottie.format.layer.ImageLayer
 import com.google.android.horologist.remotecompose.lottie.format.layer.Layer
 import com.google.android.horologist.remotecompose.lottie.format.layer.LayerType
 import com.google.android.horologist.remotecompose.lottie.format.layer.MatteMode
