@@ -73,8 +73,8 @@ Execute the 4-phase implementation plan defined in `docs/lottie_spec_parity.plan
 **Progress:**
 - [x] [Task 4.1: Repeater Modifier Geometry Engine (`PL_LOTTIE_SPEC_PARITY_T4_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T4_1)
 - [x] [Task 4.2: RoundedCorners Modifier on RemoteBezierValue (`PL_LOTTIE_SPEC_PARITY_T4_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T4_2)
-- [ ] **Next:** [Task 4.3: MergePaths Boolean Operations Engine (`PL_LOTTIE_SPEC_PARITY_T4_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T4_3)
-- [ ] [Task 4.4: Bitmap Asset Loading & ImageLayer Rendering (`PL_LOTTIE_SPEC_PARITY_T4_4`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T4_4)
+- [x] [Task 4.3: MergePaths Boolean Operations Engine (`PL_LOTTIE_SPEC_PARITY_T4_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T4_3)
+- [ ] **Next:** [Task 4.4: Bitmap Asset Loading & ImageLayer Rendering (`PL_LOTTIE_SPEC_PARITY_T4_4`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T4_4)
 - [ ] [Task 4.5: Vector Typography (TextLayer) Data Structures (`PL_LOTTIE_SPEC_PARITY_T4_5`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T4_5)
 
 **Activity:**
@@ -95,10 +95,11 @@ Execute the 4-phase implementation plan defined in `docs/lottie_spec_parity.plan
 - 01:10 — Completed Task 3.4: Precomposition Time Remapping (tm) & Timeline Markers with Marker AST model, frameRate propagation, timeRemap evaluation in Layer.kt, PrecompLayerTest suite, and clean pre-commit review. Phase 3 complete!
 - 01:45 — Completed Task 4.1: Repeater Modifier Geometry Engine with affine transform progression, start/end opacity compounding, `RepeaterTest` suite, clean pre-commit review, and full check suite pass.
 - 02:15 — Completed Task 4.2: RoundedCorners Modifier on RemoteBezierValue with `roundBezierValue` geometry evaluator, `evaluatePathGeometry` timeline compositor, `RoundedCornersTest` suite, clean pre-commit review, and full check suite pass.
+- 02:45 — Completed Task 4.3: MergePaths Boolean Operations Engine with `evaluateMergePaths`, `Path.Op` (Union, Difference, Intersect, XOR), `PathIterator`/`PathMeasure` contour extraction, `MergePathsTest` suite, clean pre-commit review, and full check suite pass.
 
 ## Coordination Notes
 
-- 02:15 [dev-flow-orchestrator] — Completed Task 4.2. Implemented `roundBezierValue` and `evaluatePathGeometry` in `renderer/shapes/RoundedCorners.kt`, wired `RoundedCorners` into `evaluatePath`, `evaluatePolyStar`, `evaluateRectangle`, `evaluateEllipse`, and `Shape.kt` group hierarchy, verified with `RoundedCornersTest.kt` unit test suite and Roborazzi screenshot verification, passed clean pre-commit review, and passed full `:remotecompose:lottie:check` suite. Ready for Task 4.3.
+- 02:45 [dev-flow-orchestrator] — Completed Task 4.3. Implemented `evaluateMergePaths`, `shapeToAndroidPath`, and `androidPathToBezierValues` in `renderer/shapes/MergePaths.kt`, wired `MergePaths` modifier dispatch into `gatherShapes` and `evaluateGroupGeometries` in `Shape.kt`, verified with `MergePathsTest.kt` unit test suite and Roborazzi screenshot verification, passed clean pre-commit review, and passed full `:remotecompose:lottie:check` suite. Ready for Task 4.4.
 
 - 01:45 [dev-flow-orchestrator] — Completed Task 4.1. Implemented `evaluateRepeater` geometry engine in `renderer/shapes/Repeater.kt`, added `startOpacity` and `endOpacity` to `Transform.kt`, supported `RemoteStyleWithOpacity` in `RemoteStyle.kt`, wired modifier dispatch in `Shape.kt`, verified with `RepeaterTest.kt` unit test suite and Roborazzi verification, passed clean pre-commit review, and passed `:remotecompose:lottie:check`. Ready for Task 4.2.
 
