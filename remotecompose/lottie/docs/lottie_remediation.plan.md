@@ -46,7 +46,7 @@ Eliminate all visual rendering regressions and mathematical defects across `:rem
   - [x] [Task 1.1: Solid Fill Opacity Compounding in RemoteFill & Shape.kt](#PL_LOTTIE_REMED_T1_1)
   - [x] [Task 1.2: TextLayer Vector Glyph Harvesting in gatherShapes](#PL_LOTTIE_REMED_T1_2)
   - [x] [Task 1.3: EvenOdd Fill Rule Canvas Path Dispatch](#PL_LOTTIE_REMED_T1_3)
-  - [ ] [Task 1.4: Sub-Frame Look-Up Table Easing Linear Interpolation](#PL_LOTTIE_REMED_T1_4)
+  - [x] [Task 1.4: Sub-Frame Look-Up Table Easing Linear Interpolation](#PL_LOTTIE_REMED_T1_4)
   - [ ] [Task 1.5: Inverted Alpha Track Mattes & Non-Adjacent Matte Parent Routing](#PL_LOTTIE_REMED_T1_5)
 - [ ] [Phase 2: Core Algorithm, Math Safety & Modifier Compounding](#PL_LOTTIE_REMED_P2)
   - [ ] [Task 2.1: Animated Primitive Keyframe Evaluation in Rectangle, Ellipse, PolyStar](#PL_LOTTIE_REMED_T2_1)
