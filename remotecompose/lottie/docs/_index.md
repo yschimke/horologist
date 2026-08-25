@@ -45,6 +45,9 @@ Router catalog for Lottie Remote Compose documentation.
 | [`sample_lottie_gallery.concept.md`](sample_lottie_gallery.concept.md) | Concept | Wear OS Demo Sample App Lottie Showcase & Device Testing Gallery concept |
 | [`sample_lottie_gallery.sp.md`](sample_lottie_gallery.sp.md) | Specification | Sample Lottie showcase data structures, contracts & inspection rules |
 | [`sample_lottie_gallery.plan.md`](sample_lottie_gallery.plan.md) | Plan | Sample Lottie showcase implementation plan |
+| [`lottie_remediation.concept.md`](lottie_remediation.concept.md) | Concept | Lottie 1.0.1 specification parity remediation & hardening concept |
+| [`lottie_remediation.sp.md`](lottie_remediation.sp.md) | Specification | Lottie remediation contracts, math formulas & verification criteria |
+| [`lottie_remediation.plan.md`](lottie_remediation.plan.md) | Plan | Lottie 1.0.1 specification parity remediation implementation plan |
 
 ## ID Prefix Mapping
 
@@ -55,6 +58,9 @@ Router catalog for Lottie Remote Compose documentation.
 | `C_SAMPLE_LOTTIE` | [`sample_lottie_gallery.concept.md`](sample_lottie_gallery.concept.md) |
 | `SP_SAMPLE_LOTTIE` | [`sample_lottie_gallery.sp.md`](sample_lottie_gallery.sp.md) |
 | `PL_SAMPLE_LOTTIE` | [`sample_lottie_gallery.plan.md`](sample_lottie_gallery.plan.md) |
+| `C_LOTTIE_REMED` | [`lottie_remediation.concept.md`](lottie_remediation.concept.md) |
+| `SP_LOTTIE_REMED` | [`lottie_remediation.sp.md`](lottie_remediation.sp.md) |
+| `PL_LOTTIE_REMED` | [`lottie_remediation.plan.md`](lottie_remediation.plan.md) |
 | `C_FMT` | [`format.concept.md`](format.concept.md) |
 
 | `SP_FMT` | [`format.sp.md`](format.sp.md) |

@@ -6,7 +6,7 @@ The parent file [`../active_context.md`](../active_context.md) is a thin dashboa
 
 ## Active Tasks
  
-None.
+- [task_PL_LOTTIE_REMEDIATION](task_PL_LOTTIE_REMEDIATION.md) — `dev-flow-orchestrator` — `plan` — Lottie 1.0.1 Specification Parity Remediation & Hardening (started 2026-08-25)
  
 ## Recently Completed
  
