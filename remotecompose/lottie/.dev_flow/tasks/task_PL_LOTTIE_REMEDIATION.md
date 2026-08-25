@@ -50,7 +50,7 @@ Execute the 3-phase remediation plan defined in `docs/lottie_remediation.plan.md
 
 **Progress:**
 - [x] [Task 2.1: Animated Primitive Keyframe Evaluation in Rectangle, Ellipse, PolyStar (`PL_LOTTIE_REMED_T2_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T2_1)
-- [ ] [Task 2.2: Scale-Zero Singularity Matrix Symmetry in Transform.kt (`PL_LOTTIE_REMED_T2_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T2_2)
+- [x] [Task 2.2: Scale-Zero Singularity Matrix Symmetry in Transform.kt (`PL_LOTTIE_REMED_T2_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T2_2)
 - [ ] [Task 2.3: ImageLayer Native Bitmap Bounds Scaling (`PL_LOTTIE_REMED_T2_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T2_3)
 - [ ] [Task 2.4: Multi-Mask Add Mode Composite Path Union (`PL_LOTTIE_REMED_T2_4`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T2_4)
 - [ ] [Task 2.5: Canvas Skew Axis Rotation Ordering & Repeater Group Compounding (`PL_LOTTIE_REMED_T2_5`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T2_5)
