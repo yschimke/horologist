@@ -1235,4 +1235,156 @@ class LottieFeatureDiffScreenshotTest : LottieDiffScreenshotTest() {
 
     runLottieDiffTest(json = json)
   }
+
+  /** Tests Repeater (rp) linear duplication with start/end opacity interpolation. */
+  @Test
+  fun repeaterLinearCopies() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "RepeaterLayer",
+            "ind": 1,
+            "ip": 0,
+            "op": 30,
+            "ks": {
+              "p": { "a": 0, "k": [18.0, 50.0, 0.0] },
+              "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+              "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+              "r": { "a": 0, "k": 0.0 },
+              "o": { "a": 0, "k": 100.0 }
+            },
+            "shapes": [
+              {
+                "ty": "gr",
+                "nm": "RepeatedCircle",
+                "it": [
+                  {
+                    "ty": "el",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [12.0, 12.0] }
+                  },
+                  {
+                    "ty": "rp",
+                    "nm": "Repeater 1",
+                    "c": { "a": 0, "k": 5.0 },
+                    "o": { "a": 0, "k": 0.0 },
+                    "m": 1,
+                    "tr": {
+                      "p": { "a": 0, "k": [16.0, 0.0] },
+                      "a": { "a": 0, "k": [0.0, 0.0] },
+                      "s": { "a": 0, "k": [100.0, 100.0] },
+                      "r": { "a": 0, "k": 0.0 },
+                      "so": { "a": 0, "k": 100.0 },
+                      "eo": { "a": 0, "k": 20.0 }
+                    }
+                  },
+                  {
+                    "ty": "fl",
+                    "c": { "a": 0, "k": [0.1, 0.7, 0.4, 1.0] },
+                    "o": { "a": 0, "k": 100.0 }
+                  },
+                  {
+                    "ty": "tr",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "a": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [100.0, 100.0] },
+                    "r": { "a": 0, "k": 0.0 },
+                    "o": { "a": 0, "k": 100.0 }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    runLottieDiffTest(json = json)
+  }
+
+  /** Tests Repeater (rp) radial distribution with rotational stepping. */
+  @Test
+  fun repeaterRadialDistribution() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "RadialRepeaterLayer",
+            "ind": 1,
+            "ip": 0,
+            "op": 30,
+            "ks": {
+              "p": { "a": 0, "k": [50.0, 50.0, 0.0] },
+              "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+              "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+              "r": { "a": 0, "k": 0.0 },
+              "o": { "a": 0, "k": 100.0 }
+            },
+            "shapes": [
+              {
+                "ty": "gr",
+                "nm": "PetalsGroup",
+                "it": [
+                  {
+                    "ty": "el",
+                    "p": { "a": 0, "k": [0.0, -28.0] },
+                    "s": { "a": 0, "k": [10.0, 18.0] }
+                  },
+                  {
+                    "ty": "rp",
+                    "nm": "RadialRepeater",
+                    "c": { "a": 0, "k": 6.0 },
+                    "o": { "a": 0, "k": 0.0 },
+                    "m": 1,
+                    "tr": {
+                      "p": { "a": 0, "k": [0.0, 0.0] },
+                      "a": { "a": 0, "k": [0.0, 0.0] },
+                      "s": { "a": 0, "k": [100.0, 100.0] },
+                      "r": { "a": 0, "k": 60.0 },
+                      "so": { "a": 0, "k": 100.0 },
+                      "eo": { "a": 100.0, "k": 100.0 }
+                    }
+                  },
+                  {
+                    "ty": "fl",
+                    "c": { "a": 0, "k": [0.85, 0.2, 0.5, 1.0] },
+                    "o": { "a": 0, "k": 100.0 }
+                  },
+                  {
+                    "ty": "tr",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "a": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [100.0, 100.0] },
+                    "r": { "a": 0, "k": 0.0 },
+                    "o": { "a": 0, "k": 100.0 }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    runLottieDiffTest(json = json)
+  }
 }
