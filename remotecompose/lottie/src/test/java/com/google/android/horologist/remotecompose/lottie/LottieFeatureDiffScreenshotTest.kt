@@ -1087,6 +1087,111 @@ class LottieFeatureDiffScreenshotTest : LottieDiffScreenshotTest() {
     runLottieDiffTest(json = json)
   }
 
+  /** Tests track matte where the matte source layer has hd: true (hidden flag). */
+  @Test
+  fun trackMatteHiddenSourceLayer() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "HiddenMatteSource",
+            "ind": 1,
+            "td": 1,
+            "hd": true,
+            "ip": 0,
+            "op": 30,
+            "ks": {
+              "p": { "a": 0, "k": [50.0, 50.0, 0.0] },
+              "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+              "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+              "r": { "a": 0, "k": 0.0 },
+              "o": { "a": 0, "k": 100.0 }
+            },
+            "shapes": [
+              {
+                "ty": "gr",
+                "nm": "CircleShape",
+                "it": [
+                  {
+                    "ty": "el",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [40.0, 40.0] }
+                  },
+                  {
+                    "ty": "fl",
+                    "c": { "a": 0, "k": [1.0, 1.0, 1.0, 1.0] },
+                    "o": { "a": 0, "k": 100.0 }
+                  },
+                  {
+                    "ty": "tr",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "a": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [100.0, 100.0] },
+                    "r": { "a": 0, "k": 0.0 },
+                    "o": { "a": 0, "k": 100.0 }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "ty": 4,
+            "nm": "TargetLayer",
+            "ind": 2,
+            "tt": 1,
+            "ip": 0,
+            "op": 30,
+            "ks": {
+              "p": { "a": 0, "k": [50.0, 50.0, 0.0] },
+              "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+              "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+              "r": { "a": 0, "k": 0.0 },
+              "o": { "a": 0, "k": 100.0 }
+            },
+            "shapes": [
+              {
+                "ty": "gr",
+                "nm": "RectShape",
+                "it": [
+                  {
+                    "ty": "rc",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [72.0, 72.0] },
+                    "r": { "a": 0, "k": 0.0 }
+                  },
+                  {
+                    "ty": "fl",
+                    "c": { "a": 0, "k": [0.9, 0.2, 0.3, 1.0] },
+                    "o": { "a": 0, "k": 100.0 }
+                  },
+                  {
+                    "ty": "tr",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "a": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [100.0, 100.0] },
+                    "r": { "a": 0, "k": 0.0 },
+                    "o": { "a": 0, "k": 100.0 }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    runLottieDiffTest(json = json)
+  }
+
   /** Tests SolidColorLayer with Subtract mask (mode: "s") cutting out a hole. */
   @Test
   fun layerMaskSolidSubtract() {

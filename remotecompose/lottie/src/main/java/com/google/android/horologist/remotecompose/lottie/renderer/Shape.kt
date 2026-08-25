@@ -581,11 +581,10 @@ internal fun applyMatteClip(
   canvas: RemoteCanvas,
 ) {
   val matteLayer = matteContext.matteLayer
-  if (matteLayer !is ShapeLayer || matteLayer.hidden == true) return
-
+  val matteTransform = matteLayer.transform
   val layerTransforms =
-    if (matteLayer.transform != null) {
-      matteContext.matteTransforms + matteLayer.transform
+    if (matteTransform != null) {
+      matteContext.matteTransforms + matteTransform
     } else {
       matteContext.matteTransforms
     }
@@ -604,7 +603,20 @@ internal fun applyMatteClip(
       ClipOp.Intersect
     }
 
-  clipShapes(matteLayer.shapes, animationSettings, canvas, clipOp)
+  when (matteLayer) {
+    is ShapeLayer -> clipShapes(matteLayer.shapes, animationSettings, canvas, clipOp)
+    is com.google.android.horologist.remotecompose.lottie.format.layer.SolidColorLayer -> {
+      val rcPath = RemotePath()
+      rcPath.reset()
+      rcPath.moveTo(0f, 0f)
+      rcPath.lineTo(matteLayer.solidWidth, 0f)
+      rcPath.lineTo(matteLayer.solidWidth, matteLayer.solidHeight)
+      rcPath.lineTo(0f, matteLayer.solidHeight)
+      rcPath.close()
+      canvas.clipPath(rcPath, clipOp)
+    }
+    else -> {}
+  }
 
   for (transform in layerTransforms.reversed()) {
     inverseTransform(transform, animationSettings, canvas)

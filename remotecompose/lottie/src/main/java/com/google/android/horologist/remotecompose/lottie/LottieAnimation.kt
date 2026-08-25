@@ -202,7 +202,10 @@ internal fun LottieAnimation(
           continue
         }
         val matteContext =
-          if (layer.matteMode != null && layer.matteMode != MatteMode.Normal) {
+          if (
+            (layer.matteMode != null && layer.matteMode != MatteMode.Normal) ||
+              layer.matteParent != null
+          ) {
             val matteLayer =
               if (layer.matteParent != null) {
                 animation.layers.firstOrNull { it.index == layer.matteParent }
@@ -212,9 +215,15 @@ internal fun LottieAnimation(
                 null
               }
             if (matteLayer != null) {
+              val matteMode =
+                if (layer.matteMode != null && layer.matteMode != MatteMode.Normal) {
+                  layer.matteMode!!
+                } else {
+                  MatteMode.Alpha
+                }
               val transforms =
                 ancestorTransforms[matteLayer.index] ?: ancestorTransforms[null] ?: emptyList()
-              MatteContext(matteLayer, transforms, layer.matteMode ?: MatteMode.Alpha)
+              MatteContext(matteLayer, transforms, matteMode)
             } else {
               null
             }

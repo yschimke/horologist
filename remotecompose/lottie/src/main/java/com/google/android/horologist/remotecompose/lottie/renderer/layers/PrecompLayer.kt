@@ -72,7 +72,10 @@ internal fun PrecompLayer(layer: PrecompLayer, transformStack: List<Transform> =
         continue
       }
       val matteContext =
-        if (childLayer.matteMode != null && childLayer.matteMode != MatteMode.Normal) {
+        if (
+          (childLayer.matteMode != null && childLayer.matteMode != MatteMode.Normal) ||
+            childLayer.matteParent != null
+        ) {
           val matteLayer =
             if (childLayer.matteParent != null) {
               asset.layers.firstOrNull { it.index == childLayer.matteParent }
@@ -82,11 +85,17 @@ internal fun PrecompLayer(layer: PrecompLayer, transformStack: List<Transform> =
               null
             }
           if (matteLayer != null) {
+            val matteMode =
+              if (childLayer.matteMode != null && childLayer.matteMode != MatteMode.Normal) {
+                childLayer.matteMode!!
+              } else {
+                MatteMode.Alpha
+              }
             val transforms =
               childAncestorTransforms[matteLayer.index]
                 ?: childAncestorTransforms[null]
                 ?: updatedTransformStack
-            MatteContext(matteLayer, transforms, childLayer.matteMode ?: MatteMode.Alpha)
+            MatteContext(matteLayer, transforms, matteMode)
           } else {
             null
           }

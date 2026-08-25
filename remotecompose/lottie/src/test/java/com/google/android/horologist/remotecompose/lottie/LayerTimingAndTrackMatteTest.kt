@@ -87,4 +87,24 @@ class LayerTimingAndTrackMatteTest {
     // Falls back to safeSr = 1f
     assertThat(localFrame.constantValueOrNull).isWithin(0.001f).of(25f)
   }
+
+  @Test
+  fun matteContext_withHiddenMatteLayer_preservesLayerAndMode() {
+    val hiddenMatteLayer = ShapeLayer(index = 5, hidden = true, shapes = emptyList())
+    val context = MatteContext(hiddenMatteLayer, emptyList(), MatteMode.InvertedAlpha)
+    assertThat(context.matteLayer.hidden).isTrue()
+    assertThat(context.matteMode).isEqualTo(MatteMode.InvertedAlpha)
+  }
+
+  @Test
+  fun matteContext_withSolidColorMatteLayer_preservesDimensions() {
+    val solidMatteLayer =
+      com.google.android.horologist.remotecompose.lottie.format.layer.SolidColorLayer(
+        index = 2,
+        solidWidth = 100f,
+        solidHeight = 200f,
+      )
+    val context = MatteContext(solidMatteLayer, emptyList(), MatteMode.Alpha)
+    assertThat(context.matteLayer).isEqualTo(solidMatteLayer)
+  }
 }
