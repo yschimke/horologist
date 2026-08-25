@@ -1546,4 +1546,216 @@ class LottieFeatureDiffScreenshotTest : LottieDiffScreenshotTest() {
 
     runLottieDiffTest(json = json)
   }
+
+  /** Tests 3 levels of nested Precompositions with compound transform propagation. */
+  @Test
+  fun nestedPrecompositions() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "assets": [
+          {
+            "id": "comp_level2",
+            "layers": [
+              {
+                "ty": 4,
+                "nm": "InnerLeafShape",
+                "ind": 1,
+                "ip": 0,
+                "op": 30,
+                "ks": {
+                  "p": { "a": 0, "k": [10.0, 10.0, 0.0] },
+                  "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+                  "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+                  "r": { "a": 0, "k": 0.0 },
+                  "o": { "a": 0, "k": 100.0 }
+                },
+                "shapes": [
+                  {
+                    "ty": "gr",
+                    "nm": "InnerRect",
+                    "it": [
+                      {
+                        "ty": "rc",
+                        "p": { "a": 0, "k": [0.0, 0.0] },
+                        "s": { "a": 0, "k": [30.0, 30.0] },
+                        "r": { "a": 0, "k": 4.0 }
+                      },
+                      {
+                        "ty": "fl",
+                        "c": { "a": 0, "k": [0.2, 0.7, 0.8, 1.0] },
+                        "o": { "a": 0, "k": 100.0 }
+                      },
+                      {
+                        "ty": "tr",
+                        "p": { "a": 0, "k": [0.0, 0.0] },
+                        "a": { "a": 0, "k": [0.0, 0.0] },
+                        "s": { "a": 0, "k": [100.0, 100.0] },
+                        "r": { "a": 0, "k": 0.0 },
+                        "o": { "a": 0, "k": 100.0 }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "comp_level1",
+            "layers": [
+              {
+                "ty": 0,
+                "nm": "Level2Ref",
+                "refId": "comp_level2",
+                "ind": 1,
+                "ip": 0,
+                "op": 30,
+                "ks": {
+                  "p": { "a": 0, "k": [15.0, 15.0, 0.0] },
+                  "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+                  "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+                  "r": { "a": 0, "k": 0.0 },
+                  "o": { "a": 0, "k": 100.0 }
+                },
+                "w": 100,
+                "h": 100
+              }
+            ]
+          }
+        ],
+        "layers": [
+          {
+            "ty": 0,
+            "nm": "Level1Ref",
+            "refId": "comp_level1",
+            "ind": 1,
+            "ip": 0,
+            "op": 30,
+            "ks": {
+              "p": { "a": 0, "k": [25.0, 25.0, 0.0] },
+              "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+              "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+              "r": { "a": 0, "k": 0.0 },
+              "o": { "a": 0, "k": 100.0 }
+            },
+            "w": 100,
+            "h": 100
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    runLottieDiffTest(json = json)
+  }
+
+  /** Tests PrecompLayer with animated Time Remapping (tm) driving internal keyframes. */
+  @Test
+  fun precompTimeRemapping() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "assets": [
+          {
+            "id": "comp_rotating_bar",
+            "layers": [
+              {
+                "ty": 4,
+                "nm": "RotatingBar",
+                "ind": 1,
+                "ip": 0,
+                "op": 30,
+                "ks": {
+                  "p": { "a": 0, "k": [50.0, 50.0, 0.0] },
+                  "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+                  "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+                  "r": {
+                    "a": 1,
+                    "k": [
+                      { "t": 0, "s": [0.0] },
+                      { "t": 30, "s": [180.0] }
+                    ]
+                  },
+                  "o": { "a": 0, "k": 100.0 }
+                },
+                "shapes": [
+                  {
+                    "ty": "gr",
+                    "nm": "BarShape",
+                    "it": [
+                      {
+                        "ty": "rc",
+                        "p": { "a": 0, "k": [0.0, 0.0] },
+                        "s": { "a": 0, "k": [60.0, 14.0] },
+                        "r": { "a": 0, "k": 0.0 }
+                      },
+                      {
+                        "ty": "fl",
+                        "c": { "a": 0, "k": [0.9, 0.3, 0.4, 1.0] },
+                        "o": { "a": 0, "k": 100.0 }
+                      },
+                      {
+                        "ty": "tr",
+                        "p": { "a": 0, "k": [0.0, 0.0] },
+                        "a": { "a": 0, "k": [0.0, 0.0] },
+                        "s": { "a": 0, "k": [100.0, 100.0] },
+                        "r": { "a": 0, "k": 0.0 },
+                        "o": { "a": 0, "k": 100.0 }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "layers": [
+          {
+            "ty": 0,
+            "nm": "TimeRemappedPrecomp",
+            "refId": "comp_rotating_bar",
+            "ind": 1,
+            "ip": 0,
+            "op": 30,
+            "tm": {
+              "a": 1,
+              "k": [
+                { "t": 0, "s": [0.0] },
+                { "t": 15, "s": [0.5] },
+                { "t": 30, "s": [1.0] }
+              ]
+            },
+            "ks": {
+              "p": { "a": 0, "k": [0.0, 0.0, 0.0] },
+              "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+              "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+              "r": { "a": 0, "k": 0.0 },
+              "o": { "a": 0, "k": 100.0 }
+            },
+            "w": 100,
+            "h": 100
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    runLottieDiffTest(json = json) {
+      captureFrame(frame = 0f)
+      captureFrame(frame = 15f)
+      captureFrame(frame = 30f)
+    }
+  }
 }
