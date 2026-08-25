@@ -74,8 +74,8 @@ Execute the 4-phase implementation plan defined in `docs/lottie_spec_parity.plan
 - [x] [Task 4.1: Repeater Modifier Geometry Engine (`PL_LOTTIE_SPEC_PARITY_T4_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T4_1)
 - [x] [Task 4.2: RoundedCorners Modifier on RemoteBezierValue (`PL_LOTTIE_SPEC_PARITY_T4_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T4_2)
 - [x] [Task 4.3: MergePaths Boolean Operations Engine (`PL_LOTTIE_SPEC_PARITY_T4_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T4_3)
-- [ ] **Next:** [Task 4.4: Bitmap Asset Loading & ImageLayer Rendering (`PL_LOTTIE_SPEC_PARITY_T4_4`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T4_4)
-- [ ] [Task 4.5: Vector Typography (TextLayer) Data Structures (`PL_LOTTIE_SPEC_PARITY_T4_5`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T4_5)
+- [x] [Task 4.4: Bitmap Asset Loading & ImageLayer Rendering (`PL_LOTTIE_SPEC_PARITY_T4_4`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T4_4)
+- [ ] **Next:** [Task 4.5: Vector Typography (TextLayer) Data Structures (`PL_LOTTIE_SPEC_PARITY_T4_5`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T4_5)
 
 **Activity:**
 - 17:45 — Created task and initialized plan for Phase 1.
@@ -96,8 +96,11 @@ Execute the 4-phase implementation plan defined in `docs/lottie_spec_parity.plan
 - 01:45 — Completed Task 4.1: Repeater Modifier Geometry Engine with affine transform progression, start/end opacity compounding, `RepeaterTest` suite, clean pre-commit review, and full check suite pass.
 - 02:15 — Completed Task 4.2: RoundedCorners Modifier on RemoteBezierValue with `roundBezierValue` geometry evaluator, `evaluatePathGeometry` timeline compositor, `RoundedCornersTest` suite, clean pre-commit review, and full check suite pass.
 - 02:45 — Completed Task 4.3: MergePaths Boolean Operations Engine with `evaluateMergePaths`, `Path.Op` (Union, Difference, Intersect, XOR), `PathIterator`/`PathMeasure` contour extraction, `MergePathsTest` suite, clean pre-commit review, and full check suite pass.
+- 03:15 — Completed Task 4.4: Bitmap Asset Loading & ImageLayer Rendering with `decodeImageAsset`, `ImageLayer` rendering pipeline, `ImageLayerTest` suite, clean pre-commit review, and full check suite pass.
 
 ## Coordination Notes
+
+- 03:15 [dev-flow-orchestrator] — Completed Task 4.4. Implemented `decodeImageAsset` and `ImageLayer` renderer in `renderer/layers/ImageLayer.kt`, supported Base64 data URLs, embedded image flags, HTTP/HTTPS URLs, and local asset streaming, wired `ImageLayer` dispatch into `Layer.kt`, reused `applyMatteClip` from `Shape.kt`, authored `ImageLayerTest.kt` unit test suite, verified with Roborazzi and full `:remotecompose:lottie:check` suite, passed clean pre-commit review. Ready for Task 4.5.
 
 - 02:45 [dev-flow-orchestrator] — Completed Task 4.3. Implemented `evaluateMergePaths`, `shapeToAndroidPath`, and `androidPathToBezierValues` in `renderer/shapes/MergePaths.kt`, wired `MergePaths` modifier dispatch into `gatherShapes` and `evaluateGroupGeometries` in `Shape.kt`, verified with `MergePathsTest.kt` unit test suite and Roborazzi screenshot verification, passed clean pre-commit review, and passed full `:remotecompose:lottie:check` suite. Ready for Task 4.4.
 
