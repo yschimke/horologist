@@ -162,66 +162,89 @@ internal fun TextLayer(
 
     // Render glyph vector shapes if chars are available in animation
     if (charsMap.isNotEmpty()) {
-      var totalLineWidth = 0f
-      val glyphs = mutableListOf<Pair<FontChar, Float>>()
-      for (ch in text) {
-        val fontChar =
-          charsMap.firstOrNull {
-            it.character == ch.toString() &&
-              (it.family == currentDoc.fontName || it.family.isEmpty())
-          } ?: charsMap.firstOrNull { it.character == ch.toString() }
-        if (fontChar != null) {
+      val lines = text.split(Regex("\r\n|\r|\n"))
+      val effLineHeight = currentDoc.lineHeight ?: (fontSize * 1.2f)
+      val baselineShift = currentDoc.baselineShift ?: 0f
+      val strokeOverFill = currentDoc.strokeOverFill ?: true
+
+      for ((lineIndex, lineText) in lines.withIndex()) {
+        var totalLineWidth = 0f
+        val glyphs = mutableListOf<Pair<FontChar, Float>>()
+        for (ch in lineText) {
+          val fontChar =
+            charsMap.firstOrNull {
+              it.character == ch.toString() &&
+                (it.family == currentDoc.fontName || it.family.isEmpty())
+            } ?: charsMap.firstOrNull { it.character == ch.toString() }
+          if (fontChar != null) {
+            val fontScale = if (fontChar.size > 0f) fontSize / fontChar.size else fontSize / 100f
+            val advance = (fontChar.width * fontScale) + (tracking * (fontSize / 1000f))
+            glyphs.add(fontChar to advance)
+            totalLineWidth += advance
+          }
+        }
+
+        var currentX =
+          when (justification) {
+            TextJustify.Right,
+            TextJustify.JustifyWithLastLineRight -> -totalLineWidth
+            TextJustify.Center,
+            TextJustify.JustifyWithLastLineCenter -> -totalLineWidth / 2f
+            else -> 0f
+          }
+        val currentY = (lineIndex * effLineHeight) - baselineShift
+
+        for ((fontChar, advance) in glyphs) {
           val fontScale = if (fontChar.size > 0f) fontSize / fontChar.size else fontSize / 100f
-          val advance = (fontChar.width * fontScale) + (tracking * (fontSize / 1000f))
-          glyphs.add(fontChar to advance)
-          totalLineWidth += advance
-        }
-      }
+          val shapes = fontChar.shapeData?.shapes.orEmpty()
+          if (shapes.isNotEmpty()) {
+            val glyphGroups = gatherShapes(shapes, animationSettings, inheritedStyle = NoopStyle())
+            remoteCanvas.save()
+            remoteCanvas.translate(currentX.rf, currentY.rf)
+            remoteCanvas.scale(fontScale.rf, fontScale.rf)
 
-      var currentX =
-        when (justification) {
-          TextJustify.Right,
-          TextJustify.JustifyWithLastLineRight -> -totalLineWidth
-          TextJustify.Center,
-          TextJustify.JustifyWithLastLineCenter -> -totalLineWidth / 2f
-          else -> 0f
-        }
-
-      for ((fontChar, advance) in glyphs) {
-        val fontScale = if (fontChar.size > 0f) fontSize / fontChar.size else fontSize / 100f
-        val shapes = fontChar.shapeData?.shapes.orEmpty()
-        if (shapes.isNotEmpty()) {
-          val glyphGroups = gatherShapes(shapes, animationSettings, inheritedStyle = NoopStyle())
-          remoteCanvas.save()
-          remoteCanvas.translate(currentX.rf, 0f.rf)
-          remoteCanvas.scale(fontScale.rf, fontScale.rf)
-
-          for (group in glyphGroups) {
-            if (group.style is NoopStyle) {
-              usePaint(fillPaint) {
-                for (shape in group.shapes) {
-                  shape.draw(this, remoteCanvas, layerOpacity)
+            for (group in glyphGroups) {
+              if (group.style is NoopStyle) {
+                if (strokeOverFill) {
+                  usePaint(fillPaint) {
+                    for (shape in group.shapes) {
+                      shape.draw(this, remoteCanvas, layerOpacity)
+                    }
+                  }
+                  if (strokePaint != null) {
+                    usePaint(strokePaint) {
+                      for (shape in group.shapes) {
+                        shape.draw(this, remoteCanvas, layerOpacity)
+                      }
+                    }
+                  }
+                } else {
+                  if (strokePaint != null) {
+                    usePaint(strokePaint) {
+                      for (shape in group.shapes) {
+                        shape.draw(this, remoteCanvas, layerOpacity)
+                      }
+                    }
+                  }
+                  usePaint(fillPaint) {
+                    for (shape in group.shapes) {
+                      shape.draw(this, remoteCanvas, layerOpacity)
+                    }
+                  }
                 }
-              }
-              if (strokePaint != null) {
-                usePaint(strokePaint) {
+              } else {
+                val groupPaint = group.style.getPaint(layerOpacity)
+                usePaint(groupPaint) {
                   for (shape in group.shapes) {
                     shape.draw(this, remoteCanvas, layerOpacity)
                   }
                 }
               }
-            } else {
-              val groupPaint = group.style.getPaint(layerOpacity)
-              usePaint(groupPaint) {
-                for (shape in group.shapes) {
-                  shape.draw(this, remoteCanvas, layerOpacity)
-                }
-              }
             }
+            remoteCanvas.restore()
           }
-          remoteCanvas.restore()
+          currentX += advance
         }
-        currentX += advance
       }
     }
 

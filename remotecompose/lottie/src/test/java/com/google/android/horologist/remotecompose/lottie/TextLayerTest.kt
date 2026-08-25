@@ -310,4 +310,60 @@ class TextLayerTest {
     assertThat(remoteGroup!!.childShapes).hasSize(1)
     assertThat(remoteGroup.childShapes[0].shapes).hasSize(1)
   }
+
+  @Test
+  fun decodeAnimation_withMultilineTextAndStrokeOverFill_decodesDocument() {
+    val json =
+      """
+      {
+        "v": "5.9.6",
+        "fr": 30.0,
+        "ip": 0.0,
+        "op": 30.0,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 5,
+            "nm": "MultilineLayer",
+            "ind": 1,
+            "ip": 0.0,
+            "op": 30.0,
+            "t": {
+              "d": {
+                "k": [
+                  {
+                    "s": {
+                      "t": "Line1\nLine2\nLine3",
+                      "s": 16.0,
+                      "f": "FontName",
+                      "j": 0,
+                      "tr": 0.0,
+                      "lh": 22.0,
+                      "ls": 2.0,
+                      "fc": [1.0, 1.0, 1.0, 1.0],
+                      "sc": [0.5, 0.5, 0.5, 1.0],
+                      "sw": 1.5,
+                      "of": false
+                    },
+                    "t": 0.0
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+    val layer = animation.layers[0] as TextLayer
+    val doc = layer.text?.document?.keyframes?.get(0)?.start
+    assertThat(doc).isNotNull()
+    assertThat(doc?.text).isEqualTo("Line1\nLine2\nLine3")
+    assertThat(doc?.lineHeight).isEqualTo(22f)
+    assertThat(doc?.baselineShift).isEqualTo(2f)
+    assertThat(doc?.strokeOverFill).isFalse()
+  }
 }

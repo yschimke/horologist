@@ -2112,4 +2112,112 @@ class LottieFeatureDiffScreenshotTest : LottieDiffScreenshotTest() {
 
     runLottieDiffTest(json = json)
   }
+
+  /** Tests TextLayer with multiline text and custom line height. */
+  @Test
+  fun textLayerMultiline() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "fonts": {
+          "list": [
+            {
+              "fName": "CustomGlyphFont",
+              "fFamily": "CustomGlyphFont",
+              "fStyle": "Regular",
+              "ascent": 75.0
+            }
+          ]
+        },
+        "chars": [
+          {
+            "ch": "H",
+            "fFamily": "CustomGlyphFont",
+            "style": "Regular",
+            "size": 100.0,
+            "w": 60.0,
+            "data": {
+              "shapes": [
+                {
+                  "ty": "gr",
+                  "nm": "Glyph_H",
+                  "it": [
+                    {
+                      "ty": "rc",
+                      "p": { "a": 0, "k": [10.0, 30.0] },
+                      "s": { "a": 0, "k": [10.0, 60.0] },
+                      "r": { "a": 0, "k": 0.0 }
+                    },
+                    {
+                      "ty": "rc",
+                      "p": { "a": 0, "k": [50.0, 30.0] },
+                      "s": { "a": 0, "k": [10.0, 60.0] },
+                      "r": { "a": 0, "k": 0.0 }
+                    },
+                    {
+                      "ty": "rc",
+                      "p": { "a": 0, "k": [30.0, 30.0] },
+                      "s": { "a": 0, "k": [30.0, 10.0] },
+                      "r": { "a": 0, "k": 0.0 }
+                    },
+                    {
+                      "ty": "tr",
+                      "p": { "a": 0, "k": [0.0, 0.0] },
+                      "a": { "a": 0, "k": [0.0, 0.0] },
+                      "s": { "a": 0, "k": [100.0, 100.0] },
+                      "r": { "a": 0, "k": 0.0 },
+                      "o": { "a": 0, "k": 100.0 }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "layers": [
+          {
+            "ty": 5,
+            "nm": "MultilineTextLayer",
+            "ind": 1,
+            "ip": 0,
+            "op": 30,
+            "ks": {
+              "p": { "a": 0, "k": [50.0, 25.0, 0.0] },
+              "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+              "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+              "r": { "a": 0, "k": 0.0 },
+              "o": { "a": 0, "k": 100.0 }
+            },
+            "t": {
+              "d": {
+                "k": [
+                  {
+                    "s": {
+                      "t": "H\nH",
+                      "s": 35.0,
+                      "f": "CustomGlyphFont",
+                      "j": 2,
+                      "tr": 0.0,
+                      "lh": 40.0,
+                      "fc": [0.2, 0.8, 0.4, 1.0]
+                    },
+                    "t": 0.0
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    runLottieDiffTest(json = json)
+  }
 }
