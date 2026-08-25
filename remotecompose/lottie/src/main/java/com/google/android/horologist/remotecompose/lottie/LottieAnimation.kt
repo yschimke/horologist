@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
 import com.google.android.horologist.remotecompose.lottie.format.Animation
+import com.google.android.horologist.remotecompose.lottie.format.asset.Asset
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
 import com.google.android.horologist.remotecompose.lottie.format.layer.Layer
 import com.google.android.horologist.remotecompose.lottie.format.layer.MatteMode
@@ -45,6 +46,9 @@ import com.google.android.horologist.remotecompose.lottie.renderer.layers.MatteC
  *
  * @property currentFrame The current frame to display.
  * @property slotMap Mapping of slot IDs to values for dynamic theming.
+ * @property assets Mapping of asset IDs to root assets.
+ * @property visibility Compound layer visibility multiplier.
+ * @property activePrecomps Set of precomposition asset IDs currently rendering (recursion guard).
  */
 internal data class LottieSettings(
   val currentFrame: RemoteFloat,
@@ -52,6 +56,9 @@ internal data class LottieSettings(
   val width: Float = 0f,
   val height: Float = 0f,
   val endFrame: Float = Float.MAX_VALUE,
+  val assets: Map<String, Asset> = emptyMap(),
+  val visibility: RemoteFloat = 1f.rf,
+  val activePrecomps: Set<String> = emptySet(),
 )
 
 /** CompositionLocal for [LottieSettings]. */
@@ -133,6 +140,7 @@ internal fun LottieAnimation(
     } else {
       startFrameRf + (floor(RemoteFloat(ANIMATION_TIME) * animation.frameRate) % totalFrames)
     }
+  val assetMap = remember(animation.assets) { animation.assets.associateBy { it.id } }
   val animationSettings =
     LottieSettings(
       currentFrame = currentFrame,
@@ -140,6 +148,7 @@ internal fun LottieAnimation(
       width = animation.width.toFloat(),
       height = animation.height.toFloat(),
       endFrame = animation.endFrame,
+      assets = assetMap,
     )
 
   CompositionLocalProvider(LocalAnimationSettings provides animationSettings) {
@@ -192,7 +201,8 @@ internal fun LottieAnimation(
                 null
               }
             if (matteLayer != null) {
-              val transforms = ancestorTransforms[matteLayer.index] ?: emptyList()
+              val transforms =
+                ancestorTransforms[matteLayer.index] ?: ancestorTransforms[null] ?: emptyList()
               MatteContext(matteLayer, transforms, layer.matteMode ?: MatteMode.Alpha)
             } else {
               null
@@ -206,15 +216,20 @@ internal fun LottieAnimation(
   }
 }
 
-internal fun buildAncestorTransforms(layers: List<Layer>): Map<Int, List<Transform>> {
-  val map = mutableMapOf<Int, List<Transform>>()
+internal fun buildAncestorTransforms(
+  layers: List<Layer>,
+  baseStack: List<Transform> = emptyList(),
+): Map<Int?, List<Transform>> {
+  val map = mutableMapOf<Int?, List<Transform>>()
   val childrenMap = layers.groupBy { it.parent }
 
   val roots = childrenMap[null] ?: emptyList()
   for (layer in roots) {
-    populateAncestorTransforms(layer, emptyList(), emptySet(), childrenMap, map)
+    populateAncestorTransforms(layer, baseStack, emptySet(), childrenMap, map)
   }
-
+  if (baseStack.isNotEmpty()) {
+    map[null] = baseStack
+  }
   return map
 }
 
@@ -223,7 +238,7 @@ private fun populateAncestorTransforms(
   currentStack: List<Transform>,
   visited: Set<Int>,
   childrenMap: Map<Int?, List<Layer>>,
-  outMap: MutableMap<Int, List<Transform>>,
+  outMap: MutableMap<Int?, List<Transform>>,
 ) {
   val layerIndex = layer.index
   if (layerIndex != null) {

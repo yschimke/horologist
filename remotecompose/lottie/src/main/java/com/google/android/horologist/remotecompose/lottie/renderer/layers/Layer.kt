@@ -28,8 +28,10 @@ import com.google.android.horologist.remotecompose.lottie.format.graphicelement.
 import com.google.android.horologist.remotecompose.lottie.format.layer.Layer
 import com.google.android.horologist.remotecompose.lottie.format.layer.LayerType
 import com.google.android.horologist.remotecompose.lottie.format.layer.MatteMode
+import com.google.android.horologist.remotecompose.lottie.format.layer.PrecompLayer
 import com.google.android.horologist.remotecompose.lottie.format.layer.ShapeLayer
 import com.google.android.horologist.remotecompose.lottie.format.layer.SolidColorLayer
+import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateScalar
 
 /** Matte context for paired track matte layer masking */
 internal data class MatteContext(
@@ -60,7 +62,7 @@ internal fun calculateLocalFrame(
 @RemoteComposable
 internal fun Layer(
   layer: Layer,
-  parentTransforms: Map<Int, List<Transform>>,
+  parentTransforms: Map<Int?, List<Transform>>,
   transform: Transform? = null,
   matteContext: MatteContext? = null,
 ) {
@@ -90,9 +92,9 @@ internal fun Layer(
 
   val isAfterStart = selectIfLt(currentFrame, startFrame.rf, 0f.rf, 1f.rf)
   val isBeforeEnd = selectIfLt(currentFrame, effectiveEndFrame.rf, 1f.rf, 0f.rf)
-  val layerVisibility = isAfterStart * isBeforeEnd
+  val layerVisibility = parentSettings.visibility * (isAfterStart * isBeforeEnd)
 
-  val ancestorStack = parentTransforms[layer.index] ?: emptyList()
+  val ancestorStack = parentTransforms[layer.index] ?: parentTransforms[null] ?: emptyList()
 
   val completeStack =
     if (transform != null) {

@@ -133,4 +133,90 @@ class LottieFeatureDiffScreenshotTest : LottieDiffScreenshotTest() {
 
     runLottieDiffTest(json = json)
   }
+
+  /** Tests precomposition recursive sub-composition rendering engine. */
+  @Test
+  fun precompSubcompositionRendering() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "assets": [
+          {
+            "id": "comp_circle_group",
+            "nm": "CircleSubcomp",
+            "layers": [
+              {
+                "ty": 4,
+                "nm": "SubcompShape",
+                "ind": 1,
+                "ip": 0,
+                "op": 30,
+                "ks": {
+                  "p": { "a": 0, "k": [0.0, 0.0, 0.0] },
+                  "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+                  "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+                  "r": { "a": 0, "k": 0.0 },
+                  "o": { "a": 0, "k": 100.0 }
+                },
+                "shapes": [
+                  {
+                    "ty": "gr",
+                    "nm": "ShapeGroup",
+                    "it": [
+                      {
+                        "ty": "el",
+                        "p": { "a": 0, "k": [0.0, 0.0] },
+                        "s": { "a": 0, "k": [36.0, 36.0] }
+                      },
+                      {
+                        "ty": "fl",
+                        "c": { "a": 0, "k": [0.9, 0.2, 0.3, 1.0] },
+                        "o": { "a": 0, "k": 100.0 }
+                      },
+                      {
+                        "ty": "tr",
+                        "p": { "a": 0, "k": [0.0, 0.0] },
+                        "a": { "a": 0, "k": [0.0, 0.0] },
+                        "s": { "a": 0, "k": [100.0, 100.0] },
+                        "r": { "a": 0, "k": 0.0 },
+                        "o": { "a": 0, "k": 100.0 }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "layers": [
+          {
+            "ty": 0,
+            "nm": "PrecompInstance",
+            "refId": "comp_circle_group",
+            "ind": 10,
+            "ip": 0,
+            "op": 30,
+            "w": 100,
+            "h": 100,
+            "ks": {
+              "p": { "a": 0, "k": [50.0, 50.0, 0.0] },
+              "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+              "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+              "r": { "a": 0, "k": 0.0 },
+              "o": { "a": 0, "k": 100.0 }
+            }
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    runLottieDiffTest(json = json)
+  }
 }
