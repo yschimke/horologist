@@ -78,4 +78,6 @@ internal data class Transform(
   @SerialName("o") val opacity: BaseScalarProperty,
   @SerialName("sk") val skew: BaseScalarProperty? = null,
   @SerialName("sa") val skewAxis: BaseScalarProperty? = null,
+  @SerialName("so") val startOpacity: BaseScalarProperty? = null,
+  @SerialName("eo") val endOpacity: BaseScalarProperty? = null,
 ) : GraphicElement

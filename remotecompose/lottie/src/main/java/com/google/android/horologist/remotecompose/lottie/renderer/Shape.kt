@@ -36,6 +36,7 @@ import com.google.android.horologist.remotecompose.lottie.format.graphicelement.
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.Rectangle
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Group
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
+import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.Repeater
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.TrimPath
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.Fill
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateColor
@@ -127,7 +128,7 @@ private fun gatherShapes(
   parentTrimPath: TrimPath? = null,
 ): List<StyledShapes> {
   val shapeGroups = mutableListOf<StyledShapes>()
-  var currentGeometries = mutableListOf<RemoteShape>()
+  var currentGeometries = mutableListOf<RepeatedShapeInstance>()
   var currentGroups = mutableListOf<Group>()
   val activeTrimPath: TrimPath? =
     shapes.filterIsInstance<TrimPath>().firstOrNull { it.hidden != true } ?: parentTrimPath
@@ -137,6 +138,12 @@ private fun gatherShapes(
     when (shape) {
       is TrimPath -> {
         // Handled via activeTrimPath
+      }
+      is Repeater -> {
+        if (shape.hidden != true && currentGeometries.isNotEmpty()) {
+          val baseShapes = currentGeometries.map { it.shape }
+          currentGeometries = evaluateRepeater(baseShapes, shape, animationSettings).toMutableList()
+        }
       }
       is GeometryShape -> {
         if (hasEmittedStyle) {
@@ -151,7 +158,9 @@ private fun gatherShapes(
             is Ellipse -> evaluateEllipse(shape, animationSettings, activeTrimPath)
             is PolyStar -> evaluatePolyStar(shape, animationSettings, activeTrimPath)
           }
-        currentGeometries.addIfNotNull(remoteShape)
+        if (remoteShape != null) {
+          currentGeometries.add(RepeatedShapeInstance(remoteShape))
+        }
       }
       is Group -> {
         if (hasEmittedStyle) {
@@ -168,16 +177,14 @@ private fun gatherShapes(
       is Fill -> {
         if (shape.hidden != true) {
           val fill = fill(shape, animationSettings)
-          val shapesToStyle = mutableListOf<RemoteShape>()
-          if (currentGeometries.isNotEmpty()) {
-            shapesToStyle.addAll(currentGeometries)
-          }
-          for (group in currentGroups) {
-            shapesToStyle.addAll(evaluateGroupGeometries(group, animationSettings, activeTrimPath))
-          }
-          if (shapesToStyle.isNotEmpty()) {
-            shapeGroups.add(StyledShapes(shapesToStyle, fill))
-          }
+          emitStyledShapes(
+            shapeGroups,
+            currentGeometries,
+            currentGroups,
+            fill,
+            animationSettings,
+            activeTrimPath,
+          )
           hasEmittedStyle = true
         }
       }
