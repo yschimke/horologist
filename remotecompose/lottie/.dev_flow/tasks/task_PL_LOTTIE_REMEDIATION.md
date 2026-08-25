@@ -56,11 +56,11 @@ Execute the 3-phase remediation plan defined in `docs/lottie_remediation.plan.md
 - [x] [Task 2.5: Canvas Skew Axis Rotation Ordering & Repeater Group Compounding (`PL_LOTTIE_REMED_T2_5`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T2_5)
 
 ### Subtask: Execute Phase 3 (Extended Parity, Typography & Verification Hardening)
-> Author: `dev-flow-orchestrator` — Created: 17:45 — Last updated: 19:40 — Status: `in-progress`
+> Author: `dev-flow-orchestrator` — Created: 17:45 — Last updated: 19:50 — Status: `in-progress`
 
 **Goal:** Implement Phase 3 extended parity fixes: multiline text and stroke-over-fill ordering, stroke miter limit application to `RemotePaint`, gradient stop array bounds protection, precomposition canvas boundary clipping, and full Roborazzi golden baseline verification.
 
 **Progress:**
 - [x] [Task 3.1: Multiline Text, Line Height & Stroke-Over-Fill in TextLayer (`PL_LOTTIE_REMED_T3_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T3_1)
-- [ ] [Task 3.2: Stroke Miter Limit & Gradient Stop Boundary Guards (`PL_LOTTIE_REMED_T3_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T3_2)
+- [x] [Task 3.2: Stroke Miter Limit & Gradient Stop Boundary Guards (`PL_LOTTIE_REMED_T3_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T3_2)
 - [ ] [Task 3.3: Precomp Canvas Boundary Clipping & Roborazzi Baseline Verification (`PL_LOTTIE_REMED_T3_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T3_3)
