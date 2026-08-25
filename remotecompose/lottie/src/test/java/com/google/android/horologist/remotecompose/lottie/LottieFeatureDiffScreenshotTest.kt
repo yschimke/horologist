@@ -1387,4 +1387,163 @@ class LottieFeatureDiffScreenshotTest : LottieDiffScreenshotTest() {
 
     runLottieDiffTest(json = json)
   }
+
+  /** Tests RoundedCorners (rd) modifier filleting sharp polygon vertices. */
+  @Test
+  fun roundedCornersStar() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "RoundedStarLayer",
+            "ind": 1,
+            "ip": 0,
+            "op": 30,
+            "ks": {
+              "p": { "a": 0, "k": [50.0, 50.0, 0.0] },
+              "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+              "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+              "r": { "a": 0, "k": 0.0 },
+              "o": { "a": 0, "k": 100.0 }
+            },
+            "shapes": [
+              {
+                "ty": "gr",
+                "nm": "StarGroup",
+                "it": [
+                  {
+                    "ty": "sr",
+                    "sy": 1,
+                    "pt": { "a": 0, "k": 5.0 },
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "r": { "a": 0, "k": 0.0 },
+                    "or": { "a": 0, "k": 38.0 },
+                    "os": { "a": 0, "k": 0.0 },
+                    "ir": { "a": 0, "k": 18.0 },
+                    "is": { "a": 0, "k": 0.0 }
+                  },
+                  {
+                    "ty": "rd",
+                    "nm": "RoundCorners",
+                    "r": { "a": 0, "k": 8.0 }
+                  },
+                  {
+                    "ty": "fl",
+                    "c": { "a": 0, "k": [0.95, 0.45, 0.2, 1.0] },
+                    "o": { "a": 0, "k": 100.0 }
+                  },
+                  {
+                    "ty": "st",
+                    "c": { "a": 0, "k": [0.9, 0.9, 0.9, 1.0] },
+                    "o": { "a": 0, "k": 100.0 },
+                    "w": { "a": 0, "k": 2.0 },
+                    "lc": 2,
+                    "lj": 2
+                  },
+                  {
+                    "ty": "tr",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "a": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [100.0, 100.0] },
+                    "r": { "a": 0, "k": 0.0 },
+                    "o": { "a": 0, "k": 100.0 }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    runLottieDiffTest(json = json)
+  }
+
+  /** Tests MergePaths (mm) modifier merging overlapping subpaths. */
+  @Test
+  fun mergePathsOverlappingCircles() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "MergePathsLayer",
+            "ind": 1,
+            "ip": 0,
+            "op": 30,
+            "ks": {
+              "p": { "a": 0, "k": [50.0, 50.0, 0.0] },
+              "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+              "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+              "r": { "a": 0, "k": 0.0 },
+              "o": { "a": 0, "k": 100.0 }
+            },
+            "shapes": [
+              {
+                "ty": "gr",
+                "nm": "MergedGroup",
+                "it": [
+                  {
+                    "ty": "el",
+                    "p": { "a": 0, "k": [-14.0, 0.0] },
+                    "s": { "a": 0, "k": [36.0, 36.0] }
+                  },
+                  {
+                    "ty": "el",
+                    "p": { "a": 0, "k": [14.0, 0.0] },
+                    "s": { "a": 0, "k": [36.0, 36.0] }
+                  },
+                  {
+                    "ty": "mm",
+                    "nm": "Merge",
+                    "mm": 1
+                  },
+                  {
+                    "ty": "fl",
+                    "c": { "a": 0, "k": [0.2, 0.5, 0.9, 1.0] },
+                    "o": { "a": 0, "k": 80.0 }
+                  },
+                  {
+                    "ty": "st",
+                    "c": { "a": 0, "k": [1.0, 1.0, 1.0, 1.0] },
+                    "o": { "a": 0, "k": 100.0 },
+                    "w": { "a": 0, "k": 2.5 },
+                    "lc": 2,
+                    "lj": 2
+                  },
+                  {
+                    "ty": "tr",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "a": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [100.0, 100.0] },
+                    "r": { "a": 0, "k": 0.0 },
+                    "o": { "a": 0, "k": 100.0 }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    runLottieDiffTest(json = json)
+  }
 }
