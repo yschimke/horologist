@@ -49,7 +49,7 @@ Eliminate all visual rendering regressions and mathematical defects across `:rem
   - [x] [Task 1.4: Sub-Frame Look-Up Table Easing Linear Interpolation](#PL_LOTTIE_REMED_T1_4)
   - [x] [Task 1.5: Inverted Alpha Track Mattes & Non-Adjacent Matte Parent Routing](#PL_LOTTIE_REMED_T1_5)
 - [ ] [Phase 2: Core Algorithm, Math Safety & Modifier Compounding](#PL_LOTTIE_REMED_P2)
-  - [ ] [Task 2.1: Animated Primitive Keyframe Evaluation in Rectangle, Ellipse, PolyStar](#PL_LOTTIE_REMED_T2_1)
+  - [x] [Task 2.1: Animated Primitive Keyframe Evaluation in Rectangle, Ellipse, PolyStar](#PL_LOTTIE_REMED_T2_1)
   - [ ] [Task 2.2: Scale-Zero Singularity Matrix Symmetry in Transform.kt](#PL_LOTTIE_REMED_T2_2)
   - [ ] [Task 2.3: ImageLayer Native Bitmap Bounds Scaling](#PL_LOTTIE_REMED_T2_3)
   - [ ] [Task 2.4: Multi-Mask Add Mode Composite Path Union](#PL_LOTTIE_REMED_T2_4)
