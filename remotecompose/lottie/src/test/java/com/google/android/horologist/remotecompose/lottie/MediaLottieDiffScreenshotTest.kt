@@ -61,6 +61,11 @@ class MediaLottieDiffScreenshotTest : LottieDiffScreenshotTest() {
   fun m3Next() {
     runLottieDiffTest(R.raw.m3_next) {
       captureProgress(0.0f)
+      captureProgress(0.15f)
+      captureProgress(0.20f)
+      captureProgress(0.23f)
+      captureProgress(0.25f)
+      captureProgress(0.30f)
       captureProgress(0.5f)
       captureProgress(1.0f)
     }
