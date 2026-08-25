@@ -664,4 +664,171 @@ class LottieFeatureDiffScreenshotTest : LottieDiffScreenshotTest() {
 
     runLottieDiffTest(json = json)
   }
+
+  /** Tests static trim path modifiers on primitive parametric shapes. */
+  @Test
+  fun trimPathPrimitives() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "TrimPrimitivesLayer",
+            "ind": 1,
+            "ip": 0,
+            "op": 30,
+            "ks": {
+              "p": { "a": 0, "k": [50.0, 50.0, 0.0] },
+              "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+              "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+              "r": { "a": 0, "k": 0.0 },
+              "o": { "a": 0, "k": 100.0 }
+            },
+            "shapes": [
+              {
+                "ty": "gr",
+                "nm": "TrimRectGroup",
+                "it": [
+                  {
+                    "ty": "rc",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [60.0, 60.0] },
+                    "r": { "a": 0, "k": 10.0 }
+                  },
+                  {
+                    "ty": "tm",
+                    "nm": "Trim",
+                    "s": { "a": 0, "k": 20.0 },
+                    "e": { "a": 0, "k": 80.0 },
+                    "o": { "a": 0, "k": 15.0 }
+                  },
+                  {
+                    "ty": "st",
+                    "nm": "Stroke",
+                    "c": { "a": 0, "k": [0.9, 0.3, 0.2, 1.0] },
+                    "o": { "a": 0, "k": 100.0 },
+                    "w": { "a": 0, "k": 6.0 },
+                    "lc": 2,
+                    "lj": 2
+                  },
+                  {
+                    "ty": "tr",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "a": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [100.0, 100.0] },
+                    "r": { "a": 0, "k": 0.0 },
+                    "o": { "a": 0, "k": 100.0 }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    runLottieDiffTest(json = json)
+  }
+
+  /** Tests dynamic animated trim paths with keyframed start, end, and offset. */
+  @Test
+  fun trimPathAnimated() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "AnimatedTrimLayer",
+            "ind": 1,
+            "ip": 0,
+            "op": 30,
+            "ks": {
+              "p": { "a": 0, "k": [50.0, 50.0, 0.0] },
+              "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+              "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+              "r": { "a": 0, "k": 0.0 },
+              "o": { "a": 0, "k": 100.0 }
+            },
+            "shapes": [
+              {
+                "ty": "gr",
+                "nm": "TrimEllipseGroup",
+                "it": [
+                  {
+                    "ty": "el",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [64.0, 64.0] }
+                  },
+                  {
+                    "ty": "tm",
+                    "nm": "AnimatedTrim",
+                    "s": {
+                      "a": 1,
+                      "k": [
+                        { "t": 0, "s": [0.0], "e": [40.0] },
+                        { "t": 30, "s": [40.0] }
+                      ]
+                    },
+                    "e": {
+                      "a": 1,
+                      "k": [
+                        { "t": 0, "s": [60.0], "e": [100.0] },
+                        { "t": 30, "s": [100.0] }
+                      ]
+                    },
+                    "o": {
+                      "a": 1,
+                      "k": [
+                        { "t": 0, "s": [0.0], "e": [90.0] },
+                        { "t": 30, "s": [90.0] }
+                      ]
+                    }
+                  },
+                  {
+                    "ty": "st",
+                    "nm": "Stroke",
+                    "c": { "a": 0, "k": [0.2, 0.5, 1.0, 1.0] },
+                    "o": { "a": 0, "k": 100.0 },
+                    "w": { "a": 0, "k": 6.0 },
+                    "lc": 2,
+                    "lj": 2
+                  },
+                  {
+                    "ty": "tr",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "a": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [100.0, 100.0] },
+                    "r": { "a": 0, "k": 0.0 },
+                    "o": { "a": 0, "k": 100.0 }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    runLottieDiffTest(json = json) {
+      captureFrame(frame = 0f)
+      captureFrame(frame = 15f)
+      captureFrame(frame = 30f)
+    }
+  }
 }
