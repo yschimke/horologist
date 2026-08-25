@@ -62,10 +62,16 @@ internal class RemoteStyleWithOpacity(
 }
 
 @SuppressLint("RestrictedApi")
-internal class RemoteFill(val fillColor: RemoteColor, val fillRule: FillRule = FillRule.NonZero) :
-  RemoteStyle {
+internal class RemoteFill(
+  val fillColor: RemoteColor,
+  val opacity: RemoteFloat = 100f.rf,
+  val fillRule: FillRule = FillRule.NonZero,
+) : RemoteStyle {
   override fun getPaint(inheritedOpacity: RemoteFloat): RemotePaint {
-    return RemotePaint { this.color = fillColor.copy(alpha = fillColor.alpha * inheritedOpacity) }
+    return RemotePaint {
+      val effectiveAlpha = fillColor.alpha * (opacity / 100f) * inheritedOpacity
+      this.color = fillColor.copy(alpha = effectiveAlpha)
+    }
   }
 }
 

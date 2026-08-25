@@ -450,7 +450,9 @@ private fun createPolygonPath(
 }
 
 private fun fill(fill: Fill, animationSettings: LottieSettings): RemoteFill {
-  return RemoteFill(animateColor(fill.color, animationSettings), fill.fillRule)
+  val fillColor = animateColor(fill.color, animationSettings)
+  val opacity = animateScalar(fill.opacity, animationSettings)
+  return RemoteFill(fillColor, opacity, fill.fillRule)
 }
 
 @SuppressLint("RestrictedApi")
