@@ -44,7 +44,7 @@ Execute the 3-phase remediation plan defined in `docs/lottie_remediation.plan.md
 - [x] [Task 1.5: Inverted Alpha Track Mattes & Non-Adjacent Matte Parent Routing (`PL_LOTTIE_REMED_T1_5`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T1_5)
 
 ### Subtask: Execute Phase 2 (Core Algorithm, Math Safety & Modifier Compounding)
-> Author: `dev-flow-orchestrator` — Created: 17:45 — Last updated: 19:15 — Status: `in-progress`
+> Author: `dev-flow-orchestrator` — Created: 17:45 — Last updated: 19:30 — Status: `completed`
 
 **Goal:** Implement Phase 2 core algorithm and math safety fixes: dynamic primitive keyframe evaluation in `Rectangle`/`Ellipse`/`PolyStar`, symmetric scale-zero transform clamping, native `ImageLayer` bitmap source rect scaling, multi-mask `Add` mode union merging, canvas skew axis rotation ordering, and `Repeater` group compounding.
 
@@ -53,10 +53,10 @@ Execute the 3-phase remediation plan defined in `docs/lottie_remediation.plan.md
 - [x] [Task 2.2: Scale-Zero Singularity Matrix Symmetry in Transform.kt (`PL_LOTTIE_REMED_T2_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T2_2)
 - [x] [Task 2.3: ImageLayer Native Bitmap Bounds Scaling (`PL_LOTTIE_REMED_T2_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T2_3)
 - [x] [Task 2.4: Multi-Mask Add Mode Composite Path Union (`PL_LOTTIE_REMED_T2_4`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T2_4)
-- [ ] [Task 2.5: Canvas Skew Axis Rotation Ordering & Repeater Group Compounding (`PL_LOTTIE_REMED_T2_5`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T2_5)
+- [x] [Task 2.5: Canvas Skew Axis Rotation Ordering & Repeater Group Compounding (`PL_LOTTIE_REMED_T2_5`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_remediation.plan.md#PL_LOTTIE_REMED_T2_5)
 
 ### Subtask: Execute Phase 3 (Extended Parity, Typography & Verification Hardening)
-> Author: `dev-flow-orchestrator` — Created: 17:45 — Last updated: 17:45 — Status: `planned`
+> Author: `dev-flow-orchestrator` — Created: 17:45 — Last updated: 19:30 — Status: `in-progress`
 
 **Goal:** Implement Phase 3 extended parity fixes: multiline text and stroke-over-fill ordering, stroke miter limit application to `RemotePaint`, gradient stop array bounds protection, precomposition canvas boundary clipping, and full Roborazzi golden baseline verification.
 
