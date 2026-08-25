@@ -1341,6 +1341,99 @@ class LottieFeatureDiffScreenshotTest : LottieDiffScreenshotTest() {
     runLottieDiffTest(json = json)
   }
 
+  /** Tests ShapeLayer with multiple Add masks merged into a composite union path. */
+  @Test
+  fun layerMultipleAddMasks() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "MultiAddMaskLayer",
+            "ind": 1,
+            "ip": 0,
+            "op": 30,
+            "ks": {
+              "p": { "a": 0, "k": [50.0, 50.0, 0.0] },
+              "a": { "a": 0, "k": [0.0, 0.0, 0.0] },
+              "s": { "a": 0, "k": [100.0, 100.0, 100.0] },
+              "r": { "a": 0, "k": 0.0 },
+              "o": { "a": 0, "k": 100.0 }
+            },
+            "masksProperties": [
+              {
+                "nm": "AddMaskLeft",
+                "mode": "a",
+                "inv": false,
+                "pt": {
+                  "a": 0,
+                  "k": {
+                    "c": true,
+                    "v": [[-40.0, -20.0], [-10.0, -20.0], [-10.0, 20.0], [-40.0, 20.0]],
+                    "i": [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
+                    "o": [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]]
+                  }
+                },
+                "o": { "a": 0, "k": 100.0 }
+              },
+              {
+                "nm": "AddMaskRight",
+                "mode": "a",
+                "inv": false,
+                "pt": {
+                  "a": 0,
+                  "k": {
+                    "c": true,
+                    "v": [[10.0, -20.0], [40.0, -20.0], [40.0, 20.0], [10.0, 20.0]],
+                    "i": [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
+                    "o": [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]]
+                  }
+                },
+                "o": { "a": 0, "k": 100.0 }
+              }
+            ],
+            "shapes": [
+              {
+                "ty": "gr",
+                "nm": "CircleGroup",
+                "it": [
+                  {
+                    "ty": "el",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [80.0, 80.0] }
+                  },
+                  {
+                    "ty": "fl",
+                    "c": { "a": 0, "k": [0.2, 0.6, 0.9, 1.0] },
+                    "o": { "a": 0, "k": 100.0 }
+                  },
+                  {
+                    "ty": "tr",
+                    "p": { "a": 0, "k": [0.0, 0.0] },
+                    "a": { "a": 0, "k": [0.0, 0.0] },
+                    "s": { "a": 0, "k": [100.0, 100.0] },
+                    "r": { "a": 0, "k": 0.0 },
+                    "o": { "a": 0, "k": 100.0 }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    runLottieDiffTest(json = json)
+  }
+
   /** Tests Repeater (rp) linear duplication with start/end opacity interpolation. */
   @Test
   fun repeaterLinearCopies() {

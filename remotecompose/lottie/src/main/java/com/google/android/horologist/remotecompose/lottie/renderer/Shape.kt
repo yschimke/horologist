@@ -551,26 +551,36 @@ internal fun applyLayerMasks(
   animationSettings: LottieSettings,
   canvas: RemoteCanvas,
 ) {
+  val nonInvertedAddSubpaths = mutableListOf<RemoteBezierValue>()
+
   for (mask in masks) {
     if (mask.mode == MaskMode.None) continue
     val maskPath = mask.path ?: continue
     val bezierList = animateBezier(maskPath, animationSettings)
     if (bezierList.isEmpty()) continue
-    val rcPath = buildRemotePathFromBezier(bezierList)
 
-    val clipOp =
-      when (mask.mode) {
-        MaskMode.Subtract -> if (mask.inverted) ClipOp.Intersect else ClipOp.Difference
-        MaskMode.Add,
-        MaskMode.Intersect -> if (mask.inverted) ClipOp.Difference else ClipOp.Intersect
-        MaskMode.Difference -> ClipOp.Difference
-        MaskMode.Lighten,
-        MaskMode.Darken,
-        MaskMode.None,
-        MaskMode.Unknown -> continue
-      }
+    if (mask.mode == MaskMode.Add && !mask.inverted) {
+      nonInvertedAddSubpaths.addAll(bezierList)
+    } else {
+      val rcPath = buildRemotePathFromBezier(bezierList)
+      val clipOp =
+        when (mask.mode) {
+          MaskMode.Subtract -> if (mask.inverted) ClipOp.Intersect else ClipOp.Difference
+          MaskMode.Add -> ClipOp.Difference
+          MaskMode.Intersect -> if (mask.inverted) ClipOp.Difference else ClipOp.Intersect
+          MaskMode.Difference -> ClipOp.Difference
+          MaskMode.Lighten,
+          MaskMode.Darken,
+          MaskMode.None,
+          MaskMode.Unknown -> continue
+        }
+      canvas.clipPath(rcPath, clipOp)
+    }
+  }
 
-    canvas.clipPath(rcPath, clipOp)
+  if (nonInvertedAddSubpaths.isNotEmpty()) {
+    val compositeAddPath = buildRemotePathFromBezier(nonInvertedAddSubpaths)
+    canvas.clipPath(compositeAddPath, ClipOp.Intersect)
   }
 }
 
