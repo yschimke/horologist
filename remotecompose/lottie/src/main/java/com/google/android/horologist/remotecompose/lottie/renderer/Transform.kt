@@ -20,7 +20,6 @@ import android.annotation.SuppressLint
 import androidx.compose.remote.creation.compose.layout.RemoteCanvas
 import androidx.compose.remote.creation.compose.state.RemoteFloat
 import androidx.compose.remote.creation.compose.state.RemotePaint
-import androidx.compose.remote.creation.compose.state.abs
 import androidx.compose.remote.creation.compose.state.rf
 import androidx.compose.remote.creation.compose.state.selectIfLt
 import androidx.compose.remote.creation.compose.state.tan
@@ -32,12 +31,21 @@ import com.google.android.horologist.remotecompose.lottie.renderer.properties.an
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateVector
 
 @SuppressLint("RestrictedApi")
+/** Clamps scale components symmetrically away from zero to avoid matrix inversion singularities. */
+internal fun clampScale(scale: RemoteFloat): RemoteFloat {
+  val posClamped = selectIfLt(scale, 0.0001f.rf, 0.0001f.rf, scale)
+  val negClamped = selectIfLt(scale, (-0.0001f).rf, scale, (-0.0001f).rf)
+  return selectIfLt(scale, 0f.rf, negClamped, posClamped)
+}
+
+@SuppressLint("RestrictedApi")
 /**
  * Calculates the inverse scale factor, guarding against division-by-zero singularities when scale
  * is zero or near zero.
  */
 internal fun computeInverseScale(scale: RemoteFloat): RemoteFloat {
-  return selectIfLt(abs(scale), 0.0001f.rf, 1f.rf, 1f.rf / scale)
+  val clamped = clampScale(scale)
+  return 1f.rf / clamped
 }
 
 @SuppressLint("RestrictedApi")
@@ -57,6 +65,8 @@ internal fun transform(
 
   val scaleX = scale[0] / 100f
   val scaleY = scale[1] / 100f
+  val safeScaleX = clampScale(scaleX)
+  val safeScaleY = clampScale(scaleY)
 
   canvas.translate(translation.x, translation.y)
   canvas.rotate(rotation)
@@ -73,7 +83,7 @@ internal fun transform(
     }
   }
 
-  canvas.scale(scaleX, scaleY)
+  canvas.scale(safeScaleX, safeScaleY)
   canvas.translate(-anchorPoint.x, -anchorPoint.y)
 
   paint?.let { it.color = it.color.copy(alpha = opacity / 100f) }

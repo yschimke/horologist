@@ -42,18 +42,19 @@ class TransformTest {
 
   @Test
   fun computeInverseScale_zeroAndNearZeroGuarded() {
-    // When scale is exactly 0, division by zero should be avoided and fallback to 1f
+    // When scale is exactly 0, it is clamped to epsilon (0.0001f) and inverted to 10000f
     val scaleZero = 0f.rf
     val invZero = computeInverseScale(scaleZero)
-    assertThat(invZero.constantValueOrNull).isWithin(0.001f).of(1f)
+    assertThat(invZero.constantValueOrNull).isWithin(1f).of(10000f)
 
-    // When scale is near zero (< 0.0001f), guard should also prevent singularity
+    // When scale is near zero (< 0.0001f), clamped to 0.0001f and inverted to 10000f
     val scaleNearZero = 0.00001f.rf
     val invNearZero = computeInverseScale(scaleNearZero)
-    assertThat(invNearZero.constantValueOrNull).isWithin(0.001f).of(1f)
+    assertThat(invNearZero.constantValueOrNull).isWithin(1f).of(10000f)
 
+    // When scale is negative near zero, clamped to -0.0001f and inverted to -10000f
     val scaleNegativeNearZero = -0.00005f.rf
     val invNegNearZero = computeInverseScale(scaleNegativeNearZero)
-    assertThat(invNegNearZero.constantValueOrNull).isWithin(0.001f).of(1f)
+    assertThat(invNegNearZero.constantValueOrNull).isWithin(1f).of(-10000f)
   }
 }
