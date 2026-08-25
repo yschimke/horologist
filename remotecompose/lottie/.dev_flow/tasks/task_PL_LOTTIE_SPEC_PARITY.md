@@ -43,7 +43,7 @@ Execute the 4-phase implementation plan defined in `docs/lottie_spec_parity.plan
 - [x] [Task 1.5: Hierarchy Cycle Guard & Dynamic Track Matte Path Safety (`PL_LOTTIE_SPEC_PARITY_T1_5`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T1_5)
 
 ### Subtask: Execute Phase 2 (Core Rendering & Mathematical Parity)
-> Author: `dev-flow-orchestrator` — Created: 19:50 — Last updated: 21:20 — Status: `in-progress`
+> Author: `dev-flow-orchestrator` — Created: 19:50 — Last updated: 22:45 — Status: `completed`
 
 **Goal:** Implement Phase 2 core rendering and mathematical parity (Spatial Bézier tangents `to`/`ti`, gradient shaders for fill/stroke, stroke dash patterns and miter limits, EvenOdd fill rule, and local layer timing scaling).
 
@@ -53,7 +53,17 @@ Execute the 4-phase implementation plan defined in `docs/lottie_spec_parity.plan
 - [x] [Task 2.3: Stroke Dash Pattern (d) and Miter Limit (ml) (`PL_LOTTIE_SPEC_PARITY_T2_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T2_3)
 - [x] [Task 2.4: Path FillRule (EvenOdd) & Primitive TrimPath Dispatch (`PL_LOTTIE_SPEC_PARITY_T2_4`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T2_4)
 - [x] [Task 2.5: Local Layer Timing Scaling & Inverted Alpha Track Mattes (`PL_LOTTIE_SPEC_PARITY_T2_5`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T2_5)
-- [ ] **Next:** [Task 3.1: Root assets[] Asset Registry Model (`PL_LOTTIE_SPEC_PARITY_T3_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T3_1)
+
+### Subtask: Execute Phase 3 (Composition, Precomps & Layer Mask Pipeline)
+> Author: `dev-flow-orchestrator` — Created: 23:00 — Last updated: 23:30 — Status: `in-progress`
+
+**Goal:** Implement Phase 3 composition, precompositions, and layer mask pipeline (Root assets registry, recursive PrecompLayer engine, Layer masks clipping, and time remapping).
+
+**Progress:**
+- [x] [Task 3.1: Root assets[] Asset Registry Model (`PL_LOTTIE_SPEC_PARITY_T3_1`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T3_1)
+- [ ] **Next:** [Task 3.2: PrecompLayer Recursive Sub-Composition Rendering Engine (`PL_LOTTIE_SPEC_PARITY_T3_2`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T3_2)
+- [ ] [Task 3.3: Layer Masks Pipeline (masksProperties) (`PL_LOTTIE_SPEC_PARITY_T3_3`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T3_3)
+- [ ] [Task 3.4: Precomposition Time Remapping (tm) & Timeline Markers (`PL_LOTTIE_SPEC_PARITY_T3_4`)](file:///usr/local/google/home/myavorskyi/AndroidStudioProjects/my-horologist-lottie-grandchild-fix-v2/remotecompose/lottie/docs/lottie_spec_parity.plan.md#PL_LOTTIE_SPEC_PARITY_T3_4)
 
 **Activity:**
 - 17:45 — Created task and initialized plan for Phase 1.
@@ -67,8 +77,11 @@ Execute the 4-phase implementation plan defined in `docs/lottie_spec_parity.plan
 - 22:00 — Completed Task 2.3: Stroke Dash Pattern (d) and Miter Limit (ml) with dedicated `StrokeTest` suite and clean pre-commit review.
 - 22:30 — Completed Task 2.4: Path FillRule (EvenOdd) & Primitive TrimPath Dispatch with dedicated `PrimitiveTrimPathAndFillRuleTest` suite and clean pre-commit review.
 - 22:45 — Completed Task 2.5: Local Layer Timing Scaling & Inverted Alpha Track Mattes with dedicated `LayerTimingAndTrackMatteTest` suite, clean pre-commit review, and full Roborazzi verification. Phase 2 complete!
+- 23:30 — Completed Task 3.1: Root assets[] Asset Registry Model with polymorphic deserializer, `AssetTest` suite, and clean pre-commit review.
 
 ## Coordination Notes
+
+- 23:30 [dev-flow-orchestrator] — Completed Task 3.1. Authored `Asset.kt` polymorphic model hierarchy (`PrecompAsset`, `ImageAsset`, `AudioAsset`, `UnknownAsset`), updated `Animation.kt`, verified with `AssetTest.kt`, passed clean-context review, and passed full `:remotecompose:lottie:check` and Roborazzi verification.
 
 - 22:45 [dev-flow-orchestrator] — Completed Task 2.5 and completed Phase 2. Supported `InvertedAlpha` and `InvertedLuma` track mattes via `ClipOp.Difference`, resolved non-adjacent `matteParent` references in `LottieAnimation.kt`, scoped `calculateLocalFrame` to precompositions, and authored `LayerTimingAndTrackMatteTest.kt`.
 - 22:30 [dev-flow-orchestrator] — Completed Task 2.4. Extended `evaluateRectangle`, `evaluateEllipse`, and `evaluatePolyStar` to support `trimPath`, updated `Shape.kt` dispatch, added `fillRule` to `RemoteFill`, `RemoteGradientFill`, and `RemoteLottiePath`, authored `PrimitiveTrimPathAndFillRuleTest.kt`, and passed clean-context review.
