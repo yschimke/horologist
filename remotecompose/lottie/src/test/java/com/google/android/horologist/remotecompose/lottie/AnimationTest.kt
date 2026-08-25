@@ -954,4 +954,37 @@ class AnimationTest {
     val resultSingleVertexClosed = buildRemotePathFromBezier(listOf(singleVertexClosedSubpath))
     assertThat(resultSingleVertexClosed).isNotNull()
   }
+
+  @Test
+  fun lookupValueInBezier_withIntegerFrames_returnsExactValues() {
+    // Linear easing: (0, 0, 1, 1), duration = 10
+    val resultFrame0 = lookupValueInBezier(0f, 0f, 1f, 1f, 10f, 0f.rf)
+    val resultFrame5 = lookupValueInBezier(0f, 0f, 1f, 1f, 10f, 5f.rf)
+    val resultFrame10 = lookupValueInBezier(0f, 0f, 1f, 1f, 10f, 10f.rf)
+
+    assertThat(resultFrame0.constantValueOrNull).isEqualTo(0f)
+    assertThat(resultFrame5.constantValueOrNull).isEqualTo(0.5f)
+    assertThat(resultFrame10.constantValueOrNull).isEqualTo(1f)
+  }
+
+  @Test
+  fun lookupValueInBezier_withFractionalFrame_linearlyInterpolatesBetweenAdjacentFrames() {
+    // Linear easing: (0, 0, 1, 1), duration = 10 -> values at 0..10 are 0.0, 0.1, 0.2, 0.3, ...
+    // At frame 2.5, lerp(V[2], V[3], 0.5) = lerp(0.2, 0.3, 0.5) = 0.25
+    val resultFrame2Point5 = lookupValueInBezier(0f, 0f, 1f, 1f, 10f, 2.5f.rf)
+    assertThat(resultFrame2Point5.constantValueOrNull!!).isWithin(0.0001f).of(0.25f)
+
+    // At frame 0.25, lerp(V[0], V[1], 0.25) = lerp(0.0, 0.1, 0.25) = 0.025
+    val resultFrame0Point25 = lookupValueInBezier(0f, 0f, 1f, 1f, 10f, 0.25f.rf)
+    assertThat(resultFrame0Point25.constantValueOrNull!!).isWithin(0.0001f).of(0.025f)
+  }
+
+  @Test
+  fun lookupValueInBezier_withClampedFrameBoundaries_clampsToValidRange() {
+    val resultNegative = lookupValueInBezier(0f, 0f, 1f, 1f, 10f, (-5f).rf)
+    val resultBeyondDuration = lookupValueInBezier(0f, 0f, 1f, 1f, 10f, 15f.rf)
+
+    assertThat(resultNegative.constantValueOrNull).isEqualTo(0f)
+    assertThat(resultBeyondDuration.constantValueOrNull).isEqualTo(1f)
+  }
 }
