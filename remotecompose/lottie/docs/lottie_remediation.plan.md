@@ -55,7 +55,7 @@ Eliminate all visual rendering regressions and mathematical defects across `:rem
   - [x] [Task 2.4: Multi-Mask Add Mode Composite Path Union](#PL_LOTTIE_REMED_T2_4)
   - [x] [Task 2.5: Canvas Skew Axis Rotation Ordering & Repeater Group Compounding](#PL_LOTTIE_REMED_T2_5)
 - [ ] [Phase 3: Extended Parity, Typography & Verification Hardening](#PL_LOTTIE_REMED_P3)
-  - [ ] [Task 3.1: Multiline Text, Line Height & Stroke-Over-Fill in TextLayer](#PL_LOTTIE_REMED_T3_1)
+  - [x] [Task 3.1: Multiline Text, Line Height & Stroke-Over-Fill in TextLayer](#PL_LOTTIE_REMED_T3_1)
   - [ ] [Task 3.2: Stroke Miter Limit & Gradient Stop Boundary Guards](#PL_LOTTIE_REMED_T3_2)
   - [ ] [Task 3.3: Precomp Canvas Boundary Clipping & Roborazzi Baseline Verification](#PL_LOTTIE_REMED_T3_3)
 
