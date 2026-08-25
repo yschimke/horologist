@@ -32,6 +32,7 @@ import com.google.android.horologist.remotecompose.lottie.format.layer.MatteMode
 import com.google.android.horologist.remotecompose.lottie.format.layer.PrecompLayer
 import com.google.android.horologist.remotecompose.lottie.format.layer.ShapeLayer
 import com.google.android.horologist.remotecompose.lottie.format.layer.SolidColorLayer
+import com.google.android.horologist.remotecompose.lottie.format.layer.TextLayer
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateScalar
 
 /** Matte context for paired track matte layer masking */

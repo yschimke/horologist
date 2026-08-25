@@ -124,7 +124,7 @@ internal fun RenderShapes(
 }
 
 @SuppressLint("RestrictedApi")
-private fun gatherShapes(
+internal fun gatherShapes(
   shapes: List<GraphicElement>,
   animationSettings: LottieSettings,
   parentTrimPath: TrimPath? = null,

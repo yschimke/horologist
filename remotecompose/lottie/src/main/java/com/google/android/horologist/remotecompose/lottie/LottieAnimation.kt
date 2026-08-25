@@ -34,6 +34,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
 import com.google.android.horologist.remotecompose.lottie.format.Animation
+import com.google.android.horologist.remotecompose.lottie.format.FontChar
+import com.google.android.horologist.remotecompose.lottie.format.FontList
 import com.google.android.horologist.remotecompose.lottie.format.asset.Asset
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
 import com.google.android.horologist.remotecompose.lottie.format.layer.Layer
@@ -50,6 +52,8 @@ import com.google.android.horologist.remotecompose.lottie.renderer.layers.MatteC
  * @property visibility Compound layer visibility multiplier.
  * @property activePrecomps Set of precomposition asset IDs currently rendering (recursion guard).
  * @property frameRate The composition frame rate in frames per second.
+ * @property fonts The fonts table defined in the animation root.
+ * @property chars Vector glyph definitions defined in the animation root.
  */
 internal data class LottieSettings(
   val currentFrame: RemoteFloat,
@@ -61,6 +65,8 @@ internal data class LottieSettings(
   val visibility: RemoteFloat = 1f.rf,
   val activePrecomps: Set<String> = emptySet(),
   val frameRate: Float = 30f,
+  val fonts: FontList? = null,
+  val chars: List<FontChar> = emptyList(),
 )
 
 /** CompositionLocal for [LottieSettings]. */
@@ -152,6 +158,8 @@ internal fun LottieAnimation(
       endFrame = animation.endFrame,
       assets = assetMap,
       frameRate = animation.frameRate,
+      fonts = animation.fonts,
+      chars = animation.chars,
     )
 
   CompositionLocalProvider(LocalAnimationSettings provides animationSettings) {
