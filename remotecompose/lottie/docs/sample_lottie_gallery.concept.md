@@ -61,33 +61,47 @@ LottieScreen (Self-Contained)
 
 ### 3.1. Showcase Presentation Modes  {#C_SAMPLE_LOTTIE_03_01}
 
-`LottieScreen` supports rich display of all animations:
-1. **Scrollable Gallery View:** A `ScalingLazyColumn` displaying all 25+ animations as cards with live animated previews, title badges, and category headers.
-2. **Interactive Detail View / Pager:** Swiping or tapping an animation allows full-screen playback with Play/Pause, Restart, and Prev/Next stepping.
+`LottieScreen` supports rich display modes:
+1. **Scrollable Gallery View:** A `ScalingLazyColumn` displaying all 26 animations grouped by category with live animated thumbnail previews, title badges, and a prominent top-level **Demo Mode** trigger button.
+2. **Interactive Detail Player:** Full-screen animation playback with instant Next/Previous navigation, Play/Pause control, and dual playback regimes.
+3. **Auto-Cycling Demo Mode (Kiosk Mode):** Automated full-screen playback that advances through all animations every couple of seconds for hands-free device inspection.
 
-### 3.2. Complete Animation Coverage  {#C_SAMPLE_LOTTIE_03_02}
+### 3.2. Playback Regimes (Time vs Crown Scrubbing)  {#C_SAMPLE_LOTTIE_03_02}
 
-The embedded catalog contains:
-- **Media Icons:** `geometry`, `m3_play_pause`, `m3_next`, `play_pause`, `next`, `volume_up`, `volume_down`, `mute_to_unmute`, `unmute_to_mute`.
-- **Parametric Shapes & Hierarchies:** `polystar`, `rect_ellipse`, `position_animated`, `position_static`, `parent_chain`, `grandparent`, `transform_skew`.
-- **Gradients, Strokes & Fills:** `gradient_linear`, `gradient_radial`, `gradient_stroke`, `stroke_dash_miter`, `fill_rule_evenodd`.
-- **Modifiers, Paths & Masks:** `trim_paths`, `layer_masks`, `repeater_modifiers`, `rounded_corners`, `merge_paths`.
-- **Compositions & Advanced:** `nested_precompositions`, `time_remapping`, `image_layer_base64`, `text_layer_glyphs`.
+The detail player provides two distinct animation driving regimes:
+1. **Time-Based Mode (⏱ Time):** Continuous looping playback driven by Compose animation transitions / system clock. Includes play/pause toggle.
+2. **Crown-Based Mode (👑 Crown Scrubbing):** Physical rotary crown rotation intercepts scroll events to manually drive the normalized progress `0.0f..1.0f`, rendering frame-by-frame on `LottiePreview(progress = progress)`.
+
+### 3.3. Next / Previous Recomposition & RemoteDocument Keying  {#C_SAMPLE_LOTTIE_03_03}
+
+Because `rememberRemoteDocument` compiles and caches the binary Remote Compose document across recompositions, switching the active animation item must be explicitly keyed (`key(item.rawRes)`) to trigger immediate document recompilation and reset playback state upon pressing Next or Previous.
+
+### 3.4. Complete Animation Coverage  {#C_SAMPLE_LOTTIE_03_04}
+
+The embedded catalog contains 26 animations across 4 categories:
+- **Media Icons (9):** `geometry`, `m3_play_pause`, `m3_next`, `play_pause`, `next`, `volume_up`, `volume_down`, `mute_to_unmute`, `unmute_to_mute`.
+- **Parametric Shapes & Hierarchies (7):** `polystar`, `rect_ellipse`, `position_animated`, `position_static`, `parent_chain`, `grandparent`, `transform_skew`.
+- **Gradients, Strokes & Fills (5):** `gradient_linear_fill`, `gradient_radial_fill`, `gradient_stroke`, `stroke_dash_pattern`, `fill_rule_even_odd`.
+- **Modifiers & Paths (5):** `trim_path_primitives`, `repeater_linear_copies`, `repeater_radial_distribution`, `rounded_corners_star`, `merge_paths_overlapping_circles`.
 
 ## 4. Integration Points  {#C_SAMPLE_LOTTIE_04}
 
 - **Entry Point:** Existing `LottieScreen(modifier: Modifier = Modifier)` in `com.google.android.horologist.lottie.LottieScreen`.
 - **Renderer:** `com.google.android.horologist.remotecompose.lottie.LottieAnimatedPreview` and `LottiePreview`.
+- **Rotary Input:** `Modifier.onRotaryScrollEvent` with `FocusRequester` for crown-driven progress scrubbing.
 
 ## 5. Design Decisions & Alternatives Considered  {#C_SAMPLE_LOTTIE_DEC}
 
 - `C_SAMPLE_LOTTIE_DEC_01` (Single-File Architecture): Implement all showcase logic, nested composables, and catalog data directly inside `LottieScreen.kt`.
   - *Pros:* Zero impact on `SampleWearApp` navigation, zero changes to other files, high cohesion.
-  - *Cons:* Larger `LottieScreen.kt` file.
   - *Resolution:* Adopted per user directive.
-- `C_SAMPLE_LOTTIE_DEC_02` (Asset Placement): Copy raw JSON files to `sample/src/main/res/raw/` with programmatic JSON definitions embedded for feature-specific cases.
-  - *Pros:* Standard Android resource resolution, offline capability, self-contained.
+- `C_SAMPLE_LOTTIE_DEC_02` (Dual Playback Regimes): Support both Time-based continuous play and Rotary Crown manual progress scrubbing.
+  - *Pros:* Allows inspecting complex multi-layer animations frame-by-frame on physical hardware.
   - *Resolution:* Adopted.
-- **Alternatives Considered:**
-  - *Multi-Screen Navigation Hierarchy:* Creating separate `LottieMenuScreen` and `LottiePlayerScreen` registered in `Screen.kt` and `SampleWearApp.kt`. *Rejected:* Unnecessary routing complexity when `LottieScreen` can encapsulate the entire interactive experience cleanly.
-  - *Automated Unit/Screenshot Tests:* Authoring Roborazzi tests for the sample app. *Rejected:* Unnecessary for internal demo screens per user directive.
+- `C_SAMPLE_LOTTIE_DEC_03` (Kiosk Demo Mode): Auto-cycling showcase cycling every 3 seconds.
+  - *Pros:* Perfect for hands-free demonstrations and rapid visual validation.
+  - *Resolution:* Adopted.
+- `C_SAMPLE_LOTTIE_DEC_04` (Explicit Compose Keying): Key the animation viewport with `key(item.rawRes)`.
+  - *Pros:* Fixes RemoteDocument caching stale document across Next/Prev navigation.
+  - *Resolution:* Adopted.
+
