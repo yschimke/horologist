@@ -34,6 +34,22 @@ internal interface RemoteShape {
 }
 
 @SuppressLint("RestrictedApi")
+@Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
+internal fun RemoteCanvas.drawPathWithFillRule(
+  path: RemotePath,
+  fillRule: FillRule,
+  paint: androidx.compose.remote.creation.compose.state.RemotePaint? = null,
+) {
+  val winding = if (fillRule == FillRule.EvenOdd) 1 else 0
+  val op =
+    internalCanvas.recordRenderingOp(paint) {
+      val pathId = document.addPathData(path, winding)
+      document.drawPath(pathId)
+    }
+  internalCanvas.buffer.addRoots(op, path)
+}
+
+@SuppressLint("RestrictedApi")
 internal class RemoteCompiledPath(val path: RemotePath, val fillRule: FillRule = FillRule.NonZero) :
   RemoteShape {
   override fun draw(
@@ -41,12 +57,7 @@ internal class RemoteCompiledPath(val path: RemotePath, val fillRule: FillRule =
     canvas: RemoteCanvas,
     inheritedOpacity: RemoteFloat,
   ) {
-    if (fillRule == FillRule.EvenOdd) {
-      path.path.fillType = android.graphics.Path.FillType.EVEN_ODD
-    } else {
-      path.path.fillType = android.graphics.Path.FillType.WINDING
-    }
-    canvas.drawPath(path)
+    canvas.drawPathWithFillRule(path, fillRule)
   }
 
   override fun withFillRule(fillRule: FillRule): RemoteCompiledPath =
@@ -109,13 +120,7 @@ internal class RemoteLottiePath(
       }
     }
 
-    if (fillRule == FillRule.EvenOdd) {
-      rcPath.path.fillType = android.graphics.Path.FillType.EVEN_ODD
-    } else {
-      rcPath.path.fillType = android.graphics.Path.FillType.WINDING
-    }
-
-    canvas.drawPath(rcPath)
+    canvas.drawPathWithFillRule(rcPath, fillRule)
   }
 
   override fun withFillRule(fillRule: FillRule): RemoteLottiePath =

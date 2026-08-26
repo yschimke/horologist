@@ -305,4 +305,27 @@ class PrimitiveTrimPathAndFillRuleTest {
     val evaluatedShape = shapeGroup.shapes.first()
     assertThat((evaluatedShape as RemoteLottiePath).fillRule).isEqualTo(FillRule.EvenOdd)
   }
+
+  @Test
+  fun remoteShape_drawing_withEvenOdd_maintainsFillRuleConfiguration() {
+    val evenOddLottiePath = RemoteLottiePath(path = emptyList(), fillRule = FillRule.EvenOdd)
+    val nonZeroLottiePath = RemoteLottiePath(path = emptyList(), fillRule = FillRule.NonZero)
+
+    assertThat(evenOddLottiePath.fillRule).isEqualTo(FillRule.EvenOdd)
+    assertThat(nonZeroLottiePath.fillRule).isEqualTo(FillRule.NonZero)
+
+    val evenOddCompiledPath =
+      RemoteCompiledPath(
+        path = androidx.compose.remote.creation.RemotePath(),
+        fillRule = FillRule.EvenOdd,
+      )
+    val nonZeroCompiledPath =
+      RemoteCompiledPath(
+        path = androidx.compose.remote.creation.RemotePath(),
+        fillRule = FillRule.NonZero,
+      )
+
+    assertThat(evenOddCompiledPath.fillRule).isEqualTo(FillRule.EvenOdd)
+    assertThat(nonZeroCompiledPath.fillRule).isEqualTo(FillRule.NonZero)
+  }
 }
