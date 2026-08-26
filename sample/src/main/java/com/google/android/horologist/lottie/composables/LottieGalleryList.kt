@@ -43,7 +43,7 @@ import com.google.android.horologist.compose.layout.rememberResponsiveColumnStat
 import com.google.android.horologist.compose.material.Chip
 import com.google.android.horologist.compose.material.SecondaryTitle
 import com.google.android.horologist.lottie.LottieDemoItem
-import com.google.android.horologist.remotecompose.lottie.LottieAnimatedPreview
+import com.google.android.horologist.lottie.util.AnimatedLottiePlayer
 
 /** Scrollable gallery displaying all animations grouped with live preview cards. */
 @Composable
@@ -116,7 +116,7 @@ fun LottieCard(item: LottieDemoItem, onClick: () -> Unit) {
         modifier = Modifier.size(36.dp).clip(CircleShape).background(Color(0xFF1E1E1E)),
         contentAlignment = Alignment.Center,
       ) {
-        LottieAnimatedPreview(animationResId = item.rawRes, modifier = Modifier.size(32.dp))
+        AnimatedLottiePlayer(rawRes = item.rawRes, modifier = Modifier.size(32.dp))
       }
     },
     onClick = onClick,

@@ -45,6 +45,8 @@ metalava { filename.set("api/current.api") }
 dependencies {
   api(projects.annotations)
 
+  implementation(libs.androidx.corektx)
+
   implementation(platform(libs.compose.bom))
   implementation(libs.compose.animation.core)
   debugImplementation(libs.compose.foundation.foundation)

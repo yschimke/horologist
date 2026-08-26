@@ -65,8 +65,7 @@ import com.google.android.horologist.compose.layout.rememberResponsiveColumnStat
 import com.google.android.horologist.compose.material.Chip
 import com.google.android.horologist.lottie.LottieDemoItem
 import com.google.android.horologist.lottie.PlaybackRegime
-import com.google.android.horologist.remotecompose.lottie.LottieAnimatedPreview
-import com.google.android.horologist.remotecompose.lottie.LottiePreview
+import com.google.android.horologist.lottie.util.AnimatedLottiePlayer
 
 /** Interactive detail view rendering full-size animation with playback controls. */
 @Composable
@@ -201,12 +200,9 @@ fun LottieDetailPlayer(
               when (regime) {
                 PlaybackRegime.TIME -> {
                   if (isPlaying) {
-                    LottieAnimatedPreview(
-                      animationResId = item.rawRes,
-                      modifier = Modifier.size(118.dp),
-                    )
+                    AnimatedLottiePlayer(rawRes = item.rawRes, modifier = Modifier.size(118.dp))
                   } else {
-                    LottiePreview(animationResId = item.rawRes, modifier = Modifier.size(118.dp))
+                    AnimatedLottiePlayer(rawRes = item.rawRes, modifier = Modifier.size(118.dp))
                   }
                 }
                 PlaybackRegime.CROWN -> {
@@ -214,9 +210,9 @@ fun LottieDetailPlayer(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                   ) {
-                    LottiePreview(
-                      animationResId = item.rawRes,
-                      progress = crownProgress,
+                    AnimatedLottiePlayer(
+                      rawRes = item.rawRes,
+                      progressOverride = crownProgress,
                       modifier = Modifier.size(100.dp),
                     )
                     Text(

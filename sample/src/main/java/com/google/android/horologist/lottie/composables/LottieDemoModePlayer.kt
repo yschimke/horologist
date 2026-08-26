@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import com.google.android.horologist.lottie.LottieDemoItem
-import com.google.android.horologist.remotecompose.lottie.LottieAnimatedPreview
+import com.google.android.horologist.lottie.util.AnimatedLottiePlayer
 import kotlinx.coroutines.delay
 
 /** Auto-cycling kiosk demo mode player presenting all catalog animations sequentially. */
@@ -98,10 +98,7 @@ fun LottieDemoModePlayer(
         contentAlignment = Alignment.Center,
       ) {
         key(currentItem.rawRes) {
-          LottieAnimatedPreview(
-            animationResId = currentItem.rawRes,
-            modifier = Modifier.size(110.dp),
-          )
+          AnimatedLottiePlayer(rawRes = currentItem.rawRes, modifier = Modifier.size(110.dp))
         }
       }
 
