@@ -17,7 +17,6 @@
 package com.google.android.horologist.lottie.composables
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,7 +30,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableFloatStateOf
@@ -41,10 +39,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.rotary.onRotaryScrollEvent
+import androidx.compose.ui.input.rotary.onPreRotaryScrollEvent
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -57,17 +53,21 @@ import androidx.wear.compose.material.CompactButton
 import androidx.wear.compose.material.CompactChip
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
+import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.compose.layout.ScalingLazyColumn
 import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults
 import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults.padding
 import com.google.android.horologist.compose.layout.ScreenScaffold
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
 import com.google.android.horologist.compose.material.Chip
+import com.google.android.horologist.compose.rotaryinput.RotaryDefaults
 import com.google.android.horologist.lottie.LottieDemoItem
 import com.google.android.horologist.lottie.PlaybackRegime
 import com.google.android.horologist.lottie.util.AnimatedLottiePlayer
+import kotlin.math.abs
 
 /** Interactive detail view rendering full-size animation with playback controls. */
+@OptIn(ExperimentalHorologistApi::class)
 @Composable
 fun LottieDetailPlayer(
   item: LottieDemoItem,
@@ -82,13 +82,7 @@ fun LottieDetailPlayer(
   var isPlaying by remember(item.rawRes) { mutableStateOf(true) }
   var crownProgress by remember(item.rawRes) { mutableFloatStateOf(0f) }
 
-  val focusRequester = remember { FocusRequester() }
-
-  LaunchedEffect(regime) {
-    if (regime == PlaybackRegime.CROWN) {
-      focusRequester.requestFocus()
-    }
-  }
+  val isLowRes = RotaryDefaults.isLowResInput()
 
   val columnState =
     rememberResponsiveColumnState(
@@ -99,8 +93,31 @@ fun LottieDetailPlayer(
         )
     )
 
-  ScreenScaffold(scrollState = columnState) {
-    ScalingLazyColumn(columnState = columnState, modifier = modifier.fillMaxSize()) {
+  ScreenScaffold(
+    scrollState = columnState,
+    modifier =
+      modifier.fillMaxSize().onPreRotaryScrollEvent { event ->
+        if (regime == PlaybackRegime.CROWN) {
+          val pixels =
+            if (event.verticalScrollPixels != 0f) {
+              event.verticalScrollPixels
+            } else {
+              event.horizontalScrollPixels
+            }
+          val delta =
+            if (isLowRes || abs(pixels) <= 2.0f) {
+              pixels * 0.05f
+            } else {
+              pixels * 0.003f
+            }
+          crownProgress = ((crownProgress + delta) % 1f + 1f) % 1f
+          true
+        } else {
+          false
+        }
+      },
+  ) {
+    ScalingLazyColumn(columnState = columnState, modifier = Modifier.fillMaxSize()) {
       // Header: Counter and Category
       item {
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
@@ -175,22 +192,7 @@ fun LottieDetailPlayer(
 
       // Large Live Animation Viewport (Keyed by rawRes and regime for instant reload)
       item {
-        Box(
-          modifier =
-            Modifier.fillMaxWidth()
-              .then(
-                if (regime == PlaybackRegime.CROWN) {
-                  Modifier.focusRequester(focusRequester).focusable().onRotaryScrollEvent { event ->
-                    val delta = event.verticalScrollPixels * 0.002f
-                    crownProgress = (crownProgress + delta).coerceIn(0f, 1f)
-                    true
-                  }
-                } else {
-                  Modifier
-                }
-              ),
-          contentAlignment = Alignment.Center,
-        ) {
+        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
           Box(
             modifier =
               Modifier.size(130.dp).clip(RoundedCornerShape(16.dp)).background(Color(0xFF121212)),
@@ -202,7 +204,11 @@ fun LottieDetailPlayer(
                   if (isPlaying) {
                     AnimatedLottiePlayer(rawRes = item.rawRes, modifier = Modifier.size(118.dp))
                   } else {
-                    AnimatedLottiePlayer(rawRes = item.rawRes, modifier = Modifier.size(118.dp))
+                    AnimatedLottiePlayer(
+                      rawRes = item.rawRes,
+                      progressOverride = 0f,
+                      modifier = Modifier.size(118.dp),
+                    )
                   }
                 }
                 PlaybackRegime.CROWN -> {
@@ -261,14 +267,14 @@ fun LottieDetailPlayer(
             PlaybackRegime.CROWN -> {
               // Step buttons for touch / non-rotary fallback
               CompactButton(
-                onClick = { crownProgress = (crownProgress - 0.1f).coerceIn(0f, 1f) },
+                onClick = { crownProgress = ((crownProgress - 0.1f) % 1f + 1f) % 1f },
                 colors = ButtonDefaults.secondaryButtonColors(),
               ) {
                 Text(text = "-10%", fontSize = 9.sp)
               }
               Spacer(modifier = Modifier.width(4.dp))
               CompactButton(
-                onClick = { crownProgress = (crownProgress + 0.1f).coerceIn(0f, 1f) },
+                onClick = { crownProgress = ((crownProgress + 0.1f) % 1f + 1f) % 1f },
                 colors = ButtonDefaults.secondaryButtonColors(),
               ) {
                 Text(text = "+10%", fontSize = 9.sp)

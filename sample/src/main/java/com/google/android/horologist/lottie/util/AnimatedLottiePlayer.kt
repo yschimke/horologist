@@ -66,7 +66,10 @@ fun AnimatedLottiePlayer(
       modifier = modifier,
       documentWidth = document.width,
       documentHeight = document.height,
-      update = { player -> player.setUserLocalFloat("progress", currentProgress) },
+      update = { player ->
+        player.setUserLocalFloat("progress", currentProgress)
+        player.invalidate()
+      },
     )
   }
 }

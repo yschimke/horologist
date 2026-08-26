@@ -103,6 +103,12 @@ val LottieDemoCatalog: List<LottieDemoItem> =
 
     // 2. Parametric Shapes & Hierarchies
     LottieDemoItem(
+      title = "Position Animated",
+      subtitle = "Spatial Bézier 2D curve",
+      category = "Shapes & Hierarchies",
+      rawRes = R.raw.position_animated,
+    ),
+    LottieDemoItem(
       title = "PolyStar",
       subtitle = "5-point star with roundness",
       category = "Shapes & Hierarchies",
@@ -115,28 +121,10 @@ val LottieDemoCatalog: List<LottieDemoItem> =
       rawRes = R.raw.rect_ellipse,
     ),
     LottieDemoItem(
-      title = "Position Animated",
-      subtitle = "Spatial Bézier 2D curve",
-      category = "Shapes & Hierarchies",
-      rawRes = R.raw.position_animated,
-    ),
-    LottieDemoItem(
-      title = "Position Static",
-      subtitle = "Absolute coordinate alignment",
-      category = "Shapes & Hierarchies",
-      rawRes = R.raw.position_static,
-    ),
-    LottieDemoItem(
       title = "Parent Chain",
       subtitle = "20-deep ancestor transform chain",
       category = "Shapes & Hierarchies",
       rawRes = R.raw.parent_chain,
-    ),
-    LottieDemoItem(
-      title = "Grandparent",
-      subtitle = "3-level nested square hierarchy",
-      category = "Shapes & Hierarchies",
-      rawRes = R.raw.grandparent,
     ),
     LottieDemoItem(
       title = "Transform Skew",
