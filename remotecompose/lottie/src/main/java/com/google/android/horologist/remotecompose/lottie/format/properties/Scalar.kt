@@ -224,3 +224,81 @@ internal object ScalarKeyframeValueSerializer : KSerializer<RemoteFloat> {
     jsonEncoder.encodeJsonElement(buildJsonArray { add(value.constantValue) })
   }
 }
+
+/**
+ * Helper to parse a list of tangent floats from a [JsonElement], supporting primitives, float
+ * arrays, and nested arrays.
+ */
+internal fun parseTangentValues(element: JsonElement?): List<Float> {
+  return when (element) {
+    null -> emptyList()
+    is JsonPrimitive -> element.floatOrNull?.let { listOf(it) } ?: emptyList()
+    is JsonArray -> {
+      if (element.isEmpty()) {
+        emptyList()
+      } else if (element.first() is JsonArray) {
+        parseTangentValues(element.first())
+      } else {
+        element.mapNotNull { it.jsonPrimitive.floatOrNull }
+      }
+    }
+    is JsonObject -> {
+      element["k"]?.let { parseTangentValues(it) } ?: emptyList()
+    }
+  }
+}
+
+/**
+ * Serializer for [KeyframeEasing] handling numbers, arrays, and objects with x/y float or array
+ * fields.
+ */
+internal object KeyframeEasingSerializer : KSerializer<KeyframeEasing> {
+  override val descriptor: SerialDescriptor =
+    buildClassSerialDescriptor("KeyframeEasing") {
+      element<List<Float>>("x")
+      element<List<Float>>("y")
+    }
+
+  override fun deserialize(decoder: Decoder): KeyframeEasing {
+    val jsonDecoder = decoder as JsonDecoder
+    return when (val element = jsonDecoder.decodeJsonElement()) {
+      is JsonObject -> {
+        val xList = parseTangentValues(element["x"])
+        val yList = parseTangentValues(element["y"])
+        KeyframeEasing(x = xList, y = yList)
+      }
+      is JsonArray -> {
+        val values = parseTangentValues(element)
+        KeyframeEasing(x = values, y = values)
+      }
+      is JsonPrimitive -> {
+        val v = element.floatOrNull ?: 0f
+        KeyframeEasing(x = listOf(v), y = listOf(v))
+      }
+    }
+  }
+
+  override fun serialize(encoder: Encoder, value: KeyframeEasing) {
+    val jsonEncoder = encoder as JsonEncoder
+    jsonEncoder.encodeJsonElement(
+      buildJsonObject {
+        put(
+          "x",
+          buildJsonArray {
+            for (v in value.x) {
+              add(JsonPrimitive(v))
+            }
+          },
+        )
+        put(
+          "y",
+          buildJsonArray {
+            for (v in value.y) {
+              add(JsonPrimitive(v))
+            }
+          },
+        )
+      }
+    )
+  }
+}

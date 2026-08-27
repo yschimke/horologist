@@ -26,6 +26,7 @@ import com.google.android.horologist.remotecompose.lottie.format.graphicelement.
 import com.google.android.horologist.remotecompose.lottie.format.properties.AnimatedPositionProperty
 import com.google.android.horologist.remotecompose.lottie.format.properties.AnimatedScalarProperty
 import com.google.android.horologist.remotecompose.lottie.format.properties.AnimatedVectorProperty
+import com.google.android.horologist.remotecompose.lottie.format.properties.KeyframeEasing
 import com.google.android.horologist.remotecompose.lottie.format.properties.PositionPropertyKeyframe
 import com.google.android.horologist.remotecompose.lottie.format.properties.ScalarKeyframeEasing
 import com.google.android.horologist.remotecompose.lottie.format.properties.ScalarPropertyKeyframe
@@ -44,7 +45,7 @@ class PrimitiveKeyframeEvaluationTest {
 
   @Test
   fun evaluateRectangle_withAnimatedSizeAndPosition_interpolatesAtCurrentFrame() {
-    val linearPosEasing = ScalarKeyframeEasing(x = 0f, y = 0f)
+    val linearPosEasing = KeyframeEasing(0f, 0f)
 
     val sizeProp =
       AnimatedVectorProperty(
@@ -117,7 +118,7 @@ class PrimitiveKeyframeEvaluationTest {
 
   @Test
   fun evaluateEllipse_withAnimatedSize_interpolatesAtCurrentFrame() {
-    val linearPosEasing = ScalarKeyframeEasing(x = 0f, y = 0f)
+    val linearPosEasing = KeyframeEasing(0f, 0f)
 
     val sizeProp =
       AnimatedVectorProperty(
