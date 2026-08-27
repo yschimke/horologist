@@ -47,7 +47,7 @@ Eliminate all visual rendering regressions and mathematical defects across `:rem
   - [x] [Task 1.2: TextLayer Vector Glyph Harvesting in gatherShapes](#PL_LOTTIE_REMED_T1_2)
   - [x] [Task 1.3: EvenOdd Fill Rule Canvas Path Dispatch](#PL_LOTTIE_REMED_T1_3)
   - [x] [Task 1.4: Sub-Frame Look-Up Table Easing Linear Interpolation](#PL_LOTTIE_REMED_T1_4)
-  - [x] [Task 1.5: Inverted Alpha Track Mattes & Non-Adjacent Matte Parent Routing](#PL_LOTTIE_REMED_T1_5)
+  - [x] [Task 1.5: Non-Adjacent Matte Routing & [BLOCKED] Inverted Alpha Clipping](#PL_LOTTIE_REMED_T1_5)
 - [x] [Phase 2: Core Algorithm, Math Safety & Modifier Compounding](#PL_LOTTIE_REMED_P2)
   - [x] [Task 2.1: Animated Primitive Keyframe Evaluation in Rectangle, Ellipse, PolyStar](#PL_LOTTIE_REMED_T2_1)
   - [x] [Task 2.2: Scale-Zero Singularity Matrix Symmetry in Transform.kt](#PL_LOTTIE_REMED_T2_2)
@@ -58,6 +58,14 @@ Eliminate all visual rendering regressions and mathematical defects across `:rem
   - [x] [Task 3.1: Multiline Text, Line Height & Stroke-Over-Fill in TextLayer](#PL_LOTTIE_REMED_T3_1)
   - [x] [Task 3.2: Stroke Miter Limit & Gradient Stop Boundary Guards](#PL_LOTTIE_REMED_T3_2)
   - [x] [Task 3.3: Precomp Canvas Boundary Clipping & Roborazzi Baseline Verification](#PL_LOTTIE_REMED_T3_3)
+- [ ] [Phase 4: Actionable Extended Modifiers, Arc Length Trim Path & Keyframe Parity](#PL_LOTTIE_REMED_P4)
+  - [ ] [Task 4.1: Dynamic Arc-Length Segmenting in Animated Trim Path](#PL_LOTTIE_REMED_T4_1)
+  - [ ] [Task 4.2: Extended Graphic Modifiers Rendering (ZigZag, Pucker/Bloat, Twist, OffsetPath)](#PL_LOTTIE_REMED_T4_2)
+  - [ ] [Task 4.3: Multi-Dimensional Easing Tangent Vector Support](#PL_LOTTIE_REMED_T4_3)
+  - [ ] [Task 4.4: Hidden Layers as Track Matte Sources](#PL_LOTTIE_REMED_T4_4)
+- [ ] [BLOCKED UPSTREAM] [Phase 5: Canvas-Level Difference Clipping & Subtractive Mask Parity](#PL_LOTTIE_REMED_P5)
+  - [ ] [Task 5.1: Inverted Alpha & Inverted Luma Track Matte Canvas Clipping](#PL_LOTTIE_REMED_T5_1)
+  - [ ] [Task 5.2: Subtractive & Difference Layer Masks Canvas Clipping](#PL_LOTTIE_REMED_T5_2)
 
 ---
 
@@ -99,14 +107,14 @@ Eliminate all visual rendering regressions and mathematical defects across `:rem
 - **Verify:** `SP_LOTTIE_REMED_03_04` — `./gradlew :remotecompose:lottie:testDebugUnitTest --no-build-cache`
 - **Commit:** `fix(lottie): interpolate fractional look-up table frames in bezier easing`
 
-#### Task 1.5: Inverted Alpha Track Mattes & Non-Adjacent Matte Parent Routing {#PL_LOTTIE_REMED_T1_5}
-- **Objective:** Fix inverted alpha clipping via `ClipOp.Difference` against layer bounds, resolve `matteParent` index lookup across non-adjacent layer indices, and ensure hidden layers (`hd: true`) contribute as matte sources.
-- **Files to Modify:**
-  - `remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/renderer/Shape.kt`
+#### Task 1.5: Non-Adjacent Matte Routing & [BLOCKED] Inverted Alpha Clipping {#PL_LOTTIE_REMED_T1_5}
+- **Objective:** Resolve `matteParent` index lookup across non-adjacent layer indices and ensure hidden layers (`hd: true`) contribute as matte sources.
+- **Upstream Blocker:** Canvas-level inverted alpha clipping (`tt: 2`, `ClipOp.Difference`) is **blocked** by the upstream `androidx.compose.remote` `RemoteCanvas.clipPath` bug. **Do not attempt workarounds or implementations of inverted alpha clipping until upstream is fixed.**
+- **Files Modified:**
   - `remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/LottieAnimation.kt`
   - `remotecompose/lottie/src/test/java/com/google/android/horologist/remotecompose/lottie/LottieFeatureDiffScreenshotTest.kt`
-- **Verify:** `SP_LOTTIE_REMED_03_05`, `SP_LOTTIE_REMED_03_06` — `./gradlew :remotecompose:lottie:testDebugUnitTest --no-build-cache`
-- **Commit:** `fix(lottie): support inverted alpha mattes and non-adjacent matte routing`
+- **Verify:** `SP_LOTTIE_REMED_03_06` — `./gradlew :remotecompose:lottie:testDebugUnitTest --no-build-cache`
+- **Commit:** `fix(lottie): support non-adjacent matte routing`
 
 ---
 
@@ -183,3 +191,72 @@ Eliminate all visual rendering regressions and mathematical defects across `:rem
   - `remotecompose/lottie/src/test/java/com/google/android/horologist/remotecompose/lottie/LottieFeatureDiffScreenshotTest.kt`
 - **Verify:** `./gradlew :remotecompose:lottie:check`
 - **Commit:** `fix(lottie): clip precomposition canvas boundaries and verify test baselines`
+
+---
+
+### Phase 4: Actionable Extended Modifiers, Arc Length Trim Path & Keyframe Parity {#PL_LOTTIE_REMED_P4}
+
+#### Task 4.1: Dynamic Arc-Length Segmenting in Animated Trim Path {#PL_LOTTIE_REMED_T4_1}
+- **Objective:** Eliminate chord distortion when trimming animated curved paths (`trimPathAnimated_frame*`). Replace endpoint-only Cartesian lerping with continuous dynamic de Casteljau segment sampling evaluated at the exact frame trim offset.
+- **Files to Modify:**
+  - `remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/renderer/shapes/TrimPath.kt`
+  - `remotecompose/lottie/src/test/java/com/google/android/horologist/remotecompose/lottie/LottieFeatureDiffScreenshotTest.kt`
+- **Verify:** `./gradlew :remotecompose:lottie:testDebugUnitTest --no-build-cache`
+- **Commit:** `fix(lottie): evaluate animated trim path curves via dynamic de Casteljau arc segmenting`
+
+#### Task 4.2: Extended Graphic Modifiers Rendering (ZigZag, Pucker/Bloat, Twist, OffsetPath) {#PL_LOTTIE_REMED_T4_2}
+- **Objective:** Implement geometry evaluators in `renderer/shapes/` for Lottie modifiers whose AST models are already parsed: ZigZag (`zz`), Pucker/Bloat (`pb`), Twist (`tw`), and OffsetPath (`op`).
+- **Files to Modify:**
+  - `remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/renderer/Shape.kt`
+  - `remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/renderer/shapes/`
+  - `remotecompose/lottie/src/test/java/com/google/android/horologist/remotecompose/lottie/renderer/ShapeEvaluationTest.kt`
+- **Verify:** `./gradlew :remotecompose:lottie:testDebugUnitTest --no-build-cache`
+- **Commit:** `feat(lottie): implement geometry modifiers for ZigZag, Pucker/Bloat, Twist, and OffsetPath`
+
+#### Task 4.3: Multi-Dimensional Easing Tangent Vector Support {#PL_LOTTIE_REMED_T4_3}
+- **Objective:** Support multi-dimensional keyframe easing tangents in `Scalar.kt` and `Vector.kt` when properties have split dimensions or multidimensional Bezier control points.
+- **Files to Modify:**
+  - `remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/renderer/properties/Scalar.kt`
+  - `remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/renderer/properties/Vector.kt`
+  - `remotecompose/lottie/src/test/java/com/google/android/horologist/remotecompose/lottie/KeyframeEasingTest.kt`
+- **Verify:** `./gradlew :remotecompose:lottie:testDebugUnitTest --no-build-cache`
+- **Commit:** `fix(lottie): parse multidimensional keyframe easing tangents`
+
+#### Task 4.4: Hidden Layers as Track Matte Sources {#PL_LOTTIE_REMED_T4_4}
+- **Objective:** Ensure layers with `hidden == true` (`hd: true`) contribute their geometry to track matte clipping without rendering themselves, fulfilling Lottie 1.0.1 specification Section 2.2.
+- **Files to Modify:**
+  - `remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/renderer/Shape.kt`
+  - `remotecompose/lottie/src/main/java/com/google/android/horologist/remotecompose/lottie/renderer/layers/Layer.kt`
+  - `remotecompose/lottie/src/test/java/com/google/android/horologist/remotecompose/lottie/LottieFeatureDiffScreenshotTest.kt`
+- **Verify:** `./gradlew :remotecompose:lottie:testDebugUnitTest --no-build-cache`
+- **Commit:** `fix(lottie): allow hidden layers to act as track matte sources`
+
+---
+
+### Phase 5: [BLOCKED UPSTREAM] Canvas-Level Difference Clipping & Subtractive Mask Parity {#PL_LOTTIE_REMED_P5}
+
+#### Task 5.1: Inverted Alpha & Inverted Luma Track Matte Canvas Clipping {#PL_LOTTIE_REMED_T5_1}
+- **Status:** **[BLOCKED - DO NOT PROCEED]**
+- **Blocker Description:** Blocked by upstream `androidx.compose.remote` bug where `RemoteCanvas.clipPath` ignores `ClipOp.Difference` and serializes all clips as `INTERSECT`.
+- **Action:** Postpone implementation until `androidx.compose.remote` provides `addClipPath(int pathId, int regionOp)` support.
+
+#### Task 5.2: Subtractive & Difference Layer Masks Canvas Clipping {#PL_LOTTIE_REMED_T5_2}
+- **Status:** **[BLOCKED - DO NOT PROCEED]**
+- **Blocker Description:** Blocked by upstream `androidx.compose.remote` bug where `RemoteCanvas.clipPath` ignores `ClipOp.Difference` for `MaskMode.Subtract` and `MaskMode.Difference`.
+- **Action:** Postpone implementation until `androidx.compose.remote` provides `addClipPath(int pathId, int regionOp)` support.
+
+---
+
+## 5. Upstream Library Blockers (`androidx.compose.remote`)
+
+### 5.1 `RemoteCanvas.clipPath` Ignores `clipOp` & Omits `regionOp` Wire Serialization
+
+- **Upstream Modules Affected:** `androidx.compose.remote:remote-creation-compose`, `androidx.compose.remote:remote-creation-core`, `androidx.compose.remote:remote-core`
+- **Issue Summary:** 
+  1. `RemoteCanvas.clipPath(path: RemotePath, clipOp: ClipOp = ClipOp.Intersect)` accepts a `clipOp` parameter but ignores it, unconditionally invoking `document.addClipPath(pathId)`.
+  2. `RemoteComposeWriter` and `RemoteComposeBuffer` lack an `addClipPath(int pathId, int regionOp)` overload.
+  3. `ClipPath.apply(buffer, id)` writes only `id`, setting high bits to `0` instead of packing `regionOp` (which `ClipPath.read()` expects via `pack >> 24`).
+  4. Both Compose and Android View players receive `regionOp = 0`, causing all `clipPath` calls to execute as `ClipOp.Intersect`.
+- **Policy Directive:**
+  - **DO NOT PROCEED** with implementing features or workarounds that depend on canvas-level `ClipOp.Difference` / `clipPath` until the upstream fix lands in `androidx.compose.remote`.
+  - All dependent tests (e.g. `layerMaskSolidSubtract`, `trackMatteInvertedAlpha`) remain documented as blocked on upstream.

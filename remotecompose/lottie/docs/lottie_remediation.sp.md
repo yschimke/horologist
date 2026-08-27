@@ -69,7 +69,7 @@ When `inheritedStyle` is non-null (e.g. from parent `TextLayer`), unstyled `Path
 | Feature | Contract | Expected Output |
 |---|---|---|
 | `MaskMode.Add` Multi-Mask | Merge all `Add` masks into `compositeAddPath` via `Path.Op.UNION`. | Canvas clips intersection with composite union path: `canvas.clipPath(compositeAddPath, ClipOp.Intersect)`. |
-| `MatteMode.InvertedAlpha` | Clip layer bounds difference with matte path: `canvas.clipPath(mattePath, ClipOp.Difference)`. | Alpha content cuts out a hole; exterior area remains visible. |
+| `MatteMode.InvertedAlpha` | Clip layer bounds difference with matte path: `canvas.clipPath(mattePath, ClipOp.Difference)`. | **[BLOCKED UPSTREAM]** Alpha content cuts out a hole; blocked by upstream `RemoteCanvas.clipPath` ignoring `ClipOp.Difference`. |
 | Non-Adjacent `matteParent` | Resolve `layer.matteParent` index by searching all layers in `animation.layers`. | Matte target receives clipping even when intermediate layers exist. |
 | Hidden Matte Source | If `matteLayer.hidden == true`, matte path is evaluated for clipping but not drawn. | Spec-compliant track matte masking from hidden control layers. |
 
@@ -87,7 +87,7 @@ When `inheritedStyle` is non-null (e.g. from parent `TextLayer`), unstyled `Path
 | `SP_LOTTIE_REMED_03_02` | TextLayer Glyphs | `textLayerVectorGlyphs` Screenshot | Character glyph contours render with crisp vector fill matching `lottie-android`. |
 | `SP_LOTTIE_REMED_03_03` | EvenOdd Fill Rule | `fillRuleEvenOdd` Screenshot | 5-pointed star renders hollow center cutout with transparent interior. |
 | `SP_LOTTIE_REMED_03_04` | Sub-Frame Lerp | `m3Next` & `playPause` Screenshot | Intermediate progress frames ($p=0.23, p=0.25$) render without morph lag or duplicate shapes. |
-| `SP_LOTTIE_REMED_03_05` | Inverted Alpha Matte | `trackMatteInvertedAlpha` Screenshot | Square renders with circular hole clipped out. |
+| `SP_LOTTIE_REMED_03_05` | Inverted Alpha Matte | `trackMatteInvertedAlpha` Screenshot | **[BLOCKED UPSTREAM]** Square renders with circular hole clipped out (pending upstream `clipPath` fix). |
 | `SP_LOTTIE_REMED_03_06` | Non-Adjacent Matte | `trackMatteNonAdjacentParent` Screenshot | Target star layer is rendered with inverted circle cutout. |
 | `SP_LOTTIE_REMED_03_07` | Primitive Keyframes | Unit Test & Animated Screenshots | Animated rectangles/ellipses/polystars preserve nonzero geometry throughout animation. |
 | `SP_LOTTIE_REMED_03_08` | Image Scaling | `imageLayerBase64` Screenshot | 1x1 bitmap scales to declared layer/asset bounds $(48 \times 48)$. |
