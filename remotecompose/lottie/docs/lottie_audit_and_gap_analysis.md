@@ -26,7 +26,7 @@ Following the full implementation of the 19 Phase 1–4 capabilities and the rol
   - **Critical:** TextLayer glyph geometries dropped in `gatherShapes` due to missing internal styles.
   - **Critical:** EvenOdd fill rule ignored in `RemoteLottiePath` rendering.
   - **Critical:** Animated trim path keyframe interpolation exhibits chord distortion across circles.
-  - **Critical:** Inverted alpha track mattes (`tt: 2`) evaluate as positive alpha.
+  - **Critical [BLOCKED Upstream]:** Inverted alpha track mattes (`tt: 2`) and layer mask subtractions evaluate as positive intersections due to upstream `androidx.compose.remote` `RemoteCanvas.clipPath` ignoring `clipOp` / `ClipOp.Difference`.
   - **Major:** Sub-frame easing Look-Up Table quantization in `lookupValueInBezier` causing 0.9 frame animation lag and speed stepping on fractional frames.
   - **Major:** Trim Path and PolyStar evaluation on animated primitives collapse to `(0, 0)` due to `.constantValueOrNull ?: 0f` unwrapping.
   - **Major:** Scale-zero singularity inversion in `Transform.kt` leaves canvas matrix permanently scaled down for subsequent sibling layers.
@@ -70,8 +70,8 @@ Following the full implementation of the 19 Phase 1–4 capabilities and the rol
 | **Shape Layer** | `ty: 4` | Full | Full | **Compliant** | Primary vector geometry and styling renderer. |
 | **Text Layer** | `ty: 5` | Full | Partial | **Critical Bug** | `TextDocument` properties, font/char glyph matching, tracking. *Bug:* `gatherShapes` drops unstyled glyphs; multiline text unhandled; keyframes frozen to frame 0. |
 | **Audio Layer** | `ty: 6` | Full | Stub | **AST Only** | Audio asset reference (not applicable to vector canvas rendering). |
-| **Layer Masks** | `masksProperties` | Full | Partial | **Major Gap** | Multi-mask clipping. *Bug:* Sequential `Add` masks compute intersection instead of union; subtract mask inverted on solid layers. |
-| **Track Mattes** | `tt`, `td`, `tp` | Full | Partial | **Major Gap** | Alpha (`tt: 1`) supported. *Bug:* Inverted Alpha (`tt: 2`) evaluates as positive; non-adjacent `tp` drops layer; hidden matte sources skipped (`hd: true`). |
+| **Layer Masks** | `masksProperties` | Full | Partial | **Major Gap [Blocked]** | Multi-mask clipping. *Bug:* Sequential `Add` masks compute intersection instead of union. *Upstream Blocker:* `Subtract`, `Difference`, and inverted mask clipping are blocked by upstream `androidx.compose.remote` bug where `RemoteCanvas.clipPath` ignores `ClipOp.Difference` and serializes as `INTERSECT`. **Do not proceed with canvas-level subtract/difference mask implementation until upstream bug is fixed.** |
+| **Track Mattes** | `tt`, `td`, `tp` | Full | Partial | **Major Gap [Blocked]** | Alpha (`tt: 1`) supported. *Bug:* Non-adjacent `tp` drops layer; hidden matte sources skipped (`hd: true`). *Upstream Blocker:* Inverted Alpha (`tt: 2`) and Inverted Luma (`tt: 4`) evaluate as positive alpha because upstream `RemoteCanvas.clipPath` ignores `ClipOp.Difference`. **Do not proceed with canvas-level inverted track matte implementation until upstream bug is fixed.** |
 | **Time Remapping** | `"tm"` | Full | Full | **Compliant** | Precomp frame remapping overriding linear clock. |
 | **Timeline Markers** | `"markers"` | Full | Full | **Compliant** | Named timeline segments `(cm, tm, dr)`. |
 
@@ -129,9 +129,9 @@ Following the full implementation of the 19 Phase 1–4 capabilities and the rol
 | **`fillRuleEvenOdd`** | 5-pointed star with center cutout | **Critical Bug** | Rendered as solid green star; `FillRule.EvenOdd` ignored during path draw. |
 | **`trimPathPrimitives`** | Trimming on static rounded rect & ellipse | **Major Discrepancy** | `lottie-android` ignores modifier placed after shape; RC applies it globally. |
 | **`trimPathAnimated_frame*`** | Animated trim path on circle (frames 0, 15, 30) | **Critical Bug** | Linear Cartesian lerping between pre-trimmed vertices cuts through circle as straight chords. |
-| **`trackMatteInvertedAlpha`** | Inverted alpha track matte (`tt: 2`) | **Critical Bug** | Rendered as solid circle instead of square with circular cutout. |
+| **`trackMatteInvertedAlpha`** | Inverted alpha track matte (`tt: 2`) | **Blocked on Upstream Bug** | Rendered as solid circle instead of square with circular cutout. *Blocker:* Upstream `RemoteCanvas.clipPath(path, ClipOp.Difference)` ignores `clipOp` and serializes as `INTERSECT`. |
 | **`trackMatteNonAdjacentParent`** | Non-adjacent track matte reference (`tp: 10`) | **Critical Bug** | Target star layer is completely missing from render output. |
-| **`layerMaskSolidSubtract`** | Subtract mask (`mode: "s"`) on solid layer | **Major Bug** | Diamond hole rendered as positive fill instead of cutout. |
+| **`layerMaskSolidSubtract`** | Subtract mask (`mode: "s"`) on solid layer | **Blocked on Upstream Bug** | Diamond hole rendered as positive fill instead of cutout. *Blocker:* Upstream `RemoteCanvas.clipPath` ignores `ClipOp.Difference`, causing subtract masks to clip inside rather than outside. |
 | **`layerMaskShapeIntersect`** | Intersect mask (`mode: "a"`) on shape layer | **100% Match** | Star correctly clipped to rectangular bounds ($\text{RMSE} = 0.70$). |
 | **`precompSubcompositionRendering`** | Subcomposition boundary rendering | **Minor Gap** | RC overflows `[0, 0, w, h]` precomp boundary without clipping. |
 | **`nestedPrecompositions`** | 3-level nested precomposition transforms | **High Parity** | Compound translation matches; precomp bounds unclipped. |
@@ -154,7 +154,7 @@ Following the full implementation of the 19 Phase 1–4 capabilities and the rol
 2. **Fix `TextLayer` Vector Glyph Rendering:** Update `gatherShapes` in `Shape.kt` to preserve unstyled character glyph geometries when styled by parent text document properties.
 3. **Fix `FillRule.EvenOdd` in Canvas Drawing:** Set `path.fillType = PathFillType.EvenOdd` on `RemotePath` when `fillRule == FillRule.EvenOdd`.
 4. **Fix Sub-Frame Easing Quantization in `lookupValueInBezier`:** Add piecewise linear interpolation (`lerp`) between $\lfloor t \rfloor$ and $\lceil t \rceil$ Look-Up Table entries in `Animation.kt`.
-5. **Fix Inverted Alpha Track Mattes (`tt: 2`):** Correctly evaluate `ClipOp.Difference` against layer bounds for inverted alpha mode.
+5. **[BLOCKED - DO NOT PROCEED] Fix Inverted Alpha Track Mattes (`tt: 2`):** Blocked by upstream `androidx.compose.remote` bug where `RemoteCanvas.clipPath` ignores `ClipOp.Difference` and serializes as `INTERSECT`. **Do not attempt implementation or workaround until upstream `androidx.compose.remote` `clipPath` fix is available.**
 6. **Fix Non-Adjacent Track Matte Resolution (`tp`):** Resolve `matteParent` index lookups across non-adjacent layer indices.
 
 ### Phase 2: Core Algorithm & Arithmetic Safety Fixes
@@ -162,8 +162,9 @@ Following the full implementation of the 19 Phase 1–4 capabilities and the rol
 2. **Fix Scale-Zero Singularity Inversion in `Transform.kt`:** Symmetrically clamp forward and inverse scale factors to prevent permanent canvas matrix scaling.
 3. **Fix `ImageLayer` Source Rect Scaling:** Pass native `bitmap.width` and `bitmap.height` to `srcRight`/`srcBottom` in `drawScaledBitmap`.
 4. **Fix Multi-Mask `Add` Mode Union:** Combine multiple `Add` masks into a composite path via `Path.Op.UNION` before invoking `canvas.clipPath(..., ClipOp.Intersect)`.
-5. **Fix Canvas Skew Axis Rotation Order:** Invert rotation call sequence in `renderer/Transform.kt` to match analytical `GeometryTransform.kt`.
-6. **Fix Repeater on `RemoteGroup`:** Transform `childShapes` recursively in `Repeater.kt`.
+5. **[BLOCKED - DO NOT PROCEED] Fix Layer Mask Subtractions (`MaskMode.Subtract` / `MaskMode.Difference`):** Blocked by upstream `androidx.compose.remote` bug where `RemoteCanvas.clipPath` ignores `ClipOp.Difference`. **Do not attempt implementation or workaround until upstream `clipPath` fix is available.**
+6. **Fix Canvas Skew Axis Rotation Order:** Invert rotation call sequence in `renderer/Transform.kt` to match analytical `GeometryTransform.kt`.
+7. **Fix Repeater on `RemoteGroup`:** Transform `childShapes` recursively in `Repeater.kt`.
 
 ### Phase 3: Typography & Extended Specification Parity
 1. **Support Multiline Text & Line Height in `TextLayer`:** Split text by newlines and advance Y by `currentDoc.lineHeight`.
@@ -171,3 +172,22 @@ Following the full implementation of the 19 Phase 1–4 capabilities and the rol
 3. **Apply `miterLimit` to `RemotePaint`:** Set `this.strokeMiterLimit` in `RemoteStroke.getPaint()`.
 4. **Support Hidden Layers as Matte Sources:** Remove `if (matteLayer.hidden == true) return` check in `Shape.kt:505`.
 5. **Enforce Precomp Canvas Boundary Clipping:** Apply `canvas.clipRect(0, 0, width, height)` in `PrecompLayer.kt`.
+
+---
+
+## 6. Upstream Library Blockers (`androidx.compose.remote`)
+
+### 6.1 `RemoteCanvas.clipPath` Ignores `clipOp` & Omits `regionOp` Wire Serialization
+
+- **Upstream Modules Affected:** `androidx.compose.remote:remote-creation-compose`, `androidx.compose.remote:remote-creation-core`, `androidx.compose.remote:remote-core`
+- **Issue Summary:** 
+  1. `RemoteCanvas.clipPath(path: RemotePath, clipOp: ClipOp = ClipOp.Intersect)` accepts a `clipOp` parameter but ignores it, unconditionally invoking `document.addClipPath(pathId)`.
+  2. `RemoteComposeWriter` and `RemoteComposeBuffer` lack an `addClipPath(int pathId, int regionOp)` overload.
+  3. `ClipPath.apply(buffer, id)` writes only `id`, setting high bits to `0` instead of packing `regionOp` (which `ClipPath.read()` expects via `pack >> 24`).
+  4. Both Compose and Android View players receive `regionOp = 0`, causing all `clipPath` calls to execute as `ClipOp.Intersect`.
+- **Impacted Features in `:remotecompose:lottie`:**
+  - `Layer Masks` with `Subtract`, `Difference`, or inverted modes (`layerMaskSolidSubtract`).
+  - `Track Mattes` with Inverted Alpha (`tt: 2`) or Inverted Luma (`tt: 4`) (`trackMatteInvertedAlpha`).
+- **Policy Directive:**
+  - **DO NOT PROCEED** with implementing features or workarounds that depend on canvas-level `ClipOp.Difference` / `clipPath` until the upstream fix lands in `androidx.compose.remote`.
+  - All dependent tests (e.g. `layerMaskSolidSubtract`, `trackMatteInvertedAlpha`) remain documented as blocked on upstream.
