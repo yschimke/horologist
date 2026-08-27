@@ -37,9 +37,13 @@ import com.google.android.horologist.remotecompose.lottie.format.graphicelement.
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Group
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.MergePaths
+import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.OffsetPath
+import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.PuckerBloat
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.Repeater
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.RoundedCorners
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.TrimPath
+import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.Twist
+import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.ZigZag
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.Fill
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateColor
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateGradient
@@ -160,6 +164,34 @@ internal fun gatherShapes(
           val baseShapes = currentGeometries.map { it.shape }
           val mergedShapes = evaluateMergePaths(baseShapes, shape, animationSettings)
           currentGeometries = mergedShapes.map { RepeatedShapeInstance(it) }.toMutableList()
+        }
+      }
+      is ZigZag -> {
+        if (shape.hidden != true && currentGeometries.isNotEmpty()) {
+          val baseShapes = currentGeometries.map { it.shape }
+          val modified = evaluateZigZag(baseShapes, shape, animationSettings)
+          currentGeometries = modified.map { RepeatedShapeInstance(it) }.toMutableList()
+        }
+      }
+      is PuckerBloat -> {
+        if (shape.hidden != true && currentGeometries.isNotEmpty()) {
+          val baseShapes = currentGeometries.map { it.shape }
+          val modified = evaluatePuckerBloat(baseShapes, shape, animationSettings)
+          currentGeometries = modified.map { RepeatedShapeInstance(it) }.toMutableList()
+        }
+      }
+      is Twist -> {
+        if (shape.hidden != true && currentGeometries.isNotEmpty()) {
+          val baseShapes = currentGeometries.map { it.shape }
+          val modified = evaluateTwist(baseShapes, shape, animationSettings)
+          currentGeometries = modified.map { RepeatedShapeInstance(it) }.toMutableList()
+        }
+      }
+      is OffsetPath -> {
+        if (shape.hidden != true && currentGeometries.isNotEmpty()) {
+          val baseShapes = currentGeometries.map { it.shape }
+          val modified = evaluateOffsetPath(baseShapes, shape, animationSettings)
+          currentGeometries = modified.map { RepeatedShapeInstance(it) }.toMutableList()
         }
       }
       is GeometryShape -> {
