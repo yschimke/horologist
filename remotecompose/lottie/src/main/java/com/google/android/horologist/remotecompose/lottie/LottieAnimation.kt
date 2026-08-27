@@ -195,10 +195,32 @@ internal fun LottieAnimation(
       // .clip(RemoteRectangleShape)
       contentAlignment = RemoteAlignment.Center,
     ) {
-      val matteTargetIndices = animation.layers.mapNotNull { it.matteParent }.toSet()
+      val matteTargetIndices =
+        remember(animation.layers) {
+          animation.layers
+            .mapIndexedNotNull { index, layer ->
+              if (layer.matteParent != null) {
+                layer.matteParent
+              } else if (
+                layer.matteMode != null && layer.matteMode != MatteMode.Normal && index > 0
+              ) {
+                animation.layers[index - 1].index
+              } else {
+                null
+              }
+            }
+            .toSet()
+        }
       for (i in animation.layers.indices.reversed()) {
         val layer = animation.layers[i]
-        if (layer.matteTarget == 1 || (layer.index != null && layer.index in matteTargetIndices)) {
+        val isMatteSource =
+          layer.matteTarget == 1 ||
+            (layer.index != null && layer.index in matteTargetIndices) ||
+            (i < animation.layers.size - 1 &&
+              animation.layers[i + 1].matteMode != null &&
+              animation.layers[i + 1].matteMode != MatteMode.Normal &&
+              animation.layers[i + 1].matteParent == null)
+        if (isMatteSource) {
           continue
         }
         val matteContext =

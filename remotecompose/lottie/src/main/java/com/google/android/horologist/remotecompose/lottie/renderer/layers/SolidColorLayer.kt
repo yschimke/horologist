@@ -34,6 +34,7 @@ import com.google.android.horologist.remotecompose.lottie.format.graphicelement.
 import com.google.android.horologist.remotecompose.lottie.format.layer.SolidColorLayer
 import com.google.android.horologist.remotecompose.lottie.format.mask.MaskMode
 import com.google.android.horologist.remotecompose.lottie.renderer.applyLayerMasks
+import com.google.android.horologist.remotecompose.lottie.renderer.applyMatteClip
 import com.google.android.horologist.remotecompose.lottie.renderer.inverseTransform
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateScalar
 import com.google.android.horologist.remotecompose.lottie.renderer.transform
@@ -45,6 +46,7 @@ import com.google.android.horologist.remotecompose.lottie.renderer.transform
 internal fun SolidColorLayer(
   layer: SolidColorLayer,
   transformStack: List<Transform> = emptyList(),
+  matteContext: MatteContext? = null,
   layerVisibility: RemoteFloat = 1f.rf,
 ) {
   // No-op in PR 2 - solid color layer drawing integrated in downstream PR.

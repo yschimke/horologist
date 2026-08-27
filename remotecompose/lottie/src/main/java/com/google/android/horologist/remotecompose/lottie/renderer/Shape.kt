@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.ClipOp
 import com.google.android.horologist.remotecompose.lottie.LocalAnimationSettings
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
+import com.google.android.horologist.remotecompose.lottie.format.asset.PrecompAsset
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.GraphicElement
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.Ellipse
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.GeometryShape
@@ -656,6 +657,45 @@ internal fun applyMatteClip(
       rcPath.lineTo(0f, matteLayer.solidHeight)
       rcPath.close()
       canvas.clipPath(rcPath, clipOp)
+    }
+    is PrecompLayer -> {
+      val asset = animationSettings.assets[matteLayer.refId] as? PrecompAsset
+      if (asset != null) {
+        for (childLayer in asset.layers) {
+          if (childLayer.hidden == true) continue
+          if (childLayer is ShapeLayer) {
+            val childTransforms = childLayer.transform?.let { listOf(it) } ?: emptyList()
+            for (t in childTransforms) {
+              transform(t, null, animationSettings, canvas)
+            }
+            clipShapes(childLayer.shapes, animationSettings, canvas, clipOp)
+            for (t in childTransforms.reversed()) {
+              inverseTransform(t, animationSettings, canvas)
+            }
+          } else if (
+            childLayer
+              is com.google.android.horologist.remotecompose.lottie.format.layer.SolidColorLayer
+          ) {
+            val childTransforms = childLayer.transform?.let { listOf(it) } ?: emptyList()
+            for (t in childTransforms) {
+              transform(t, null, animationSettings, canvas)
+            }
+            val rcPath =
+              RemotePath().apply {
+                reset()
+                moveTo(0f, 0f)
+                lineTo(childLayer.solidWidth, 0f)
+                lineTo(childLayer.solidWidth, childLayer.solidHeight)
+                lineTo(0f, childLayer.solidHeight)
+                close()
+              }
+            canvas.clipPath(rcPath, clipOp)
+            for (t in childTransforms.reversed()) {
+              inverseTransform(t, animationSettings, canvas)
+            }
+          }
+        }
+      }
     }
     else -> {}
   }

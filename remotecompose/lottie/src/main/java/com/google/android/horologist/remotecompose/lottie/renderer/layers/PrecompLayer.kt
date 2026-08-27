@@ -57,7 +57,19 @@ internal fun PrecompLayer(layer: PrecompLayer, transformStack: List<Transform> =
     }
 
   val matteTargetIndices =
-    remember(asset.layers) { asset.layers.mapNotNull { it.matteParent }.toSet() }
+    remember(asset.layers) {
+      asset.layers
+        .mapIndexedNotNull { index, l ->
+          if (l.matteParent != null) {
+            l.matteParent
+          } else if (l.matteMode != null && l.matteMode != MatteMode.Normal && index > 0) {
+            asset.layers[index - 1].index
+          } else {
+            null
+          }
+        }
+        .toSet()
+    }
 
   val nextSettings =
     animationSettings.copy(activePrecomps = animationSettings.activePrecomps + layer.refId)
@@ -65,10 +77,14 @@ internal fun PrecompLayer(layer: PrecompLayer, transformStack: List<Transform> =
   CompositionLocalProvider(LocalAnimationSettings provides nextSettings) {
     for (i in asset.layers.indices.reversed()) {
       val childLayer = asset.layers[i]
-      if (
+      val isMatteSource =
         childLayer.matteTarget == 1 ||
-          (childLayer.index != null && childLayer.index in matteTargetIndices)
-      ) {
+          (childLayer.index != null && childLayer.index in matteTargetIndices) ||
+          (i < asset.layers.size - 1 &&
+            asset.layers[i + 1].matteMode != null &&
+            asset.layers[i + 1].matteMode != MatteMode.Normal &&
+            asset.layers[i + 1].matteParent == null)
+      if (isMatteSource) {
         continue
       }
       val matteContext =
