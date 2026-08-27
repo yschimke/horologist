@@ -28,7 +28,11 @@ import com.google.android.horologist.remotecompose.lottie.format.values.BezierVa
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.RemoteBezierValue
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateBezier
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.toRemote
+import com.google.android.horologist.remotecompose.lottie.renderer.scalarLinearEasingIn
+import com.google.android.horologist.remotecompose.lottie.renderer.scalarLinearEasingOut
 import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.floor
 import kotlin.math.hypot
 
 private const val ROUNDED_CORNER_CONTROL_POINT_CONSTANT = 0.5519f
@@ -221,7 +225,31 @@ internal fun evaluatePathGeometry(
   val sortedTimes = keyframeTimes.sorted()
   val keyframes = mutableListOf<BezierPropertyKeyframe>()
 
-  for (f in sortedTimes) {
+  val sampleTimes =
+    if (hasTrim && isTrimAnimated) {
+      val frames = mutableSetOf<Float>()
+      if (sortedTimes.size <= 1) {
+        frames.addAll(sortedTimes)
+        frames.add(0f)
+      } else {
+        for (i in 0 until sortedTimes.size - 1) {
+          val t0 = sortedTimes[i]
+          val t1 = sortedTimes[i + 1]
+          frames.add(t0)
+          frames.add(t1)
+          val startInt = ceil(t0).toInt()
+          val endInt = floor(t1).toInt()
+          for (frameInt in startInt..endInt) {
+            frames.add(frameInt.toFloat())
+          }
+        }
+      }
+      frames.sorted()
+    } else {
+      sortedTimes
+    }
+
+  for (f in sampleTimes) {
     val r = sampleScalar(roundedCorners.radius, f)
     val baseSubpaths = sampleBezier(bezierProperty, f)
     val roundedSubpaths = baseSubpaths.map { roundBezierValue(it, r) }
@@ -235,32 +263,44 @@ internal fun evaluatePathGeometry(
         roundedSubpaths
       }
 
-    val primaryScalarKf =
-      (roundedCorners.radius as? AnimatedScalarProperty)?.keyframes?.firstOrNull { it.frame == f }
-        ?: if (hasTrim) {
-          (trimPath!!.start as? AnimatedScalarProperty)?.keyframes?.firstOrNull { it.frame == f }
-            ?: (trimPath.end as? AnimatedScalarProperty)?.keyframes?.firstOrNull { it.frame == f }
-            ?: (trimPath.offset as? AnimatedScalarProperty)?.keyframes?.firstOrNull {
-              it.frame == f
-            }
-        } else null
-
-    val bezierKf =
-      (bezierProperty as? AnimatedBezierProperty)?.keyframes?.firstOrNull { it.frame == f }
-
-    val inTangent = primaryScalarKf?.inTangent ?: bezierKf?.inTangent
-    val outTangent = primaryScalarKf?.outTangent ?: bezierKf?.outTangent
-    val hold = primaryScalarKf?.hold ?: bezierKf?.hold ?: false
-
-    keyframes.add(
-      BezierPropertyKeyframe(
-        frame = f,
-        value = finalSubpaths,
-        inTangent = inTangent,
-        outTangent = outTangent,
-        hold = hold,
+    if (hasTrim && isTrimAnimated) {
+      keyframes.add(
+        BezierPropertyKeyframe(
+          frame = f,
+          value = finalSubpaths,
+          inTangent = scalarLinearEasingIn,
+          outTangent = scalarLinearEasingOut,
+          hold = false,
+        )
       )
-    )
+    } else {
+      val primaryScalarKf =
+        (roundedCorners.radius as? AnimatedScalarProperty)?.keyframes?.firstOrNull { it.frame == f }
+          ?: if (hasTrim) {
+            (trimPath!!.start as? AnimatedScalarProperty)?.keyframes?.firstOrNull { it.frame == f }
+              ?: (trimPath.end as? AnimatedScalarProperty)?.keyframes?.firstOrNull { it.frame == f }
+              ?: (trimPath.offset as? AnimatedScalarProperty)?.keyframes?.firstOrNull {
+                it.frame == f
+              }
+          } else null
+
+      val bezierKf =
+        (bezierProperty as? AnimatedBezierProperty)?.keyframes?.firstOrNull { it.frame == f }
+
+      val inTangent = primaryScalarKf?.inTangent ?: bezierKf?.inTangent
+      val outTangent = primaryScalarKf?.outTangent ?: bezierKf?.outTangent
+      val hold = primaryScalarKf?.hold ?: bezierKf?.hold ?: false
+
+      keyframes.add(
+        BezierPropertyKeyframe(
+          frame = f,
+          value = finalSubpaths,
+          inTangent = inTangent,
+          outTangent = outTangent,
+          hold = hold,
+        )
+      )
+    }
   }
 
   val animatedEvaluatedBezier = AnimatedBezierProperty(keyframes = keyframes)

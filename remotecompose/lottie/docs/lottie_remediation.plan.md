@@ -59,7 +59,7 @@ Eliminate all visual rendering regressions and mathematical defects across `:rem
   - [x] [Task 3.2: Stroke Miter Limit & Gradient Stop Boundary Guards](#PL_LOTTIE_REMED_T3_2)
   - [x] [Task 3.3: Precomp Canvas Boundary Clipping & Roborazzi Baseline Verification](#PL_LOTTIE_REMED_T3_3)
 - [ ] [Phase 4: Actionable Extended Modifiers, Arc Length Trim Path & Keyframe Parity](#PL_LOTTIE_REMED_P4)
-  - [ ] [Task 4.1: Dynamic Arc-Length Segmenting in Animated Trim Path](#PL_LOTTIE_REMED_T4_1)
+  - [x] [Task 4.1: Dynamic Arc-Length Segmenting in Animated Trim Path](#PL_LOTTIE_REMED_T4_1)
   - [ ] [Task 4.2: Extended Graphic Modifiers Rendering (ZigZag, Pucker/Bloat, Twist, OffsetPath)](#PL_LOTTIE_REMED_T4_2)
   - [ ] [Task 4.3: Multi-Dimensional Easing Tangent Vector Support](#PL_LOTTIE_REMED_T4_3)
   - [ ] [Task 4.4: Hidden Layers as Track Matte Sources](#PL_LOTTIE_REMED_T4_4)

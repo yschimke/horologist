@@ -31,7 +31,11 @@ import com.google.android.horologist.remotecompose.lottie.format.values.BezierVa
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.RemoteBezierValue
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateBezier
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.toRemote
+import com.google.android.horologist.remotecompose.lottie.renderer.scalarLinearEasingIn
+import com.google.android.horologist.remotecompose.lottie.renderer.scalarLinearEasingOut
 import kotlin.math.absoluteValue
+import kotlin.math.ceil
+import kotlin.math.floor
 import kotlin.math.hypot
 
 /** Represents a 2D point used for Bézier calculations. */
@@ -253,7 +257,7 @@ internal fun trimBezierValue(
 
   val diff = (endFraction - startFraction).absoluteValue
   if (diff >= 1f && offsetFraction == 0f) {
-    return listOf(subpath)
+    return if (keepStructureIfDegenerate) listOf(segments.toBezierValue()) else listOf(subpath)
   }
 
   val segmentLengths = segments.map { it.approximateLength() }
@@ -288,7 +292,7 @@ internal fun trimBezierValue(
       accumulated += segLen
     }
 
-    val vertexCount = subpath.vertices.size
+    val vertexCount = segments.size + 1
     val vertices = List(vertexCount) { listOf(degPoint.x, degPoint.y) }
     val inTangents = List(vertexCount) { listOf(0f, 0f) }
     val outTangents = List(vertexCount) { listOf(0f, 0f) }
@@ -303,7 +307,7 @@ internal fun trimBezierValue(
   }
 
   if (span >= 1f) {
-    return listOf(subpath)
+    return if (keepStructureIfDegenerate) listOf(segments.toBezierValue()) else listOf(subpath)
   }
 
   val startNorm = ((minVal % 1f) + 1f) % 1f
@@ -321,8 +325,31 @@ internal fun trimBezierValue(
   for ((dStart, dEnd) in intervals) {
     if (dStart >= dEnd) continue
     val trimmedSegments = mutableListOf<CubicSegment>()
-    var accumulated = 0f
 
+    var pTrimStart: Point? = null
+    var pTrimEnd: Point? = null
+    var acc = 0f
+    for (idx in segments.indices) {
+      val seg = segments[idx]
+      val segLen = segmentLengths[idx]
+      val segStart = acc
+      val segEnd = acc + segLen
+      acc = segEnd
+      if (pTrimStart == null && dStart <= segEnd) {
+        val distInSeg = (dStart - segStart).coerceIn(0f, segLen)
+        val t = if (segLen > 0.0001f) seg.tAtDistance(distInSeg, lengthTables[idx]) else 0f
+        pTrimStart = seg.pointAt(t)
+      }
+      if (pTrimEnd == null && dEnd <= segEnd) {
+        val distInSeg = (dEnd - segStart).coerceIn(0f, segLen)
+        val t = if (segLen > 0.0001f) seg.tAtDistance(distInSeg, lengthTables[idx]) else 1f
+        pTrimEnd = seg.pointAt(t)
+      }
+    }
+    val startPt = pTrimStart ?: segments.first().p0
+    val endPt = pTrimEnd ?: segments.last().p3
+
+    var accumulated = 0f
     for (idx in segments.indices) {
       val seg = segments[idx]
       val segLen = segmentLengths[idx]
@@ -330,17 +357,28 @@ internal fun trimBezierValue(
       val segEnd = accumulated + segLen
       accumulated = segEnd
 
-      val overlapStart = maxOf(dStart, segStart)
-      val overlapEnd = minOf(dEnd, segEnd)
+      if (segEnd <= dStart) {
+        if (keepStructureIfDegenerate) {
+          trimmedSegments.add(CubicSegment(startPt, startPt, startPt, startPt))
+        }
+      } else if (segStart >= dEnd) {
+        if (keepStructureIfDegenerate) {
+          trimmedSegments.add(CubicSegment(endPt, endPt, endPt, endPt))
+        }
+      } else {
+        val overlapStart = maxOf(dStart, segStart)
+        val overlapEnd = minOf(dEnd, segEnd)
+        if (overlapStart < overlapEnd && segLen > 0.0001f) {
+          val distStartInSeg = (overlapStart - segStart).coerceIn(0f, segLen)
+          val distEndInSeg = (overlapEnd - segStart).coerceIn(0f, segLen)
 
-      if (overlapStart < overlapEnd && segLen > 0.0001f) {
-        val distStartInSeg = (overlapStart - segStart).coerceIn(0f, segLen)
-        val distEndInSeg = (overlapEnd - segStart).coerceIn(0f, segLen)
+          val t0 = seg.tAtDistance(distStartInSeg, lengthTables[idx])
+          val t1 = seg.tAtDistance(distEndInSeg, lengthTables[idx])
 
-        val t0 = seg.tAtDistance(distStartInSeg, lengthTables[idx])
-        val t1 = seg.tAtDistance(distEndInSeg, lengthTables[idx])
-
-        trimmedSegments.add(seg.subsegment(t0, t1))
+          trimmedSegments.add(seg.subsegment(t0, t1))
+        } else if (keepStructureIfDegenerate) {
+          trimmedSegments.add(CubicSegment(startPt, startPt, startPt, startPt))
+        }
       }
     }
 
@@ -505,8 +543,31 @@ internal fun evaluateTrimmedBezier(
   val sortedTimes = keyframeTimes.sorted()
   val keyframes = mutableListOf<BezierPropertyKeyframe>()
 
-  for (i in sortedTimes.indices) {
-    val f = sortedTimes[i]
+  val sampleFrames =
+    if (isTrimAnimated) {
+      val frames = mutableSetOf<Float>()
+      if (sortedTimes.size <= 1) {
+        frames.addAll(sortedTimes)
+        frames.add(0f)
+      } else {
+        for (i in 0 until sortedTimes.size - 1) {
+          val t0 = sortedTimes[i]
+          val t1 = sortedTimes[i + 1]
+          frames.add(t0)
+          frames.add(t1)
+          val startInt = ceil(t0).toInt()
+          val endInt = floor(t1).toInt()
+          for (frameInt in startInt..endInt) {
+            frames.add(frameInt.toFloat())
+          }
+        }
+      }
+      frames.sorted()
+    } else {
+      sortedTimes
+    }
+
+  for (f in sampleFrames) {
     val s = sampleScalar(trimPath.start, f) / 100f
     val e = sampleScalar(trimPath.end, f) / 100f
     val o = sampleScalar(trimPath.offset, f) / 360f
@@ -515,28 +576,39 @@ internal fun evaluateTrimmedBezier(
       trimBezierValue(it, s, e, o, keepStructureIfDegenerate = true)
     }
 
-    // Find keyframe easing from the primary animated property
-    val primaryScalarKeyframe =
-      (trimPath.start as? AnimatedScalarProperty)?.keyframes?.firstOrNull { it.frame == f }
-        ?: (trimPath.end as? AnimatedScalarProperty)?.keyframes?.firstOrNull { it.frame == f }
-        ?: (trimPath.offset as? AnimatedScalarProperty)?.keyframes?.firstOrNull { it.frame == f }
-
-    val bezierKf =
-      (bezierProperty as? AnimatedBezierProperty)?.keyframes?.firstOrNull { it.frame == f }
-
-    val inTangent = primaryScalarKeyframe?.inTangent ?: bezierKf?.inTangent
-    val outTangent = primaryScalarKeyframe?.outTangent ?: bezierKf?.outTangent
-    val hold = primaryScalarKeyframe?.hold ?: bezierKf?.hold ?: false
-
-    keyframes.add(
-      BezierPropertyKeyframe(
-        frame = f,
-        value = trimmedSubpaths,
-        inTangent = inTangent,
-        outTangent = outTangent,
-        hold = hold,
+    if (isTrimAnimated) {
+      keyframes.add(
+        BezierPropertyKeyframe(
+          frame = f,
+          value = trimmedSubpaths,
+          inTangent = scalarLinearEasingIn,
+          outTangent = scalarLinearEasingOut,
+          hold = false,
+        )
       )
-    )
+    } else {
+      val primaryScalarKeyframe =
+        (trimPath.start as? AnimatedScalarProperty)?.keyframes?.firstOrNull { it.frame == f }
+          ?: (trimPath.end as? AnimatedScalarProperty)?.keyframes?.firstOrNull { it.frame == f }
+          ?: (trimPath.offset as? AnimatedScalarProperty)?.keyframes?.firstOrNull { it.frame == f }
+
+      val bezierKf =
+        (bezierProperty as? AnimatedBezierProperty)?.keyframes?.firstOrNull { it.frame == f }
+
+      val inTangent = primaryScalarKeyframe?.inTangent ?: bezierKf?.inTangent
+      val outTangent = primaryScalarKeyframe?.outTangent ?: bezierKf?.outTangent
+      val hold = primaryScalarKeyframe?.hold ?: bezierKf?.hold ?: false
+
+      keyframes.add(
+        BezierPropertyKeyframe(
+          frame = f,
+          value = trimmedSubpaths,
+          inTangent = inTangent,
+          outTangent = outTangent,
+          hold = hold,
+        )
+      )
+    }
   }
 
   val animatedTrimmedBezier = AnimatedBezierProperty(keyframes = keyframes)

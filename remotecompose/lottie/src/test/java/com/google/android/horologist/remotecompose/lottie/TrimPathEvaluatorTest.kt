@@ -149,4 +149,88 @@ class TrimPathEvaluatorTest {
     assertThat(degenTrim[0].vertices[0][0]).isWithin(0.01f).of(0f)
     assertThat(degenTrim[0].vertices[1][0]).isWithin(0.01f).of(0f)
   }
+
+  @Test
+  fun trimBezierValue_multiSegment_preservesTopologyAcrossDifferentTrimRanges() {
+    // 4-segment circle (radius 50 centered at 50, 50)
+    val cp = 50f * 0.55228f
+    val circle =
+      BezierValue(
+        closed = true,
+        vertices = listOf(listOf(50f, 0f), listOf(100f, 50f), listOf(50f, 100f), listOf(0f, 50f)),
+        inTangents = listOf(listOf(-cp, 0f), listOf(0f, -cp), listOf(cp, 0f), listOf(0f, cp)),
+        outTangents = listOf(listOf(cp, 0f), listOf(0f, cp), listOf(-cp, 0f), listOf(0f, -cp)),
+      )
+
+    // Test different trim ranges with keepStructureIfDegenerate = true
+    val trim1 =
+      trimBezierValue(
+        circle,
+        startFraction = 0.25f,
+        endFraction = 0.75f,
+        keepStructureIfDegenerate = true,
+      )
+    assertThat(trim1).hasSize(1)
+    assertThat(trim1[0].vertices).hasSize(5)
+
+    val trim2 =
+      trimBezierValue(
+        circle,
+        startFraction = 0.1f,
+        endFraction = 0.2f,
+        keepStructureIfDegenerate = true,
+      )
+    assertThat(trim2).hasSize(1)
+    assertThat(trim2[0].vertices).hasSize(5)
+
+    val trim3 =
+      trimBezierValue(
+        circle,
+        startFraction = 0f,
+        endFraction = 0f,
+        keepStructureIfDegenerate = true,
+      )
+    assertThat(trim3).hasSize(1)
+    assertThat(trim3[0].vertices).hasSize(5)
+
+    val trimFull =
+      trimBezierValue(
+        circle,
+        startFraction = 0f,
+        endFraction = 1f,
+        keepStructureIfDegenerate = true,
+      )
+    assertThat(trimFull).hasSize(1)
+    assertThat(trimFull[0].vertices).hasSize(5)
+  }
+
+  @Test
+  fun trimBezierValue_multiSegment_evaluatedPointsLieOnArc() {
+    val cp = 50f * 0.55228f
+    val circle =
+      BezierValue(
+        closed = true,
+        vertices = listOf(listOf(50f, 0f), listOf(100f, 50f), listOf(50f, 100f), listOf(0f, 50f)),
+        inTangents = listOf(listOf(-cp, 0f), listOf(0f, -cp), listOf(cp, 0f), listOf(0f, cp)),
+        outTangents = listOf(listOf(cp, 0f), listOf(0f, cp), listOf(-cp, 0f), listOf(0f, -cp)),
+      )
+
+    // Trim first quadrant: 0.0 to 0.25
+    val trimQuad =
+      trimBezierValue(
+        circle,
+        startFraction = 0f,
+        endFraction = 0.25f,
+        keepStructureIfDegenerate = false,
+      )
+    assertThat(trimQuad).hasSize(1)
+    val segs = trimQuad[0].toCubicSegments()
+    assertThat(segs).hasSize(1)
+
+    // Midpoint of the trimmed segment at t=0.5 (i.e. angle ~ 45 deg)
+    val midPt = segs[0].pointAt(0.5f)
+    val distFromCenter = Point(50f, 50f).distanceTo(midPt)
+    // Distance from circle center (50, 50) must be ~ 50.0 (true arc), not ~ 35.3 (flat chord)
+    assertThat(distFromCenter).isWithin(0.5f).of(50f)
+  }
 }
