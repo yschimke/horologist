@@ -71,6 +71,10 @@ When `LottieDiffTestScope.captureProgress(progress)` or `LottieDiffTestScope.cap
 | `polystar` | `R.raw.polystar` | Static parametric polystars | Default (`0.0f`) | `_polystar.png` |
 | `parentChain` | `R.raw.parent_chain` | Deep ancestor parenting hierarchy | Default (`0.0f`) | `_parentChain.png` |
 | `transformSkew` | Inline JSON | Static 2D skew matrix | Default (`0.0f`) | `_transformSkew.png` |
+| `trackMatteAlpha` | Inline JSON | Alpha track matte cutout | Default (`0.0f`) | `_trackMatteAlpha.png` |
+| `trackMatteLuma` | Inline JSON | Luminance-keyed track matte | Default (`0.0f`) | `_trackMatteLuma.png` |
+| `extendedModifiersZigZagPuckerBloat` | Inline JSON | Chained ZigZag and PuckerBloat modifiers | Default (`0.0f`) | `_extendedModifiersZigZagPuckerBloat.png` |
+| `extendedModifiersTwistOffsetPath` | Inline JSON | Chained Twist and OffsetPath modifiers | Default (`0.0f`) | `_extendedModifiersTwistOffsetPath.png` |
 
 ### 03.3 `LottieScalingDiffScreenshotTest` Suite {#SP_LOTTIE_DIFF_03_03}
 
