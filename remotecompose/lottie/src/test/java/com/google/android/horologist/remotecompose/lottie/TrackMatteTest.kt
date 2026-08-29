@@ -37,10 +37,12 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 
+// [SP_LOTTIE_MATTE_03_01]
 @SuppressLint("RestrictedApi")
 @RunWith(AndroidJUnit4::class)
 class TrackMatteTest {
 
+  // [SP_LOTTIE_REMED_02_03]
   @Test
   fun hiddenShapeLayer_functionsAsMatteContextSource() {
     val matteShapeLayer =
@@ -99,6 +101,7 @@ class TrackMatteTest {
     assertThat(shapes).isNotEmpty()
   }
 
+  // [SP_LOTTIE_REMED_02_03]
   @Test
   fun hiddenSolidColorLayer_functionsAsMatteContextSource() {
     val matteSolidLayer =
@@ -120,6 +123,7 @@ class TrackMatteTest {
     assertThat(solid.solidHeight).isEqualTo(60f)
   }
 
+  // [SP_LOTTIE_MATTE_03_01]
   @Test
   fun precompLayer_withHiddenMatteSource_deserializesAndResolvesMatteHierarchy() {
     val json =
@@ -195,5 +199,57 @@ class TrackMatteTest {
     assertThat(precompAsset.layers).hasSize(2)
     assertThat(precompAsset.layers[0].hidden).isTrue()
     assertThat(precompAsset.layers[1].matteMode).isEqualTo(MatteMode.Alpha)
+  }
+
+  // [SP_LOTTIE_REMED_03_06]
+  @Test
+  fun animation_withNonAdjacentMatteParent_deserializesLayerHierarchy() {
+    val json =
+      """
+      {
+        "v": "5.7.0",
+        "fr": 30,
+        "ip": 0,
+        "op": 30,
+        "w": 100,
+        "h": 100,
+        "layers": [
+          {
+            "ty": 4,
+            "nm": "MatteSource",
+            "ind": 1,
+            "td": 1,
+            "hd": true,
+            "shapes": []
+          },
+          {
+            "ty": 3,
+            "nm": "IntermediaryNullLayer",
+            "ind": 2
+          },
+          {
+            "ty": 4,
+            "nm": "ConsumerTarget",
+            "ind": 3,
+            "tp": 1,
+            "tt": 2,
+            "shapes": []
+          }
+        ]
+      }
+      """
+        .trimIndent()
+
+    val animation = Animation.decodeFromString(json)
+    assertThat(animation.layers).hasSize(3)
+    val source = animation.layers[0] as ShapeLayer
+    val intermediary = animation.layers[1]
+    val target = animation.layers[2] as ShapeLayer
+
+    assertThat(source.matteTarget).isEqualTo(1)
+    assertThat(source.hidden).isTrue()
+    assertThat(intermediary.index).isEqualTo(2)
+    assertThat(target.matteParent).isEqualTo(1)
+    assertThat(target.matteMode).isEqualTo(MatteMode.InvertedAlpha)
   }
 }

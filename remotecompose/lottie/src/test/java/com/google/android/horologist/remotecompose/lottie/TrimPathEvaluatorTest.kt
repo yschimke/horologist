@@ -233,4 +233,98 @@ class TrimPathEvaluatorTest {
     // Distance from circle center (50, 50) must be ~ 50.0 (true arc), not ~ 35.3 (flat chord)
     assertThat(distFromCenter).isWithin(0.5f).of(50f)
   }
+
+  // [SP_LOTTIE_REMED_02_04]
+  @Test
+  fun trimBezierValue_whenStartExceedsEnd_evaluatesWrapAroundInterval() {
+    val cp = 50f * 0.55228f
+    val circle =
+      BezierValue(
+        closed = true,
+        vertices = listOf(listOf(50f, 0f), listOf(100f, 50f), listOf(50f, 100f), listOf(0f, 50f)),
+        inTangents = listOf(listOf(-cp, 0f), listOf(0f, -cp), listOf(cp, 0f), listOf(0f, cp)),
+        outTangents = listOf(listOf(cp, 0f), listOf(0f, cp), listOf(-cp, 0f), listOf(0f, -cp)),
+      )
+
+    // Wrap-around trim: start at 80% (0.8), end at 20% (0.2)
+    // Span = |0.2 - 0.8| = 0.6 -> trimmed length covers 60% of perimeter in [0.2, 0.8]
+    val trimmed =
+      trimBezierValue(
+        circle,
+        startFraction = 0.8f,
+        endFraction = 0.2f,
+        keepStructureIfDegenerate = false,
+      )
+    assertThat(trimmed).isNotEmpty()
+    val totalTrimmedLength = trimmed.sumOf {
+      it.toCubicSegments().sumOf { seg -> seg.approximateLength().toDouble() }
+    }
+    val totalCircleLength = circle.toCubicSegments().sumOf { it.approximateLength().toDouble() }
+    assertThat(totalTrimmedLength / totalCircleLength).isWithin(0.05).of(0.60)
+  }
+
+  // [SP_LOTTIE_REMED_02_04]
+  @Test
+  fun trimBezierValue_whenOffsetExceedsFullTurn_appliesModularOffset() {
+    val cp = 50f * 0.55228f
+    val circle =
+      BezierValue(
+        closed = true,
+        vertices = listOf(listOf(50f, 0f), listOf(100f, 50f), listOf(50f, 100f), listOf(0f, 50f)),
+        inTangents = listOf(listOf(-cp, 0f), listOf(0f, -cp), listOf(cp, 0f), listOf(0f, cp)),
+        outTangents = listOf(listOf(cp, 0f), listOf(0f, cp), listOf(-cp, 0f), listOf(0f, -cp)),
+      )
+
+    // 450 deg offset = 1.25 turns, equivalent to 0.25 offset
+    val trimmedWithLargeOffset =
+      trimBezierValue(
+        circle,
+        startFraction = 0.0f,
+        endFraction = 0.25f,
+        offsetFraction = 1.25f,
+        keepStructureIfDegenerate = false,
+      )
+
+    val trimmedWithModOffset =
+      trimBezierValue(
+        circle,
+        startFraction = 0.0f,
+        endFraction = 0.25f,
+        offsetFraction = 0.25f,
+        keepStructureIfDegenerate = false,
+      )
+
+    assertThat(trimmedWithLargeOffset).hasSize(1)
+    assertThat(trimmedWithModOffset).hasSize(1)
+    val segLarge = trimmedWithLargeOffset[0].toCubicSegments()[0]
+    val segMod = trimmedWithModOffset[0].toCubicSegments()[0]
+    assertThat(segLarge.p0.x).isWithin(0.05f).of(segMod.p0.x)
+    assertThat(segLarge.p0.y).isWithin(0.05f).of(segMod.p0.y)
+  }
+
+  // [SP_LOTTIE_REMED_02_04]
+  @Test
+  fun trimBezierValue_whenStartEqualsEnd_preservesDegenerateStructureWithoutThrowing() {
+    val line =
+      BezierValue(
+        closed = false,
+        vertices = listOf(listOf(0f, 0f), listOf(100f, 0f)),
+        inTangents = listOf(listOf(0f, 0f), listOf(0f, 0f)),
+        outTangents = listOf(listOf(0f, 0f), listOf(0f, 0f)),
+      )
+
+    val collapsedTrim =
+      trimBezierValue(
+        line,
+        startFraction = 0.5f,
+        endFraction = 0.5f,
+        keepStructureIfDegenerate = true,
+      )
+
+    assertThat(collapsedTrim).hasSize(1)
+    assertThat(collapsedTrim[0].vertices).hasSize(2)
+    // Vertices collapsed at mid point (50, 0)
+    assertThat(collapsedTrim[0].vertices[0][0]).isWithin(0.01f).of(50f)
+    assertThat(collapsedTrim[0].vertices[1][0]).isWithin(0.01f).of(50f)
+  }
 }

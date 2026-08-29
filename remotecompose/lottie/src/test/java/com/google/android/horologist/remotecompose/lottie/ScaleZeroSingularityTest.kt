@@ -25,6 +25,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 
+// [SP_LOTTIE_REMED_01_04]
 @SuppressLint("RestrictedApi")
 @RunWith(AndroidJUnit4::class)
 class ScaleZeroSingularityTest {
@@ -61,7 +62,8 @@ class ScaleZeroSingularityTest {
 
   @Test
   fun forwardAndInverseScale_whenMultiplied_yieldsIdentityAcrossSingularities() {
-    val testValues = listOf(2.0f, 0.5f, 0.0f, 0.00001f, -0.00001f, -0.5f, -2.0f)
+    val testValues =
+      listOf(2.0f, 0.5f, 0.0f, 0.00001f, -0.00001f, 0.000001f, -0.000001f, -0.5f, -2.0f)
     for (value in testValues) {
       val fwd = clampScale(value.rf)
       val inv = computeInverseScale(fwd)

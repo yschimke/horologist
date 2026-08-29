@@ -52,12 +52,14 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 
+// [SP_LOTTIE_REMED_02_01]
 @SuppressLint("RestrictedApi")
 @RunWith(AndroidJUnit4::class)
 class PrimitiveTrimPathAndFillRuleTest {
 
   private val settings = LottieSettings(currentFrame = 0f.rf, slotMap = SlotMap.Empty)
 
+  // [SP_LOTTIE_REMED_02_04]
   @Test
   fun evaluateRectangle_withStaticTrimPath_trimsPathCorrectly() {
     val rect =

@@ -20,6 +20,9 @@ import android.annotation.SuppressLint
 import androidx.compose.remote.creation.compose.state.rc
 import androidx.compose.remote.creation.compose.state.rf
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.Path
+import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.PolyStar
+import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.PolyStarType
+import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.Rectangle
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.OffsetPath
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.PuckerBloat
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.Twist
@@ -27,10 +30,12 @@ import com.google.android.horologist.remotecompose.lottie.format.graphicelement.
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.ZigZagType
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.Fill
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.LineJoin
+import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.Stroke
 import com.google.android.horologist.remotecompose.lottie.format.properties.StaticBezierProperty
 import com.google.android.horologist.remotecompose.lottie.format.properties.StaticColorProperty
 import com.google.android.horologist.remotecompose.lottie.format.properties.StaticPositionProperty
 import com.google.android.horologist.remotecompose.lottie.format.properties.StaticScalarProperty
+import com.google.android.horologist.remotecompose.lottie.format.properties.StaticVectorProperty
 import com.google.android.horologist.remotecompose.lottie.format.values.BezierValue
 import com.google.android.horologist.remotecompose.lottie.renderer.RemoteLottiePath
 import com.google.android.horologist.remotecompose.lottie.renderer.gatherShapesForTest
@@ -268,5 +273,66 @@ class ExtendedModifiersTest {
     val group = shapeGroups[0]
     val lottiePath = group.shapes[0] as RemoteLottiePath
     assertThat(lottiePath.path[0].vertices).hasSize(6)
+  }
+
+  // [SP_LOTTIE_SHAPES_03_01]
+  @Test
+  fun gatherShapes_withChainedRectangleZigZagAndPuckerBloat_appliesModifiersSequentially() {
+    val rect =
+      Rectangle(
+        position = StaticPositionProperty(value = listOf(50f, 50f)),
+        size = StaticVectorProperty(value = listOf(100f, 100f)),
+        cornerRadius = StaticScalarProperty(value = 0f),
+      )
+    val zigZag =
+      ZigZag(
+        size = StaticScalarProperty(value = 10f),
+        ridgesPerSegment = StaticScalarProperty(value = 2f),
+        pointType = ZigZagType.Corner,
+      )
+    val puckerBloat = PuckerBloat(amount = StaticScalarProperty(value = 50f))
+    val fill = Fill(color = StaticColorProperty(value = androidx.compose.ui.graphics.Color.Red.rc))
+
+    val shapeGroups = gatherShapesForTest(listOf(rect, zigZag, puckerBloat, fill), settings)
+    assertThat(shapeGroups).hasSize(1)
+    val lottiePath = shapeGroups[0].shapes[0] as RemoteLottiePath
+    val subpath = lottiePath.path[0]
+
+    // 4 edges * (1 + 2 * 2 ridges intermediate points) = 20 vertices around perimeter
+    assertThat(subpath.vertices.size).isGreaterThan(4)
+    // PuckerBloat(+50%) should ensure outTangents are bowed outward (non-zero)
+    assertThat(subpath.outTangents[0][0].constantValueOrNull).isNotEqualTo(0f)
+  }
+
+  // [SP_LOTTIE_SHAPES_03_01]
+  @Test
+  fun gatherShapes_withChainedPolyStarTwistAndOffsetPath_evaluatesDeformedGeometry() {
+    val star =
+      PolyStar(
+        starType = PolyStarType.Star,
+        points = StaticScalarProperty(value = 5f),
+        position = StaticPositionProperty(value = listOf(50f, 50f)),
+        rotation = StaticScalarProperty(value = 0f),
+        innerRadius = StaticScalarProperty(value = 20f),
+        outerRadius = StaticScalarProperty(value = 50f),
+      )
+    val twist =
+      Twist(
+        angle = StaticScalarProperty(value = 90f),
+        center = StaticPositionProperty(value = listOf(50f, 50f)),
+      )
+    val offsetPath =
+      OffsetPath(amount = StaticScalarProperty(value = 10f), lineJoin = LineJoin.Miter)
+    val stroke =
+      Stroke(
+        color = StaticColorProperty(value = androidx.compose.ui.graphics.Color.White.rc),
+        opacity = StaticScalarProperty(value = 100f),
+        strokeWidth = StaticScalarProperty(value = 2f),
+      )
+
+    val shapeGroups = gatherShapesForTest(listOf(star, twist, offsetPath, stroke), settings)
+    assertThat(shapeGroups).hasSize(1)
+    val lottiePath = shapeGroups[0].shapes[0] as RemoteLottiePath
+    assertThat(lottiePath.path[0].vertices).isNotEmpty()
   }
 }

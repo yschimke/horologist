@@ -58,6 +58,31 @@ internal fun calculateLocalFrame(
   return (currentFrame - st.rf) / safeSr.rf
 }
 
+/** Calculates effective layer end frame padding for composition end boundaries. */
+internal fun calculateEffectiveEndFrame(endFrame: Float, compositionEndFrame: Float): Float {
+  return if (endFrame >= compositionEndFrame) {
+    endFrame + 0.01f
+  } else {
+    endFrame
+  }
+}
+
+/**
+ * Evaluates dynamic RemoteFloat timeline visibility for a layer given its [startFrame, endFrame)
+ * bounds.
+ */
+@SuppressLint("RestrictedApi")
+internal fun calculateLayerVisibility(
+  currentFrame: RemoteFloat,
+  startFrame: Float,
+  effectiveEndFrame: Float,
+  baseVisibility: RemoteFloat = 1f.rf,
+): RemoteFloat {
+  val isAfterStart = selectIfLt(currentFrame, startFrame.rf, 0f.rf, 1f.rf)
+  val isBeforeEnd = selectIfLt(currentFrame, effectiveEndFrame.rf, 1f.rf, 0f.rf)
+  return baseVisibility * (isAfterStart * isBeforeEnd)
+}
+
 /** A Layer in the Lottie composition */
 @SuppressLint("RestrictedApi")
 @Composable
@@ -79,12 +104,7 @@ internal fun Layer(
 
   // If layer spans up to or past the composition endFrame, extend by 0.01f
   // so it remains visible at progress 1.0f / final frame.
-  val effectiveEndFrame =
-    if (endFrame >= compositionEndFrame) {
-      endFrame + 0.01f
-    } else {
-      endFrame
-    }
+  val effectiveEndFrame = calculateEffectiveEndFrame(endFrame, compositionEndFrame)
 
   val currentFrame = parentSettings.currentFrame
   val constFrame = currentFrame.constantValueOrNull
@@ -92,9 +112,8 @@ internal fun Layer(
     return
   }
 
-  val isAfterStart = selectIfLt(currentFrame, startFrame.rf, 0f.rf, 1f.rf)
-  val isBeforeEnd = selectIfLt(currentFrame, effectiveEndFrame.rf, 1f.rf, 0f.rf)
-  val layerVisibility = parentSettings.visibility * (isAfterStart * isBeforeEnd)
+  val layerVisibility =
+    calculateLayerVisibility(currentFrame, startFrame, effectiveEndFrame, parentSettings.visibility)
 
   val ancestorStack = parentTransforms[layer.index] ?: parentTransforms[null] ?: emptyList()
 
