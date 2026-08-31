@@ -1,6 +1,6 @@
 {
   "schema": "compose-preview-activity/v1",
-  "generatedAt": "2026-08-24T07:27:41.849Z",
+  "generatedAt": "2026-08-31T13:32:01.649Z",
   "windowDays": 30,
   "code": {
     "repo": "yschimke/horologist",
