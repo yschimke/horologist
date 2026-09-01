@@ -1,7 +1,0 @@
-domains:
-  - name: remote_compose
-    directory: remote_compose
-    topics: ["remotecompose", "androidx.compose.remote", "widgets"]
-  - name: lottie
-    directory: lottie
-    topics: ["format", "json", "keyframes"]
