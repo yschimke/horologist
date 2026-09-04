@@ -110,7 +110,7 @@ fun LottieDetailPlayer(
             } else {
               pixels * 0.003f
             }
-          crownProgress = ((crownProgress + delta) % 1f + 1f) % 1f
+          crownProgress = (crownProgress + delta).coerceIn(0f, 1f)
           true
         } else {
           false
@@ -267,14 +267,14 @@ fun LottieDetailPlayer(
             PlaybackRegime.CROWN -> {
               // Step buttons for touch / non-rotary fallback
               CompactButton(
-                onClick = { crownProgress = ((crownProgress - 0.1f) % 1f + 1f) % 1f },
+                onClick = { crownProgress = (crownProgress - 0.1f).coerceIn(0f, 1f) },
                 colors = ButtonDefaults.secondaryButtonColors(),
               ) {
                 Text(text = "-10%", fontSize = 9.sp)
               }
               Spacer(modifier = Modifier.width(4.dp))
               CompactButton(
-                onClick = { crownProgress = ((crownProgress + 0.1f) % 1f + 1f) % 1f },
+                onClick = { crownProgress = (crownProgress + 0.1f).coerceIn(0f, 1f) },
                 colors = ButtonDefaults.secondaryButtonColors(),
               ) {
                 Text(text = "+10%", fontSize = 9.sp)
