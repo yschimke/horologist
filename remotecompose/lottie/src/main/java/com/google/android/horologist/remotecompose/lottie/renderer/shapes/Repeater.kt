@@ -63,10 +63,15 @@ internal fun evaluateRepeater(
   val offset = animateScalar(repeater.offset, animationSettings)
   val offsetVal = offset.constantValueOrNull ?: 0f
 
-  val repeaterTransform = repeater.transform
+  val repeaterTransform = repeater.transform?.toTransform()
   val startOpacity =
-    repeaterTransform?.opacity?.let { animateScalar(it, animationSettings) } ?: 100f.rf
-  val endOpacity = startOpacity
+    repeater.transform
+      ?.let { it.startOpacity ?: it.legacyOpacity }
+      ?.let { animateScalar(it, animationSettings) } ?: 100f.rf
+  val endOpacity =
+    repeater.transform
+      ?.let { it.endOpacity ?: it.legacyOpacity }
+      ?.let { animateScalar(it, animationSettings) } ?: 100f.rf
 
   val copyIndices =
     if (repeater.composite == CompositeMode.Below) {
@@ -78,13 +83,10 @@ internal fun evaluateRepeater(
   val instances = mutableListOf<RepeatedShapeInstance>()
   for (i in copyIndices) {
     val k = i.toFloat() + offsetVal
-    val alpha =
-      if (count <= 1) {
-        startOpacity / 100f
-      } else {
-        (startOpacity + (endOpacity - startOpacity) * (i.toFloat() / (count - 1).toFloat()).rf) /
-          100f
-      }
+    // The reference renderer uses index/copies, not index/(copies-1). Preserve fractional input
+    // in the ramp denominator while retaining the existing integer-copy topology policy.
+    val fraction = i.toFloat() / (copies.constantValueOrNull ?: count.toFloat())
+    val alpha = (startOpacity + (endOpacity - startOpacity) * fraction) / 100f
 
     for (shape in shapes) {
       val transformedShape =
@@ -125,6 +127,7 @@ internal fun transformRepeaterShape(
         childShapes = newChildShapes,
         animationSettings = shape.animationSettings,
         transform = shape.transform,
+        opacityMultiplier = shape.opacityMultiplier,
       )
     }
     else -> shape

@@ -165,6 +165,7 @@ internal class RemoteGroup(
   val childShapes: List<StyledShapes>,
   val animationSettings: LottieSettings,
   val transform: Transform?,
+  val opacityMultiplier: RemoteFloat = 1f.rf,
 ) : RemoteShape {
   override fun draw(
     drawScope: RemoteDrawScope,
@@ -174,9 +175,9 @@ internal class RemoteGroup(
     val groupOpacity =
       if (transform != null) {
         val o = animateScalar(transform.opacity, animationSettings)
-        inheritedOpacity * (o / 100f)
+        inheritedOpacity * opacityMultiplier * (o / 100f)
       } else {
-        inheritedOpacity
+        inheritedOpacity * opacityMultiplier
       }
 
     for (shapeGroup in childShapes) {
@@ -210,6 +211,10 @@ internal class RemoteGroup(
         style = styledShapes.style,
       )
     }
-    return RemoteGroup(newChildShapes, animationSettings, transform)
+    return RemoteGroup(newChildShapes, animationSettings, transform, opacityMultiplier)
   }
+
+  /** Scales the opacity inherited by the group's own paints, without changing its geometry. */
+  fun withOpacity(multiplier: RemoteFloat): RemoteGroup =
+    RemoteGroup(childShapes, animationSettings, transform, opacityMultiplier * multiplier)
 }

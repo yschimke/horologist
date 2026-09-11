@@ -19,7 +19,6 @@ package com.google.android.horologist.remotecompose.lottie.format.graphicelement
 import androidx.compose.remote.creation.compose.state.rb
 import androidx.compose.remote.creation.compose.state.rf
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.ShapeType
-import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
 import com.google.android.horologist.remotecompose.lottie.format.properties.BaseScalarProperty
 import com.google.android.horologist.remotecompose.lottie.format.properties.StaticScalarProperty
 import com.google.android.horologist.remotecompose.lottie.format.values.SerializableBoolean
@@ -48,7 +47,7 @@ internal data class Repeater(
   @SerialName("c") val copies: BaseScalarProperty = StaticScalarProperty(value = 1f.rf),
   @SerialName("o") val offset: BaseScalarProperty = StaticScalarProperty(value = 0f.rf),
   @SerialName("m") val composite: CompositeMode = CompositeMode.Above,
-  @SerialName("tr") val transform: Transform? = null,
+  @SerialName("tr") val transform: RepeaterTransform? = null,
 ) : ShapeModifier
 
 @Serializable(with = CompositeModeSerializer::class)

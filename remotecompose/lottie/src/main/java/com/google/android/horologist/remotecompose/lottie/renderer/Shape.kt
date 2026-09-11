@@ -172,9 +172,23 @@ internal fun gatherShapes(
         // Handled via activeRoundedCorners
       }
       is Repeater -> {
-        if (shape.hidden?.constantValue != true && currentGeometries.isNotEmpty()) {
-          val baseShapes = currentGeometries.map { it.shape }
-          currentGeometries = evaluateRepeater(baseShapes, shape, animationSettings).toMutableList()
+        if (shape.hidden?.constantValue != true) {
+          // Exported repeaters follow their fills/strokes. Repeat the already-styled content as
+          // a unit so the ramp reaches its paints and the original is not also drawn unmodified.
+          if (shapeGroups.isNotEmpty()) {
+            val content = RemoteGroup(shapeGroups.reversed(), animationSettings, null)
+            val repeated = evaluateRepeater(listOf(content), shape, animationSettings)
+            shapeGroups.clear()
+            for (instance in repeated) {
+              val group = (instance.shape as RemoteGroup).withOpacity(instance.opacityMultiplier)
+              shapeGroups.add(StyledShapes(listOf(group), NoopStyle()))
+            }
+          }
+          if (currentGeometries.isNotEmpty()) {
+            val baseShapes = currentGeometries.map { it.shape }
+            currentGeometries =
+              evaluateRepeater(baseShapes, shape, animationSettings).toMutableList()
+          }
         }
       }
       is MergePaths -> {
