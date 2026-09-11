@@ -60,23 +60,23 @@ internal fun animateVector(
         val endKeyframe = vector.keyframes[i + 1]
         val duration = endKeyframe.frame.constantValue - startKeyframe.frame.constantValue
         val frameInAnimation = animationSettings.currentFrame - startKeyframe.frame
-        val outTangent = startKeyframe.outTangent ?: scalarLinearEasingOut
-        val inTangent = startKeyframe.inTangent ?: scalarLinearEasingIn
-        val currentBezierValue =
-          if (startKeyframe.hold.constantValue) {
-            selectIfLt(frameInAnimation, duration.rf, 0f.rf, 1f.rf)
-          } else
-            lookupValueInBezier(
-              outTangent.x,
-              outTangent.y,
-              inTangent.x,
-              inTangent.y,
-              duration,
-              frameInAnimation,
-            )
-
         val segment =
           startKeyframe.value.mapIndexed { index, value ->
+            val outTangent = (startKeyframe.outTangent ?: scalarLinearEasingOut).forDimension(index)
+            val inTangent = (startKeyframe.inTangent ?: scalarLinearEasingIn).forDimension(index)
+            val currentBezierValue =
+              if (startKeyframe.hold.constantValue) {
+                selectIfLt(frameInAnimation, duration.rf, 0f.rf, 1f.rf)
+              } else
+                lookupValueInBezier(
+                  outTangent.x,
+                  outTangent.y,
+                  inTangent.x,
+                  inTangent.y,
+                  duration,
+                  frameInAnimation,
+                )
+
             AnimationSegment(
               startKeyframe.frame.constantValue,
               lerp(value, endKeyframe.value[index], currentBezierValue),
