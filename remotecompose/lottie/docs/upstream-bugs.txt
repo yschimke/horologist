@@ -7,8 +7,9 @@ Comparison main: 3db533155202db8ed7a48b232feb4b90c1240fc8 (local origin/main)
 Scope: remotecompose/lottie, including parsing, property evaluation, layer and
 shape rendering, masks/mattes, modifiers, sample previews, and test coverage.
 No upstream issues have been filed. This file is a backlog for later reporting.
-19 findings: seven addressed here (R01, R02, R03, R04, R11, R12, R19).
-R07 timing is also fixed; its masking/bounds portion remains among twelve follow-ups.
+19 findings: eight addressed here (R01, R02, R03, R04, R11, R12, R13, R19).
+R07 timing, R09 parametric trim/rounding, and R10 basic repeater decoding/opacity
+are also fixed; their remaining portions are among eleven follow-ups.
 
 Paths below are relative to remotecompose/lottie/src/main/java/com/google/
 android/horologist/remotecompose/lottie unless another source set is named.
@@ -187,38 +188,69 @@ font-text, glyph-text, missing-glyph, and animated-document tests separate.
 R09 [P1] Several geometry modifiers only work for constant-frame evaluation
 Location: renderer/shapes/{PolyStar,ZigZag,PuckerBloat,Twist,OffsetPath,MergePaths}.kt;
 Rectangle.kt and Ellipse.kt when trim/rounding is present.
-Origin: branch geometry implementation. Status: code-confirmed.
+Origin: branch geometry implementation. Status: rectangle/ellipse trim and
+rounding fixed; other modifier paths remain code-confirmed follow-ups.
 Cause: animated property results or vertices are converted using
 constantValueOrNull ?: 0f. Animated polystar points/radius can become zero;
 animated twist/offset/zigzag parameters become no-ops. Boolean merge paths turn
 dynamic points into zeros. Adding a trim or rounding modifier to a moving
-rectangle/ellipse converts its dynamic geometry into a static zero-valued path.
+rectangle/ellipse previously converted its dynamic geometry into a static
+zero-valued path.
 Minimal reproductions: animate polystar radius; animate a rectangle's position
 and add an otherwise neutral trim (0..100%); merge two moving paths. Drive all
 examples through the same compiled document rather than recording a new one
 per frame.
-Suggested fix: use remote expressions where topology permits; for topology or
-boolean operations, precompute geometry with an explicit sampling strategy or
-provide player-side support. Never silently replace expressions with zero.
+Applied parametric fix: retain rectangle/ellipse coordinate expressions. Apply
+rectangle rounding analytically (its own radius wins over the modifier), and
+use the player's live path measurement for dynamic geometry trimming. Constant
+geometry keeps the existing precomputed trim path. Ellipses have no sharp
+corners for the rounding modifier to replace.
+Evidence: eleven native playback tests cover translation, resizing, full and
+half trim, rounding, animated radius, and animated trim endpoints. Static
+reference fixtures are explicitly remounted per frame and independently probed
+for their expected position; the dynamic document is never remounted.
+Remaining suggested fix: use remote expressions where topology permits; for
+topology or boolean operations, precompute geometry with an explicit sampling
+strategy or provide player-side support. Never silently replace expressions
+with zero.
+Boolean merges and the other listed modifiers were not implemented here.
+Combined multi-contour trims and interactions with later baked nonuniform
+geometry transforms still need reference-parity coverage; wrapped runtime trims
+draw two segments and may expose stroke-cap seams at the contour boundary.
 
 R10 [P1] Repeater copies, opacity, and animated scaling are incomplete
 Location: format/graphicelement/modifiers/Repeater.kt;
 renderer/shapes/Repeater.kt, evaluateRepeater/transformRepeaterBezierValue;
 renderer/Shape.kt, gatherShapes.
-Origin: branch implementation/port. Status: code-confirmed.
-Cause: repeater tr is a generic Transform and cannot retain start/end opacity
+Origin: branch implementation/port. Status: standard decoding, styled-content
+repetition and start/end opacity fixed; broader repeater behavior remains open.
+Cause before fix: repeater tr is a generic Transform and cannot retain start/end opacity
 so/eo. It also requires ordinary o, so a tr containing so/eo without o fails
 decoding instead of using repeater opacity. When o is supplied, rendering sets
-endOpacity=startOpacity from o. Fractional copy
-counts are truncated; dynamic counts default to one and offsets to zero.
-For dynamic scale and copy index k>1, scale^k becomes just scale. Modifiers
-consume currentGeometries, while preceding groups are held in currentGroups;
-a repeater on grouped content may therefore have nothing to repeat.
+endOpacity=startOpacity from o. Exported [geometry,fill,repeater] ordering also
+left the already-emitted fill untouched, drawing a single unmodified original.
+Dynamic counts still default to one and offsets to zero.
+For dynamic scale and copy index k>1, scale^k becomes just scale. Preceding
+groups were previously excluded from repetition; interactions with a following
+fill and nested group transforms still need reference-parity coverage.
 Minimal reproductions: three copies, so=100/eo=0; 2.5 copies; an animated scale
 with at least three copies; place a group before a repeater and a fill.
-Suggested fix: a repeater-specific transform model; preserve so/eo; define
-fractional-copy alpha; expression-based offsets/scales; include grouped content
-and preserve opacity across subsequent modifiers.
+Applied fix: a repeater-specific transform model retains so/eo without requiring
+ordinary o. Missing endpoints default to 100%; legacy o supplies only missing
+endpoints for compatibility. Repeat already-styled content as a unit, scaling
+the opacity inherited by its paints rather than leaving an unmodified original.
+Use copyIndex/copies for the ramp (not copyIndex/(copies-1)). For 2.5 copies the
+pinned reference draws two copies, with ramp factors 0 and 0.4; truncation alone
+is therefore not a parity defect against that reference.
+Evidence: six initial native tests failed decoding, then failed pixel checks
+after parser repair, then passed for zero/one/three copies, constant and animated
+ramps, and fully transparent endpoints. Four additional passing controls cover
+omitted endpoints, legacy opacity, explicit endpoint precedence, and fractional
+copy counts. Broader parent/group transform ordering, dynamic counts/offsets,
+exponential animated scaling, and opacity through later modifiers still need
+implementation and reference-parity tests.
+Reference contract (the dependency version used by this module):
+https://github.com/airbnb/lottie-android/blob/v6.7.1/lottie/src/main/java/com/airbnb/lottie/animation/content/RepeaterContent.java
 
 R11 [P1] Gradient alpha stops are matched by index rather than position
 Location: renderer/RemoteStyle.kt, extractGradientColorsAndPositions;
@@ -250,16 +282,29 @@ parity claim is made for every exporter variant or arbitrary gradient topology.
 R13 [P1] Per-dimension easing and spatial position curves are lost
 Location: format/values/KeyframeEasing.kt, parseTangentValue;
 format/properties/Position.kt; renderer/properties/{Vector,Position}.kt.
-Origin: comparison-main property model/evaluators. Status: code-confirmed.
-Cause: easing arrays retain only their first entry, and the same timing factor
+Origin: comparison-main property model/evaluators. Status: fixed with playback
+and serialization regressions.
+Cause before fix: easing arrays retain only their first entry, and the same timing factor
 is applied to every dimension. PositionPropertyKeyframe retains spatial to/ti
 tangents, but animatePosition ignores them and follows a straight line between
 endpoints.
 Minimal reproduction: vector with different x/y easing handles; a position
 segment whose spatial control points bend away from its endpoint chord.
-Suggested fix: preserve per-dimension easing in the model and use the retained
-spatial tangents; evaluate component timing and the spatial path with distinct
-contracts. Do not report this as fixed by fractional-frame interpolation.
+Suggested/applied fix: preserve per-dimension easing arrays in both decoding and
+encoding, select vector/position-axis handles independently, and traverse spatial
+cubics by eased arc length. Both spatial tangents belong to the starting keyframe,
+with incoming relative to the endpoint. Bounded 256-interval length and position
+tables retain dynamic playback; overshoot extrapolates along endpoint tangents.
+This is a sampled approximation, not an exact cubic arc-length solver.
+Evidence: fourteen native tests cover curved midpoint/endpoints, independent
+Android PathMeasure quarter-frame checks on an asymmetric curve, holds, linear
+controls, scalar/singleton easing fallback, serialization round trips, independent
+axis easing, and spatial over/undershoot. The focused property suite passed 146
+tests. Extreme coordinate magnitudes and unusual curve shapes need further
+accuracy coverage upstream; separated-dimension position objects remain outside
+this change.
+Reference for arc-length traversal and overshoot:
+https://github.com/airbnb/lottie-android/blob/v6.7.1/lottie/src/main/java/com/airbnb/lottie/animation/keyframe/PathKeyframeAnimation.java
 
 R14 [P2] Animated stroke dashes freeze at the first keyframe
 Location: renderer/RemoteStyle.kt, createDashPathEffect/resolveScalarFloat.
@@ -374,6 +419,21 @@ Follow-up playback fixes (R04, R11, R07 timing):
   unchanged from the previous validated sample renders. The artifact checker
   passes all 15 sample pairs, 17 PNGs, and 16 GIFs (11 moving; five static sources).
   Re-inspected the contact sheet with initial/middle/final GIF frames.
+
+Follow-up geometry, motion and repeater fixes (R09 subset, R13, R10 subset):
+- Added 35 regressions: 11 moving geometry/modifier tests, 14 position/easing
+  tests, and 10 repeater tests. Native playback checks update named progress on
+  one recorded document; independent static fixtures or PathMeasure supply the
+  geometry/motion oracles where applicable.
+- Full module check and explicit verifyRoborazziDebug: 399 passed, 0 failed,
+  17 existing skipped (416 discovered). No additional tests were excluded.
+  Golden images and public API signatures are unchanged.
+- Formatting, API generation, Kotlin compilation and debug assembly pass.
+- All 33 compose-preview captures render: one changed, 32 unchanged, 0 missing,
+  0 skipped. Artifact checks pass for all 15 sample pairs, 17 PNGs and 16 GIFs
+  (11 moving; five static sources). Visually inspected the complete contact
+  sheet including initial/middle/final GIF frames. This is sample validation,
+  not a claim of exhaustive reference-renderer parity.
 
 Repeatable commands (from repository root):
   build-brief ./gradlew :remotecompose:lottie:testDebugUnitTest
