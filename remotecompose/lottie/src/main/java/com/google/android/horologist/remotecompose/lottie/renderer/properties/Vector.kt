@@ -19,6 +19,8 @@ package com.google.android.horologist.remotecompose.lottie.renderer.properties
 import android.annotation.SuppressLint
 import androidx.compose.remote.creation.compose.state.RemoteFloat
 import androidx.compose.remote.creation.compose.state.lerp
+import androidx.compose.remote.creation.compose.state.rf
+import androidx.compose.remote.creation.compose.state.selectIfLt
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
 import com.google.android.horologist.remotecompose.lottie.format.properties.AnimatedVectorProperty
 import com.google.android.horologist.remotecompose.lottie.format.properties.BaseVectorProperty
@@ -61,14 +63,17 @@ internal fun animateVector(
         val outTangent = startKeyframe.outTangent ?: scalarLinearEasingOut
         val inTangent = startKeyframe.inTangent ?: scalarLinearEasingIn
         val currentBezierValue =
-          lookupValueInBezier(
-            outTangent.x,
-            outTangent.y,
-            inTangent.x,
-            inTangent.y,
-            duration,
-            frameInAnimation,
-          )
+          if (startKeyframe.hold.constantValue) {
+            selectIfLt(frameInAnimation, duration.rf, 0f.rf, 1f.rf)
+          } else
+            lookupValueInBezier(
+              outTangent.x,
+              outTangent.y,
+              inTangent.x,
+              inTangent.y,
+              duration,
+              frameInAnimation,
+            )
 
         val segment =
           startKeyframe.value.mapIndexed { index, value ->

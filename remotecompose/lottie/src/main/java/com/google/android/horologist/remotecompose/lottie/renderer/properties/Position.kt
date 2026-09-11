@@ -19,6 +19,7 @@ package com.google.android.horologist.remotecompose.lottie.renderer.properties
 import android.annotation.SuppressLint
 import androidx.compose.remote.creation.compose.state.lerp
 import androidx.compose.remote.creation.compose.state.rf
+import androidx.compose.remote.creation.compose.state.selectIfLt
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
 import com.google.android.horologist.remotecompose.lottie.format.properties.AnimatedPositionProperty
 import com.google.android.horologist.remotecompose.lottie.format.properties.BasePositionProperty
@@ -81,14 +82,17 @@ internal fun animatePosition(
 
         // Evaluate the cubic Bézier curve to obtain the normalized interpolation factor [0.0, 1.0].
         val currentBezierValue =
-          lookupValueInBezier(
-            outTangent.x,
-            outTangent.y,
-            inTangent.x,
-            inTangent.y,
-            duration,
-            frameInAnimation,
-          )
+          if (startKeyframe.hold.constantValue) {
+            selectIfLt(frameInAnimation, duration.rf, 0f.rf, 1f.rf)
+          } else
+            lookupValueInBezier(
+              outTangent.x,
+              outTangent.y,
+              inTangent.x,
+              inTangent.y,
+              duration,
+              frameInAnimation,
+            )
 
         // Linearly interpolate each coordinate (x, y) between the start and end keyframe values.
         val segment =

@@ -181,6 +181,12 @@ internal fun animateColor(
         animationSegments.add(segment)
       }
 
+      // A final hold segment still has to switch to the last keyframe's value.
+      val lastKeyframe = keyframes.last()
+      animationSegments.add(
+        toRgbaFloats(lastKeyframe).map { AnimationSegment(lastKeyframe.frame.constantValue, it) }
+      )
+
       val channels =
         (0 until 4).map { index ->
           chainAnimation(animationSegments.map { it[index] }, animationSettings.currentFrame)
