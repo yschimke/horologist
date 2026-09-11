@@ -23,6 +23,7 @@ import androidx.compose.remote.creation.compose.layout.RemoteComposable
 import androidx.compose.remote.creation.compose.modifier.RemoteModifier
 import androidx.compose.remote.creation.compose.modifier.fillMaxSize
 import androidx.compose.remote.creation.compose.state.RemoteFloat
+import androidx.compose.remote.creation.compose.state.remotePath
 import androidx.compose.remote.creation.compose.state.rf
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.ClipOp
@@ -594,7 +595,7 @@ internal fun applyLayerMasks(
     if (mask.mode == MaskMode.Add && !mask.inverted) {
       nonInvertedAddSubpaths.addAll(bezierList)
     } else {
-      val rcPath = buildRemotePathFromBezier(bezierList)
+      val rcPath = canvas.buildRemotePathFromBezier(bezierList)
       val clipOp =
         when (mask.mode) {
           MaskMode.Subtract -> if (mask.inverted) ClipOp.Intersect else ClipOp.Difference
@@ -611,7 +612,7 @@ internal fun applyLayerMasks(
   }
 
   if (nonInvertedAddSubpaths.isNotEmpty()) {
-    val compositeAddPath = buildRemotePathFromBezier(nonInvertedAddSubpaths)
+    val compositeAddPath = canvas.buildRemotePathFromBezier(nonInvertedAddSubpaths)
     canvas.clipPath(compositeAddPath, ClipOp.Intersect)
   }
 }
@@ -723,28 +724,28 @@ private fun clipShapes(
       is Rectangle -> {
         val lottiePath = evaluateRectangle(shape, animationSettings)
         if (lottiePath != null) {
-          val rcPath = buildRemotePathFromBezier(lottiePath.path)
+          val rcPath = canvas.buildRemotePathFromBezier(lottiePath.path)
           canvas.clipPath(rcPath, clipOp)
         }
       }
       is Path -> {
         val lottiePath = evaluatePath(shape, animationSettings, null)
         if (lottiePath != null) {
-          val rcPath = buildRemotePathFromBezier(lottiePath.path)
+          val rcPath = canvas.buildRemotePathFromBezier(lottiePath.path)
           canvas.clipPath(rcPath, clipOp)
         }
       }
       is Ellipse -> {
         val lottiePath = evaluateEllipse(shape, animationSettings)
         if (lottiePath != null) {
-          val rcPath = buildRemotePathFromBezier(lottiePath.path)
+          val rcPath = canvas.buildRemotePathFromBezier(lottiePath.path)
           canvas.clipPath(rcPath, clipOp)
         }
       }
       is PolyStar -> {
         val lottiePath = evaluatePolyStar(shape, animationSettings)
         if (lottiePath != null) {
-          val rcPath = buildRemotePathFromBezier(lottiePath.path)
+          val rcPath = canvas.buildRemotePathFromBezier(lottiePath.path)
           canvas.clipPath(rcPath, clipOp)
         }
       }
@@ -764,50 +765,48 @@ private fun clipShapes(
 }
 
 @SuppressLint("RestrictedApi")
-internal fun buildRemotePathFromBezier(path: List<RemoteBezierValue>): RemotePath {
-  val rcPath = RemotePath()
-  rcPath.reset()
-  if (path.isEmpty()) return rcPath
-  for (subpath in path) {
-    val vertices = subpath.vertices
-    val inTangents = subpath.inTangents
-    val outTangents = subpath.outTangents
+/** Records a clipping path while retaining vertex and tangent dependencies for playback. */
+private fun RemoteCanvas.buildRemotePathFromBezier(path: List<RemoteBezierValue>): RemotePath =
+  remotePath {
+    for (subpath in path) {
+      val vertices = subpath.vertices
+      val inTangents = subpath.inTangents
+      val outTangents = subpath.outTangents
 
-    if (vertices.isEmpty()) continue
+      if (vertices.isEmpty()) continue
 
-    val startX = vertices[0].getOrElse(0) { 0f.rf }.constantValueOrNull ?: 0f
-    val startY = vertices[0].getOrElse(1) { 0f.rf }.constantValueOrNull ?: 0f
-    rcPath.moveTo(startX, startY)
+      val startX = vertices[0].getOrElse(0) { 0f.rf }
+      val startY = vertices[0].getOrElse(1) { 0f.rf }
+      moveTo(startX, startY)
 
-    val maxIndex = if (subpath.closed) vertices.size else vertices.size - 1
-    for (i in 0 until maxIndex) {
-      val p0 = vertices[i]
-      val lastIndex = if (i == vertices.size - 1 && subpath.closed) 0 else i + 1
-      val p4 = vertices[lastIndex]
-      val inTangent = inTangents.getOrNull(lastIndex)
-      val outTangent = outTangents.getOrNull(i)
+      val maxIndex = if (subpath.closed) vertices.size else vertices.size - 1
+      for (i in 0 until maxIndex) {
+        val p0 = vertices[i]
+        val lastIndex = if (i == vertices.size - 1 && subpath.closed) 0 else i + 1
+        val p4 = vertices[lastIndex]
+        val inTangent = inTangents.getOrNull(lastIndex)
+        val outTangent = outTangents.getOrNull(i)
 
-      val p0x = p0.getOrElse(0) { 0f.rf }.constantValueOrNull ?: 0f
-      val p0y = p0.getOrElse(1) { 0f.rf }.constantValueOrNull ?: 0f
-      val p4x = p4.getOrElse(0) { 0f.rf }.constantValueOrNull ?: 0f
-      val p4y = p4.getOrElse(1) { 0f.rf }.constantValueOrNull ?: 0f
+        val p0x = p0.getOrElse(0) { 0f.rf }
+        val p0y = p0.getOrElse(1) { 0f.rf }
+        val p4x = p4.getOrElse(0) { 0f.rf }
+        val p4y = p4.getOrElse(1) { 0f.rf }
 
-      val inTangentX = inTangent?.getOrElse(0) { 0f.rf }?.constantValueOrNull ?: 0f
-      val inTangentY = inTangent?.getOrElse(1) { 0f.rf }?.constantValueOrNull ?: 0f
-      val outTangentX = outTangent?.getOrElse(0) { 0f.rf }?.constantValueOrNull ?: 0f
-      val outTangentY = outTangent?.getOrElse(1) { 0f.rf }?.constantValueOrNull ?: 0f
+        val inTangentX = inTangent?.getOrElse(0) { 0f.rf } ?: 0f.rf
+        val inTangentY = inTangent?.getOrElse(1) { 0f.rf } ?: 0f.rf
+        val outTangentX = outTangent?.getOrElse(0) { 0f.rf } ?: 0f.rf
+        val outTangentY = outTangent?.getOrElse(1) { 0f.rf } ?: 0f.rf
 
-      val p1x = p0x + outTangentX
-      val p1y = p0y + outTangentY
-      val p2x = p4x + inTangentX
-      val p2y = p4y + inTangentY
+        val p1x = p0x + outTangentX
+        val p1y = p0y + outTangentY
+        val p2x = p4x + inTangentX
+        val p2y = p4y + inTangentY
 
-      rcPath.cubicTo(p1x, p1y, p2x, p2y, p4x, p4y)
-    }
+        curveTo(p1x, p1y, p2x, p2y, p4x, p4y)
+      }
 
-    if (subpath.closed) {
-      rcPath.close()
+      if (subpath.closed) {
+        close()
+      }
     }
   }
-  return rcPath
-}
