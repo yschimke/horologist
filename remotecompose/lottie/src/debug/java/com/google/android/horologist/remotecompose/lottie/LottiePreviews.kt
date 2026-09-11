@@ -82,7 +82,8 @@ fun LottiePlayPauseAnimatedPreview() {
   LottieAnimatedPreview(animationResId = R.raw.play_pause, modifier = Modifier.size(64.dp))
 }
 
-@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 64, heightDp = 64)
+// The M3 samples contain black artwork, so use a light background to make it visible.
+@Preview(backgroundColor = 0xffffffff, showBackground = true, widthDp = 64, heightDp = 64)
 @Composable
 fun LottieM3PlayPausePreview() {
   LottiePreview(
@@ -92,8 +93,8 @@ fun LottieM3PlayPausePreview() {
   )
 }
 
-@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 64, heightDp = 64)
-@AnimatedPreview(durationMs = 1000, frameIntervalMs = 100, showCurves = false)
+@Preview(backgroundColor = 0xffffffff, showBackground = true, widthDp = 64, heightDp = 64)
+@AnimatedPreview(durationMs = 2000, frameIntervalMs = 100, showCurves = false)
 @Composable
 fun LottieM3PlayPauseAnimatedPreview() {
   LottieAnimatedPreview(animationResId = R.raw.m3_play_pause, modifier = Modifier.size(64.dp))
@@ -175,13 +176,13 @@ fun LottieGrandparentAnimatedPreview() {
   LottieAnimatedPreview(animationResId = R.raw.grandparent, modifier = Modifier.size(100.dp))
 }
 
-@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 64, heightDp = 64)
+@Preview(backgroundColor = 0xffffffff, showBackground = true, widthDp = 64, heightDp = 64)
 @Composable
 fun LottieM3NextPreview() {
   LottiePreview(animationResId = R.raw.m3_next, modifier = Modifier.size(64.dp), progress = 0f)
 }
 
-@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 64, heightDp = 64)
+@Preview(backgroundColor = 0xffffffff, showBackground = true, widthDp = 64, heightDp = 64)
 @AnimatedPreview(durationMs = 1000, frameIntervalMs = 100, showCurves = false)
 @Composable
 fun LottieM3NextAnimatedPreview() {
