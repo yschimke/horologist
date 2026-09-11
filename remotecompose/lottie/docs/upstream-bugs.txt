@@ -1,0 +1,352 @@
+LOTTIE REVIEW — UPSTREAM REPORT CANDIDATES
+========================================
+
+Reviewed: 2026-09-11
+Starting commit: 2417e6e67 (lottie-testing / lottie-testing-fixes)
+Comparison main: 3db533155202db8ed7a48b232feb4b90c1240fc8 (local origin/main)
+Scope: remotecompose/lottie, including parsing, property evaluation, layer and
+shape rendering, masks/mattes, modifiers, sample previews, and test coverage.
+No upstream issues have been filed. This file is a backlog for later reporting.
+19 findings: five addressed here (R01, R02, R03, R12, R19); fourteen follow-ups.
+
+Paths below are relative to remotecompose/lottie/src/main/java/com/google/
+android/horologist/remotecompose/lottie unless another source set is named.
+Symbols are used instead of line numbers so fixes do not invalidate references.
+P1 = incorrect output for a supported animation feature; P2 = narrower defect
+or validation/coverage gap. "Code-confirmed" means the implementation establishes
+the limitation, but the proposed minimal visual reproduction has not been run.
+Do not describe these as verified lottie-android parity failures without running
+the listed reproduction. The fixed issues were reproduced during this review.
+
+FIXED IN THIS BRANCH
+--------------------
+
+R01 [P1] Scalar, vector, and position hold keyframes interpolate instead of hold
+Location: renderer/properties/{Scalar,Vector,Position}.kt, animate*.
+Origin: present in comparison main, not introduced by the branch port.
+Reproduction: parse {"a":1,"k":[{"t":0,"s":[0],"h":1},
+{"t":10,"s":[100]}] as a scalar; evaluate frame 5. Use [0,0] and [100,100]
+for vector/position. Before the fix each returns 50, rather than 0.
+Impact: stepped visibility, scale, rotation, and position values move early.
+Suggested/applied fix: select start/end progress at the next keyframe boundary
+when h=1, bypassing easing. Preserve interpolation for non-hold segments.
+Evidence: new ReviewRegressionTest hold tests failed before the fix; also
+re-enabled the three existing ignored hold tests in ScalarPropertyTest,
+VectorPropertyTest, and PositionPropertyTest. Test start, midpoint, just before
+the end, and exact end. The negative-start Bezier control already passed.
+
+R02 [P1] Fractional and zero-duration easing segments produce incorrect values
+Location: renderer/Animation.kt, lookupValueInBezier.
+Origin: present in comparison main.
+Reproduction: linear handles (0,0,1,1), duration=0.5, frame=0.25 should produce
+0.5; at frame=0.5 or later it should produce 1. The old code returns 0 for all
+three. A duration of 2.5 ends at 0.8 rather than 1. A zero-duration segment
+produces a non-finite result (constantValue evaluation throws).
+Cause: sampling 0..duration.toInt(), dividing by duration, then truncating a
+floating-point array index. The fractional endpoint is never sampled, and
+intermediate frames are rounded down. Coincident keyframes divide by zero.
+Suggested/applied fix: sample a normalized interval including both endpoints;
+interpolate adjacent samples and clamp lookup positions. Zero-length segments
+choose the later endpoint. The table is bounded to 32..4096 intervals to avoid
+allocations proportional to arbitrarily large durations.
+Evidence: failing subframe/zero-duration regressions, then passing endpoint and
+clamping tests. Easing remains a sampled approximation, not an exact runtime
+cubic solver; extreme easing curves need additional accuracy testing upstream.
+
+R03 [P2] Four M3 previews are completely blank, and one motion capture is short
+Location: src/debug/.../LottiePreviews.kt, M3PlayPause/M3Next still and animated.
+Origin: branch preview configuration.
+Reproduction: compose-preview successfully emits 33 files, yet both M3 PNGs
+contain one color and both M3 GIFs contain one distinct frame. The JSON artwork
+is black and the preview backgrounds were also black. M3 play/pause spans
+100 frames at 60 fps, but its recording lasted only 1000 ms.
+Suggested/applied fix: light backgrounds for these four previews; record M3
+play/pause for 2000 ms. Do not recolor or rewrite the sample animation.
+Evidence: tools/check_previews.py rejects the original output for solid-color
+captures and missing motion. It checks manifest-based paths, all 15 sample
+files, still and animated coverage, GIF magic/decoding, expected frame counts,
+and distinct frames for samples that contain animation. Static source samples
+are allowed to produce a repeated static GIF.
+
+R19 [P2] Seven media screenshot tests request nonexistent baseline filenames
+Location: src/test/.../MediaLottieDiffScreenshotTest.kt.
+Origin: branch test restoration. Status: fixed; golden verification passes.
+Reproduction: run :remotecompose:lottie:verifyRoborazziDebug. Seven tests fail
+with "original file ... was not found", requesting names such as
+MediaLottieDiffScreenshotTest_playPause.png. The committed baseline is named
+MediaLottieDiffScreenshotTest_playPause_progress0.png. This mismatch was already
+present at the starting commit; it is not caused by the easing fix.
+Suggested/applied fix: explicitly use suffix="_progress0" for the seven
+zero-progress tests, preserving and verifying the existing golden images.
+The two ignored mute tests instead have obsolete expectedFailure=true and
+stored images of a decoder error. They need deliberate success baselines and
+additional parity checks, rather than simply removing their Ignore annotations.
+
+R12 [P1] Dynamic color playback never reaches the final value after a hold
+Location: renderer/properties/Color.kt, dynamic animateColor branch.
+Origin: present in comparison main. Status: fixed with a pixel regression test.
+Cause: a hold created only a constant start-value segment and no final-keyframe
+segment was appended. The separate constant-frame branch did switch, hiding
+the defect from constant-only evaluator tests.
+Reproduction: red at t=0/h=1, blue at t=10, root op=20. In a single composition
+with named dynamic progress, the center pixel stayed red at progress=0.5.
+DynamicColorPlaybackTest reproduced this with a native rendered pixel assertion
+(actual ARGB -65536 versus expected -16776961), after verifying initial red.
+Suggested/applied fix: append the final keyframe as an explicit terminal segment.
+The regression also checks progress=0.75 to ensure the final blue is held.
+Temporary image capture forces Record mode locally; it neither adds a golden
+image nor depends on global Roborazzi recording/verification flags.
+
+UNFIXED: RENDERING CORRECTNESS
+------------------------------
+
+R04 [P1] Animated mask and matte geometry loses every dynamic coordinate
+Location: renderer/Shape.kt, buildRemotePathFromBezier/applyLayerMasks/clipShapes.
+Origin: branch implementation. Status: code-confirmed.
+Cause: every vertex and tangent reads constantValueOrNull ?: 0f. Normal playback
+uses a dynamic RemoteFloat frame, so animateBezier can return expressions even
+when an equivalent isolated constant-frame test succeeds. A mask path then
+collapses toward (0,0), hiding content or revealing too much.
+Minimal reproduction: solid layer with an add mask whose rectangle moves from
+x=0 to x=50; play one compiled document through a named progress variable.
+Compare against captures of independently evaluated constant frames.
+Suggested fix: build clipping paths with the same expression-aware path builder
+used by RemoteLottiePath.draw, preserving RemoteFloat dependencies. Add a
+single-document playback test, not only constant-frame geometry assertions.
+
+R05 [P1] Track mattes use intersected outlines instead of rendered alpha/luma
+Location: renderer/Shape.kt, applyMatteClip and clipShapes.
+Origin: branch implementation. Status: code-confirmed.
+Cause: positive matte shapes call clipPath(Intersect) one by one. Two disjoint
+filled shapes therefore yield an empty intersection rather than their union.
+Luma and alpha modes take the same clipping path; fill color, opacity, matte
+timeline visibility, and masks do not contribute. Image/text mattes take the
+empty else branch. Layer.kt does not pass matteContext to PrecompLayer at all.
+Minimal reproductions: two disjoint opaque rectangles in a shape matte; a black
+solid luma matte over a colored target; a precomp target with an alpha matte;
+a matte whose op precedes the target op.
+Suggested fix: composite the rendered matte into an alpha/luminance surface
+with the correct mode and time, then apply it to every target layer type. A
+union of paths only fixes the disjoint-shape case; it is not full matte support.
+
+R06 [P1] Masks ignore opacity/expansion and reorder mixed operations
+Location: renderer/Shape.kt, applyLayerMasks; format/mask/Mask.kt.
+Origin: branch masking implementation. Status: code-confirmed.
+Cause: mask opacity never reaches rendering; expansion is absent from the model.
+Non-inverted add masks
+are collected and intersected at the end; subtract/intersect masks execute
+earlier regardless of authored order. Difference is treated as subtraction.
+Minimal reproductions: an add mask with opacity=0; a mask with expansion=10;
+subtract followed by add on overlapping shapes. Inspect output against the
+reference renderer, including inversion and half-opacity cases.
+Suggested fix: evaluate ordered mask compositing with alpha, expansion, and
+mode semantics. Hard clipping alone cannot implement partially opaque masks.
+
+R07 [P1] Precomp transforms use child time and precomp masks are dropped
+Location: renderer/layers/Layer.kt, Precomposition branch; PrecompLayer.kt.
+Origin: branch implementation. Status: code-confirmed.
+Cause: Layer switches currentFrame to remapped/stretched local time before
+PrecompLayer appends the precomp transform to the child's stack. All stack
+transforms are later evaluated using that child's frame. A precomp's own
+animated transform belongs to its containing composition's timeline. Further
+nested precomps can incorrectly retime outer transforms again. The precomp's
+masks are never applied, and its width/height do not establish clipping bounds.
+Minimal reproduction: precomp with st=10, animated outer translation, and a
+static child; render parent frame 20. Add a mask to the precomp layer. Repeat
+with time remap and a nested precomp.
+Suggested fix: retain the evaluation context of each transform or compose the
+outer transform before changing to child time. Apply layer masks and bounds
+around the rendered precomp, not separately to child geometry.
+
+R08 [P1] Text layers without vector glyphs render nothing; text changes freeze
+Location: renderer/layers/TextLayer.kt, TextLayer.
+Origin: branch implementation. Status: code-confirmed.
+Cause: the only drawing branch is if (charsMap.isNotEmpty()). There is no font
+text drawing fallback. TextDocument selection uses currentFrame.constantValueOrNull
+?: 0f, so dynamic playback selects frame-zero text forever. Missing characters
+also vanish without advancing the cursor; fallback glyph lookup may choose a
+different family/style.
+Minimal reproductions: a text layer with a fonts list and no chars; two text
+documents at t=0 and t=30 in a document driven by named progress.
+Suggested fix: implement a font-backed text path or explicitly reject unsupported
+font text, plus runtime document selection and correct font/glyph lookup. Keep
+font-text, glyph-text, missing-glyph, and animated-document tests separate.
+
+R09 [P1] Several geometry modifiers only work for constant-frame evaluation
+Location: renderer/shapes/{PolyStar,ZigZag,PuckerBloat,Twist,OffsetPath,MergePaths}.kt;
+Rectangle.kt and Ellipse.kt when trim/rounding is present.
+Origin: branch geometry implementation. Status: code-confirmed.
+Cause: animated property results or vertices are converted using
+constantValueOrNull ?: 0f. Animated polystar points/radius can become zero;
+animated twist/offset/zigzag parameters become no-ops. Boolean merge paths turn
+dynamic points into zeros. Adding a trim or rounding modifier to a moving
+rectangle/ellipse converts its dynamic geometry into a static zero-valued path.
+Minimal reproductions: animate polystar radius; animate a rectangle's position
+and add an otherwise neutral trim (0..100%); merge two moving paths. Drive all
+examples through the same compiled document rather than recording a new one
+per frame.
+Suggested fix: use remote expressions where topology permits; for topology or
+boolean operations, precompute geometry with an explicit sampling strategy or
+provide player-side support. Never silently replace expressions with zero.
+
+R10 [P1] Repeater copies, opacity, and animated scaling are incomplete
+Location: format/graphicelement/modifiers/Repeater.kt;
+renderer/shapes/Repeater.kt, evaluateRepeater/transformRepeaterBezierValue;
+renderer/Shape.kt, gatherShapes.
+Origin: branch implementation/port. Status: code-confirmed.
+Cause: repeater tr is a generic Transform and cannot retain start/end opacity
+so/eo. It also requires ordinary o, so a tr containing so/eo without o fails
+decoding instead of using repeater opacity. When o is supplied, rendering sets
+endOpacity=startOpacity from o. Fractional copy
+counts are truncated; dynamic counts default to one and offsets to zero.
+For dynamic scale and copy index k>1, scale^k becomes just scale. Modifiers
+consume currentGeometries, while preceding groups are held in currentGroups;
+a repeater on grouped content may therefore have nothing to repeat.
+Minimal reproductions: three copies, so=100/eo=0; 2.5 copies; an animated scale
+with at least three copies; place a group before a repeater and a fill.
+Suggested fix: a repeater-specific transform model; preserve so/eo; define
+fractional-copy alpha; expression-based offsets/scales; include grouped content
+and preserve opacity across subsequent modifiers.
+
+R11 [P1] Gradient alpha stops are matched by index rather than position
+Location: renderer/RemoteStyle.kt, extractGradientColorsAndPositions/sampleAlpha.
+Origin: branch implementation. Status: code-confirmed.
+Cause: equal numbers of color and alpha stops bypass position interpolation.
+Otherwise sampleAlpha can only compare constant positions and falls back to
+the first alpha for dynamic values. Output stops are emitted only at color
+positions, so an opacity breakpoint between color stops disappears.
+Minimal reproductions: two color stops at 0 and 1, three alpha stops at
+(0,1),(0.5,0),(1,1): the center should be transparent but is opaque. Also use
+three color stops at 0,0.5,1 and three alpha stops at 0,0.25,1, with differing
+alpha values; equal counts do not imply corresponding positions.
+Suggested fix: merge color/alpha positions and interpolate both channels at
+the combined stops. Preserve dynamic offsets using RemoteFloat expressions.
+
+R13 [P1] Per-dimension easing and spatial position curves are lost
+Location: format/values/KeyframeEasing.kt, parseTangentValue;
+format/properties/Position.kt; renderer/properties/{Vector,Position}.kt.
+Origin: comparison-main property model/evaluators. Status: code-confirmed.
+Cause: easing arrays retain only their first entry, and the same timing factor
+is applied to every dimension. PositionPropertyKeyframe retains spatial to/ti
+tangents, but animatePosition ignores them and follows a straight line between
+endpoints.
+Minimal reproduction: vector with different x/y easing handles; a position
+segment whose spatial control points bend away from its endpoint chord.
+Suggested fix: preserve per-dimension easing in the model and use the retained
+spatial tangents; evaluate component timing and the spatial path with distinct
+contracts. Do not report this as fixed by fractional-frame interpolation.
+
+R14 [P2] Animated stroke dashes freeze at the first keyframe
+Location: renderer/RemoteStyle.kt, createDashPathEffect/resolveScalarFloat.
+Origin: branch implementation. Status: code-confirmed.
+Cause: when animateScalar yields an expression, resolveScalarFloat substitutes
+the first keyframe value. The PathEffect is built once from ordinary floats.
+Minimal reproduction: constant dash intervals with offset animated from 0 to 20.
+Suggested fix: serialize dynamic dash data to a supported player operation or
+precompute the effect at supported frames; test motion through one document.
+
+R15 [P2] Several parsed or declared layer features are silently ignored
+Location: format/layer/{Layer,ShapeLayer,SolidColorLayer,NullLayer}.kt;
+renderer/layers/Layer.kt and renderer/Transform.kt.
+Origin: mixed comparison-main model and branch extensions. Status: code-confirmed.
+Cause: the common default startTime/timeStretch/blendMode/matteTarget/is3d
+properties do not have matching JSON names in the original layer subclasses.
+New subclasses retain more fields, but drawing still does not apply blendMode
+or autoOrient. calculateLocalFrame is called only for precomposition layers.
+Minimal reproductions: inspect decoded shape layer sr=2, bm=1, td=1; animate
+an image/shape property under time stretch; enable auto-orient on a moving layer.
+Suggested fix: audit common fields across each concrete serialized layer type;
+implement or explicitly expose unsupported rendering features. Verify timing
+rules against reference behavior before applying one formula to all properties.
+
+R16 [P2] Layer endpoint padding conflicts with its half-open visibility contract
+Location: LottieAnimation.kt, frame calculation;
+renderer/layers/Layer.kt, calculateEffectiveEndFrame.
+Origin: branch visibility behavior. Status: code-confirmed.
+Cause: progress=1 maps exactly to composition op, then matching layer op is
+extended by 0.01 to retain visibility. Visibility therefore depends on root op
+rather than solely on the layer's [ip,op) interval. The epsilon can disappear
+at large frame values. Child precomps inherit the outer endFrame unchanged.
+Minimal reproduction: sample exactly at layer op with and without a longer
+root op; repeat inside a shifted/stretched precomp.
+Suggested fix: define the public progress endpoint policy at the root and keep
+layer out-points exclusive. Pass correct child composition bounds. Account for
+existing progress=1 callers and screenshot expectations when changing this.
+
+R17 [P2] Degenerate input reaches unchecked arithmetic and indexing
+Location: format/Animation.kt; LottieAnimation.kt;
+renderer/properties/Vector.kt; renderer/Transform.kt.
+Origin: mixed comparison-main and branch behavior. Status: code-confirmed.
+Cause: default root width/height and endFrame are zero, but rendering divides
+by dimensions and takes clock modulo (op-ip). An animated vector with k=[]
+indexes keyframes[0]; transform scale assumes at least two components.
+Minimal reproductions: decode {} and attempt playback; evaluate {"a":1,"k":[]}
+as a vector; use an undersized scale vector. These are resilience cases, not
+claims that the malformed inputs are valid Lottie documents.
+Suggested fix: validate root dimensions/timeline before recording, and establish
+consistent rejection or fallback policies for malformed properties. Prefer a
+clear load error to non-finite expressions or an incidental index exception.
+
+VALIDATION AND REPORTING GAPS
+-----------------------------
+
+R18 [P2] Passing tests do not establish reference-renderer parity
+Location: src/test/.../LottieDiffScreenshotTest.kt, src/staleTest/, and ignored
+tests in src/test. Origin: branch test strategy and pre-existing ignored tests.
+The "diff" helper places two renderers side by side and captures that result.
+It asserts decoding success, not equality of their pixels. A stored screenshot
+can therefore preserve an incorrect Remote Compose result. Plain unit-test or
+check success also does not mean Roborazzi golden verification ran.
+28 stale test files are outside configured test source sets. Several current
+tests remain ignored, including two mute screenshots; this review restored
+three hold tests, not the entire excluded suite.
+Suggested fix: explicitly distinguish parse tests, evaluator tests, golden
+regressions, and reference parity assertions. Port stale tests by feature with
+real runtime assertions. Introduce single-document dynamic-frame checks for
+masks, modifiers, text, and color. Do not update golden files merely to accept
+an unexplained renderer difference.
+
+VERIFICATION FOR THIS REVIEW
+-----------------------------
+
+Before fixes:
+- Existing AnimationTest + BezierPropertyTest baseline: 45 passed.
+- First new regression run: 9 tests, 7 failed / 2 passed. Fractional endpoint
+  cases were subsequently split into separate tests, giving 11 new tests.
+- Preview command reported 33 produced, 0 missing, 0 skipped, but artifact
+  inspection found the four blank M3 captures and two non-moving M3 GIFs.
+
+After fixes:
+- Focused regression/property tests: 143 passed, 0 failed.
+- Full unit suite and module check after R01-R03: 348 passed, 0 failed,
+  17 skipped (365 discovered tests).
+- All 33 previews render, with 0 missing and 0 skipped. Artifact checks pass:
+  17 PNGs and 16 valid GIFs; 11 GIFs have changing frames and the other five
+  correspond to static source samples. All 15 samples have both preview kinds.
+  The M3 play/pause capture now contains 21 frames covering 2000 ms.
+- Visually inspected the complete contact sheet (stills plus initial/middle/final
+  animation frames). This checks visibility and plausible sample rendering,
+  not full reference-renderer parity for every frame.
+- First explicit golden verification: 341 passed, 7 failed, 17 skipped. All
+  seven failures were missing filenames (R19), not measured pixel differences.
+- Final module check and explicit verifyRoborazziDebug: 349 passed, 0 failed,
+  17 skipped (366 discovered tests). Existing golden images were not changed.
+- Dynamic color regression plus color/easing tests: 61 passed, 0 failed.
+- Formatting, API signature generation, Kotlin compilation, and debug assembly
+  completed successfully. Public API signatures are unchanged.
+
+Repeatable commands (from repository root):
+  build-brief ./gradlew :remotecompose:lottie:testDebugUnitTest
+  build-brief ./gradlew :remotecompose:lottie:check
+  build-brief ./gradlew :remotecompose:lottie:verifyRoborazziDebug
+  compose-preview show --module :remotecompose:lottie --json --timeout 1200
+  python remotecompose/lottie/tools/check_previews.py
+Use --contact-sheet /tmp/lottie-previews.png on the last command for a visual
+sheet containing initial/middle/final frames. Rendered binaries stay in build/.
+
+Reference for upstream report preparation:
+https://lottie.github.io/lottie-spec/1.0.1/single-page/
+The published spec covers a subset of exporter/player features. Consult the
+reference implementation for extensions such as modifiers and text support.
+This file separates fixes reproduced here from code-confirmed limitations
+whose proposed visual reproductions still need execution before filing.
