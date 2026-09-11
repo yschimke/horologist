@@ -20,15 +20,38 @@ import android.annotation.SuppressLint
 import androidx.compose.remote.creation.compose.layout.RemoteCanvas
 import androidx.compose.remote.creation.compose.state.RemoteFloat
 import androidx.compose.remote.creation.compose.state.RemotePaint
+import androidx.compose.remote.creation.compose.state.rb
 import androidx.compose.remote.creation.compose.state.rf
 import androidx.compose.remote.creation.compose.state.selectIfLt
 import androidx.compose.remote.creation.compose.state.tan
 import androidx.compose.remote.creation.compose.state.toRad
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
+import com.google.android.horologist.remotecompose.lottie.format.properties.StaticPositionProperty
+import com.google.android.horologist.remotecompose.lottie.format.properties.StaticScalarProperty
+import com.google.android.horologist.remotecompose.lottie.format.properties.StaticVectorProperty
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animatePosition
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateScalar
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateVector
+
+/**
+ * Binds a transform to its containing composition's timeline before entering a child timeline. The
+ * returned properties retain RemoteFloat playback expressions, not frame-zero snapshots; evaluating
+ * them again in a nested composition cannot retime those expressions.
+ */
+@SuppressLint("RestrictedApi")
+internal fun Transform.bindToTimeline(animationSettings: LottieSettings): Transform =
+  copy(
+    anchorPoint = StaticPositionProperty(value = animatePosition(anchorPoint, animationSettings)),
+    positionTranslation =
+      StaticPositionProperty(value = animatePosition(positionTranslation, animationSettings)),
+    rotation = StaticScalarProperty(value = animateScalar(rotation, animationSettings)),
+    scale =
+      StaticVectorProperty(animated = false.rb, value = animateVector(scale, animationSettings)),
+    opacity = StaticScalarProperty(value = animateScalar(opacity, animationSettings)),
+    skew = skew?.let { StaticScalarProperty(value = animateScalar(it, animationSettings)) },
+    skewAxis = skewAxis?.let { StaticScalarProperty(value = animateScalar(it, animationSettings)) },
+  )
 
 @SuppressLint("RestrictedApi")
 /** Clamps scale components symmetrically away from zero to avoid matrix inversion singularities. */

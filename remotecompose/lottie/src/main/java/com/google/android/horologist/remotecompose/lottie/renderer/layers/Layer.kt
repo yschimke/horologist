@@ -33,6 +33,7 @@ import com.google.android.horologist.remotecompose.lottie.format.layer.PrecompLa
 import com.google.android.horologist.remotecompose.lottie.format.layer.ShapeLayer
 import com.google.android.horologist.remotecompose.lottie.format.layer.SolidColorLayer
 import com.google.android.horologist.remotecompose.lottie.format.layer.TextLayer
+import com.google.android.horologist.remotecompose.lottie.renderer.bindToTimeline
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateScalar
 
 /** Matte context for paired track matte layer masking */
@@ -132,6 +133,8 @@ internal fun Layer(
     LayerType.Text -> TextLayer(layer as TextLayer, completeStack, matteContext, layerVisibility)
     LayerType.Precomposition -> {
       val precompLayer = layer as PrecompLayer
+      val boundTransforms =
+        (completeStack + listOfNotNull(layer.transform)).map { it.bindToTimeline(parentSettings) }
       val localFrame =
         if (precompLayer.timeRemap != null) {
           animateScalar(precompLayer.timeRemap, parentSettings) * parentSettings.frameRate.rf
@@ -146,7 +149,7 @@ internal fun Layer(
           visibility = layerVisibility * precompOpacity,
         )
       CompositionLocalProvider(LocalAnimationSettings provides localSettings) {
-        PrecompLayer(layer = precompLayer, transformStack = completeStack)
+        PrecompLayer(layer = precompLayer, transformStack = boundTransforms)
       }
     }
     LayerType.Null,
