@@ -17,15 +17,15 @@
 package com.google.android.horologist.remotecompose.lottie.renderer.shapes
 
 import android.annotation.SuppressLint
+import androidx.compose.remote.creation.compose.state.abs
 import androidx.compose.remote.creation.compose.state.clamp
 import androidx.compose.remote.creation.compose.state.min
 import androidx.compose.remote.creation.compose.state.rf
+import androidx.compose.remote.creation.compose.state.selectIfLe
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.geometry.Rectangle
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.RoundedCorners
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.TrimPath
-import com.google.android.horologist.remotecompose.lottie.format.properties.StaticBezierProperty
-import com.google.android.horologist.remotecompose.lottie.format.values.BezierValue
 import com.google.android.horologist.remotecompose.lottie.renderer.RemoteLottiePath
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.RemoteBezierValue
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animatePosition
@@ -52,8 +52,18 @@ internal fun evaluateRectangle(
   val halfHeight = height / 2f
 
   val cornerRadius = rect.cornerRadius?.let { animateScalar(it, animationSettings) } ?: 0f.rf
+  // A rectangle's own radius takes precedence; the modifier rounds otherwise sharp corners.
+  val effectiveRadius =
+    if (roundedCorners != null && roundedCorners.hidden?.constantValue != true) {
+      selectIfLe(
+        abs(cornerRadius),
+        0f.rf,
+        animateScalar(roundedCorners.radius, animationSettings),
+        cornerRadius,
+      )
+    } else cornerRadius
   val maxRadius = min(halfWidth, halfHeight)
-  val clampedR = clamp(cornerRadius, 0f.rf, maxRadius)
+  val clampedR = clamp(effectiveRadius, 0f.rf, maxRadius)
   val kr = clampedR * RECTANGLE_CORNER_RADIUS_CONTROL_POINT_CONSTANT
   val rr = clampedR
 
@@ -99,25 +109,5 @@ internal fun evaluateRectangle(
       vertices = vertices,
     )
 
-  val hasTrim = trimPath != null && trimPath.hidden?.constantValue != true
-  val hasRounding = roundedCorners != null && roundedCorners.hidden?.constantValue != true
-  if (hasTrim || hasRounding) {
-    val bezierValue =
-      BezierValue(
-        closed = remoteBezier.closed,
-        vertices = remoteBezier.vertices.map { pt -> pt.map { it.constantValueOrNull ?: 0f } },
-        inTangents = remoteBezier.inTangents.map { pt -> pt.map { it.constantValueOrNull ?: 0f } },
-        outTangents = remoteBezier.outTangents.map { pt -> pt.map { it.constantValueOrNull ?: 0f } },
-      )
-    val evaluated =
-      evaluatePathGeometry(
-        StaticBezierProperty(value = bezierValue),
-        trimPath,
-        roundedCorners,
-        animationSettings,
-      )
-    return RemoteLottiePath(evaluated)
-  }
-
-  return RemoteLottiePath(listOf(remoteBezier))
+  return trimParametricPath(remoteBezier, trimPath, animationSettings)
 }

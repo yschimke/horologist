@@ -60,7 +60,7 @@ internal fun transformLottiePath(
 ): RemoteLottiePath {
   val transformedSubpaths =
     lottiePath.path.map { subpath -> transformBezierValue(subpath, transform, animationSettings) }
-  return RemoteLottiePath(transformedSubpaths)
+  return RemoteLottiePath(transformedSubpaths, lottiePath.fillRule, lottiePath.trim)
 }
 
 /** Transforms a single [RemoteBezierValue] by a Lottie [Transform]. */

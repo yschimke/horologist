@@ -21,8 +21,14 @@ import androidx.compose.remote.creation.RemotePath
 import androidx.compose.remote.creation.compose.layout.RemoteCanvas
 import androidx.compose.remote.creation.compose.layout.RemoteDrawScope
 import androidx.compose.remote.creation.compose.state.RemoteFloat
+import androidx.compose.remote.creation.compose.state.abs
+import androidx.compose.remote.creation.compose.state.clamp
+import androidx.compose.remote.creation.compose.state.floor
+import androidx.compose.remote.creation.compose.state.max
+import androidx.compose.remote.creation.compose.state.min
 import androidx.compose.remote.creation.compose.state.remotePath
 import androidx.compose.remote.creation.compose.state.rf
+import androidx.compose.remote.creation.compose.state.selectIfGe
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.FillRule
@@ -71,6 +77,7 @@ internal class RemoteCompiledPath(val path: RemotePath, val fillRule: FillRule =
 internal class RemoteLottiePath(
   val path: List<RemoteBezierValue>,
   val fillRule: FillRule = FillRule.NonZero,
+  val trim: RemotePathTrim? = null,
 ) : RemoteShape {
   override fun draw(
     drawScope: RemoteDrawScope,
@@ -123,11 +130,34 @@ internal class RemoteLottiePath(
       }
     }
 
-    canvas.drawPathWithFillRule(rcPath, fillRule)
+    if (trim == null) canvas.drawPathWithFillRule(rcPath, fillRule) else trim.draw(canvas, rcPath)
   }
 
   override fun withFillRule(fillRule: FillRule): RemoteLottiePath =
-    if (this.fillRule == fillRule) this else RemoteLottiePath(path, fillRule)
+    if (this.fillRule == fillRule) this else RemoteLottiePath(path, fillRule, trim)
+}
+
+/**
+ * Playback-time trim for a single parametric contour; start/end are fractions and offset is turns.
+ */
+@SuppressLint("RestrictedApi")
+internal class RemotePathTrim(
+  val start: RemoteFloat,
+  val end: RemoteFloat,
+  val offset: RemoteFloat,
+) {
+  fun draw(canvas: RemoteCanvas, path: RemotePath) {
+    val span = clamp(abs(end - start), 0f.rf, 1f.rf)
+    val shiftedStart = min(start, end) + offset
+    val from = selectIfGe(span, 1f.rf, 0f.rf, shiftedStart - floor(shiftedStart))
+    val to = from + span
+    // Tweening a path with itself asks the player to measure live coordinates on every frame.
+    canvas.drawTweenPath(path, path, 0f.rf, from, min(to, 1f.rf))
+    val wrappedEnd = max(to - 1f.rf, 0f.rf)
+    if (wrappedEnd.constantValueOrNull != 0f) {
+      canvas.drawTweenPath(path, path, 0f.rf, 0f.rf, wrappedEnd)
+    }
+  }
 }
 
 @SuppressLint("RestrictedApi")

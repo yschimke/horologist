@@ -143,7 +143,7 @@ internal fun transformRepeaterLottiePath(
     lottiePath.path.map { subpath ->
       transformRepeaterBezierValue(subpath, transform, k, animationSettings)
     }
-  return RemoteLottiePath(transformedSubpaths, lottiePath.fillRule)
+  return RemoteLottiePath(transformedSubpaths, lottiePath.fillRule, lottiePath.trim)
 }
 
 /** Transforms a single [RemoteBezierValue] by a repeater [Transform] at step [k]. */
