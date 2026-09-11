@@ -89,7 +89,13 @@ internal data class GradientKeyframe(
   @SerialName("i") val inTangent: KeyframeEasing? = null,
   @SerialName("o") val outTangent: KeyframeEasing? = null,
   @SerialName("s") val startValue: List<GradientValue> = emptyList(),
-)
+) {
+  val frame: Float
+    get() = time
+
+  val value: List<GradientValue>
+    get() = startValue
+}
 
 /** Polymorphic serializer for [BaseGradientProperty] based on "a" field. */
 internal object BaseGradientPropertySerializer :

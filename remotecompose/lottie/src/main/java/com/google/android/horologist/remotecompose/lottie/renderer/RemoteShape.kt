@@ -25,6 +25,9 @@ import androidx.compose.remote.creation.compose.state.remotePath
 import androidx.compose.remote.creation.compose.state.rf
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
+import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.FillRule
+import com.google.android.horologist.remotecompose.lottie.renderer.properties.RemoteBezierValue
+import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateScalar
 
 @SuppressLint("RestrictedApi")
 internal interface RemoteShape {

@@ -24,7 +24,6 @@ import androidx.compose.remote.creation.compose.modifier.RemoteModifier
 import androidx.compose.remote.creation.compose.modifier.fillMaxSize
 import androidx.compose.remote.creation.compose.state.RemoteFloat
 import androidx.compose.remote.creation.compose.state.RemotePaint
-import androidx.compose.remote.creation.compose.state.rc
 import androidx.compose.remote.creation.compose.state.rf
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -49,5 +48,98 @@ internal fun SolidColorLayer(
   matteContext: MatteContext? = null,
   layerVisibility: RemoteFloat = 1f.rf,
 ) {
-  // No-op in PR 2 - solid color layer drawing integrated in downstream PR.
+  val solidWidth = layer.solidWidth.constantValue.toFloat()
+  val solidHeight = layer.solidHeight.constantValue.toFloat()
+  if (solidWidth <= 0f || solidHeight <= 0f) {
+    return
+  }
+
+  val animationSettings = LocalAnimationSettings.current
+  val updatedTransformStack =
+    if (layer.transform != null) transformStack + layer.transform else transformStack
+
+  val layerOpacity =
+    (updatedTransformStack.lastOrNull()?.opacity?.let {
+      animateScalar(it, animationSettings) / 100f
+    } ?: 1f.rf) * layerVisibility
+
+  val color = layer.solidColor
+  val paint = RemotePaint { this.color = color.copy(alpha = color.alpha * layerOpacity) }
+
+  val path =
+    RemotePath().apply {
+      reset()
+      moveTo(0f, 0f)
+      lineTo(solidWidth, 0f)
+      lineTo(solidWidth, solidHeight)
+      lineTo(0f, solidHeight)
+      close()
+    }
+
+  val hasMasks = layer.masksProperties.any { it.mode != MaskMode.None && it.path != null }
+  val needsSave = matteContext != null || hasMasks
+
+  RemoteCanvas(modifier = RemoteModifier.fillMaxSize()) {
+    if (needsSave) {
+      remoteCanvas.save()
+    }
+
+    if (matteContext != null) {
+      applyMatteClip(matteContext, animationSettings, remoteCanvas)
+    }
+
+    if (hasMasks) {
+      for (transform in updatedTransformStack) {
+        transform(transform, null, animationSettings, remoteCanvas)
+      }
+      applyLayerMasks(layer.masksProperties, animationSettings, remoteCanvas)
+      for (transform in updatedTransformStack.reversed()) {
+        inverseTransform(transform, animationSettings, remoteCanvas)
+      }
+    }
+
+    for (transform in updatedTransformStack) {
+      remoteCanvas.save()
+      transform(transform, null, animationSettings, remoteCanvas)
+    }
+
+    usePaint(paint) { remoteCanvas.drawPath(path) }
+
+    for (transform in updatedTransformStack) {
+      remoteCanvas.restore()
+    }
+
+    if (needsSave) {
+      remoteCanvas.restore()
+    }
+  }
+}
+
+internal fun parseHexColor(colorStr: String): Color {
+  return try {
+    val clean = colorStr.trim().removePrefix("#")
+    when (clean.length) {
+      6 -> {
+        val argb = (0xFF000000L or clean.toLong(16)).toInt()
+        Color(argb)
+      }
+      8 -> {
+        val argb = clean.toLong(16).toInt()
+        Color(argb)
+      }
+      3 -> {
+        val r = clean[0]
+        val g = clean[1]
+        val b = clean[2]
+        val argb = (0xFF000000L or "$r$r$g$g$b$b".toLong(16)).toInt()
+        Color(argb)
+      }
+      else -> {
+        val formatted = if (colorStr.startsWith("#")) colorStr else "#$colorStr"
+        Color(formatted.toColorInt())
+      }
+    }
+  } catch (_: Exception) {
+    Color.Transparent
+  }
 }

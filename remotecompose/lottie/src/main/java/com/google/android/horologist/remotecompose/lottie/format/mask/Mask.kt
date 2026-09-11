@@ -47,6 +47,7 @@ import kotlinx.serialization.json.jsonPrimitive
 @Serializable
 internal data class Mask(
   @SerialName("mode") val mode: MaskMode = MaskMode.Intersect,
+  @SerialName("inv") val inverted: Boolean = false,
   @SerialName("pt") val path: BaseBezierProperty? = null,
   @SerialName("o")
   val opacity: BaseScalarProperty = StaticScalarProperty(animated = false.rb, value = 100f.rf),
@@ -61,7 +62,11 @@ internal enum class MaskMode(val value: String) {
   None("n"),
   Add("a"),
   Subtract("s"),
-  Intersect("i");
+  Intersect("i"),
+  Difference("d"),
+  Lighten("l"),
+  Darken("f"),
+  Unknown("unknown");
 
   companion object {
     fun fromValueOrNull(value: String): MaskMode? = entries.firstOrNull {

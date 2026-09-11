@@ -27,13 +27,21 @@ import com.google.android.horologist.remotecompose.lottie.format.graphicelement.
 import com.google.android.horologist.remotecompose.lottie.format.properties.StaticBezierProperty
 import com.google.android.horologist.remotecompose.lottie.format.values.BezierValue
 import com.google.android.horologist.remotecompose.lottie.renderer.RemoteLottiePath
+import com.google.android.horologist.remotecompose.lottie.renderer.properties.RemoteBezierValue
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animatePosition
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateScalar
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateVector
 
-/** Evaluates a Lottie [Rectangle] into a [RemoteLottiePath]. */
+private const val RECTANGLE_CORNER_RADIUS_CONTROL_POINT_CONSTANT = 0.55228475f
+
+/** Evaluates a Lottie [Rectangle] parametric shape into a [RemoteLottiePath]. */
 @SuppressLint("RestrictedApi")
-internal fun rectangle(rect: Rectangle, animationSettings: LottieSettings): RemoteLottiePath? {
+internal fun evaluateRectangle(
+  rect: Rectangle,
+  animationSettings: LottieSettings,
+  trimPath: TrimPath? = null,
+  roundedCorners: RoundedCorners? = null,
+): RemoteLottiePath? {
   if (rect.hidden?.constantValue == true) return null
 
   val pos = animatePosition(rect.position, animationSettings)
@@ -43,10 +51,11 @@ internal fun rectangle(rect: Rectangle, animationSettings: LottieSettings): Remo
   val halfWidth = width / 2f
   val halfHeight = height / 2f
 
-  val cornerRadius =
-    rect.cornerRadius?.let { animateScalar(it, animationSettings).constantValueOrNull } ?: 0f
-  val maxRadius = minOf(halfWidth, halfHeight)
-  val r = cornerRadius.coerceIn(0f, maxRadius)
+  val cornerRadius = rect.cornerRadius?.let { animateScalar(it, animationSettings) } ?: 0f.rf
+  val maxRadius = min(halfWidth, halfHeight)
+  val clampedR = clamp(cornerRadius, 0f.rf, maxRadius)
+  val kr = clampedR * RECTANGLE_CORNER_RADIUS_CONTROL_POINT_CONSTANT
+  val rr = clampedR
 
   val vertices =
     listOf(
@@ -82,5 +91,33 @@ internal fun rectangle(rect: Rectangle, animationSettings: LottieSettings): Remo
       listOf(kr, 0f.rf),
     )
 
-  return RemoteLottiePath(rcPath)
+  val remoteBezier =
+    RemoteBezierValue(
+      closed = true,
+      inTangents = inTangents,
+      outTangents = outTangents,
+      vertices = vertices,
+    )
+
+  val hasTrim = trimPath != null && trimPath.hidden?.constantValue != true
+  val hasRounding = roundedCorners != null && roundedCorners.hidden?.constantValue != true
+  if (hasTrim || hasRounding) {
+    val bezierValue =
+      BezierValue(
+        closed = remoteBezier.closed,
+        vertices = remoteBezier.vertices.map { pt -> pt.map { it.constantValueOrNull ?: 0f } },
+        inTangents = remoteBezier.inTangents.map { pt -> pt.map { it.constantValueOrNull ?: 0f } },
+        outTangents = remoteBezier.outTangents.map { pt -> pt.map { it.constantValueOrNull ?: 0f } },
+      )
+    val evaluated =
+      evaluatePathGeometry(
+        StaticBezierProperty(value = bezierValue),
+        trimPath,
+        roundedCorners,
+        animationSettings,
+      )
+    return RemoteLottiePath(evaluated)
+  }
+
+  return RemoteLottiePath(listOf(remoteBezier))
 }

@@ -93,12 +93,12 @@ internal fun Layer(
   transform: Transform? = null,
   matteContext: MatteContext? = null,
 ) {
-  if (layer.hidden == true) {
+  if (layer.hidden?.constantValue == true) {
     return
   }
 
-  val startFrame = layer.startFrame ?: 0f
-  val endFrame = layer.endFrame ?: Float.MAX_VALUE
+  val startFrame = layer.startFrame.constantValue
+  val endFrame = layer.endFrame.constantValue
   val parentSettings = LocalAnimationSettings.current
   val compositionEndFrame = parentSettings.endFrame
 
@@ -125,9 +125,32 @@ internal fun Layer(
     }
 
   when (layer.type) {
-    LayerType.Null -> {}
-    LayerType.Solid -> SolidColorLayer(layer as SolidColorLayer, completeStack)
-    LayerType.Shape -> ShapeLayer(layer as ShapeLayer, completeStack)
-    else -> {}
+    LayerType.Solid ->
+      SolidColorLayer(layer as SolidColorLayer, completeStack, matteContext, layerVisibility)
+    LayerType.Shape -> ShapeLayer(layer as ShapeLayer, completeStack, matteContext, layerVisibility)
+    LayerType.Image -> ImageLayer(layer as ImageLayer, completeStack, matteContext, layerVisibility)
+    LayerType.Text -> TextLayer(layer as TextLayer, completeStack, matteContext, layerVisibility)
+    LayerType.Precomposition -> {
+      val precompLayer = layer as PrecompLayer
+      val localFrame =
+        if (precompLayer.timeRemap != null) {
+          animateScalar(precompLayer.timeRemap, parentSettings) * parentSettings.frameRate.rf
+        } else {
+          calculateLocalFrame(currentFrame, layer.startTime, layer.timeStretch)
+        }
+      val precompOpacity =
+        layer.transform?.opacity?.let { animateScalar(it, parentSettings) / 100f } ?: 1f.rf
+      val localSettings =
+        parentSettings.copy(
+          currentFrame = localFrame,
+          visibility = layerVisibility * precompOpacity,
+        )
+      CompositionLocalProvider(LocalAnimationSettings provides localSettings) {
+        PrecompLayer(layer = precompLayer, transformStack = completeStack)
+      }
+    }
+    LayerType.Null,
+    LayerType.Audio,
+    LayerType.Unknown -> {}
   }
 }
