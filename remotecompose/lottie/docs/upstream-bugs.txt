@@ -7,7 +7,8 @@ Comparison main: 3db533155202db8ed7a48b232feb4b90c1240fc8 (local origin/main)
 Scope: remotecompose/lottie, including parsing, property evaluation, layer and
 shape rendering, masks/mattes, modifiers, sample previews, and test coverage.
 No upstream issues have been filed. This file is a backlog for later reporting.
-19 findings: five addressed here (R01, R02, R03, R12, R19); fourteen follow-ups.
+19 findings: seven addressed here (R01, R02, R03, R04, R11, R12, R19).
+R07 timing is also fixed; its masking/bounds portion remains among twelve follow-ups.
 
 Paths below are relative to remotecompose/lottie/src/main/java/com/google/
 android/horologist/remotecompose/lottie unless another source set is named.
@@ -97,22 +98,27 @@ The regression also checks progress=0.75 to ensure the final blue is held.
 Temporary image capture forces Record mode locally; it neither adds a golden
 image nor depends on global Roborazzi recording/verification flags.
 
-UNFIXED: RENDERING CORRECTNESS
+RENDERING CORRECTNESS (STATUS NOTED PER FINDING)
 ------------------------------
 
 R04 [P1] Animated mask and matte geometry loses every dynamic coordinate
 Location: renderer/Shape.kt, buildRemotePathFromBezier/applyLayerMasks/clipShapes.
-Origin: branch implementation. Status: code-confirmed.
-Cause: every vertex and tangent reads constantValueOrNull ?: 0f. Normal playback
+Origin: branch implementation. Status: fixed with native playback pixel tests.
+Cause before fix: every vertex and tangent read constantValueOrNull ?: 0f. Normal playback
 uses a dynamic RemoteFloat frame, so animateBezier can return expressions even
 when an equivalent isolated constant-frame test succeeds. A mask path then
 collapses toward (0,0), hiding content or revealing too much.
 Minimal reproduction: solid layer with an add mask whose rectangle moves from
 x=0 to x=50; play one compiled document through a named progress variable.
 Compare against captures of independently evaluated constant frames.
-Suggested fix: build clipping paths with the same expression-aware path builder
+Suggested/applied fix: build clipping paths with the same expression-aware path builder
 used by RemoteLottiePath.draw, preserving RemoteFloat dependencies. Add a
 single-document playback test, not only constant-frame geometry assertions.
+Evidence: PlaybackEffectsRegressionTest failed its initial red probe before
+the fix, then verified static masks and an animated rectangular add mask at
+frames 0, 5, and 10 in one document. The shared clipping helper also preserves
+matte path coordinates; this does not implement the missing matte semantics
+in R05 or mask compositing in R06.
 
 R05 [P1] Track mattes use intersected outlines instead of rendered alpha/luma
 Location: renderer/Shape.kt, applyMatteClip and clipShapes.
@@ -144,8 +150,8 @@ mode semantics. Hard clipping alone cannot implement partially opaque masks.
 
 R07 [P1] Precomp transforms use child time and precomp masks are dropped
 Location: renderer/layers/Layer.kt, Precomposition branch; PrecompLayer.kt.
-Origin: branch implementation. Status: code-confirmed.
-Cause: Layer switches currentFrame to remapped/stretched local time before
+Origin: branch implementation. Status: timing fixed; masks/bounds remain unfixed.
+Cause before timing fix: Layer switches currentFrame to remapped/stretched local time before
 PrecompLayer appends the precomp transform to the child's stack. All stack
 transforms are later evaluated using that child's frame. A precomp's own
 animated transform belongs to its containing composition's timeline. Further
@@ -154,9 +160,15 @@ masks are never applied, and its width/height do not establish clipping bounds.
 Minimal reproduction: precomp with st=10, animated outer translation, and a
 static child; render parent frame 20. Add a mask to the precomp layer. Repeat
 with time remap and a nested precomp.
-Suggested fix: retain the evaluation context of each transform or compose the
-outer transform before changing to child time. Apply layer masks and bounds
-around the rendered precomp, not separately to child geometry.
+Applied timing fix: bind the outer transform stack to RemoteFloat expressions
+using its containing timeline before switching to child time. Static property
+wrappers hold these dynamic expressions without evaluating them a second time
+against a nested child's timeline. This is not a frame-zero snapshot.
+Evidence: failing native playback tests now cover st=10/sr=2, nested precomps,
+time remap in seconds, and an animated root parent; an unshifted control remains
+correct. A second progress update verifies the bound transform keeps moving.
+Remaining suggested fix: apply layer masks and bounds around the rendered
+precomp, not separately to child geometry. These were intentionally not changed.
 
 R08 [P1] Text layers without vector glyphs render nothing; text changes freeze
 Location: renderer/layers/TextLayer.kt, TextLayer.
@@ -209,9 +221,10 @@ fractional-copy alpha; expression-based offsets/scales; include grouped content
 and preserve opacity across subsequent modifiers.
 
 R11 [P1] Gradient alpha stops are matched by index rather than position
-Location: renderer/RemoteStyle.kt, extractGradientColorsAndPositions/sampleAlpha.
-Origin: branch implementation. Status: code-confirmed.
-Cause: equal numbers of color and alpha stops bypass position interpolation.
+Location: renderer/RemoteStyle.kt, extractGradientColorsAndPositions;
+format/properties/Gradient.kt, gradient property serializers.
+Origin: branch implementation. Status: fixed with native playback pixel tests.
+Cause before fix: equal numbers of color and alpha stops bypass position interpolation.
 Otherwise sampleAlpha can only compare constant positions and falls back to
 the first alpha for dynamic values. Output stops are emitted only at color
 positions, so an opacity breakpoint between color stops disappears.
@@ -219,8 +232,20 @@ Minimal reproductions: two color stops at 0 and 1, three alpha stops at
 (0,1),(0.5,0),(1,1): the center should be transparent but is opaque. Also use
 three color stops at 0,0.5,1 and three alpha stops at 0,0.25,1, with differing
 alpha values; equal counts do not imply corresponding positions.
-Suggested fix: merge color/alpha positions and interpolate both channels at
-the combined stops. Preserve dynamic offsets using RemoteFloat expressions.
+Suggested/applied fix: merge color/alpha positions and interpolate both channels
+at the combined stops. Preserve dynamic offsets with RemoteFloat expressions
+and stable runtime sorting when alpha stops cross RGB stops. Retain coincident
+RGB hard stops and pad a one-color shader to the platform's two-stop minimum.
+Prerequisite parsing defects found by the reproductions: custom descriptors
+requested nonexistent serializers for RemoteBoolean and GradientValue, and
+animated dispatch ignored a=1 inside standard g={p,k:{a,k}}. Use explicit
+descriptors and select the nested property's discriminator while retaining p.
+Evidence: tests first failed during decoding, then reproduced opaque centers
+and misplaced alpha breakpoints after the parser fix. Pixel tests cover unequal
+counts, equal counts/different positions, changing alpha values, a moving alpha
+stop crossing and coinciding with an RGB stop, no-alpha and one-color controls,
+and coincident RGB hard stops with/without transparency. No comparison-renderer
+parity claim is made for every exporter variant or arbitrary gradient topology.
 
 R13 [P1] Per-dimension easing and spatial position curves are lost
 Location: format/values/KeyframeEasing.kt, parseTangentValue;
@@ -334,6 +359,21 @@ After fixes:
 - Dynamic color regression plus color/easing tests: 61 passed, 0 failed.
 - Formatting, API signature generation, Kotlin compilation, and debug assembly
   completed successfully. Public API signatures are unchanged.
+
+Follow-up playback fixes (R04, R11, R07 timing):
+- Static-mask and unshifted-precomp controls passed before their fixes; moving
+  masks and four shifted/nested/remapped/parented precomp cases failed pixels.
+- Gradient reproductions exposed decoding failures first. After parser repair,
+  all four opacity cases failed pixel checks, while the no-opacity control passed.
+- PlaybackEffectsRegressionTest now has 15 passing native-rendered tests,
+  including midpoint motion, crossing/coincident stops and hard-edge controls.
+- Full module check and explicit verifyRoborazziDebug: 364 passed, 0 failed,
+  17 existing skipped (381 discovered). Golden images and public API unchanged.
+- Formatting, API generation, compilation and debug assembly also pass.
+- All 33 compose-preview captures render again: 0 missing, 0 skipped, all
+  unchanged from the previous validated sample renders. The artifact checker
+  passes all 15 sample pairs, 17 PNGs, and 16 GIFs (11 moving; five static sources).
+  Re-inspected the contact sheet with initial/middle/final GIF frames.
 
 Repeatable commands (from repository root):
   build-brief ./gradlew :remotecompose:lottie:testDebugUnitTest
