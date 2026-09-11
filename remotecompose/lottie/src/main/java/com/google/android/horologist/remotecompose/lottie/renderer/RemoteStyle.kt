@@ -296,75 +296,95 @@ private fun extractGradientColorsAndPositions(
   val alphaFloats = values.size - totalColorFloats
   val alphaCount = if (alphaFloats >= 2) alphaFloats / 2 else 0
 
-  val colors = ArrayList<RemoteColor>(colorCount)
-  val positions = ArrayList<RemoteFloat>(colorCount)
+  val colorPositions = List(colorCount) { values[it * 4] }
+  val rgbChannels = List(3) { channel -> List(colorCount) { values[it * 4 + channel + 1] } }
+  val alphaPositions = List(alphaCount) { values[totalColorFloats + it * 2] }
+  val alphas = List(alphaCount) { values[totalColorFloats + it * 2 + 1] }
 
-  for (i in 0 until colorCount) {
-    val offset = values[i * 4]
-    val r = values[i * 4 + 1]
-    val g = values[i * 4 + 2]
-    val b = values[i * 4 + 3]
-
-    val alpha =
-      if (alphaCount > 0) {
-        if (alphaCount == colorCount && (totalColorFloats + i * 2 + 1) < values.size) {
-          values[totalColorFloats + i * 2 + 1]
-        } else {
-          sampleAlpha(offset, values, totalColorFloats, alphaCount)
-        }
-      } else {
-        1f.rf
+  // Both sets contribute stops: sampling opacity only at RGB stops loses intermediate valleys.
+  val stops =
+    colorPositions.mapIndexed { index, offset ->
+      GradientShaderStop(
+        offset,
+        rgbChannels.map { it[index] } + sampleGradientChannel(offset, alphaPositions, alphas),
+      )
+    } +
+      alphaPositions.mapIndexed { index, offset ->
+        GradientShaderStop(
+          offset,
+          rgbChannels.map { sampleGradientChannel(offset, colorPositions, it) } + alphas[index],
+        )
       }
-
-    val finalAlpha = alpha * effectiveBaseOpacity
-    colors.add(RemoteColor(alpha = finalAlpha, red = r, green = g, blue = b))
-    positions.add(offset)
+  val sorted = if (alphaCount == 0) stops else sortGradientStops(stops)
+  val colors = sorted.map { stop ->
+    RemoteColor(
+      red = stop.rgba[0],
+      green = stop.rgba[1],
+      blue = stop.rgba[2],
+      alpha = stop.rgba[3] * effectiveBaseOpacity,
+    )
   }
-
-  return Pair(colors, positions)
+  // Android shaders require at least two stops, even for a constant one-color gradient.
+  return if (colors.size == 1) {
+    listOf(colors.single(), colors.single()) to listOf(0f.rf, 1f.rf)
+  } else {
+    colors to sorted.map { it.offset }
+  }
 }
 
+/** A shader stop with four unpremultiplied channels in RGBA order. */
+private data class GradientShaderStop(val offset: RemoteFloat, val rgba: List<RemoteFloat>)
+
+/**
+ * Samples a channel with equally sized values and nondecreasing positions. Empty means opaque;
+ * out-of-range samples clamp to the endpoints, and coincident stops select the later value.
+ */
 @SuppressLint("RestrictedApi")
-private fun sampleAlpha(
+private fun sampleGradientChannel(
   offset: RemoteFloat,
+  positions: List<RemoteFloat>,
   values: List<RemoteFloat>,
-  totalColorFloats: Int,
-  alphaCount: Int,
 ): RemoteFloat {
-  if (alphaCount <= 0 || totalColorFloats + 1 >= values.size) {
-    return 1f.rf
+  if (values.isEmpty()) return 1f.rf
+  var result = values.last()
+  for (index in positions.size - 2 downTo 0) {
+    val width = positions[index + 1] - positions[index]
+    // Protect even unselected expression branches from division by zero at coincident stops.
+    val safeWidth = selectIfLt(0f.rf, width, width, 1f.rf)
+    val fraction = (offset - positions[index]) / safeWidth
+    val interpolated = lerp(values[index], values[index + 1], fraction)
+    result = selectIfLt(offset, positions[index + 1], interpolated, result)
   }
-  if (alphaCount <= 1) {
-    return values[totalColorFloats + 1]
+  return selectIfLt(offset, positions.first(), values.first(), result)
+}
+
+/** Keeps the union ordered during playback, including when an opacity stop crosses an RGB stop. */
+@SuppressLint("RestrictedApi")
+private fun sortGradientStops(stops: List<GradientShaderStop>): List<GradientShaderStop> {
+  if (stops.all { it.offset.constantValueOrNull != null }) {
+    return stops.sortedBy { it.offset.constantValue }
   }
-  val constOffset = offset.constantValueOrNull
-  if (constOffset != null) {
-    val firstPos = values[totalColorFloats].constantValueOrNull
-    val lastPosIndex = totalColorFloats + (alphaCount - 1) * 2
-    if (lastPosIndex + 1 >= values.size) return values[totalColorFloats + 1]
-    val lastPos = values[lastPosIndex].constantValueOrNull
-    if (firstPos != null && constOffset <= firstPos) {
-      return values[totalColorFloats + 1]
-    }
-    if (lastPos != null && constOffset >= lastPos) {
-      return values[lastPosIndex + 1]
-    }
-    for (j in 0 until alphaCount - 1) {
-      val p0Index = totalColorFloats + j * 2
-      val p1Index = totalColorFloats + (j + 1) * 2
-      if (p1Index + 1 < values.size) {
-        val p0 = values[p0Index].constantValueOrNull
-        val p1 = values[p1Index].constantValueOrNull
-        if (p0 != null && p1 != null && constOffset >= p0 && constOffset <= p1) {
-          val a0 = values[p0Index + 1]
-          val a1 = values[p1Index + 1]
-          val fraction = if (p1 > p0) (constOffset - p0) / (p1 - p0) else 0f
-          return lerp(a0, a1, fraction.rf)
-        }
-      }
+  // An insertion sorting network carries channels with their offsets. Stable ties retain hard
+  // stops.
+  val sorted = stops.toMutableList()
+  for (index in 1 until sorted.size) {
+    for (j in index downTo 1) {
+      val left = sorted[j - 1]
+      val right = sorted[j]
+      fun select(a: RemoteFloat, b: RemoteFloat) = selectIfLt(right.offset, left.offset, b, a)
+      sorted[j - 1] =
+        GradientShaderStop(
+          select(left.offset, right.offset),
+          left.rgba.zip(right.rgba) { a, b -> select(a, b) },
+        )
+      sorted[j] =
+        GradientShaderStop(
+          select(right.offset, left.offset),
+          right.rgba.zip(left.rgba) { a, b -> select(a, b) },
+        )
     }
   }
-  return values[totalColorFloats + 1]
+  return sorted
 }
 
 internal class NoopStyle() : RemoteStyle {
