@@ -195,7 +195,7 @@ fun LottieDetailPlayer(
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
           Box(
             modifier =
-              Modifier.size(130.dp).clip(RoundedCornerShape(16.dp)).background(Color(0xFF121212)),
+              Modifier.size(130.dp).clip(RoundedCornerShape(16.dp)).background(item.color ?: Color(0xFF121212)),
             contentAlignment = Alignment.Center,
           ) {
             key(item.rawRes, regime) {

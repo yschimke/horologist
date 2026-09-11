@@ -17,6 +17,7 @@
 package com.google.android.horologist.lottie
 
 import androidx.annotation.RawRes
+import androidx.compose.ui.graphics.Color
 import com.google.android.horologist.sample.R
 
 /** Active navigation / presentation mode within the Lottie showcase screen. */
@@ -40,11 +41,26 @@ data class LottieDemoItem(
   val subtitle: String,
   val category: String,
   @param:RawRes val rawRes: Int,
+  val color: Color? = null,
 )
 
 /** Canonical catalog of all test and feature showcase animations in the sample app. */
 val LottieDemoCatalog: List<LottieDemoItem> =
   listOf(
+    LottieDemoItem(
+      title = "Clear weather",
+      subtitle = "Weather forecast",
+      category = "Weather widget",
+      rawRes = R.raw.prod,
+      color = Color(0xff3C6D9A),
+    ),
+    LottieDemoItem(
+      title = "Snow",
+      subtitle = "Weather forecast",
+      category = "Weather widget",
+      rawRes = R.raw.prod2,
+      color = Color(0xFF314560),
+    ),
     // 1. Media & System Controls
     LottieDemoItem(
       title = "Geometry",

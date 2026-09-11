@@ -94,7 +94,7 @@ fun LottieDemoModePlayer(
 
       Box(
         modifier =
-          Modifier.size(120.dp).clip(RoundedCornerShape(16.dp)).background(Color(0xFF121212)),
+          Modifier.size(120.dp).clip(RoundedCornerShape(16.dp)).background(currentItem.color ?: Color(0xFF121212)),
         contentAlignment = Alignment.Center,
       ) {
         key(currentItem.rawRes) {
