@@ -119,6 +119,13 @@ fun LottiePositionStaticPreview() {
 }
 
 @Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 100, heightDp = 100)
+@AnimatedPreview(durationMs = 2000, frameIntervalMs = 100, showCurves = false)
+@Composable
+fun LottiePositionStaticAnimatedPreview() {
+  LottieAnimatedPreview(animationResId = R.raw.position_static, modifier = Modifier.size(100.dp))
+}
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 100, heightDp = 100)
 @Composable
 fun LottiePositionAnimatedPreview() {
   LottiePreview(
@@ -146,4 +153,127 @@ fun LottiePositionAnimatedLivePreview() {
 @Composable
 fun LottieParentChainPreview() {
   LottiePreview(animationResId = R.raw.parent_chain, modifier = Modifier.size(100.dp))
+}
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 100, heightDp = 100)
+@AnimatedPreview(durationMs = 2000, frameIntervalMs = 100, showCurves = false)
+@Composable
+fun LottieParentChainAnimatedPreview() {
+  LottieAnimatedPreview(animationResId = R.raw.parent_chain, modifier = Modifier.size(100.dp))
+}
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 100, heightDp = 100)
+@Composable
+fun LottieGrandparentPreview() {
+  LottiePreview(animationResId = R.raw.grandparent, modifier = Modifier.size(100.dp), progress = 0f)
+}
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 100, heightDp = 100)
+@AnimatedPreview(durationMs = 2000, frameIntervalMs = 100, showCurves = false)
+@Composable
+fun LottieGrandparentAnimatedPreview() {
+  LottieAnimatedPreview(animationResId = R.raw.grandparent, modifier = Modifier.size(100.dp))
+}
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 64, heightDp = 64)
+@Composable
+fun LottieM3NextPreview() {
+  LottiePreview(animationResId = R.raw.m3_next, modifier = Modifier.size(64.dp), progress = 0f)
+}
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 64, heightDp = 64)
+@AnimatedPreview(durationMs = 1000, frameIntervalMs = 100, showCurves = false)
+@Composable
+fun LottieM3NextAnimatedPreview() {
+  LottieAnimatedPreview(animationResId = R.raw.m3_next, modifier = Modifier.size(64.dp))
+}
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 64, heightDp = 64)
+@Composable
+fun LottieMuteToUnmutePreview() {
+  LottiePreview(
+    animationResId = R.raw.mute_to_unmute,
+    modifier = Modifier.size(64.dp),
+    progress = 0f,
+  )
+}
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 64, heightDp = 64)
+@AnimatedPreview(durationMs = 1000, frameIntervalMs = 100, showCurves = false)
+@Composable
+fun LottieMuteToUnmuteAnimatedPreview() {
+  LottieAnimatedPreview(animationResId = R.raw.mute_to_unmute, modifier = Modifier.size(64.dp))
+}
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 100, heightDp = 100)
+@Composable
+fun LottiePolyStarPreview() {
+  LottiePreview(animationResId = R.raw.polystar, modifier = Modifier.size(100.dp), progress = 0f)
+}
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 100, heightDp = 100)
+@AnimatedPreview(durationMs = 2000, frameIntervalMs = 100, showCurves = false)
+@Composable
+fun LottiePolyStarAnimatedPreview() {
+  LottieAnimatedPreview(animationResId = R.raw.polystar, modifier = Modifier.size(100.dp))
+}
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 100, heightDp = 100)
+@Composable
+fun LottieRectangleEllipsePreview() {
+  LottiePreview(
+    animationResId = R.raw.rect_ellipse,
+    modifier = Modifier.size(100.dp),
+    progress = 0f,
+  )
+}
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 100, heightDp = 100)
+@AnimatedPreview(durationMs = 2000, frameIntervalMs = 100, showCurves = false)
+@Composable
+fun LottieRectangleEllipseAnimatedPreview() {
+  LottieAnimatedPreview(animationResId = R.raw.rect_ellipse, modifier = Modifier.size(100.dp))
+}
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 64, heightDp = 64)
+@Composable
+fun LottieUnmuteToMutePreview() {
+  LottiePreview(
+    animationResId = R.raw.unmute_to_mute,
+    modifier = Modifier.size(64.dp),
+    progress = 0f,
+  )
+}
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 64, heightDp = 64)
+@AnimatedPreview(durationMs = 1000, frameIntervalMs = 100, showCurves = false)
+@Composable
+fun LottieUnmuteToMuteAnimatedPreview() {
+  LottieAnimatedPreview(animationResId = R.raw.unmute_to_mute, modifier = Modifier.size(64.dp))
+}
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 64, heightDp = 64)
+@Composable
+fun LottieVolumeDownPreview() {
+  LottiePreview(animationResId = R.raw.volume_down, modifier = Modifier.size(64.dp), progress = 0f)
+}
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 64, heightDp = 64)
+@AnimatedPreview(durationMs = 1000, frameIntervalMs = 100, showCurves = false)
+@Composable
+fun LottieVolumeDownAnimatedPreview() {
+  LottieAnimatedPreview(animationResId = R.raw.volume_down, modifier = Modifier.size(64.dp))
+}
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 64, heightDp = 64)
+@Composable
+fun LottieVolumeUpPreview() {
+  LottiePreview(animationResId = R.raw.volume_up, modifier = Modifier.size(64.dp), progress = 0f)
+}
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 64, heightDp = 64)
+@AnimatedPreview(durationMs = 1000, frameIntervalMs = 100, showCurves = false)
+@Composable
+fun LottieVolumeUpAnimatedPreview() {
+  LottieAnimatedPreview(animationResId = R.raw.volume_up, modifier = Modifier.size(64.dp))
 }
