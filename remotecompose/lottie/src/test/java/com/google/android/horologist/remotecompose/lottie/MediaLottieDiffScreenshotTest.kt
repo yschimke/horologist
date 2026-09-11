@@ -23,37 +23,37 @@ class MediaLottieDiffScreenshotTest : LottieDiffScreenshotTest() {
 
   @Test
   fun geometry() {
-    runLottieDiffTest(R.raw.geometry)
+    runLottieDiffTest(R.raw.geometry, suffix = "_progress0")
   }
 
   @Test
   fun playPause() {
-    runLottieDiffTest(R.raw.play_pause)
+    runLottieDiffTest(R.raw.play_pause, suffix = "_progress0")
   }
 
   @Test
   fun next() {
-    runLottieDiffTest(R.raw.next)
+    runLottieDiffTest(R.raw.next, suffix = "_progress0")
   }
 
   @Test
   fun m3PlayPause() {
-    runLottieDiffTest(R.raw.m3_play_pause)
+    runLottieDiffTest(R.raw.m3_play_pause, suffix = "_progress0")
   }
 
   @Test
   fun m3Next() {
-    runLottieDiffTest(R.raw.m3_next)
+    runLottieDiffTest(R.raw.m3_next, suffix = "_progress0")
   }
 
   @Test
   fun volumeUp() {
-    runLottieDiffTest(R.raw.volume_up)
+    runLottieDiffTest(R.raw.volume_up, suffix = "_progress0")
   }
 
   @Test
   fun volumeDown() {
-    runLottieDiffTest(R.raw.volume_down)
+    runLottieDiffTest(R.raw.volume_down, suffix = "_progress0")
   }
 
   @Test
