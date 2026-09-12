@@ -40,6 +40,10 @@ internal fun lookupValueInBezier(
   // Coincident keyframes select the later value without dividing by a zero duration.
   if (duration <= 0f) return 1f.rf
 
+  // A diagonal timing curve is exactly linear. Sampling it introduces enough rounding
+  // error to miss exact zero crossings (which can enable/disable a geometry modifier).
+  if (a == b && c == d) return clamp(frame / duration, 0f.rf, 1f.rf)
+
   // TODO implement using Remote Compose expressions to avoid a Compose UI impl
   val easing = CubicBezierEasing(a, b, c, d)
   // Include both endpoints even for fractional durations. Bound the table size and

@@ -135,6 +135,8 @@ internal fun LottieAnimation(
   slotMap: SlotMap = SlotMap.Empty,
   progress: RemoteFloat? = null,
 ) {
+  // Cache validation with the immutable model, before emitting any recording operations.
+  remember(animation) { animation.also { it.validateForRecording() } }
   // Total span of frames across the animation timeline.
   val totalFrames = animation.endFrame - animation.startFrame
   val startFrameRf = animation.startFrame.rf
@@ -144,7 +146,8 @@ internal fun LottieAnimation(
   // from the Remote Compose document animation clock time.
   val currentFrame =
     if (progress != null) {
-      startFrameRf + (progress * totalFrames)
+      // Progress 1 displays the last representable frame, while layer out-points stay exclusive.
+      min(startFrameRf + (progress * totalFrames), Math.nextDown(animation.endFrame).rf)
     } else {
       startFrameRf + (floor(RemoteFloat(ANIMATION_TIME) * animation.frameRate) % totalFrames)
     }
@@ -195,6 +198,7 @@ internal fun LottieAnimation(
       // .clip(RemoteRectangleShape)
       contentAlignment = RemoteAlignment.Center,
     ) {
+      DeclarePlaybackState(currentFrame)
       val matteTargetIndices =
         remember(animation.layers) {
           animation.layers

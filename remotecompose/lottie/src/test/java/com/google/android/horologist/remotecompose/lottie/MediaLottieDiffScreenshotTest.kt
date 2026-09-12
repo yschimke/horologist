@@ -16,7 +16,6 @@
 
 package com.google.android.horologist.remotecompose.lottie
 
-import org.junit.Ignore
 import org.junit.Test
 
 class MediaLottieDiffScreenshotTest : LottieDiffScreenshotTest() {
@@ -57,14 +56,21 @@ class MediaLottieDiffScreenshotTest : LottieDiffScreenshotTest() {
   }
 
   @Test
-  @Ignore("Filtered after latest-main rebase: branch output does not match the current baseline")
   fun muteToUnmute() {
-    runLottieDiffTest(R.raw.mute_to_unmute, expectedFailure = true)
+    runLottieDiffTest(R.raw.mute_to_unmute) {
+      captureProgress(0f)
+      captureProgress(0.25f)
+      captureProgress(0.5f)
+      captureProgress(1f)
+    }
   }
 
   @Test
-  @Ignore("Filtered after latest-main rebase: branch output does not match the current baseline")
   fun unmuteToMute() {
-    runLottieDiffTest(R.raw.unmute_to_mute, expectedFailure = true)
+    runLottieDiffTest(R.raw.unmute_to_mute) {
+      captureProgress(0f)
+      captureProgress(0.5f)
+      captureProgress(1f)
+    }
   }
 }

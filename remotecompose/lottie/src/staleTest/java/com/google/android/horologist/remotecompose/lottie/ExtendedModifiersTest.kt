@@ -27,7 +27,6 @@ import com.google.android.horologist.remotecompose.lottie.format.graphicelement.
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.PuckerBloat
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.Twist
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.ZigZag
-import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.ZigZagType
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.Fill
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.LineJoin
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.Stroke
@@ -67,7 +66,7 @@ class ExtendedModifiersTest {
       ZigZag(
         size = StaticScalarProperty(value = 10f),
         ridgesPerSegment = StaticScalarProperty(value = 2f),
-        pointType = ZigZagType.Corner,
+        pointType = StaticScalarProperty(value = 1f.rf),
       )
 
     val results = evaluateZigZag(listOf(shape), zigZag, settings)
@@ -109,7 +108,7 @@ class ExtendedModifiersTest {
       ZigZag(
         size = StaticScalarProperty(value = 10f),
         ridgesPerSegment = StaticScalarProperty(value = 2f),
-        pointType = ZigZagType.Smooth,
+        pointType = StaticScalarProperty(value = 2f.rf),
       )
 
     val results = evaluateZigZag(listOf(shape), zigZag, settings)
@@ -263,7 +262,7 @@ class ExtendedModifiersTest {
         ZigZag(
           size = StaticScalarProperty(value = 10f),
           ridgesPerSegment = StaticScalarProperty(value = 2f),
-          pointType = ZigZagType.Corner,
+          pointType = StaticScalarProperty(value = 1f.rf),
         ),
         Fill(color = StaticColorProperty(value = androidx.compose.ui.graphics.Color.Blue.rc)),
       )
@@ -288,7 +287,7 @@ class ExtendedModifiersTest {
       ZigZag(
         size = StaticScalarProperty(value = 10f),
         ridgesPerSegment = StaticScalarProperty(value = 2f),
-        pointType = ZigZagType.Corner,
+        pointType = StaticScalarProperty(value = 1f.rf),
       )
     val puckerBloat = PuckerBloat(amount = StaticScalarProperty(value = 50f))
     val fill = Fill(color = StaticColorProperty(value = androidx.compose.ui.graphics.Color.Red.rc))
@@ -336,4 +335,3 @@ class ExtendedModifiersTest {
     assertThat(lottiePath.path[0].vertices).isNotEmpty()
   }
 }
-

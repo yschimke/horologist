@@ -51,6 +51,7 @@ internal data class Mask(
   @SerialName("pt") val path: BaseBezierProperty? = null,
   @SerialName("o")
   val opacity: BaseScalarProperty = StaticScalarProperty(animated = false.rb, value = 100f.rf),
+  @SerialName("x") val expansion: BaseScalarProperty = StaticScalarProperty(value = 0f.rf),
 )
 
 /**

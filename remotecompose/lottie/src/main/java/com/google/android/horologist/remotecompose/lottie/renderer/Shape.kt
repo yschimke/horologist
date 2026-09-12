@@ -43,6 +43,7 @@ import com.google.android.horologist.remotecompose.lottie.format.graphicelement.
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.PuckerBloat
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.Repeater
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.RoundedCorners
+import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.TrimMode
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.TrimPath
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.Twist
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.ZigZag
@@ -72,11 +73,24 @@ import com.google.android.horologist.remotecompose.lottie.renderer.shapes.evalua
 import com.google.android.horologist.remotecompose.lottie.renderer.shapes.evaluatePuckerBloat
 import com.google.android.horologist.remotecompose.lottie.renderer.shapes.evaluateRectangle
 import com.google.android.horologist.remotecompose.lottie.renderer.shapes.evaluateRepeater
+import com.google.android.horologist.remotecompose.lottie.renderer.shapes.evaluateRoundedCorners
+import com.google.android.horologist.remotecompose.lottie.renderer.shapes.evaluateTrimPaths
 import com.google.android.horologist.remotecompose.lottie.renderer.shapes.evaluateTwist
 import com.google.android.horologist.remotecompose.lottie.renderer.shapes.evaluateZigZag
+import com.google.android.horologist.remotecompose.lottie.renderer.shapes.individualTrimModifier
 import com.google.android.horologist.remotecompose.lottie.renderer.shapes.transformRemoteShape
 
 internal data class StyledShapes(val shapes: List<RemoteShape>, val style: RemoteStyle)
+
+@SuppressLint("RestrictedApi")
+private fun evaluateGeometry(shape: GeometryShape, settings: LottieSettings): RemoteLottiePath? =
+  (when (shape) {
+      is Path -> evaluatePath(shape, settings)
+      is Rectangle -> evaluateRectangle(shape, settings)
+      is Ellipse -> evaluateEllipse(shape, settings)
+      is PolyStar -> evaluatePolyStar(shape, settings)
+    })
+    ?.withIdentity(GeometryIdentity(shape))
 
 /** Renders a list of Lottie Shapes to the RemoteCanvas. */
 @SuppressLint("RestrictedApi")
@@ -128,10 +142,12 @@ internal fun RenderShapes(
       }
 
       usePaint(paint) {
+        remoteCanvas.applyStrokeDetails(shapeGroup.style)
         for (shape in shapeGroup.shapes) {
           shape.draw(this, remoteCanvas, layerOpacity)
         }
       }
+      remoteCanvas.applyStrokeDetails(null)
 
       for (transform in transformStack) {
         remoteCanvas.restore()
@@ -148,28 +164,91 @@ internal fun RenderShapes(
 internal fun gatherShapes(
   shapes: List<GraphicElement>,
   animationSettings: LottieSettings,
-  parentTrimPath: TrimPath? = null,
-  parentRoundedCorners: RoundedCorners? = null,
+  inheritedStyle: RemoteStyle? = null,
+): List<StyledShapes> =
+  resolveStyledGeometry(gatherShapesUnresolved(shapes, animationSettings, inheritedStyle))
+
+/** Resolve only at the outer collection boundary, after all ancestor modifiers have run. */
+private fun resolveStyledGeometry(groups: List<StyledShapes>): List<StyledShapes> =
+  groups.flatMap { group ->
+    val shapes =
+      group.shapes.map { shape ->
+        when (shape) {
+          is RemoteLottiePath -> shape.resolveGeometry()
+          is RemoteGroup ->
+            RemoteGroup(
+              resolveStyledGeometry(shape.childShapes),
+              shape.animationSettings,
+              shape.transform,
+              shape.opacityMultiplier,
+            )
+          else -> shape
+        }
+      }
+    val baseStyle = (group.style as? RemoteStyleWithOpacity)?.baseStyle ?: group.style
+    if (baseStyle is RemoteStroke || baseStyle is RemoteGradientStroke) {
+      // A collapsed open contour can still draw a round cap. Hide inactive copy slots
+      // through stroke opacity as well; fills instead share the combined visible contours.
+      shapes.mapIndexed { index, shape ->
+        val visibility = (group.shapes[index] as? RemoteLottiePath)?.geometryVisibility
+        val style =
+          if (visibility != null && visibility.constantValueOrNull != 1f)
+            RemoteStyleWithOpacity(group.style, visibility)
+          else group.style
+        val strokeShape =
+          if (
+            shape is RemoteLottiePath && shape.path.any { it.visibility.constantValueOrNull != 1f }
+          )
+            RemoteContourStroke(shape)
+          else shape
+        StyledShapes(listOf(strokeShape), style)
+      }
+    } else listOf(group.copy(shapes = compoundFillShapes(shapes, group.style)))
+  }
+
+@SuppressLint("RestrictedApi")
+private fun gatherShapesUnresolved(
+  shapes: List<GraphicElement>,
+  animationSettings: LottieSettings,
   inheritedStyle: RemoteStyle? = null,
 ): List<StyledShapes> {
   val shapeGroups = mutableListOf<StyledShapes>()
   var currentGeometries = mutableListOf<RepeatedShapeInstance>()
-  var currentGroups = mutableListOf<Group>()
-  val activeTrimPath: TrimPath? =
-    shapes.filterIsInstance<TrimPath>().firstOrNull { it.hidden?.constantValue != true }
-      ?: parentTrimPath
-  val activeRoundedCorners: RoundedCorners? =
-    shapes.filterIsInstance<RoundedCorners>().firstOrNull { it.hidden?.constantValue != true }
-      ?: parentRoundedCorners
+  var currentGroups = mutableListOf<RemoteShape>()
+  // Greedy modifiers consume authored path operands, not paint views. A compound group or
+  // repeater is one operand, even when it contains multiple contours and painted runs.
+  var pathOperands = mutableListOf<List<RemoteShape>>()
   var hasEmittedStyle = false
 
+  fun modifyEarlierGeometry(modify: (List<RemoteShape>) -> List<RemoteShape>) {
+    // Paints are views of the preceding geometry, not scope boundaries for later modifiers.
+    // Update each view independently: paths are immutable, and two paints may own the same path.
+    for (i in shapeGroups.indices) {
+      val styled = shapeGroups[i]
+      shapeGroups[i] = styled.copy(shapes = modify(styled.shapes))
+    }
+    currentGeometries =
+      currentGeometries
+        .flatMap { instance -> modify(listOf(instance.shape)).map { instance.copy(shape = it) } }
+        .toMutableList()
+    currentGroups = modify(currentGroups).toMutableList()
+    pathOperands = pathOperands.map(modify).toMutableList()
+  }
+
   for (shape in shapes) {
+    // A modifier affects content earlier in its authored list, not later siblings.
     when (shape) {
       is TrimPath -> {
-        // Handled via activeTrimPath
+        if (shape.mode == TrimMode.Individually) {
+          modifyEarlierGeometry(
+            individualTrimModifier(pathOperands.flatten(), shape, animationSettings)
+          )
+        } else modifyEarlierGeometry { evaluateTrimPaths(it, shape, animationSettings) }
       }
       is RoundedCorners -> {
-        // Handled via activeRoundedCorners
+        if (shape.hidden?.constantValue != true) {
+          modifyEarlierGeometry { evaluateRoundedCorners(it, shape, animationSettings) }
+        }
       }
       is Repeater -> {
         if (shape.hidden?.constantValue != true) {
@@ -184,46 +263,49 @@ internal fun gatherShapes(
               shapeGroups.add(StyledShapes(listOf(group), NoopStyle()))
             }
           }
-          if (currentGeometries.isNotEmpty()) {
-            val baseShapes = currentGeometries.map { it.shape }
+          if (pathOperands.isNotEmpty()) {
+            val baseShapes = pathOperands.flatten()
             currentGeometries =
-              evaluateRepeater(baseShapes, shape, animationSettings).toMutableList()
+              evaluateRepeater(baseShapes, shape, animationSettings, pathOnly = true)
+                .toMutableList()
+            currentGroups.clear()
+            pathOperands = mutableListOf(currentGeometries.map { it.shape })
           }
         }
       }
       is MergePaths -> {
-        if (shape.hidden?.constantValue != true && currentGeometries.isNotEmpty()) {
-          val baseShapes = currentGeometries.map { it.shape }
-          val mergedShapes = evaluateMergePaths(baseShapes, shape, animationSettings)
-          currentGeometries = mergedShapes.map { RepeatedShapeInstance(it) }.toMutableList()
-        }
+        val mergedShapes =
+          evaluateMergePaths(
+            pathOperands.map { mergeOperand(it, animationSettings) },
+            shape,
+            animationSettings,
+          )
+        // MergePaths absorbs preceding PathContent, including groups' owned paints. Paints
+        // before it no longer have those source paths; later paints consume the merge result.
+        shapeGroups.clear()
+        currentGroups.clear()
+        currentGeometries = mergedShapes.map { RepeatedShapeInstance(it) }.toMutableList()
+        pathOperands = mutableListOf(mergedShapes)
+        hasEmittedStyle = false
       }
       is ZigZag -> {
-        if (shape.hidden?.constantValue != true && currentGeometries.isNotEmpty()) {
-          val baseShapes = currentGeometries.map { it.shape }
-          val modified = evaluateZigZag(baseShapes, shape, animationSettings)
-          currentGeometries = modified.map { RepeatedShapeInstance(it) }.toMutableList()
+        if (shape.hidden?.constantValue != true) {
+          modifyEarlierGeometry { evaluateZigZag(it, shape, animationSettings) }
         }
       }
       is PuckerBloat -> {
-        if (shape.hidden?.constantValue != true && currentGeometries.isNotEmpty()) {
-          val baseShapes = currentGeometries.map { it.shape }
-          val modified = evaluatePuckerBloat(baseShapes, shape, animationSettings)
-          currentGeometries = modified.map { RepeatedShapeInstance(it) }.toMutableList()
+        if (shape.hidden?.constantValue != true) {
+          modifyEarlierGeometry { evaluatePuckerBloat(it, shape, animationSettings) }
         }
       }
       is Twist -> {
-        if (shape.hidden?.constantValue != true && currentGeometries.isNotEmpty()) {
-          val baseShapes = currentGeometries.map { it.shape }
-          val modified = evaluateTwist(baseShapes, shape, animationSettings)
-          currentGeometries = modified.map { RepeatedShapeInstance(it) }.toMutableList()
+        if (shape.hidden?.constantValue != true) {
+          modifyEarlierGeometry { evaluateTwist(it, shape, animationSettings) }
         }
       }
       is OffsetPath -> {
-        if (shape.hidden?.constantValue != true && currentGeometries.isNotEmpty()) {
-          val baseShapes = currentGeometries.map { it.shape }
-          val modified = evaluateOffsetPath(baseShapes, shape, animationSettings)
-          currentGeometries = modified.map { RepeatedShapeInstance(it) }.toMutableList()
+        if (shape.hidden?.constantValue != true) {
+          modifyEarlierGeometry { evaluateOffsetPath(it, shape, animationSettings) }
         }
       }
       is GeometryShape -> {
@@ -232,18 +314,10 @@ internal fun gatherShapes(
           currentGroups = mutableListOf()
           hasEmittedStyle = false
         }
-        val remoteShape =
-          when (shape) {
-            is Path -> evaluatePath(shape, animationSettings, activeTrimPath, activeRoundedCorners)
-            is Rectangle ->
-              evaluateRectangle(shape, animationSettings, activeTrimPath, activeRoundedCorners)
-            is Ellipse ->
-              evaluateEllipse(shape, animationSettings, activeTrimPath, activeRoundedCorners)
-            is PolyStar ->
-              evaluatePolyStar(shape, animationSettings, activeTrimPath, activeRoundedCorners)
-          }
+        val remoteShape = evaluateGeometry(shape, animationSettings)
         if (remoteShape != null) {
           currentGeometries.add(RepeatedShapeInstance(remoteShape))
+          pathOperands.add(listOf(remoteShape))
         }
       }
       is Group -> {
@@ -252,70 +326,40 @@ internal fun gatherShapes(
           currentGroups = mutableListOf()
           hasEmittedStyle = false
         }
-        val groupShape =
-          group(shape, animationSettings, activeTrimPath, activeRoundedCorners, inheritedStyle)
+        val groupShape = group(shape, animationSettings, inheritedStyle)
         if (groupShape != null) {
           shapeGroups.add(StyledShapes(listOf(groupShape), inheritedStyle ?: NoopStyle()))
         }
-        currentGroups.add(shape)
+        // Keep the group's modifier scope from its own position, not the later fill/stroke's.
+        val geometries = evaluateGroupGeometries(shape, animationSettings)
+        currentGroups.addAll(geometries)
+        pathOperands.add(geometries)
       }
       is Fill -> {
         if (shape.hidden?.constantValue != true) {
           val fill = fill(shape, animationSettings)
-          emitStyledShapes(
-            shapeGroups,
-            currentGeometries,
-            currentGroups,
-            fill,
-            animationSettings,
-            activeTrimPath,
-            activeRoundedCorners,
-          )
+          emitStyledShapes(shapeGroups, currentGeometries, currentGroups, fill)
           hasEmittedStyle = true
         }
       }
       is Stroke -> {
         if (shape.hidden?.constantValue != true) {
           val stroke = stroke(shape, animationSettings)
-          emitStyledShapes(
-            shapeGroups,
-            currentGeometries,
-            currentGroups,
-            stroke,
-            animationSettings,
-            activeTrimPath,
-            activeRoundedCorners,
-          )
+          emitStyledShapes(shapeGroups, currentGeometries, currentGroups, stroke)
           hasEmittedStyle = true
         }
       }
       is GradientFill -> {
         if (shape.hidden?.constantValue != true) {
           val gradientFill = gradientFill(shape, animationSettings)
-          emitStyledShapes(
-            shapeGroups,
-            currentGeometries,
-            currentGroups,
-            gradientFill,
-            animationSettings,
-            activeTrimPath,
-            activeRoundedCorners,
-          )
+          emitStyledShapes(shapeGroups, currentGeometries, currentGroups, gradientFill)
           hasEmittedStyle = true
         }
       }
       is GradientStroke -> {
         if (shape.hidden?.constantValue != true) {
           val gradientStroke = gradientStroke(shape, animationSettings)
-          emitStyledShapes(
-            shapeGroups,
-            currentGeometries,
-            currentGroups,
-            gradientStroke,
-            animationSettings,
-            activeTrimPath,
-            activeRoundedCorners,
-          )
+          emitStyledShapes(shapeGroups, currentGeometries, currentGroups, gradientStroke)
           hasEmittedStyle = true
         }
       }
@@ -324,15 +368,7 @@ internal fun gatherShapes(
   }
 
   if (inheritedStyle != null && currentGeometries.isNotEmpty()) {
-    emitStyledShapes(
-      shapeGroups,
-      currentGeometries,
-      emptyList(),
-      inheritedStyle,
-      animationSettings,
-      activeTrimPath,
-      activeRoundedCorners,
-    )
+    emitStyledShapes(shapeGroups, currentGeometries, emptyList(), inheritedStyle)
   }
 
   // In Lottie, elements at higher array indices are at the bottom of the stack and drawn first;
@@ -344,11 +380,8 @@ internal fun gatherShapes(
 private fun emitStyledShapes(
   shapeGroups: MutableList<StyledShapes>,
   currentGeometries: List<RepeatedShapeInstance>,
-  currentGroups: List<Group>,
+  currentGroups: List<RemoteShape>,
   style: RemoteStyle,
-  animationSettings: LottieSettings,
-  activeTrimPath: TrimPath?,
-  activeRoundedCorners: RoundedCorners? = null,
 ) {
   val fillRule =
     (style as? RemoteFill)?.fillRule
@@ -368,6 +401,11 @@ private fun emitStyledShapes(
     }
 
   val hasVaryingOpacity = styledGeometries.any { it.opacityMultiplier.constantValueOrNull != 1f }
+  val baseStyle = if (style is RemoteStyleWithOpacity) style.baseStyle else style
+  val isFill = baseStyle is RemoteFill || baseStyle is RemoteGradientFill
+  val styledGroupShapes = currentGroups.map {
+    if (fillRule != FillRule.NonZero) it.withFillRule(fillRule) else it
+  }
   if (hasVaryingOpacity) {
     for (instance in styledGeometries.reversed()) {
       val instanceStyle =
@@ -378,25 +416,41 @@ private fun emitStyledShapes(
         }
       shapeGroups.add(StyledShapes(listOf(instance.shape), instanceStyle))
     }
-  } else if (styledGeometries.isNotEmpty()) {
-    shapeGroups.add(StyledShapes(styledGeometries.map { it.shape }, style))
+  } else if (styledGeometries.isNotEmpty() || (isFill && styledGroupShapes.isNotEmpty())) {
+    val contours =
+      styledGeometries.map { it.shape } + if (isFill) styledGroupShapes else emptyList()
+    shapeGroups.add(StyledShapes(contours, style))
   }
 
-  val groupShapes = mutableListOf<RemoteShape>()
-  for (group in currentGroups) {
-    groupShapes.addAll(
-      evaluateGroupGeometries(group, animationSettings, activeTrimPath, activeRoundedCorners)
-    )
-  }
-  if (groupShapes.isNotEmpty()) {
-    val styledGroupShapes =
-      if (fillRule != FillRule.NonZero) {
-        groupShapes.map { it.withFillRule(fillRule) }
-      } else {
-        groupShapes
-      }
+  if (styledGroupShapes.isNotEmpty() && (hasVaryingOpacity || !isFill)) {
     shapeGroups.add(StyledShapes(styledGroupShapes, style))
   }
+}
+
+/** One fill operation owns all compatible contours, including their shared winding and opacity. */
+private fun compoundFillShapes(shapes: List<RemoteShape>, style: RemoteStyle): List<RemoteShape> {
+  val baseStyle = if (style is RemoteStyleWithOpacity) style.baseStyle else style
+  if (baseStyle !is RemoteFill && baseStyle !is RemoteGradientFill) return shapes
+  val result = mutableListOf<RemoteShape>()
+  var pending = mutableListOf<RemoteBezierValue>()
+  var rule: FillRule? = null
+  fun flush() {
+    if (pending.isNotEmpty()) result.add(RemoteLottiePath(pending.toList(), checkNotNull(rule)))
+    pending = mutableListOf()
+    rule = null
+  }
+  for (shape in shapes) {
+    if (shape is RemoteLottiePath && shape.trim == null) {
+      if (pending.isNotEmpty() && shape.fillRule != rule) flush()
+      rule = shape.fillRule
+      pending.addAll(shape.path)
+    } else {
+      flush()
+      result.add(shape)
+    }
+  }
+  flush()
+  return result
 }
 
 @SuppressLint("RestrictedApi")
@@ -406,78 +460,87 @@ internal fun gatherShapesForTest(
   inheritedStyle: RemoteStyle? = null,
 ): List<StyledShapes> = gatherShapes(shapes, animationSettings, inheritedStyle = inheritedStyle)
 
+/** Keep a compound group's contour list as one boolean operand without duplicating its paints. */
+private fun mergeOperand(shapes: List<RemoteShape>, settings: LottieSettings): RemoteShape =
+  shapes.singleOrNull() ?: RemoteGroup(listOf(StyledShapes(shapes, NoopStyle())), settings, null)
+
 @SuppressLint("RestrictedApi")
 private fun evaluateGroupGeometries(
   group: Group,
   animationSettings: LottieSettings,
-  parentTrimPath: TrimPath? = null,
-  parentRoundedCorners: RoundedCorners? = null,
 ): List<RemoteShape> {
   if (group.hidden?.constantValue == true) return emptyList()
-  val activeTrimPath =
-    group.shapes.filterIsInstance<TrimPath>().firstOrNull { it.hidden?.constantValue != true }
-      ?: parentTrimPath
-  val activeRoundedCorners =
-    group.shapes.filterIsInstance<RoundedCorners>().firstOrNull { it.hidden?.constantValue != true }
-      ?: parentRoundedCorners
   val groupTransform = group.shapes.filterIsInstance<Transform>().firstOrNull()
-  var geometries = mutableListOf<RemoteShape>()
+  var operands = mutableListOf<List<RemoteShape>>()
+  fun modify(modifier: (List<RemoteShape>) -> List<RemoteShape>) {
+    operands = operands.map(modifier).toMutableList()
+  }
   for (shape in group.shapes) {
     when (shape) {
       is GeometryShape -> {
-        val remoteShape =
-          when (shape) {
-            is Path -> evaluatePath(shape, animationSettings, activeTrimPath, activeRoundedCorners)
-            is Rectangle ->
-              evaluateRectangle(shape, animationSettings, activeTrimPath, activeRoundedCorners)
-            is Ellipse ->
-              evaluateEllipse(shape, animationSettings, activeTrimPath, activeRoundedCorners)
-            is PolyStar ->
-              evaluatePolyStar(shape, animationSettings, activeTrimPath, activeRoundedCorners)
-          }
+        val remoteShape = evaluateGeometry(shape, animationSettings)
         if (remoteShape != null) {
-          geometries.add(remoteShape)
+          operands.add(listOf(remoteShape))
         }
       }
       is Group -> {
-        val nestedGeometries =
-          evaluateGroupGeometries(shape, animationSettings, activeTrimPath, activeRoundedCorners)
-        geometries.addAll(nestedGeometries)
+        val nestedGeometries = evaluateGroupGeometries(shape, animationSettings)
+        operands.add(nestedGeometries)
+      }
+      is TrimPath -> {
+        if (shape.mode == TrimMode.Individually) {
+          modify(individualTrimModifier(operands.flatten(), shape, animationSettings))
+        } else modify { evaluateTrimPaths(it, shape, animationSettings) }
+      }
+      is RoundedCorners -> {
+        if (shape.hidden?.constantValue != true) {
+          modify { evaluateRoundedCorners(it, shape, animationSettings) }
+        }
       }
       is Repeater -> {
-        if (shape.hidden?.constantValue != true && geometries.isNotEmpty()) {
-          geometries =
-            evaluateRepeater(geometries, shape, animationSettings).map { it.shape }.toMutableList()
+        if (shape.hidden?.constantValue != true && operands.isNotEmpty()) {
+          operands =
+            mutableListOf(
+              evaluateRepeater(operands.flatten(), shape, animationSettings, pathOnly = true).map {
+                it.shape
+              }
+            )
         }
       }
       is MergePaths -> {
-        if (shape.hidden?.constantValue != true && geometries.isNotEmpty()) {
-          geometries = evaluateMergePaths(geometries, shape, animationSettings).toMutableList()
-        }
+        operands =
+          mutableListOf(
+            evaluateMergePaths(
+              operands.map { mergeOperand(it, animationSettings) },
+              shape,
+              animationSettings,
+            )
+          )
       }
       is ZigZag -> {
-        if (shape.hidden?.constantValue != true && geometries.isNotEmpty()) {
-          geometries = evaluateZigZag(geometries, shape, animationSettings).toMutableList()
+        if (shape.hidden?.constantValue != true) {
+          modify { evaluateZigZag(it, shape, animationSettings) }
         }
       }
       is PuckerBloat -> {
-        if (shape.hidden?.constantValue != true && geometries.isNotEmpty()) {
-          geometries = evaluatePuckerBloat(geometries, shape, animationSettings).toMutableList()
+        if (shape.hidden?.constantValue != true) {
+          modify { evaluatePuckerBloat(it, shape, animationSettings) }
         }
       }
       is Twist -> {
-        if (shape.hidden?.constantValue != true && geometries.isNotEmpty()) {
-          geometries = evaluateTwist(geometries, shape, animationSettings).toMutableList()
+        if (shape.hidden?.constantValue != true) {
+          modify { evaluateTwist(it, shape, animationSettings) }
         }
       }
       is OffsetPath -> {
-        if (shape.hidden?.constantValue != true && geometries.isNotEmpty()) {
-          geometries = evaluateOffsetPath(geometries, shape, animationSettings).toMutableList()
+        if (shape.hidden?.constantValue != true) {
+          modify { evaluateOffsetPath(it, shape, animationSettings) }
         }
       }
       else -> {}
     }
   }
+  val geometries = operands.flatten()
   if (groupTransform != null) {
     return geometries.map { transformRemoteShape(it, groupTransform, animationSettings) }
   }
@@ -488,8 +551,6 @@ private fun evaluateGroupGeometries(
 private fun group(
   group: Group,
   animationSettings: LottieSettings,
-  parentTrimPath: TrimPath? = null,
-  parentRoundedCorners: RoundedCorners? = null,
   inheritedStyle: RemoteStyle? = null,
 ): RemoteGroup? {
   if (group.hidden?.constantValue == true) {
@@ -498,14 +559,7 @@ private fun group(
 
   val transform = group.shapes.filterIsInstance<Transform>().firstOrNull()
   val contentShapes = group.shapes.filter { it !is Transform }
-  val styledShapes =
-    gatherShapes(
-      contentShapes,
-      animationSettings,
-      parentTrimPath,
-      parentRoundedCorners,
-      inheritedStyle,
-    )
+  val styledShapes = gatherShapesUnresolved(contentShapes, animationSettings, inheritedStyle)
   if (styledShapes.isEmpty()) {
     return null
   }
@@ -780,7 +834,7 @@ private fun clipShapes(
 
 @SuppressLint("RestrictedApi")
 /** Records a clipping path while retaining vertex and tangent dependencies for playback. */
-private fun RemoteCanvas.buildRemotePathFromBezier(path: List<RemoteBezierValue>): RemotePath =
+internal fun RemoteCanvas.buildRemotePathFromBezier(path: List<RemoteBezierValue>): RemotePath =
   remotePath {
     for (subpath in path) {
       val vertices = subpath.vertices

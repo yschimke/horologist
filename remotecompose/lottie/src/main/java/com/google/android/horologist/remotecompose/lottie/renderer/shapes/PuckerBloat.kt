@@ -18,9 +18,11 @@ package com.google.android.horologist.remotecompose.lottie.renderer.shapes
 
 import android.annotation.SuppressLint
 import androidx.compose.remote.creation.compose.state.RemoteFloat
+import androidx.compose.remote.creation.compose.state.max
 import androidx.compose.remote.creation.compose.state.rf
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.PuckerBloat
+import com.google.android.horologist.remotecompose.lottie.renderer.RemoteBooleanPath
 import com.google.android.horologist.remotecompose.lottie.renderer.RemoteGroup
 import com.google.android.horologist.remotecompose.lottie.renderer.RemoteLottiePath
 import com.google.android.horologist.remotecompose.lottie.renderer.RemoteShape
@@ -38,14 +40,16 @@ internal fun evaluatePuckerBloat(
 ): List<RemoteShape> {
   if (puckerBloat.hidden?.constantValue == true || shapes.isEmpty()) return shapes
 
-  val amount = animateScalar(puckerBloat.amount, animationSettings).constantValueOrNull ?: 0f
-  if (amount == 0f) return shapes
+  val amount = animateScalar(puckerBloat.amount, animationSettings)
+  if (amount.constantValueOrNull == 0f) return shapes
 
   return shapes.map { shape ->
     when (shape) {
+      is RemoteBooleanPath -> error("PuckerBloat after a live boolean merge is not yet supported")
       is RemoteLottiePath -> {
-        val newSubpaths = shape.path.map { subpath -> applyPuckerBloatToSubpath(subpath, amount) }
-        RemoteLottiePath(newSubpaths, shape.fillRule)
+        val source = shape.materializeTrim()
+        val newSubpaths = source.path.map { subpath -> applyPuckerBloatToSubpath(subpath, amount) }
+        source.withPath(newSubpaths)
       }
       is RemoteGroup -> {
         val newChildShapes =
@@ -55,7 +59,12 @@ internal fun evaluatePuckerBloat(
               style = styledShapes.style,
             )
           }
-        RemoteGroup(newChildShapes, shape.animationSettings, shape.transform)
+        RemoteGroup(
+          newChildShapes,
+          shape.animationSettings,
+          shape.transform,
+          shape.opacityMultiplier,
+        )
       }
       else -> shape
     }
@@ -65,19 +74,22 @@ internal fun evaluatePuckerBloat(
 @SuppressLint("RestrictedApi")
 private fun applyPuckerBloatToSubpath(
   subpath: RemoteBezierValue,
-  amount: Float,
+  amount: RemoteFloat,
 ): RemoteBezierValue {
   val count = subpath.vertices.size
-  if (count < 2) return subpath
+  if (count == 0 || (count == 1 && !subpath.closed)) return subpath
 
-  var sumX = 0f
-  var sumY = 0f
-  for (v in subpath.vertices) {
-    sumX += v.getOrElse(0) { 0f.rf }.constantValueOrNull ?: 0f
-    sumY += v.getOrElse(1) { 0f.rf }.constantValueOrNull ?: 0f
+  var sumX = 0f.rf
+  var sumY = 0f.rf
+  var activeCount = 0f.rf
+  for ((index, v) in subpath.vertices.withIndex()) {
+    val active = subpath.topology?.vertices?.get(index) ?: 1f.rf
+    sumX += v.getOrElse(0) { 0f.rf } * active
+    sumY += v.getOrElse(1) { 0f.rf } * active
+    activeCount += active
   }
-  val cx = sumX / count.toFloat()
-  val cy = sumY / count.toFloat()
+  val cx = sumX / max(activeCount, 1f.rf)
+  val cy = sumY / max(activeCount, 1f.rf)
 
   val f = amount / 100f
 
@@ -86,33 +98,37 @@ private fun applyPuckerBloatToSubpath(
   val newOutTangents = mutableListOf<List<RemoteFloat>>()
 
   for (i in 0 until count) {
-    val vx = subpath.vertices[i].getOrElse(0) { 0f.rf }.constantValueOrNull ?: 0f
-    val vy = subpath.vertices[i].getOrElse(1) { 0f.rf }.constantValueOrNull ?: 0f
+    val vx = subpath.vertices[i].getOrElse(0) { 0f.rf }
+    val vy = subpath.vertices[i].getOrElse(1) { 0f.rf }
 
     val inTan = subpath.inTangents.getOrNull(i)
-    val inX = inTan?.getOrElse(0) { 0f.rf }?.constantValueOrNull ?: 0f
-    val inY = inTan?.getOrElse(1) { 0f.rf }?.constantValueOrNull ?: 0f
+    val inX = inTan?.getOrElse(0) { 0f.rf } ?: 0f.rf
+    val inY = inTan?.getOrElse(1) { 0f.rf } ?: 0f.rf
 
     val outTan = subpath.outTangents.getOrNull(i)
-    val outX = outTan?.getOrElse(0) { 0f.rf }?.constantValueOrNull ?: 0f
-    val outY = outTan?.getOrElse(1) { 0f.rf }?.constantValueOrNull ?: 0f
+    val outX = outTan?.getOrElse(0) { 0f.rf } ?: 0f.rf
+    val outY = outTan?.getOrElse(1) { 0f.rf } ?: 0f.rf
 
     val dx = vx - cx
     val dy = vy - cy
 
-    // For pucker (f < 0), pull vertex inward towards center
-    val newVx = if (f < 0f) vx + dx * f * 0.5f else vx + dx * f * 0.1f
-    val newVy = if (f < 0f) vy + dy * f * 0.5f else vy + dy * f * 0.1f
+    // Vertices move toward the centroid; absolute control points move away from it.
+    val newVx = vx - dx * f
+    val newVy = vy - dy * f
 
-    // Tangents bow relative to the center vector
-    val newOutX = outX - dx * f * 0.5519f
-    val newOutY = outY - dy * f * 0.5519f
-    val newInX = inX + dx * f * 0.5519f
-    val newInY = inY + dy * f * 0.5519f
+    // Convert the displaced absolute controls back to offsets from the displaced vertex.
+    val newOutX = outX * (1f.rf + f) + dx * f * 2f
+    val newOutY = outY * (1f.rf + f) + dy * f * 2f
+    val newInX = inX * (1f.rf + f) + dx * f * 2f
+    val newInY = inY * (1f.rf + f) + dy * f * 2f
 
-    newVertices.add(listOf(newVx.rf, newVy.rf))
-    newInTangents.add(listOf(newInX.rf, newInY.rf))
-    newOutTangents.add(listOf(newOutX.rf, newOutY.rf))
+    newVertices.add(listOf(newVx, newVy))
+    // A padding slot may own the incoming control of the real closing edge, but its outgoing
+    // edge is empty. Gate edges independently so pucker does not inflate collapsed slots.
+    val incoming = subpath.topology?.segments?.get((i + count - 1) % count) ?: 1f.rf
+    val outgoing = subpath.topology?.segments?.get(i) ?: 1f.rf
+    newInTangents.add(listOf(newInX * incoming, newInY * incoming))
+    newOutTangents.add(listOf(newOutX * outgoing, newOutY * outgoing))
   }
 
   return RemoteBezierValue(
@@ -120,5 +136,7 @@ private fun applyPuckerBloatToSubpath(
     inTangents = newInTangents,
     outTangents = newOutTangents,
     vertices = newVertices,
+    topology = subpath.topology,
+    visibility = subpath.visibility,
   )
 }

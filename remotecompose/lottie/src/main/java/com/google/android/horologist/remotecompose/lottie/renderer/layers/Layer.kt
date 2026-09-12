@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import com.google.android.horologist.remotecompose.lottie.LocalAnimationSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
+import com.google.android.horologist.remotecompose.lottie.format.layer.BlendMode
 import com.google.android.horologist.remotecompose.lottie.format.layer.ImageLayer
 import com.google.android.horologist.remotecompose.lottie.format.layer.Layer
 import com.google.android.horologist.remotecompose.lottie.format.layer.LayerType
@@ -59,14 +60,10 @@ internal fun calculateLocalFrame(
   return (currentFrame - st.rf) / safeSr.rf
 }
 
-/** Calculates effective layer end frame padding for composition end boundaries. */
-internal fun calculateEffectiveEndFrame(endFrame: Float, compositionEndFrame: Float): Float {
-  return if (endFrame >= compositionEndFrame) {
-    endFrame + 0.01f
-  } else {
-    endFrame
-  }
-}
+/** Layer out-points are exclusive, independently of the containing composition's end. */
+@Suppress("UNUSED_PARAMETER")
+internal fun calculateEffectiveEndFrame(endFrame: Float, compositionEndFrame: Float): Float =
+  endFrame
 
 /**
  * Evaluates dynamic RemoteFloat timeline visibility for a layer given its [startFrame, endFrame)
@@ -93,8 +90,20 @@ internal fun Layer(
   parentTransforms: Map<Int?, List<Transform>>,
   transform: Transform? = null,
   matteContext: MatteContext? = null,
+  effectsApplied: Boolean = false,
 ) {
   if (layer.hidden?.constantValue == true) {
+    return
+  }
+
+  if (
+    !effectsApplied &&
+      (matteContext != null ||
+        (layer.blendMode != null && layer.blendMode != BlendMode.Normal) ||
+        layer.masksProperties.isNotEmpty() ||
+        (layer is PrecompLayer && layer.width != null && layer.height != null))
+  ) {
+    LayerEffects(layer, parentTransforms, transform, matteContext)
     return
   }
 
@@ -103,8 +112,7 @@ internal fun Layer(
   val parentSettings = LocalAnimationSettings.current
   val compositionEndFrame = parentSettings.endFrame
 
-  // If layer spans up to or past the composition endFrame, extend by 0.01f
-  // so it remains visible at progress 1.0f / final frame.
+  // Root progress clamps before its out-point; child/layer intervals remain half-open.
   val effectiveEndFrame = calculateEffectiveEndFrame(endFrame, compositionEndFrame)
 
   val currentFrame = parentSettings.currentFrame
@@ -125,6 +133,9 @@ internal fun Layer(
       ancestorStack
     }
 
+  // Ordinary-layer keyframes and visibility are authored in the containing composition's
+  // time, even when st/sr metadata is present. Only precomposition content changes timelines;
+  // applying (frame - st) / sr to ordinary layers would retime their exported keys twice.
   when (layer.type) {
     LayerType.Solid ->
       SolidColorLayer(layer as SolidColorLayer, completeStack, matteContext, layerVisibility)

@@ -78,6 +78,12 @@ abstract class MotionPixelHarness : WearScreenshotTest() {
           .isWithin(0.01f)
           .of(0f)
       }
+    } catch (failure: AssertionError) {
+      val output =
+        File("build/outputs/motion-failures/${javaClass.simpleName}-${System.nanoTime()}.png")
+      output.parentFile.mkdirs()
+      output.outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+      throw AssertionError("${failure.message}\nActual image: ${output.absolutePath}", failure)
     } finally {
       bitmap.recycle()
     }
@@ -87,6 +93,12 @@ abstract class MotionPixelHarness : WearScreenshotTest() {
   protected fun assertMatchesStaticFrames(
     json: String,
     referenceProbeAt: (Int) -> Probe,
+    artifactName: String? = null,
+    frames: List<Int> = listOf(0, 5, 10),
+    maxMeanRedError: Float? = null,
+    maxPeakRedError: Float = 0.25f,
+    minVisiblePixels: Int = 20,
+    maxMeanEdgeRedError: Float? = null,
     staticAt: (Int) -> String,
   ) {
     val decoded = Animation.decodeFromString(json)
@@ -105,7 +117,8 @@ abstract class MotionPixelHarness : WearScreenshotTest() {
         }
       }
     }
-    for (frame in listOf(0, 5, 10)) {
+    val failures = mutableListOf<String>()
+    for (frame in frames) {
       composeRule.runOnIdle {
         reference.value = Animation.decodeFromString(staticAt(frame))
         progress.floatValue = frame / 40f
@@ -113,6 +126,14 @@ abstract class MotionPixelHarness : WearScreenshotTest() {
       val expected = capture("reference")
       val actual = capture("motion")
       try {
+        artifactName?.let { name ->
+          val output = File("build/outputs/lottie-motion/$name").apply { mkdirs() }
+          for ((kind, bitmap) in listOf("reference" to expected, "rc" to actual)) {
+            File(output, "frame$frame-$kind.png").outputStream().use {
+              bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+            }
+          }
+        }
         val probe = referenceProbeAt(frame)
         val referencePixel =
           Color(expected.getPixel(probe.x * expected.width / 64, probe.y * expected.height / 64))
@@ -132,18 +153,77 @@ abstract class MotionPixelHarness : WearScreenshotTest() {
         }
         assertWithMessage("static fixture must contain visible geometry at frame $frame")
           .that(visible)
-          .isGreaterThan(20)
-        assertWithMessage("moving geometry differs from static geometry at frame $frame")
-          .that(different)
-          .isEqualTo(0)
+          .isGreaterThan(minVisiblePixels)
+        if (maxMeanRedError == null) {
+          assertWithMessage("moving geometry differs from static geometry at frame $frame")
+            .that(different)
+            .isEqualTo(0)
+        } else {
+          // Opt-in for independently generated geometry whose float arithmetic can shift
+          // edge coverage. Inspect every output pixel, with both mean and outlier bounds.
+          assertWithMessage("raster dimensions").that(actual.width).isEqualTo(expected.width)
+          assertWithMessage("raster dimensions").that(actual.height).isEqualTo(expected.height)
+          var sum = 0.0
+          var largest = 0f
+          var edgeCount = 0
+          var edgeSum = 0.0
+          var offEdgeDifferences = 0
+          for (y in 0 until actual.height) for (x in 0 until actual.width) {
+            val error =
+              kotlin.math.abs(Color(actual.getPixel(x, y)).red - Color(expected.getPixel(x, y)).red)
+            sum += error
+            largest = maxOf(largest, error)
+            if (maxMeanEdgeRedError != null) {
+              var low = 1f
+              var high = 0f
+              for (dy in -1..1) for (dx in -1..1) {
+                val red =
+                  Color(
+                      expected.getPixel(
+                        (x + dx).coerceIn(0, expected.width - 1),
+                        (y + dy).coerceIn(0, expected.height - 1),
+                      )
+                    )
+                    .red
+                low = minOf(low, red)
+                high = maxOf(high, red)
+              }
+              if (low != high) {
+                edgeCount++
+                edgeSum += error
+              } else if (error != 0f) offEdgeDifferences++
+            }
+          }
+          if (maxMeanEdgeRedError == null) {
+            assertWithMessage("mean raster error at frame $frame")
+              .that(sum / (actual.width * actual.height))
+              .isAtMost(maxMeanRedError.toDouble())
+          } else {
+            // Explicit opt-in for native fill AA variance backed by independent geometry checks.
+            assertWithMessage("off-edge differences at frame $frame")
+              .that(offEdgeDifferences)
+              .isEqualTo(0)
+            assertWithMessage("mean edge error at frame $frame")
+              .that(edgeSum / maxOf(edgeCount, 1))
+              .isAtMost(maxMeanEdgeRedError.toDouble())
+          }
+          assertWithMessage("largest raster error at frame $frame")
+            .that(largest)
+            .isAtMost(maxPeakRedError)
+        }
+      } catch (failure: AssertionError) {
+        // Capture every requested frame even when an early frame differs, so one failing edge
+        // does not hide later topology or timing failures from the review artifacts.
+        failures.add("Frame $frame: ${failure.message}")
       } finally {
         expected.recycle()
         actual.recycle()
       }
     }
+    if (failures.isNotEmpty()) throw AssertionError(failures.joinToString("\n"))
   }
 
-  private fun capture(tag: String): Bitmap {
+  protected fun capture(tag: String): Bitmap {
     composeRule.waitForIdle()
     val screenshot = File.createTempFile("motion-regression-", ".png")
     try {

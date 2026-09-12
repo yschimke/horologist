@@ -44,6 +44,10 @@ internal fun animateVector(
   return when (vector) {
     is StaticVectorProperty -> vector.value
     is AnimatedVectorProperty -> {
+      require(vector.keyframes.isNotEmpty()) { "Animated vector requires at least one keyframe" }
+      require(vector.keyframes.all { it.value.size == vector.keyframes.first().value.size }) {
+        "Animated vector keyframes must have equal dimensions"
+      }
       if (vector.keyframes.size == 1) {
         return vector.keyframes[0].value
       }

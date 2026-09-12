@@ -18,18 +18,20 @@ package com.google.android.horologist.remotecompose.lottie.renderer.shapes
 
 import android.annotation.SuppressLint
 import androidx.compose.remote.creation.compose.state.RemoteFloat
+import androidx.compose.remote.creation.compose.state.cos
 import androidx.compose.remote.creation.compose.state.rf
+import androidx.compose.remote.creation.compose.state.sin
+import androidx.compose.remote.creation.compose.state.sqrt
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.Twist
+import com.google.android.horologist.remotecompose.lottie.format.values.Point
+import com.google.android.horologist.remotecompose.lottie.renderer.RemoteBooleanPath
 import com.google.android.horologist.remotecompose.lottie.renderer.RemoteGroup
 import com.google.android.horologist.remotecompose.lottie.renderer.RemoteLottiePath
 import com.google.android.horologist.remotecompose.lottie.renderer.RemoteShape
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.RemoteBezierValue
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animatePosition
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateScalar
-import kotlin.math.cos
-import kotlin.math.hypot
-import kotlin.math.sin
 
 /**
  * Evaluates a [Twist] modifier across [shapes], rotating vertices around a center proportional to
@@ -43,18 +45,20 @@ internal fun evaluateTwist(
 ): List<RemoteShape> {
   if (twist.hidden?.constantValue == true || shapes.isEmpty()) return shapes
 
-  val angle = animateScalar(twist.angle, animationSettings).constantValueOrNull ?: 0f
+  val angle = animateScalar(twist.angle, animationSettings)
   val center = animatePosition(twist.center, animationSettings)
-  val cx = center.x.constantValueOrNull ?: 0f
-  val cy = center.y.constantValueOrNull ?: 0f
+  val cx = center.x
+  val cy = center.y
 
-  if (angle == 0f) return shapes
+  if (angle.constantValueOrNull == 0f) return shapes
 
   return shapes.map { shape ->
     when (shape) {
+      is RemoteBooleanPath -> error("Twist after a live boolean merge is not yet supported")
       is RemoteLottiePath -> {
-        val newSubpaths = shape.path.map { subpath -> applyTwistToSubpath(subpath, angle, cx, cy) }
-        RemoteLottiePath(newSubpaths, shape.fillRule)
+        val source = shape.materializeTrim()
+        val newSubpaths = source.path.map { subpath -> applyTwistToSubpath(subpath, angle, cx, cy) }
+        source.withPath(newSubpaths)
       }
       is RemoteGroup -> {
         val newChildShapes =
@@ -64,7 +68,12 @@ internal fun evaluateTwist(
               style = styledShapes.style,
             )
           }
-        RemoteGroup(newChildShapes, shape.animationSettings, shape.transform)
+        RemoteGroup(
+          newChildShapes,
+          shape.animationSettings,
+          shape.transform,
+          shape.opacityMultiplier,
+        )
       }
       else -> shape
     }
@@ -74,9 +83,9 @@ internal fun evaluateTwist(
 @SuppressLint("RestrictedApi")
 private fun applyTwistToSubpath(
   subpath: RemoteBezierValue,
-  angleDeg: Float,
-  cx: Float,
-  cy: Float,
+  angleDeg: RemoteFloat,
+  cx: RemoteFloat,
+  cy: RemoteFloat,
 ): RemoteBezierValue {
   val count = subpath.vertices.size
   if (count == 0) return subpath
@@ -86,28 +95,24 @@ private fun applyTwistToSubpath(
   val newOutTangents = mutableListOf<List<RemoteFloat>>()
 
   for (i in 0 until count) {
-    val vx = subpath.vertices[i].getOrElse(0) { 0f.rf }.constantValueOrNull ?: 0f
-    val vy = subpath.vertices[i].getOrElse(1) { 0f.rf }.constantValueOrNull ?: 0f
+    val vx = subpath.vertices[i].getOrElse(0) { 0f.rf }
+    val vy = subpath.vertices[i].getOrElse(1) { 0f.rf }
 
     val inTan = subpath.inTangents.getOrNull(i)
-    val inX = inTan?.getOrElse(0) { 0f.rf }?.constantValueOrNull ?: 0f
-    val inY = inTan?.getOrElse(1) { 0f.rf }?.constantValueOrNull ?: 0f
+    val inX = inTan?.getOrElse(0) { 0f.rf } ?: 0f.rf
+    val inY = inTan?.getOrElse(1) { 0f.rf } ?: 0f.rf
 
     val outTan = subpath.outTangents.getOrNull(i)
-    val outX = outTan?.getOrElse(0) { 0f.rf }?.constantValueOrNull ?: 0f
-    val outY = outTan?.getOrElse(1) { 0f.rf }?.constantValueOrNull ?: 0f
+    val outX = outTan?.getOrElse(0) { 0f.rf } ?: 0f.rf
+    val outY = outTan?.getOrElse(1) { 0f.rf } ?: 0f.rf
 
     val vTwisted = twistPoint(vx, vy, cx, cy, angleDeg)
     val inPointTwisted = twistPoint(vx + inX, vy + inY, cx, cy, angleDeg)
     val outPointTwisted = twistPoint(vx + outX, vy + outY, cx, cy, angleDeg)
 
-    newVertices.add(listOf(vTwisted.x.rf, vTwisted.y.rf))
-    newInTangents.add(
-      listOf((inPointTwisted.x - vTwisted.x).rf, (inPointTwisted.y - vTwisted.y).rf)
-    )
-    newOutTangents.add(
-      listOf((outPointTwisted.x - vTwisted.x).rf, (outPointTwisted.y - vTwisted.y).rf)
-    )
+    newVertices.add(listOf(vTwisted.x, vTwisted.y))
+    newInTangents.add(listOf(inPointTwisted.x - vTwisted.x, inPointTwisted.y - vTwisted.y))
+    newOutTangents.add(listOf(outPointTwisted.x - vTwisted.x, outPointTwisted.y - vTwisted.y))
   }
 
   return RemoteBezierValue(
@@ -115,14 +120,23 @@ private fun applyTwistToSubpath(
     inTangents = newInTangents,
     outTangents = newOutTangents,
     vertices = newVertices,
+    topology = subpath.topology,
+    visibility = subpath.visibility,
   )
 }
 
-private fun twistPoint(px: Float, py: Float, cx: Float, cy: Float, angleDeg: Float): Point {
+@SuppressLint("RestrictedApi")
+private fun twistPoint(
+  px: RemoteFloat,
+  py: RemoteFloat,
+  cx: RemoteFloat,
+  cy: RemoteFloat,
+  angleDeg: RemoteFloat,
+): Point {
   val dx = px - cx
   val dy = py - cy
-  val dist = hypot(dx, dy)
-  val theta = Math.toRadians((angleDeg * dist / 100f).toDouble()).toFloat()
+  val dist = sqrt(dx * dx + dy * dy)
+  val theta = angleDeg * dist * (Math.PI.toFloat() / 18000f)
   val cosT = cos(theta)
   val sinT = sin(theta)
   val newX = cx + dx * cosT - dy * sinT

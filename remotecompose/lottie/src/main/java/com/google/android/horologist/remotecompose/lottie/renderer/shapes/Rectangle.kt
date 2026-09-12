@@ -27,6 +27,7 @@ import com.google.android.horologist.remotecompose.lottie.format.graphicelement.
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.RoundedCorners
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.TrimPath
 import com.google.android.horologist.remotecompose.lottie.renderer.RemoteLottiePath
+import com.google.android.horologist.remotecompose.lottie.renderer.properties.RemoteBezierTopology
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.RemoteBezierValue
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animatePosition
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateScalar
@@ -107,6 +108,13 @@ internal fun evaluateRectangle(
       inTangents = inTangents,
       outTangents = outTangents,
       vertices = vertices,
+      topology =
+        selectIfLe(clampedR, 0f.rf, 0f.rf, 1f.rf).let { split ->
+          RemoteBezierTopology(
+            listOf(1f.rf, 1f.rf, split, 1f.rf, split, 1f.rf, split, split),
+            listOf(1f.rf, split, 1f.rf, split, 1f.rf, split, 1f.rf, split),
+          )
+        },
     )
 
   return trimParametricPath(remoteBezier, trimPath, animationSettings)

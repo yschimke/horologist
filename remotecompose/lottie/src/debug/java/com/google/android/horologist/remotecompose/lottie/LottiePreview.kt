@@ -62,7 +62,7 @@ internal fun LottiePreview(
   progress: Float? = null,
 ) {
   val doc =
-    rememberRemoteDocument(clock = clock) {
+    rememberRemoteDocument(clock = clock, profile = LottieProfiles.NoRuntimeShaders) {
       // When progress is specified, bind the animation to a named RemoteFloat ("progress").
       // This allows updating progress dynamically via player.setUserLocalFloat("progress", value)
       // on the single compiled RemoteDocument, avoiding document regeneration on frame changes.
@@ -85,6 +85,8 @@ internal fun LottiePreview(
       modifier = modifier,
       documentWidth = animation.width,
       documentHeight = animation.height,
+      // Defense in depth: profile validation is a recording check, not a player policy.
+      init = { player -> player.setShaderControl { false } },
       update = { player ->
         if (progress != null) {
           player.setUserLocalFloat("progress", progress)

@@ -20,22 +20,49 @@ import android.annotation.SuppressLint
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.RoundedCorners
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.modifiers.TrimPath
-import com.google.android.horologist.remotecompose.lottie.format.properties.AnimatedBezierProperty
-import com.google.android.horologist.remotecompose.lottie.format.properties.AnimatedScalarProperty
 import com.google.android.horologist.remotecompose.lottie.format.properties.BaseBezierProperty
-import com.google.android.horologist.remotecompose.lottie.format.properties.BezierPropertyKeyframe
 import com.google.android.horologist.remotecompose.lottie.format.values.BezierValue
-import com.google.android.horologist.remotecompose.lottie.renderer.properties.RemoteBezierValue
+import com.google.android.horologist.remotecompose.lottie.renderer.RemoteBooleanPath
+import com.google.android.horologist.remotecompose.lottie.renderer.RemoteGroup
+import com.google.android.horologist.remotecompose.lottie.renderer.RemoteLottiePath
+import com.google.android.horologist.remotecompose.lottie.renderer.RemoteShape
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateBezier
-import com.google.android.horologist.remotecompose.lottie.renderer.properties.toRemote
-import com.google.android.horologist.remotecompose.lottie.renderer.scalarLinearEasingIn
-import com.google.android.horologist.remotecompose.lottie.renderer.scalarLinearEasingOut
-import kotlin.math.abs
-import kotlin.math.ceil
-import kotlin.math.floor
+import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateScalar
 import kotlin.math.hypot
 
 private const val ROUNDED_CORNER_CONTROL_POINT_CONSTANT = 0.5519f
+
+/** Applies rounding at its authored position, including earlier paints and styled groups. */
+@SuppressLint("RestrictedApi")
+internal fun evaluateRoundedCorners(
+  shapes: List<RemoteShape>,
+  rounding: RoundedCorners,
+  settings: LottieSettings,
+): List<RemoteShape> {
+  if (rounding.hidden?.constantValue == true || shapes.isEmpty()) return shapes
+  val radius = animateScalar(rounding.radius, settings)
+  if (radius.constantValueOrNull == 0f) return shapes
+  return shapes.map { shape ->
+    when (shape) {
+      is RemoteBooleanPath ->
+        error("RoundedCorners after a live boolean merge is not yet supported")
+      is RemoteLottiePath -> {
+        val source = shape.materializeTrim()
+        source.withPath(source.path.map { roundRemoteBezier(it, radius) })
+      }
+      is RemoteGroup ->
+        RemoteGroup(
+          shape.childShapes.map {
+            it.copy(shapes = evaluateRoundedCorners(it.shapes, rounding, settings))
+          },
+          shape.animationSettings,
+          shape.transform,
+          shape.opacityMultiplier,
+        )
+      else -> shape
+    }
+  }
+}
 
 /**
  * Rounds sharp corners of a [BezierValue] subpath with the given [radius].
@@ -64,8 +91,7 @@ internal fun roundBezierValue(subpath: BezierValue, radius: Float): BezierValue 
     val outX = outTan?.getOrElse(0) { 0f } ?: 0f
     val outY = outTan?.getOrElse(1) { 0f } ?: 0f
 
-    val isSharp =
-      abs(inX) < 0.0001f && abs(inY) < 0.0001f && abs(outX) < 0.0001f && abs(outY) < 0.0001f
+    val isSharp = inX == 0f && inY == 0f && outX == 0f && outY == 0f
 
     val prevPoint: Point? =
       when {
@@ -107,14 +133,14 @@ internal fun roundBezierValue(subpath: BezierValue, radius: Float): BezierValue 
       val dyNext = nextPoint.y - currY
       val lenNext = hypot(dxNext, dyNext)
 
-      if (lenPrev < 0.0001f || lenNext < 0.0001f) {
+      if (lenPrev == 0f && lenNext == 0f) {
         newVertices.add(listOf(currX, currY))
         newInTangents.add(listOf(inX, inY))
         newOutTangents.add(listOf(outX, outY))
       } else {
-        val maxR = minOf(maxOf(0f, radius), lenPrev / 2f, lenNext / 2f)
-        val tPrev = if (lenPrev > 0.0001f) maxR / lenPrev else 0f
-        val tNext = if (lenNext > 0.0001f) maxR / lenNext else 0f
+        val r = maxOf(0f, radius)
+        val tPrev = if (lenPrev > 0f) minOf(r / lenPrev, 0.5f) else 0f
+        val tNext = if (lenNext > 0f) minOf(r / lenNext, 0.5f) else 0f
 
         val pStartX = currX + dxPrev * tPrev
         val pStartY = currY + dyPrev * tPrev
@@ -147,176 +173,25 @@ internal fun roundBezierValue(subpath: BezierValue, radius: Float): BezierValue 
   )
 }
 
-/**
- * Evaluates a [BaseBezierProperty] together with optional [TrimPath] and [RoundedCorners] modifiers
- * into a list of [RemoteBezierValue]s.
- */
+/** Evaluates rounding at playback time instead of baking modifier results into keyframes. */
 @SuppressLint("RestrictedApi")
 internal fun evaluatePathGeometry(
   bezierProperty: BaseBezierProperty,
   trimPath: TrimPath?,
   roundedCorners: RoundedCorners?,
   animationSettings: LottieSettings,
-): List<RemoteBezierValue> {
+): RemoteLottiePath {
   val hasRounding = roundedCorners != null && roundedCorners.hidden?.constantValue != true
-  val hasTrim = trimPath != null && trimPath.hidden?.constantValue != true
-
-  if (!hasRounding && !hasTrim) {
-    return animateBezier(bezierProperty, animationSettings)
-  }
-
   if (!hasRounding) {
-    return evaluateTrimmedBezier(bezierProperty, trimPath, animationSettings)
+    return trimEvaluatedPaths(
+      animateBezier(bezierProperty, animationSettings),
+      trimPath,
+      animationSettings,
+    )
   }
-
-  val isRadiusAnimated = roundedCorners!!.radius is AnimatedScalarProperty
-  val isTrimAnimated =
-    hasTrim &&
-      (trimPath!!.start is AnimatedScalarProperty ||
-        trimPath.end is AnimatedScalarProperty ||
-        trimPath.offset is AnimatedScalarProperty)
-  val isBezierAnimated = bezierProperty is AnimatedBezierProperty
-
-  if (!isRadiusAnimated && !isTrimAnimated && !isBezierAnimated) {
-    val r = sampleScalar(roundedCorners.radius, 0f)
-    val baseSubpaths = sampleBezier(bezierProperty, 0f)
-    val roundedSubpaths = baseSubpaths.map { roundBezierValue(it, r) }
-    if (!hasTrim) {
-      return roundedSubpaths.map { it.toRemote() }
-    }
-    val s = sampleScalar(trimPath!!.start, 0f) / 100f
-    val e = sampleScalar(trimPath.end, 0f) / 100f
-    val o = sampleScalar(trimPath.offset, 0f) / 360f
-    val trimmed = roundedSubpaths.flatMap {
-      trimBezierValue(it, s, e, o, keepStructureIfDegenerate = false)
-    }
-    return trimmed.map { it.toRemote() }
-  }
-
-  val keyframeTimes = mutableSetOf<Float>()
-  (roundedCorners.radius as? AnimatedScalarProperty)?.keyframes?.forEach {
-    keyframeTimes.add(it.frame.constantValue)
-  }
-  if (hasTrim) {
-    (trimPath!!.start as? AnimatedScalarProperty)?.keyframes?.forEach {
-      keyframeTimes.add(it.frame.constantValue)
-    }
-    (trimPath.end as? AnimatedScalarProperty)?.keyframes?.forEach {
-      keyframeTimes.add(it.frame.constantValue)
-    }
-    (trimPath.offset as? AnimatedScalarProperty)?.keyframes?.forEach {
-      keyframeTimes.add(it.frame.constantValue)
-    }
-  }
-  (bezierProperty as? AnimatedBezierProperty)?.keyframes?.forEach {
-    keyframeTimes.add(it.frame.constantValue)
-  }
-
-  if (keyframeTimes.isEmpty()) {
-    val r = sampleScalar(roundedCorners.radius, 0f)
-    val baseSubpaths = sampleBezier(bezierProperty, 0f)
-    val roundedSubpaths = baseSubpaths.map { roundBezierValue(it, r) }
-    if (!hasTrim) {
-      return roundedSubpaths.map { it.toRemote() }
-    }
-    val s = sampleScalar(trimPath!!.start, 0f) / 100f
-    val e = sampleScalar(trimPath.end, 0f) / 100f
-    val o = sampleScalar(trimPath.offset, 0f) / 360f
-    val trimmed = roundedSubpaths.flatMap {
-      trimBezierValue(it, s, e, o, keepStructureIfDegenerate = false)
-    }
-    return trimmed.map { it.toRemote() }
-  }
-
-  val sortedTimes = keyframeTimes.sorted()
-  val keyframes = mutableListOf<BezierPropertyKeyframe>()
-
-  val sampleTimes =
-    if (hasTrim && isTrimAnimated) {
-      val frames = mutableSetOf<Float>()
-      if (sortedTimes.size <= 1) {
-        frames.addAll(sortedTimes)
-        frames.add(0f)
-      } else {
-        for (i in 0 until sortedTimes.size - 1) {
-          val t0 = sortedTimes[i]
-          val t1 = sortedTimes[i + 1]
-          frames.add(t0)
-          frames.add(t1)
-          val startInt = ceil(t0).toInt()
-          val endInt = floor(t1).toInt()
-          for (frameInt in startInt..endInt) {
-            frames.add(frameInt.toFloat())
-          }
-        }
-      }
-      frames.sorted()
-    } else {
-      sortedTimes
-    }
-
-  for (f in sampleTimes) {
-    val r = sampleScalar(roundedCorners.radius, f)
-    val baseSubpaths = sampleBezier(bezierProperty, f)
-    val roundedSubpaths = baseSubpaths.map { roundBezierValue(it, r) }
-    val finalSubpaths =
-      if (hasTrim) {
-        val s = sampleScalar(trimPath!!.start, f) / 100f
-        val e = sampleScalar(trimPath.end, f) / 100f
-        val o = sampleScalar(trimPath.offset, f) / 360f
-        roundedSubpaths.flatMap { trimBezierValue(it, s, e, o, keepStructureIfDegenerate = true) }
-      } else {
-        roundedSubpaths
-      }
-
-    if (hasTrim && isTrimAnimated) {
-      keyframes.add(
-        BezierPropertyKeyframe(
-          frame = f,
-          value = finalSubpaths,
-          inTangent = scalarLinearEasingIn,
-          outTangent = scalarLinearEasingOut,
-          hold = false,
-        )
-      )
-    } else {
-      val primaryScalarKf =
-        (roundedCorners.radius as? AnimatedScalarProperty)?.keyframes?.firstOrNull {
-          it.frame.constantValue == f
-        }
-          ?: if (hasTrim) {
-            (trimPath!!.start as? AnimatedScalarProperty)?.keyframes?.firstOrNull {
-              it.frame.constantValue == f
-            }
-              ?: (trimPath.end as? AnimatedScalarProperty)?.keyframes?.firstOrNull {
-                it.frame.constantValue == f
-              }
-              ?: (trimPath.offset as? AnimatedScalarProperty)?.keyframes?.firstOrNull {
-                it.frame.constantValue == f
-              }
-          } else null
-
-      val bezierKf =
-        (bezierProperty as? AnimatedBezierProperty)?.keyframes?.firstOrNull {
-          it.frame.constantValue == f
-        }
-
-      val inTangent = primaryScalarKf?.inTangent ?: bezierKf?.inTangent
-      val outTangent = primaryScalarKf?.outTangent ?: bezierKf?.outTangent
-      val hold = primaryScalarKf?.hold?.constantValue ?: bezierKf?.hold?.constantValue ?: false
-
-      keyframes.add(
-        BezierPropertyKeyframe(
-          frame = f,
-          value = finalSubpaths,
-          inTangent = inTangent,
-          outTangent = outTangent,
-          hold = hold,
-        )
-      )
-    }
-  }
-
-  val animatedEvaluatedBezier = AnimatedBezierProperty(keyframes = keyframes)
-  return animateBezier(animatedEvaluatedBezier, animationSettings)
+  val radius = animateScalar(roundedCorners!!.radius, animationSettings)
+  val paths = animateBezier(bezierProperty, animationSettings).map { roundRemoteBezier(it, radius) }
+  // Rounded contours share the same arc-length domain and clamping policy as other paths.
+  // Keep a single contour on native playback trimming; materialize compound cuts together.
+  return trimEvaluatedPaths(paths, trimPath, animationSettings, playback = true)
 }

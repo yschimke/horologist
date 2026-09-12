@@ -25,6 +25,9 @@ import androidx.compose.remote.creation.compose.state.RemoteFloat
 import androidx.compose.remote.creation.compose.state.RemotePaint
 import androidx.compose.remote.creation.compose.state.rc
 import androidx.compose.remote.creation.compose.state.rf
+import androidx.compose.remote.creation.compose.state.rs
+import androidx.compose.remote.creation.compose.state.selectIfLt
+import androidx.compose.remote.creation.compose.text.RemoteTypeface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PaintingStyle
@@ -95,8 +98,37 @@ internal fun TextLayer(
   val docProperty = textData.document ?: return
   val animationSettings = LocalAnimationSettings.current
 
-  val constFrame = animationSettings.currentFrame.constantValueOrNull ?: 0f
-  val currentDoc = evaluateTextDocument(docProperty, constFrame) ?: return
+  // Documents are discrete keyframes. Record each once and select it on the player's timeline.
+  val documents = docProperty.keyframes.filter { it.start != null }
+  for ((index, keyframe) in documents.withIndex()) {
+    val start =
+      if (index == 0) 1f.rf
+      else selectIfLt(animationSettings.currentFrame, (keyframe.time ?: 0f).rf, 0f.rf, 1f.rf)
+    val end =
+      documents.getOrNull(index + 1)?.let {
+        selectIfLt(animationSettings.currentFrame, (it.time ?: 0f).rf, 1f.rf, 0f.rf)
+      } ?: 1f.rf
+    RenderTextDocument(
+      layer,
+      keyframe.start!!,
+      transformStack,
+      matteContext,
+      layerVisibility * start * end,
+    )
+  }
+}
+
+@SuppressLint("RestrictedApi")
+@Composable
+@RemoteComposable
+private fun RenderTextDocument(
+  layer: TextLayer,
+  currentDoc: TextDocument,
+  transformStack: List<Transform>,
+  matteContext: MatteContext?,
+  layerVisibility: RemoteFloat,
+) {
+  val animationSettings = LocalAnimationSettings.current
   val text = currentDoc.text
   if (text.isEmpty()) {
     return
@@ -117,9 +149,19 @@ internal fun TextLayer(
   val fillColor = currentDoc.fillColor?.let { parseColorFromList(it) } ?: Color.Black
   val strokeColor = currentDoc.strokeColor?.let { parseColorFromList(it) }
   val strokeWidth = currentDoc.strokeWidth ?: 0f
+  val font = animationSettings.fonts?.list?.firstOrNull { it.name == currentDoc.fontName }
+  val fontFamily = font?.family?.takeIf { it.isNotEmpty() } ?: currentDoc.fontName
+  val typeface =
+    RemoteTypeface.Named(
+      fontFamily,
+      weight = if (font?.style?.contains("bold", ignoreCase = true) == true) 700 else 400,
+      isItalic = font?.style?.contains("italic", ignoreCase = true) == true,
+    )
 
   val fillPaint = RemotePaint {
     this.color = fillColor.rc.copy(alpha = fillColor.rc.alpha * layerOpacity)
+    this.textSize = fontSize.rf
+    this.typeface = typeface
   }
   val strokePaint =
     if (strokeColor != null && strokeWidth > 0f) {
@@ -127,6 +169,8 @@ internal fun TextLayer(
         this.color = strokeColor.rc.copy(alpha = strokeColor.rc.alpha * layerOpacity)
         this.style = PaintingStyle.Stroke
         this.strokeWidth = strokeWidth.rf
+        this.textSize = fontSize.rf
+        this.typeface = typeface
       }
     } else {
       null
@@ -161,7 +205,7 @@ internal fun TextLayer(
     }
 
     // Render glyph vector shapes if chars are available in animation
-    if (charsMap.isNotEmpty()) {
+    run {
       val lines = text.split(Regex("\r\n|\r|\n"))
       val effLineHeight = currentDoc.lineHeight ?: (fontSize * 1.2f)
       val baselineShift = currentDoc.baselineShift ?: 0f
@@ -169,19 +213,28 @@ internal fun TextLayer(
 
       for ((lineIndex, lineText) in lines.withIndex()) {
         var totalLineWidth = 0f
-        val glyphs = mutableListOf<Pair<FontChar, Float>>()
-        for (ch in lineText) {
-          val fontChar =
-            charsMap.firstOrNull {
-              it.character == ch.toString() &&
-                (it.family == currentDoc.fontName || it.family.isEmpty())
-            } ?: charsMap.firstOrNull { it.character == ch.toString() }
-          if (fontChar != null) {
-            val fontScale = if (fontChar.size > 0f) fontSize / fontChar.size else fontSize / 100f
-            val advance = (fontChar.width * fontScale) + (tracking * (fontSize / 1000f))
-            glyphs.add(fontChar to advance)
-            totalLineWidth += advance
+        val glyphs = mutableListOf<Triple<String, FontChar?, Float>>()
+        val measurer =
+          android.graphics.Paint().apply {
+            textSize = fontSize
+            this.typeface = typeface.toAndroidTypeface()
           }
+        val characters = lineText.codePoints().toArray().map { String(Character.toChars(it)) }
+        for ((index, ch) in characters.withIndex()) {
+          val fontChar = charsMap.firstOrNull {
+            it.character == ch &&
+              (it.family == fontFamily || it.family.isEmpty()) &&
+              (it.style.isEmpty() || font == null || it.style == font.style)
+          }
+          val width =
+            if (fontChar != null) {
+              fontChar.width *
+                (if (fontChar.size > 0f) fontSize / fontChar.size else fontSize / 100f)
+            } else measurer.measureText(ch)
+          val advance =
+            width + if (index < characters.lastIndex) tracking * (fontSize / 1000f) else 0f
+          glyphs.add(Triple(ch, fontChar, advance))
+          totalLineWidth += advance
         }
 
         var currentX =
@@ -194,7 +247,16 @@ internal fun TextLayer(
           }
         val currentY = (lineIndex * effLineHeight) - baselineShift
 
-        for ((fontChar, advance) in glyphs) {
+        for ((character, fontChar, advance) in glyphs) {
+          if (fontChar == null) {
+            if (!strokeOverFill && strokePaint != null)
+              remoteCanvas.drawText(character.rs, currentX.rf, currentY.rf, strokePaint)
+            remoteCanvas.drawText(character.rs, currentX.rf, currentY.rf, fillPaint)
+            if (strokeOverFill && strokePaint != null)
+              remoteCanvas.drawText(character.rs, currentX.rf, currentY.rf, strokePaint)
+            currentX += advance
+            continue
+          }
           val fontScale = if (fontChar.size > 0f) fontSize / fontChar.size else fontSize / 100f
           val shapes = fontChar.shapeData?.shapes.orEmpty()
           if (shapes.isNotEmpty()) {

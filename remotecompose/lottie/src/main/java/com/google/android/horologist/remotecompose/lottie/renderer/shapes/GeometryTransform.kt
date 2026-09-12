@@ -25,12 +25,25 @@ import androidx.compose.remote.creation.compose.state.tan
 import androidx.compose.remote.creation.compose.state.toRad
 import com.google.android.horologist.remotecompose.lottie.LottieSettings
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.grouping.Transform
+import com.google.android.horologist.remotecompose.lottie.renderer.RemoteBooleanPath
 import com.google.android.horologist.remotecompose.lottie.renderer.RemoteLottiePath
 import com.google.android.horologist.remotecompose.lottie.renderer.RemoteShape
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.RemoteBezierValue
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animatePosition
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateScalar
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateVector
+
+/** A path-space boundary retained until modifiers have finished evaluating its source geometry. */
+@SuppressLint("RestrictedApi")
+internal data class DeferredPathTransform(
+  val transform: Transform,
+  val settings: LottieSettings,
+  val repeaterStep: RemoteFloat? = null,
+) {
+  fun apply(path: RemoteBezierValue): RemoteBezierValue =
+    if (repeaterStep == null) transformBezierValue(path, transform, settings)
+    else transformRepeaterBezierValue(path, transform, repeaterStep, settings)
+}
 
 /**
  * Transforms a [RemoteShape] geometry by a Lottie [Transform] definition into the parent coordinate
@@ -44,13 +57,19 @@ internal fun transformRemoteShape(
 ): RemoteShape {
   return when (shape) {
     is RemoteLottiePath -> transformLottiePath(shape, transform, animationSettings)
+    is RemoteBooleanPath ->
+      RemoteBooleanPath(
+        transformRemoteShape(shape.remainder, transform, animationSettings),
+        transformRemoteShape(shape.last, transform, animationSettings),
+        shape.operation,
+      )
     else -> shape
   }
 }
 
 /**
- * Transforms all subpaths of a [RemoteLottiePath] by applying anchor point, scale, skew, rotation,
- * and translation transformations directly to path vertices and control points.
+ * Retains an affine path-space boundary. Resolving it after modifiers preserves their local radius,
+ * center and amplitude while still letting the final paint combine transformed contours.
  */
 @SuppressLint("RestrictedApi")
 internal fun transformLottiePath(
@@ -58,9 +77,14 @@ internal fun transformLottiePath(
   transform: Transform,
   animationSettings: LottieSettings,
 ): RemoteLottiePath {
-  val transformedSubpaths =
-    lottiePath.path.map { subpath -> transformBezierValue(subpath, transform, animationSettings) }
-  return RemoteLottiePath(transformedSubpaths, lottiePath.fillRule, lottiePath.trim)
+  return RemoteLottiePath(
+    lottiePath.path,
+    lottiePath.fillRule,
+    lottiePath.trim,
+    lottiePath.geometryTransforms + DeferredPathTransform(transform, animationSettings),
+    lottiePath.geometryVisibility,
+    lottiePath.identity,
+  )
 }
 
 /** Transforms a single [RemoteBezierValue] by a Lottie [Transform]. */
@@ -127,6 +151,8 @@ internal fun transformBezierValue(
     inTangents = newInTangents,
     outTangents = newOutTangents,
     vertices = newVertices,
+    topology = subpath.topology,
+    visibility = subpath.visibility,
   )
 }
 

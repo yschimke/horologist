@@ -7,9 +7,1826 @@ Comparison main: 3db533155202db8ed7a48b232feb4b90c1240fc8 (local origin/main)
 Scope: remotecompose/lottie, including parsing, property evaluation, layer and
 shape rendering, masks/mattes, modifiers, sample previews, and test coverage.
 No upstream issues have been filed. This file is a backlog for later reporting.
-19 findings: eight addressed here (R01, R02, R03, R04, R11, R12, R13, R19).
-R07 timing, R09 parametric trim/rounding, and R10 basic repeater decoding/opacity
-are also fixed; their remaining portions are among eleven follow-ups.
+54 findings, including the color-space mismatch discovered using CC0 reference
+fixtures (R20), unnecessary precomp rasterization (R21), and pucker/bloat math
+(R22), boolean operand grouping/winding (R23), and a pinned reference-renderer
+XOR discrepancy (R24), trim/rounded-corner scope and trim composition (R25), and
+ignored stroke miter limits (R26), zigzag geometry/timing errors (R27), and
+polygon offset joins/winding/open-contour errors (R28), and polystar topology and
+fractional-geometry errors (R29), separately rendered compound fills (R30), and
+keyframe-baked rounded corners and incorrect edge clamps (R31), and geometry
+modifiers lost after paints and across group/instance views (R32), and static-only
+curved offsets, degenerate control edges and unstable inflection evaluation (R33),
+and recording-capacity slots corrupting later pucker/bloat geometry (R34), and
+rounded-corner modifier ordering and logical adjacency (R35), and premature
+group-transform application before inherited modifiers (R36), and repeater
+path/paint scope, transform composition and inactive-copy artifacts (R37), grouped
+merge operand/paint consumption errors (R38), and reference-player cached-path
+mutation during grouped merges (R39), and rejected nested live Boolean trees
+and lost operand winding (R40), and keyframe/whole-frame-baked trim geometry (R41),
+and trim lookahead bypassing preceding deformation (R42), deferred live trims
+feeding uncut controls to later modifiers (R43), and native PathIterator payload
+offsets corrupting extracted merge curves (R44), NaN-payload expression-cache
+collisions (R45), silently discarded oversized float state (R46), coarse
+constant-cut controls (R47), discarded single-vertex closed loops (R48), and
+per-contour rather than compound arc-length trims (R49), and ignored trim mode
+with duplicated paint-view length domains (R50), and discarded/self-pruned
+single-vertex closed offset loops (R51), and unnecessarily rejected ordinary-layer
+time-stretch metadata (R52), and offset traversal through inactive recording slots
+and oversized live offset expressions (R53), and unsorted reference intersection
+candidates selecting near-endpoint roots before interior crossings (R54).
+See the current support/verification update below for the latest
+status; original reproductions are retained as upstream-report history.
+
+CURRENT IMPLEMENTATION UPDATE — 2026-09-12
+----------------------------------------
+Completion audit: the implementation task list is still open. In particular,
+R09's remaining geometry modifier implementations and R10's broader modifier-order
+coverage are not made complete by rejecting unsupported inputs. Explicit rejection
+is the safe interim behavior, not evidence of full implementation. Shader-disabled
+generation is the selected user-approved behavior for the RC luminance limitation.
+R53's live rounded-star fixture now passes against an independently justified
+root-order correction (R54). The raw upstream reference is retained, not silently
+replaced with Kotlin output. The broader offset cleanup and modifier-order task
+list is still open; passing these fixtures does not establish arbitrary-input parity.
+
+Previous verification after R54: 876 passed, zero failed, sixteen skipped (892
+discovered). Full module check, debug assembly, API compatibility, lint, formatting
+and screenshot verification all pass. Nine offset-topology scenarios / 49 unique
+frame pairs pass the unchanged 0.0002 mean / 0.3 peak bounds. The reference/RC
+sheet was visually checked, including the new static 5.4-point star control.
+The live star's worst mean error is now 0.000006, rather than the reference-order
+mismatch at frame 6. This is a green checkpoint, not completion of the task list;
+R53 below records the subsequent split-group cross-pruning implementation.
+compose-preview renders all 45 previews unchanged, with no missing/skipped output.
+The coverage/motion audit passes for 21 samples and 22 GIFs (sixteen moving,
+six static inputs). The shader-disabled profile and player policy are unchanged.
+
+Previous verification after split-group cross-pruning: 881 passed, zero failed,
+sixteen skipped (897 discovered). Full module check, debug assembly, API
+compatibility, lint, formatting and screenshot verification pass. The expanded
+offset-topology audit passes 13 scenarios / 73 unique frame pairs under unchanged
+bounds; the reference/RC sheet was visually reviewed, including padded and
+unpadded split-group crossings. The curved-offset audit passes 30 cases / 320
+frame pairs. compose-preview renders all 45 previews unchanged with zero missing
+or skipped outputs. Coverage, visible-content and expected-motion checks pass for
+all 21 samples and 22 GIFs (sixteen moving, six intentionally static). These are
+bounded regression checks, not completion of general offset cleanup or R09/R10.
+
+Previous green verification after animated offset amounts and the compound-rounding
+evaluator fix: 889 passed, zero failed, sixteen skipped (905 discovered). Debug
+assembly, full module check, API compatibility, lint, formatting and Roborazzi
+verification all pass. The 117-pair offset-topology, 320-pair curved-offset,
+110-pair rounding, 1008-pair trim and 1586-pair reference-parity audits pass.
+The new offset comparisons were visually reviewed; the compound-rounding tests
+check independently calculated coordinates and live player values. All 45
+compose-preview outputs are unchanged, with zero missing/skipped renders.
+No screenshot goldens, error bounds or test exclusions changed in this pass.
+The broader completion audit above remains open.
+
+Wrap-up state: a new active regression, RoundedCompoundGeometryTest.
+twoClosedContoursWithChangingRadiusAndTrim, fails during recording at RC's
+10000-entry float-state limit. Two 20x20 closed square contours, a rounding
+radius animated 0->8, and a shared trim end animated 25->75% reproduce it.
+The smaller two-open-contour case with both radius and cut changing passes.
+This is another concrete R46 capacity limitation; the full test suite must not
+be reported green while this regression fails. The test remains enabled.
+Suggested fix: compact curve-length measurement and cut inversion with shared
+player-side scratch storage, while retaining spatial accuracy and player limits.
+Experiments with binary table lookup, fused distance accumulation and shared
+straight-parameter inversion did not resolve the larger case and were reverted
+when the user requested wrap-up. Production code is back to the preceding
+verified implementation; the new tests and this reproduction are retained.
+Final wrap-up compilation passes: :remotecompose:lottie:assembleDebug,
+:remotecompose:lottie:assembleRelease and :remotecompose:lottie:compileDebugUnitTestKotlin.
+This compile-only check does not execute or clear the known failing regression.
+
+Expanded preview audit: all 21 bundled files now have numerical comparisons at
+13 common authored-frame coordinates (273 frame pairs), including the original
+15 samples as well as CC0 inputs. The test also normalizes error over the union
+of visible artwork so empty background cannot hide a missing small shape.
+Both images and metrics are saved under build/outputs/lottie-parity/<sample>/.
+tools/check_parity.py verifies sample/frame coverage and creates reference/RC
+review sheets. All frame pairs passed after the R21 fix; the sheets were reviewed.
+This validates sampled frames, not every possible frame or arbitrary input file.
+
+Reference-oracle correction: lottie-android's parsed end frame is op minus 0.01,
+whereas RC's public progress maps to a half-open [ip,op) interval. At progress=0.5
+in cc0_precomp_stretch, the old oracle sampled opposite sides of layer op=30.5.
+The comparison now sends both renderers the same authored frame, without changing
+either renderer's endpoint policy or loosening image tolerances.
+
+R21 [P2] Clipping-only precomps unnecessarily rasterize vector artwork
+Location: renderer/layers/LayerEffects.kt.
+Reproduction: cc0_precomp_stretch rendered at 2x composition dimensions has softer
+edges than the reference; worst foreground RGB MAE was 3.95% across 13 frames.
+Cause: declared precomp bounds always allocated an offscreen bitmap at composition
+resolution, even without masks, mattes or blending. Upscaling softened its edges.
+Applied fix: clip-only precomps use transformed canvas clipping and retain vector
+drawing. Real compositing effects still use offscreen surfaces.
+Evidence: worst foreground error falls to 0.26%; a new stricter 1% fixture bound
+passes along with compositing/timing regressions. Real offscreen effects can still
+soften at enlarged output sizes; output-scale-aware surfaces remain a follow-up.
+
+R22 [P1] Pucker/bloat uses arbitrary coefficients and reverses vertex displacement
+Location: renderer/shapes/PuckerBloat.kt.
+Cause: positive amount pushes vertices away from the centroid using 0.1 instead
+of pulling toward it; tangent offsets use unrelated 0.5519 factors and signs.
+The reference moves vertices toward the centroid by amount/100 and absolute
+control points away by the same fraction. Relative controls must be recomputed
+from the moved vertices. Before the fix, live values failed the interim static guard.
+Applied fix: express the reference centroid/vertex/control-point transform in
+RemoteFloat arithmetic and keep animated geometry/amounts live. Four regression
+tests failed before the fix and now pass: positive/negative analytic control
+points, animated amounts, and moving geometry with a live centroid. No raster
+sampling or frame-zero freezing is involved. Other R09 modifiers remain open.
+Reference implementation (pinned):
+https://github.com/airbnb/lottie-web/blob/v5.12.2/player/js/utils/shapes/PuckerAndBloatModifier.js
+
+R23 [P1] Boolean merge ordering, winding and live geometry are incorrect
+Locations: renderer/shapes/MergePaths.kt and renderer/RemoteBooleanPath.kt.
+Reproduction: three rectangles, first centered (16,24), second (48,24), both
+20x20, last centered (32,32), size 40x24. Follow them with mm=3/4/5 and a red
+fill. Pairwise reduction loses the second rectangle during subtraction and
+returns empty intersection, instead of combining the last rectangle against
+the concatenation of the earlier contours. Dropping a Skia result's EVEN_ODD
+winding fills holes excluded by XOR. Animating the first rectangle previously
+failed the CPU geometry guard.
+Applied fix: concatenate earlier contours, combine once against the final
+operand, retain the boolean result's winding, and use RC PATH_COMBINE for live
+coordinates. Static results still expose Bezier geometry to later modifiers;
+live boolean results retain operands for affine transforms/repeaters. The later
+R40 follow-up supports nested binary live operations. Runtime contour concatenation,
+later nonlinear modifiers and playback-trimmed operands still need implementation
+and remain explicitly rejected, not silently flattened.
+Evidence: of eight initial static/moving reference cases, seven failed before
+the change. Additional analytic probes test both excluded XOR overlaps.
+The XOR reference comparison uses explicit even-odd fill for the reason in R24.
+All 10 merge reference cases (four modes static/live, parent transform, repeater)
+match at 13 authored-frame coordinates each with zero measured RGB error. Their
+review sheets were visually checked. The two non-zero XOR region tests also pass.
+R40 adds nested operand winding checks; larger modifier chains remain open.
+Reference operand-order source:
+https://github.com/airbnb/lottie-android/blob/v6.7.1/lottie/src/main/java/com/airbnb/lottie/animation/content/MergePathsContent.java
+
+R24 [P2] lottie-android 6.7.1 non-zero fill can reinterpret XOR output
+Report target: lottie-android; not verified against later releases.
+Reproduction: R23's three-rectangle fixture, mm=5, fill r=1. The reference fills
+one overlap which set exclusion should remove; changing only r to 2 leaves both
+overlaps empty. The original reference mismatch reached 11.15% foreground RGB
+MAE at frame zero. FillContent appends the boolean result to a new path whose
+fill type comes from the fill style, losing the operation's own EVEN_ODD rule.
+Suggested fix: normalize boolean result contour orientation before appending
+to a non-zero fill path, or otherwise preserve its filled region. RC preserves
+the boolean result winding; it does not duplicate this reference discrepancy.
+Tests separately assert non-zero XOR interior/exterior pixels and compare the
+even-odd fixture against the reference. No image-error tolerance was loosened.
+This is a tracked compatibility difference, not a claim of r=1 reference parity.
+Source:
+https://github.com/airbnb/lottie-android/blob/v6.7.1/lottie/src/main/java/com/airbnb/lottie/animation/content/FillContent.java
+
+User choice: keep unsupported features explicit; do not add raster fallbacks.
+No claim of full Lottie specification coverage is made.
+
+R25 [P1] Trim/rounding scope leaks into later siblings; compound trims are discarded
+Locations: renderer/Shape.kt and renderer/RemoteShape.kt (RemotePathTrim).
+Reproduction: put a 25% trim before a rectangle, or between two rectangles,
+followed by a stroke. Only geometry preceding the trim should be affected. The
+old whole-list lookup also trimmed later rectangles and groups. A 75% trim
+followed by a 50% trim kept 75%, instead of trimming that visible extent again.
+Applied fix: collect trims from each shape/group's following siblings, retain
+that scope when a parent provides its stroke, and apply local plus inherited
+trims in order. Additional trims map their intervals into the previously visible
+range using live RemoteFloat expressions. No raster fallback or frozen frames.
+Compound interval expansion is bounded at 256 recorded intervals.
+Rounded corners now use the same following-sibling scope, including inherited
+group strokes; a modifier before a shape/group must not round that later content.
+Evidence: five of six initial reference cases failed before the fix, then passed;
+two of three additional rounded-corner cases also failed before the scope fix.
+All 13 scope/compound cases now pass at 13 authored-frame coordinates, together
+with the 11 existing moving-geometry tests (24 tests total). The compound tests
+include moving geometry, animated trim values, non-wrapped offsets and local plus
+parent trim chains. Diagnostics are saved under build/outputs/lottie-parity/trim_*/
+and round_*/. Wrapped compound trims, multiple contour
+measurement, individually-trimmed stroke groups (m=2), and trim ordering against
+nonlinear deformation remain separate open cases; they are not established by
+the scoped/non-wrapped tests.
+Reference scope/composition source:
+https://github.com/airbnb/lottie-android/blob/v6.7.1/lottie/src/main/java/com/airbnb/lottie/animation/content/ShapeContent.java
+https://github.com/airbnb/lottie-android/blob/v6.7.1/lottie/src/main/java/com/airbnb/lottie/animation/content/CompoundTrimPathContent.java
+
+R26 [P2] Solid and gradient strokes ignore parsed miter limits
+Location: renderer/RemoteStyle.kt, RemoteStroke and RemoteGradientStroke.
+Reproduction: a square with a 10-unit miter-join stroke and ml=0 should bevel its
+corners; RC keeps the default long corners. The difference was visible on R25's
+reference/RC sheets even though its thin strokes stayed within the 3% error bound.
+Cause: both style classes store the parsed/animated miter limit but never send
+it to the player. alpha19's RemotePaint has no stroke-miter property.
+Applied fix: serialize the miter value through PaintBundle with live dependency
+roots, together with the existing dash state. Opacity wrappers retain the limit;
+each style resets extra stroke state to avoid leaking it to subsequent content.
+Evidence: four of six new pixel tests fail before the fix (low static limits and
+animated solid/gradient limits); high-limit controls pass. Static cases compare
+against lottie-android. Animated tests update one document at frames 0/5/10 and
+compare against explicit bevel/miter join fixtures, independently of ml2 support
+in the reference renderer. See the verification results below for final status.
+All six tests now pass. The four static reference cases have zero measured RGB
+error at all 13 authored frames; the dynamic cases match explicit join fixtures
+at all three sampled frames. R25's original corner discrepancies also disappear.
+
+R27 [P1] Zigzag uses the wrong ridge count, amplitude and curve geometry
+Location: renderer/shapes/ZigZag.kt; renderer/Animation.kt;
+format/graphicelement/modifiers/ZigZag.kt.
+Cause: the old algorithm inserts twice ceil(ridges) points along the straight
+chord, displaces them by half the size, leaves original corners in place, and
+retains unrelated original handles. The pinned web implementation rounds the
+ridge count, samples the actual cubic parameter and normal, displaces corners
+too, and constructs distinct smooth handles. Zero ridges does not disable it.
+Live size, ridge count and geometry were all explicitly rejected by CPU guards.
+Applied fix: compute the reference cubic/normal/corner geometry in RemoteFloat.
+Keyframe/easing bounds allocate up to 1024 ridge slots per segment (65536 output
+vertices per contour). Unused slots collapse at endpoints without extra control
+loops; active count and parity remain live. Exact zero size restores the original
+cubic, including its controls. No frame sampling or raster fallback is involved.
+A diagonal timing curve now returns the exact clamped progress instead of a
+sample-table approximation: the latter missed the -4 to 6 zero crossing at
+frame 4/10 and left zigzag enabled, visibly straightening the original curve.
+Evidence: the initial ten tests all failed before implementation. Offline fixtures
+are generated by executing pinned lottie-web code, not this Kotlin renderer.
+They cover corner/smooth points, open/closed curves, fractional/zero ridges,
+negative/zero size, degenerate paths and live size/ridge-count/geometry changes.
+Broader modifier-order and post-live-boolean combinations remain under R10/R23.
+Point-type follow-up: the fixed-enum parser silently replaced scalar-property
+objects (including a static smooth value) with Corner after catching a decoding
+exception. It now accepts both legacy numeric input and static/animated scalar
+properties. RemoteFloat selectors keep corner/smooth handles live. As in the web
+reference, only an exact value of 2 is smooth; interpolated fractions are not
+rounded to an enum. Malformed properties fail instead of silently changing style.
+Eight new native playback regressions failed before this fix and pass afterward.
+They cover open/closed paths, static property-form smooth points, multi-keyframe
+holds with a return to Corner, and increasing/decreasing interpolation through 2.
+Five decoding/round-trip tests additionally cover defaults, legacy numbers,
+static and held properties, and rejection of malformed values.
+Residual tracked difference: float32 expression evaluation versus the generated
+reference changes a few antialiased smooth-join edge pixels in two closed-path
+motion cases. Worst whole-image red MAE is 0.000022 (0.0022%); worst single-pixel
+difference is 49/255. Geometry coordinates/controls still satisfy the 0.001-unit
+bound. Those two cases use a full-image mean bound of 0.00005 and an outlier bound
+of 0.25; other playback tests retain their existing strict comparison. The
+independent capture auditor applies these tight full-image bounds to all 220
+frames. This is tracked numerical/raster variance, not claimed pixel identity.
+All 27 focused playback/geometry tests pass, covering 32 static geometry cases, 20 motion cases at
+11 frames each, and exact linear timing. The reference/RC review sheets were
+visually checked. A future precision investigation should compare emitted cubic
+control coordinates at the affected joins before changing raster tolerances.
+Reference source and reproducible offline-fixture generator:
+https://github.com/airbnb/lottie-web/blob/v5.12.2/player/js/utils/shapes/ZigZagModifier.js
+https://github.com/airbnb/lottie-web/blob/v5.12.2/player/js/utils/PolynomialBezier.js
+tools/generate_zigzag_reference.mjs -> src/test/resources/zigzag-reference.json
+
+R28 [P1] Polygon offsets ignore joins, winding direction and the other side of open paths
+Locations: renderer/shapes/OffsetPath.kt, new OffsetPolygon.kt, properties/Bezier.kt.
+Cause: lineJoin is unused, over-limit miters keep only one endpoint instead of
+beveling, signed area flips the offset normal to always point outward, and open
+paths produce only a displaced centerline. Live amounts and geometry are rejected.
+Applied polygon fix: right-side edge normals, distinct bevel/miter/circular joins,
+inner-corner intersection, live absolute miter limits, and forward/reverse contours
+for open paths with round caps where requested. A fixed three-vertex join remains
+live as its type changes. Duplicate/zero-length edges are skipped in linear time;
+their unused joins collapse without control loops. Source contour size is capped
+at 16384 vertices. No time sampling or raster fallback is used.
+The triangle playback repro initially failed because unchanged zero handles were
+wrapped in dynamic interpolation. Bézier interpolation, holds and segment selection
+now preserve invariant coordinates as constants without freezing varying vertices.
+Evidence: 12 offset playback cases at 11 frames cover amount crossing zero, moving
+rectangles (including their duplicate corner vertices), changing triangle normals,
+reverse winding, miter-limit transitions, and both sides/caps of open paths.
+Their oracles are analytic half-plane intersections, bevel polygons and circular
+arcs, not production offset helpers. Existing Bézier/zigzag tests also pass.
+Three direct tests additionally cover invariant handles in linear, held and delayed
+keyframe chains. The curved branch was still CPU-only at this stage; R33 replaces
+it with live curve evaluation and separate reference/analytic checks. Global
+self-intersection cleanup, collapse of eroded contours and more complex modifier
+chains remain incomplete, not verified by the polygon tests.
+
+Reference compatibility observations for later upstream investigation:
+tools/generate_offset_reference.mjs executes pinned lottie-web code and records
+36 static / 36 motion scenarios in src/test/resources/offset-reference.json.
+These are audit data, not a claim that all those scenarios are implemented here.
+The square-1--4 reference retains backtracking vertices outside the mathematical
+inset square. The square-2-4 round join uses a 3.122018-unit handle; a true radius-4
+quarter-circle approximation needs 2.209139. Its join-center calculation constructs
+parallel lines and falls back to half the chord as radius. RC's analytic polygon
+tests do not copy these discrepancies. The reference's absolute miter distance
+test (rather than amount-scaled ratio) is retained. Pixel repros against the actual
+lottie-web host, beyond the generated coordinate evidence, are still needed before
+filing these reference-renderer observations.
+https://github.com/airbnb/lottie-web/blob/v5.12.2/player/js/utils/shapes/OffsetPathModifier.js
+
+R29 [P1] Animated polystar point counts fail; fractional geometry is misconstructed
+Locations: renderer/shapes/PolyStar.kt, new PolystarTopology.kt.
+Cause: point counts are required to be constant, fractional stars omit the initial
+half-angle adjustment, and fractional polygons allocate ceil(points) vertices
+while their angular step uses floor(points). Stars also ignore reverse direction.
+Applied fix: live point-count expressions with a finite keyframe/easing capacity
+bound (at most 1024 points), dynamic fractional-star start angle/radius/handles,
+floor-count polygons, and live collapsed slots for unused vertices. The first
+collapsed slot alone owns the closing incoming control, preventing invisible
+cubic loops or extra trim length. Position, rotation, radii and roundness remain
+live concurrently. Static fractional stars/polygons use the corrected geometry;
+reversed stars use the reference's negative angular step. No sampled frames or
+raster fallback are introduced. Negative authored counts and excessive capacity
+fail explicitly; easing excursions below zero collapse the contour to a point.
+Evidence: initial 12 reference comparisons had 11 failures (10 live-count guards
+and one static fractional-star pixel failure); the static fractional-polygon test
+passed within its original tolerance despite the redundant topology. All 12 pass
+after the fix. Further comparisons cover simultaneous geometry changes, fills
+and an opposite-winding hole. Six direct capacity tests cover linear motion up to
+the limit, held values, increasing/decreasing overshoot and invalid bounds.
+Follow-up: rounded-corner modifiers on animated polystars now retain live geometry
+and topology (R31). Polygon direction currently follows lottie-android 6.7.1,
+which ignores d=3 for polygons; this is not a claim of cross-player direction
+parity. Broader modifier-order chains remain under R10.
+Reference:
+https://github.com/airbnb/lottie-android/blob/v6.7.1/lottie/src/main/java/com/airbnb/lottie/animation/content/PolystarContent.java
+
+R30 [P1] Separate draw calls lose compound-fill holes and apply opacity repeatedly
+Location: renderer/Shape.kt, emitStyledShapes.
+Cause: contours collected for the same Fill/GradientFill are drawn one at a time.
+Nonzero opposite winding and even-odd rules therefore cannot cut a hole across
+contours; translucent overlap applies the same paint opacity multiple times.
+Parent fills also split direct geometry from child-group geometry.
+Reproduction: two nested stars with opposite directions and one fill lose the
+inner hole throughout live point-count changes (about 7% foreground RGB error).
+After sibling batching, a parent-fill test mixing a direct ellipse and a child
+group ellipse still failed (about 12.46% foreground RGB error).
+Applied fix: concatenate compatible, untrimmed RemoteLottiePath contours into one
+fill path, including baked child-group geometry in that paint's scope. Preserve
+the contour fill rule and apply opacity once. Stroke rendering and independent
+repeater-opacity instances retain their existing boundaries. Trimmed paths and
+non-concatenable remote operations remain separate; general live compound-trim
+and mixed boolean/ordinary path batching still need implementation/coverage.
+Controls cover nonzero/even-odd holes, gradient fill, 50% overlap, nested groups
+and parent-fill ownership. See final verification below for tested results.
+The full verification initially found one changed golden: M3 play/pause at zero.
+Visual inspection found 108 changed antialiased RC edge pixels. Comparing the
+two artwork panels over x=16..159, y=40..179 (RC x offset 184) gives RGB MAE
+0.00003793 before batching and exactly zero afterward. Only that golden is
+regenerated for this fix; the reference panel and image dimensions are unchanged.
+
+R31 [P1] Baked rounded corners lose live clamps, sharpness changes and topology
+Locations: renderer/shapes/RoundedCorners.kt, new LiveRoundedCorners.kt,
+PolyStar.kt, Path.kt and ParametricTrim.kt.
+Cause: rounded paths were evaluated at selected keyframes and interpolated after
+the modifier. That misses nonlinear edge-length clamps, changing control handles
+and independently timed properties. Animated polystars were explicitly rejected.
+The static algorithm also clamped both sides to the shorter adjacent edge, instead
+of independently limiting each side to half its own edge length.
+Applied fix: evaluate corner splitting in RemoteFloat at playback time, with exact
+zero-handle sharpness checks, independently clamped adjacent edges, protected open
+endpoints and safe zero-length edges. Each source vertex has two recorded slots;
+non-rounded pairs collapse while preserving original incoming/outgoing controls.
+Animated polystars pass their logical active vertex count so padding is not treated
+as extra corners, and the closing control is transferred exactly once. The sampled
+rounded-keyframe synthesis was removed. Rounded single-contour paths with trim use
+native playback trimming. No raster fallback or temporal sampling was added.
+Evidence: all 10 initial reference-generated playback repros failed before this
+implementation. Nine passed immediately; the tenth compared native trim with the
+old precomputed trim fixture. The explicit reference path now uses native trim too
+(zero-radius bypass, no reference rounding), and separate Android comparisons
+cover radius changes, moving rounded paths and animated trims. Other comparisons
+cover intrinsic star/polygon roundness preserving existing controls during changing
+point counts. Rounding coordinates are generated offline by pinned lottie-web;
+polystar source vertices are independently computed analytic geometry, not Kotlin
+renderer outputs. Every playback case uses one mounted document for all frames.
+Compound-evaluator follow-up: evaluatePathGeometry still had a separate branch
+rejecting rounded multi-contour trims after the shared trim evaluator gained
+compound arc-length support. Three analytic regressions reproduced that rejection.
+The applied fix routes rounded geometry through trimEvaluatedPaths (playback=true),
+preserving native single-contour trimming and sharing compound length/clamping.
+The regressions use two equal-length, independently specified rounded L contours:
+0..50% and 50..100% retain the respective whole contour and its control handles;
+25..75% cuts each rounded arc at its analytic symmetry point.
+A player test drives a named end percentage forward and backward through
+0/25/50/75/100, checking contour visibility and endpoints without rerecording.
+This fixes the legacy evaluator restriction; the authored modifier pipeline
+already used the common trim policy. Arbitrary modifier-chain ordering and
+nonlinear modifiers after a live boolean still require implementation under
+R10/R23. This does not close the full task list.
+References and reproducible fixture generation:
+https://github.com/airbnb/lottie-web/blob/v5.12.2/player/js/utils/shapes/RoundCornersModifier.js
+https://github.com/airbnb/lottie-android/blob/v6.7.1/lottie/src/main/java/com/airbnb/lottie/animation/content/RoundedCornersContent.java
+tools/generate_rounding_reference.mjs -> src/test/resources/rounding-reference.json
+
+R32 [P1] Later geometry modifiers leave already-emitted paints unchanged
+Location: renderer/Shape.kt, gatherShapes.
+Reproduction: [square path, fill or stroke, animated pucker/bloat]. The visible
+paint stays square while an equivalent modifier before the paint animates.
+Zigzag, twist and offset have the same paint-scope error. A preceding styled
+group is ignored when no direct geometry remains. Unstyled group geometry is
+also omitted from the modifier's input before a following inherited paint.
+Cause: modifier branches replace only currentGeometries; shapeGroups already
+hold immutable earlier path values. Rebuilding RepeatedShapeInstance with its
+default multiplier also resets opacity supplied by a preceding repeater.
+Applied fix: pointwise modifiers update prior styled views, current geometry
+instances, and unstyled group geometry. Preserve each paint, group transform,
+group opacity, and repeated instance multiplier. Hidden modifiers are no-ops;
+later siblings are outside the modifier's scope. Each view is updated once,
+including chains with a paint between two modifiers.
+Evidence: ModifierPaintScopeTest contains 15 native playback cases, each with
+11 frames on one mounted live document: fill, stroke, both gradient paints,
+multiple paints, two modifiers spanning paints, hidden modifier, later sibling,
+earlier paints across a geometry reset, styled/transformed group, inherited
+paint, repeater opacity, offset, twist, and zigzag. Thirteen valid pre-fix
+cases failed pixel comparisons; the hidden control passed and the repeater
+fixture first needed a missing JSON brace corrected. All 15 pass after fixing
+the renderer. Pucker references use analytic vertex/control radii (including
+two composed modifiers), offset uses an analytic expanded square, twist uses
+the branch's distance-weighted polar-coordinate contract, and zigzag uses the
+pinned web geometry fixture. No production modifiers compute expected paths.
+tools/check_modifier_scope.py audits full RGB captures and produces review
+sheets; it checks all 165 frame pairs, dimensions, visible reference content,
+mean error and peak error. This is not a claim of arbitrary modifier-chain or
+After Effects twist parity. Merge operations need operand aggregation rather
+than pointwise mapping; trim/rounding order, nonlinear modifiers after live
+boolean output, and transformed inherited geometry remain broader follow-ups.
+R37 corrects the repeater-opacity oracle above: the original fixture placed its
+fill after the repeater but expected the owned-paint ramp. The ramp fixture now
+places the paint before the repeater, preserving its independent faded-copy
+expectation. A separate inherited-paint case checks the unattenuated paths.
+The corrected distinction is backed by actual RepeaterContent reference renders;
+the paint-scope audit now covers 16 cases / 176 frames. Original counts above are
+historical, not evidence for the former incorrect inherited-opacity contract.
+Reference paint/modifier registration scope (reverse authored traversal):
+https://github.com/airbnb/lottie-web/blob/v5.12.2/player/js/elements/canvasElements/CVShapeElement.js
+
+R33 [P1] Curved offsets freeze or reject motion and use straight-edge geometry
+Locations: renderer/shapes/OffsetPath.kt and the new OffsetCurves.kt.
+Before: the curved branch moved vertices using chord normals, copied unchanged
+Bezier handles, ignored lineJoin, used a different miter policy from polygon
+offsets, and rejected animated geometry/amount/limit. Open curves had only one
+offset side. Six initial curved-reference playback tests failed before this fix.
+Applied fix: live control-polygon offsets with up to three slots per source cubic,
+split at live inflection roots, supporting signed amounts, moving controls and
+miter limits. Open curves traverse both sides and include their end caps; closed
+contours retain their winding. Bevel, miter and two-cubic circular joins/caps are
+distinct. Zero amount restores the original unsplit cubic instead of changing its
+tessellation or closing an originally open stroke. Constant zero-length seam
+segments are omitted instead of acquiring an arbitrary axis-aligned normal.
+Each local adjacent-curve intersection is solved with ten remote Newton steps and
+the resulting endpoints trim the two curves. Each solver iterate has an explicit
+remote reference: inline expressions produced an animated notch even though
+constant evaluation and named-coordinate inspection agreed. Parallel supporting
+edges at inflections, and coincident middle controls between two inflections,
+are enforced analytically; normalizing float roundoff previously caused errors
+of several composition units. Exact miter boundaries have a relative 1e-6
+roundoff allowance. Recording is limited to 1024 curved source vertices.
+
+Independent references and provenance:
+tools/generate_offset_reference.mjs --precise-intersections generates
+src/test/resources/curved-offset-reference.json from pinned lottie-web 5.12.2.
+It uses the upstream recursive intersection algorithm with tolerance 0.00001
+and maximum recursion 20, rather than the shipping defaults 2 and 7. The latter
+produced visibly coarse clipping at joins. The original offset-reference.json
+and default generator behavior are retained unchanged for upstream investigation.
+No production Kotlin computes the fixture geometry. Round caps instead use an
+independent analytic circular oracle because of the upstream round-join issue
+already noted in R28. Closed quarter-circle control-polygon offsets have an
+analytic oracle too; this is not a claim that cubic offsets are exact parallel
+curves (the control-polygon algorithm itself is an approximation).
+
+Verification: CurvedOffsetRegressionTest checks 16 static and 264 reference-frame
+geometries (280 total). At nine points per cubic, in both directions, a separate
+double-precision nearest-curve calculation bounds distance by 0.002 composition
+units. This is sampled geometry evidence, not a continuous Hausdorff proof.
+It also checks native named-coordinate evaluation and the negative-offset inner
+crossing. Native playback plus CurvedOffsetCapsTest cover 21 captured scenarios /
+221 frame pairs: changing signed amounts, controls, limits, one/two inflections,
+zero bypass, round/bevel/miter caps, filled/stroked outlines and a closed contour
+with repeated seam vertices. Four comparison sheets were visually reviewed.
+tools/check_curved_offset.py checks coverage, dimensions, visible content and
+full-image red-channel error. Small raster-edge variance remains tracked: the
+reference-generated cases use a 0.0002 mean / 0.3 peak bound, with observed maxima
+0.000128 and 72/255. Those new tests initially exceeded the shared 0.25 peak bound
+at isolated edges; the separate bound is paired with the independent geometry
+gate above. Existing tests keep their original limits. Analytic cases retain
+0.0001 mean / 0.25 peak bounds; worst mean is 0.000017. The closed-contour fill
+and filled round-cap oracle match exactly in the checked captures.
+
+Still open: complete global/remote intersection selection, the upstream
+first-versus-last subsegment cleanup for multiply intersecting split groups,
+collapsed animated source segments, large inward offsets that erase contours,
+and general modifier-chain ordering. The local Newton solver is not a proof that
+all intersections of arbitrary cubic pairs are found. R33 does not close R09/R10
+or the full task list. No raster fallback or animation-time sampling was added.
+https://github.com/airbnb/lottie-web/blob/v5.12.2/player/js/utils/shapes/OffsetPathModifier.js
+https://github.com/airbnb/lottie-web/blob/v5.12.2/player/js/utils/PolynomialBezier.js
+
+R34 [P1] Recording padding changes modifier centroids and creates phantom curves
+Locations: renderer/properties/Bezier.kt; renderer/shapes/PolystarTopology.kt,
+LiveRoundedCorners.kt, PuckerBloat.kt, GeometryTransform.kt, Twist.kt, Repeater.kt.
+Reproduction: animate a star or polygon from three to seven points, followed by
+a pucker/bloat modifier. Extra recorded vertices collapse at the first vertex,
+but the old centroid included them. Pucker then gave these empty edges nonzero
+control points, inflating them into unwanted loops. Round-corner output also
+reserves two slots for smooth vertices and for a live radius at zero; applying
+pucker to those duplicate slots introduced loops and, with mixed smooth/sharp
+corners, changed the centroid's vertex weighting.
+Suggested/applied fix: retain logical vertex and segment activity separately from
+recording capacity. Average only real vertices and transform controls only on real
+edges. The first padding slot still owns the incoming control of a real closing
+edge. Preserve this metadata through pucker, twist, affine group transforms and
+repeater transforms. This is live expression-based geometry, not frame sampling.
+The rounding implementation records whether each additional vertex/edge is real,
+including the radius-zero transition, without dropping authored duplicate vertices.
+Evidence: all ten initial PuckerTopologyTest cases failed against independently
+computed geometry before the change, including all four rounding-chain cases.
+The expected polystar paths use analytic polar coordinates and absolute-control
+displacement; rounded inputs use the pinned lottie-web rounding-reference.json.
+Three additional cases exercise group transforms, twist and repeater transforms.
+tools/check_pucker_topology.py audits their native capture pairs and makes review
+sheets. Verification results are recorded with the current build audit below.
+Follow-up R35 moves rounding into authored order. Still open: general trim
+ordering/materialization and propagation across other topology-changing
+modifiers, and the broader R09/R10 implementation list. R34 is a prerequisite
+for correct modifier chains, not a claim that all chains are now implemented.
+
+R35 [P1] Rounded corners run before earlier modifiers and ignore later rounding
+Locations: renderer/Shape.kt; renderer/shapes/RoundedCorners.kt,
+LiveRoundedCorners.kt, LogicalBezier.kt, Rectangle.kt, OffsetPolygon.kt.
+Reproduction: an uneven four-corner path followed by pucker/bloat then rd=8
+renders as round-then-pucker, despite the authored order. A second rounding
+modifier was never processed. Moving rounding to the modifier pass also exposes
+noncontiguous padding in rectangles, earlier rounding results and polygon-offset
+joins: adjacent recording slots are not necessarily adjacent logical corners.
+Suggested/applied fix: apply each rounding modifier to earlier geometry and paint
+views at its authored position, including styled child groups. Retain live trim
+metadata where later rounding needs the uncut source, and preserve pending trims
+through pucker/twist. LogicalBezier finds real neighbors and incoming/outgoing
+controls using linear-time directional scans, redistributing controls across
+collapsed recording slots without changing the represented curve. Rectangle and
+polygon-offset outputs now carry logical activity. Rectangle external rounding
+uses the generic sharp-corner modifier rather than the intrinsic rectangle radius.
+
+Playback follow-up: two consecutive rounds (first radius animated 0..12, second
+radius 4) initially passed all constant-frame geometry assertions but produced a
+cusp in native animated playback. Merely referencing the output coordinates did
+not fix it. Sharing the evaluated radius via createReference at each rounding
+stage fixes the native pixel failure. This is an alpha19 recording/playback
+reproduction; the exact underlying framework cause has not been isolated into a
+standalone upstream test. Keep the issue and workaround together when reporting.
+
+Evidence: ModifierOrderTest has 14 scenarios x 11 authored frames, using pinned
+lottie-web rounding with independent analytic pucker, twist, rectangle, star and
+mitered-square inputs. Both modifier orders are explicitly checked, as are paints
+before/between modifiers, styled/unstyled child groups, two rounds, round/pucker/
+round, rectangle pucker, polygon offset and live star topology. Additional tests
+compare 11 constant-frame logical geometries and the live coordinate dependencies
+of a double-rounding document at ten updated playback frames. The generator's
+default rounding-reference.json output remains byte-identical; order cases use a
+separate --modifier-order output. No new test exclusions or sampled fallback.
+
+Remaining scope: trims before later nonlinear modifiers still need real geometry
+materialization, including multi-contour paths. R36 addresses the inherited
+group radius/coordinate-space gap, now reproduced against Android playback.
+Boolean-to-rounding and other nonlinear chains remain explicitly rejected;
+curved-offset/zigzag topology through later modifiers needs further work. The full
+R09/R10 task list is still open. This does not claim universal modifier-order parity.
+Reference implementations (pinned):
+https://github.com/airbnb/lottie-web/blob/v5.12.2/player/js/utils/shapes/RoundCornersModifier.js
+https://github.com/airbnb/lottie-web/blob/v5.12.2/player/js/utils/shapes/ShapeProperty.js
+
+R36 [P1] Inherited modifiers consume transformed rather than path-local geometry
+Locations: renderer/Shape.kt, RemoteShape.kt; renderer/shapes/GeometryTransform.kt,
+Repeater.kt, MergePaths.kt and pointwise modifier evaluators.
+Reproduction: an uneven path in a group scaled to [60,110], followed by an outer
+animated rounded-corner modifier and stroke, rounds in parent units instead of
+path-local units. Uniform, nonuniform, live and mirrored scales and nested rotated
+groups expose the error. Six of eight GroupModifierSpaceTest comparisons failed
+before the fix; owned-paint and compound-hole controls already passed.
+Suggested/applied fix: retain group/repeater affine transforms as path metadata
+while local modifiers evaluate the Bezier geometry. Preserve this metadata through
+rounding, offset, twist, pucker and zigzag. Resolve transform stacks at the outer
+paint boundary, then combine compatible fill contours. Resolve explicit merge
+operands in shared coordinates. Keep owned group paints under their canvas
+transform, and preserve nesting and repeater transform order.
+
+Evidence: eight Android-reference scenarios sample 13 authored coordinates each;
+five additional native motion scenarios sample 11 frames with independent analytic
+offset/twist/pucker and pinned lottie-web zigzag geometry. Two live-coordinate
+tests independently check every offset vertex against analytic affine geometry,
+with/without the inner repeater, to 0.0002 coordinate units at all 11 frames.
+The offset raster comparisons initially exceeded the 0.0001 mean-red bound despite
+passing coordinate checks. Duplicating the reference's miter slots did not change
+the difference, and that experiment was removed. These two new rotated-stroke
+cases use a documented 0.0006 mean / 0.25 peak bound; the other three retain
+0.0001 / 0.25. This is bounded raster variance, not pixel-exact offset parity.
+
+Remaining scope: R37 addresses parent repeater collection and path/paint opacity.
+R38 addresses parent merge collection and operand boundaries. Trim-before-nonlinear materialization, local-space trim
+lengths under nonuniform transforms, Boolean-to-nonlinear chains, curved-offset
+intersection cleanup and downstream topology remain open. Deferring affine
+transforms does not implement those features. No runtime shader, raster fallback
+or new test exclusion is introduced.
+Reference (pinned):
+https://github.com/airbnb/lottie-web/blob/v5.12.2/player/js/utils/shapes/RepeaterModifier.js
+
+R37 [P1] Repeaters miss grouped paths, misapply inherited opacity and transform only vertices
+Locations: renderer/Shape.kt, RemoteShape.kt; renderer/shapes/Repeater.kt,
+GeometryTransform.kt; tests/RepeaterScopeTest.kt, ModifierPaintScopeTest.kt.
+Reproductions: group(path), repeater, inherited fill omits the repeated group;
+path, repeater with so=100/eo=0, inherited half-opacity fill incorrectly fades
+each copy and composites overlaps separately. A scaled parent repeater moves
+styled-group vertices in the wrong coordinate space and leaves stroke widths
+and gradient coordinates untransformed. Geometry from earlier painted runs is
+missing from a greedy repeater's later path view.
+
+Suggested/applied fix: distinguish repeaters' own painted content from their path
+view. Repeat the entire painted group with an outer live canvas transform and
+the copy's opacity ramp. Include direct, grouped and preceding painted geometry
+in the inherited path view; ignore so/eo there, matching RepeaterContent.getPath.
+Retain live copy visibility separately from opacity, apply it after local
+modifiers and deferred affine transforms, then combine fill contours once. A
+zero-length open contour still paints a round cap, so inactive stroke copies
+also receive zero paint opacity. The nested group's existing path-view omission
+of so/eo was correct; blindly propagating its discarded ramp would be a new bug.
+
+Evidence: seven of ten initial valid Android-reference cases failed before the
+change, while owned fill, nested inherited paths and consecutive owned repeaters
+were controls. A subsequent round-cap test reproduced inactive-copy dots and
+an earlier-painted-path test reproduced omitted greedy content. Further cases
+cover a parent-transformed gradient and a modifier after live-count repetition.
+All cases use shared authored-frame coordinates, including changing copy counts,
+overlapping half-opacity fills, nested nonuniform group transforms, scaled
+strokes, copy ramps and consecutive repeaters. Tests retain the original 0.02
+foreground RGB / 0.03 whole-image bounds; no new exclusions or raster fallback.
+
+Remaining scope: R38 addresses general merge operand collection and ordering. Trim geometry
+materialization, nonlinear Boolean chains and curved-offset/topology work are
+still open. Repeater anchor/scale behavior differs between reference players;
+these comparisons use origin anchors, while the existing analytic tests retain
+the branch's path-local anchor contract. This is not universal exporter parity.
+Reference:
+https://github.com/airbnb/lottie-android/blob/v6.7.1/lottie/src/main/java/com/airbnb/lottie/animation/content/RepeaterContent.java
+
+R38 [P1] Merge paths ignore grouped operands and retain consumed paint views
+Locations: renderer/Shape.kt, renderer/shapes/MergePaths.kt.
+Reproductions: a direct path followed by a two-contour group and subtraction
+must subtract the entire last group, not only its last contour. Interleaving
+groups and direct paths must preserve authored operand order. A merge also
+absorbs preceding groups' painted content and the paths attached to earlier
+direct paints; those views must not continue drawing the consumed originals.
+Single-operand subtraction/intersection and hidden merges must be empty.
+
+Suggested/applied fix: maintain ordered path operands separately from paint
+views. Each group/repeater retains a compound operand boundary, including empty
+groups. Use the same collection rules in nested geometry evaluation, and retain
+pointwise modifier updates on each operand. Greedy repeaters reuse the ordered
+path collection. Merges consume prior paint views, expose only their result to
+later paints, and retain empty operands instead of returning one input unchanged.
+Hidden merges consume their sources but produce no path, matching the reference.
+
+Evidence: MergeScopeTest covers 16 scenarios at 13 authored coordinates: union,
+subtract with last/first/interleaved groups, intersection, XOR, nested groups,
+owned/direct paint consumption, paint before merge, single/empty operands,
+static subtraction and simple contour concatenation. The initial 12 scenarios
+all failed, but eight transformed-group comparisons were subsequently found
+to be confounded by R39; do not cite that initial count as twelve independently
+validated RC defects. Corrected comparisons retain real transforms in RC and
+use equivalent independently baked geometry in the reference. The intersection
+motion crosses a cutout boundary so it verifies visible change, not merely a
+moving source whose intersection stays fixed. Existing merge/repeater/paint
+scope tests remain part of the verification gate. No bounds were loosened.
+R40 adds nested binary live Boolean results. Remaining work includes runtime
+contour concatenation, nonlinear modifiers after Boolean results, trim
+materialization/order and curved-offset/topology completeness.
+
+R39 [P2] Pinned Android merge renderer mutates cached grouped child paths
+Location: lottie-android v6.7.1 MergePathsContent.opFirstPathWithRest.
+Reproduction: merge two uniformly scaled/translated groups, draw the same
+LottieDrawable twice at exactly the same progress. Cached child paths are
+transformed again, shrinking/shifting the second drawing without time advancing.
+The first draw agrees with an independently transform-baked fixture; the second
+differs by more than 100 pixels on a 64x64 bitmap. The baked fixture remains
+identical across draws. MergeScopeTest includes this standalone reproduction.
+Suggested upstream fix: copy each child Path before applying the group matrix,
+in both operand loops. Never mutate the PathContent-owned cached source.
+This is a reference dependency issue, not behavior to reproduce in RC.
+
+Test workaround: bake these fixtures' uniform group scale/translation into
+rectangle coordinates and keyframes, retaining group/operand structure and
+identity group matrices in the reference. RC receives the original JSON.
+The harness saves input.json and reference.json beside the comparison captures
+when they differ. No production geometry helper computes the reference input.
+This isolates scoped merge semantics without hiding cached-path instability or
+claiming direct parity with the faulty repeated-draw output. No external issue
+has been filed and the dependency itself has not been patched here.
+Reference for R38/R39:
+https://github.com/airbnb/lottie-android/blob/v6.7.1/lottie/src/main/java/com/airbnb/lottie/animation/content/MergePathsContent.java
+
+R40 [P1] Nested live Boolean operations are rejected and operand winding is lost
+Locations: renderer/RemoteBooleanPath.kt; renderer/shapes/MergePaths.kt,
+GeometryTransform.kt and Repeater.kt.
+Reproduction: animate rectangle A, merge A with B, then merge that result with C.
+All sixteen pairs of union/subtract/intersect/XOR previously failed the explicit
+"Nested live boolean merges" guard. Four right-hand static-difference controls
+already passed. This before/after baseline was captured before implementation.
+
+Cause: RemoteBooleanPath required two raw RemoteLottiePath operands. Merge
+evaluation flattened operands to Bezier lists, which also discarded a prior
+static Boolean result's winding. Transform/repeater visitors assumed one level.
+Suggested/applied fix: keep a binary operation tree, emit child pathCombine
+operations before their parents and register all live path leaves as recording
+dependencies. Recursively transform/mask leaves for groups and repeaters. Retain
+each operand's winding, including when converting a static operand to Android
+Path; do not apply the final fill style to an intermediate Boolean result.
+
+NestedBooleanTest builds its reference directly from fresh native Path rectangles
+and Path.op calls, independent of Lottie parsing and production geometry helpers.
+One RC document stays mounted while progress changes through eleven authored
+frames. The matrix covers sixteen left-nested mode pairs, static/live right-hand
+difference and XOR results, two live result operands, a no-op single-operand
+concatenation, nested mirrored/live group transforms, painted repetition, and
+live path-only repetition. Two guard tests retain explicit concatenation errors.
+This avoids the reference dependency's R24/R39 winding/cache bugs without copying
+production calculations into a reference Lottie file. It is sampled native-path
+algebra coverage, not universal Lottie-format parity.
+
+Still open: RC alpha19 pathAppend accepts coordinate verbs, not runtime path IDs.
+Consequently concatenating a live Boolean result with another path (including a
+three-operand merge's earlier remainder) remains explicitly unsupported. Replacing
+concatenation with union is not equivalent for authored winding/cancellation.
+A single-result concatenation is a pass-through. Nonlinear modifiers and trims
+that need materialized runtime result vertices remain open; this does not close
+R09/R10 or the overall implementation task. No raster sampling was introduced.
+
+Alpha19 capability recheck (2026-09-12): javap inspection of the exact cached
+remote-core and remote-player-core alpha19 artifacts confirms PathCombine only
+supports the five Boolean operations; PathAppend consumes coordinate verbs,
+not path IDs. AndroidPaintContext.combinePath stores a native Path in the player
+cache without exposing a float-coordinate result. Its getPath(id,start,end)
+returns a cached Path before consulting start/end, so directly drawing a partial
+Boolean result would silently draw the entire result. This is static bytecode
+evidence, not a newly exercised pixel regression. Suggested upstream work: add
+path-ID concatenation with explicit winding and a native-path trim/extraction
+operation that preserves contour boundaries. A union or raster snapshot would
+not implement the missing contour semantics. Existing explicit guards remain.
+
+R41 [P1] Trim paths interpolate pre-cut curves instead of measuring live geometry
+Locations: renderer/shapes/TrimPathEvaluator.kt, ParametricTrim.kt and
+RoundedCorners.kt; straight-segment recording in renderer/RemoteShape.kt.
+Reproduction: morph a two-cubic open path while trimming it to 60%, or animate
+its trim from 20% to 85% during a single authored frame. Sample at fractional
+frames such as 0.125, 0.5 and 0.875. Old evaluation trims geometry at keyframes
+or whole frames, then interpolates the cut controls. Arc-length inversion does
+not commute with interpolation, so the visible curve/endpoint drifts. A trim
+hold ending at frame 0.6 is incorrectly smoothed by synthesized linear keyframes.
+Animated offsets can also change the number of trimmed contours between samples.
+
+Suggested/applied fix: evaluate source geometry and all three trim properties
+using their original live expressions, then let native playback measure and cut
+the current path. Authored paths and parametric shapes now share that policy.
+R42 subsequently moves final constant drawing onto the same native trim path;
+genuinely constant geometry AND constant trim values can still expose cut vertices
+to later modifiers through the CPU cutting code. A full constant trim preserves the original closed contour. Removed
+the time-sampling/keyframe-synthesis helpers rather than retaining a fallback.
+Recording no longer grows with the number of whole frames in the animation.
+
+Straight-path follow-up: zero-handle straight contours were serialized as cubics.
+Although geometrically straight, their nonlinear parameter speed introduces
+small endpoint errors in native approximate length inversion. Record wholly
+linear playback-trimmed contours with lineTo; preserve mixed curved contours
+and non-trim drawing unchanged. A broad per-edge line optimization changed
+non-trim antialiasing and static/live mixed-curve comparisons, so it was narrowed
+to the actual playback-trim case before final verification. An attempted
+inactive-edge omission was discarded; it was not needed to fix the observed
+measurement error.
+
+Evidence design: TrimTimingTest builds fresh native curves and uses PathMeasure
+without production geometry/trim helpers. A single RC document is updated through
+16 captures including fractional frames, the two sides of a noninteger hold,
+backward seeks and an identical repeated seek. Coverage includes morphing,
+trim and offset animation, simultaneous geometry/trim motion, compound trims,
+easing, a static rectangle, full closed-path joins, and trim after pucker/bloat.
+A separate structural check uses 10,000 authored frames and verifies retained
+source vertices plus live trim metadata instead of a frame-baked path.
+
+Baseline qualification: the six initial curve scenarios failed before the fix.
+The initial rectangle fixture also failed, but its reference defaulted to miter
+limit 4 while the JSON omitted ml (default 0). The fixture now declares ml=4;
+do not attribute that corner mismatch to RC. With aligned miter limits, native
+straight-segment endpoint differences remained and were isolated separately.
+
+Still open: cutting live Bezier vertices for trim BEFORE nonlinear deformation,
+authored ordering across all modifiers, local-space measurement before inherited
+nonuniform transforms, multi-contour and individually-trimmed groups, and runtime
+Boolean-result materialization. RC alpha19 FloatsToPath.genPath measures only the
+first contour for a partial drawTweenPath; multi-contour live trims are explicitly
+rejected rather than silently dropping later contours. This removes temporal
+baking, not the rest of R09/R10. R42 removes lookahead and shares final static/live
+measurement; materializing an animated cut before deformation remains open.
+Reference semantics:
+https://github.com/airbnb/lottie-web/blob/v5.12.2/player/js/utils/shapes/TrimModifier.js
+
+R42 [P1] Constant trims run before preceding nonlinear modifiers
+Locations: renderer/Shape.kt and renderer/shapes/ParametricTrim.kt; constant-cut
+consumption in RoundedCorners, PuckerBloat, Twist, ZigZag, OffsetPath and MergePaths.
+Reproduction: an open three-vertex, two-cubic path followed by pucker/bloat
+(20% to 40%), then a constant 60% trim. Trim lookahead cuts the original path
+during geometry collection; pucker then uses the cut path's centroid and handles.
+The required result first deforms the original three vertices, then measures 60%
+of that deformed curve. The direct native-oracle reproduction differs by
+1.78% to 2.75% full-image red MAE before the fix, including fully wrong pixels.
+The same issue affects parent trims and existing paint views. Animating the trim
+used a deferred native cut and therefore followed a different order (R41).
+
+Suggested/applied fix: collect untrimmed source geometry and evaluate TrimPath
+at its authored position, just like other modifiers. Apply it to earlier raw
+operands, groups and painted views; remove inherited trim/rounding lookahead.
+Final constant and animated cuts use native measurement, avoiding a second
+static-only curve approximation in drawing. When a subsequent modifier needs
+vertices, materialize a genuinely constant cut, including composed trim ranges,
+while retaining deferred affine transforms, fill winding and copy visibility.
+At an inherited affine boundary, constant cuts are materialized before scale
+can change their relative arc lengths. A nonuniform-transform regression caught
+this during the refactor (0.004688 full-image red MAE before the correction);
+the corrected constant case matches the native oracle exactly.
+No temporal sampling, shader or raster fallback is added.
+
+Regression coverage extends TrimTimingTest's native Path/PathMeasure oracle to
+fixed trims after static/live pucker, child and parent modifier scope, paint
+views, constant cuts before a live modifier, compound cuts and inherited group
+transforms. One initial paint-view fixture accidentally added a second outer
+stroke; it now renders only its authored child paint, without relaxing bounds.
+The direct and parent reproductions did not have that fixture problem.
+
+Still open: live cut vertices before nonlinear deformation, live local-space
+length measurement before inherited nonuniform transforms, multi-contour/group-
+length trim semantics, and runtime Boolean-result materialization. The constant
+cut helper is not a substitute for implementing the live geometry pipeline.
+General authored-order parity across these combinations is not established.
+Reference semantics:
+https://github.com/airbnb/lottie-web/blob/v5.12.2/player/js/utils/shapes/TrimModifier.js
+
+R43 [P1] Live trims feed uncut controls to later geometry modifiers
+Location: renderer/shapes/LiveTrim.kt, ParametricTrim.kt, RemoteShape.kt and
+the nonlinear modifier consumers.
+Reproduction: trim an open two-edge path with a moving end, then apply 25%
+pucker/bloat. Deforming first and trimming the resulting stroke gives a different
+centroid, endpoints and controls (the corrected analytic straight-path fixture
+had whole-image red MAE of approximately 1.0%-2.4% before materialization).
+The same error occurs when measuring a live local-space cut only after an
+inherited nonuniform scale.
+Applied fix: expose cut cubic vertices and controls for a single open contour
+and one non-wrapped interval before consuming geometry. Measure each live cubic
+with a 256-step spatial chord table, invert distance, and split with de Casteljau
+points and endpoint derivatives. Zero-handle straight cubics use analytic length
+and bisection of their cubic parameterization. Removed edges collapse into
+inactive topology slots and do not enter a later pucker centroid or leave caps
+at zero-length cuts. Start/end fractions are clamped independently; whole-turn
+offsets no longer create a spurious potentially wrapped interval.
+No time sampling, raster fallback or runtime shaders are introduced. Fixed
+curves fold their length tables at recording time; moving geometry stays live.
+
+Tests retain the 0.0001 full-image red MAE and 0.25 peak bounds. Eight new capture
+matrices cover live straight/curved cuts, simultaneously moving controls and
+cuts, sliding starts, held discontinuities, empty/full cuts, and inherited
+nonuniform transforms, at 16 subframes including backward/repeated seeks.
+A separate round-cap test checks zero-length invisibility. The cubic oracle
+integrates derivative speed in Double with adaptive Simpson quadrature and
+inverts independently by bisection; it does not use the production chord table.
+An analytic symmetric half-cubic validates that oracle's controls, and an
+additional player-float test validates moving symmetric half-cuts to 0.0002
+coordinate units through forward/backward seeks.
+
+Oracle qualification: native PathMeasure cuts were measurably coarser when their
+controls were subsequently deformed, so these new control-sensitive tests use
+the independently integrated oracle. Existing final-draw/native-trim tests are
+unchanged. This is not a claim of bit-identical native PathMeasure controls.
+A 128-step table missed the retained pixel bound; 256 passes the current cases.
+512 sequential steps overflowed the recorder's recursive registration stack.
+A balanced prefix-table experiment changed moving-curve playback and failed
+the tests, although its static cases passed. It is not used; the exact upstream
+expression-registration cause is not yet established. General complexity/error
+bounds for very large or near-degenerate curves still need investigation.
+
+Follow-up: wrapped intervals of a single open contour now materialize separately,
+retaining each interval's logical vertices and centroid. Contour visibility is
+preserved through geometry modifiers. Strokes append only active contours and
+edges into one path, then draw once; omitted intervals cannot leave round caps,
+and translucent paint is not reapplied per contour. Fills keep their winding-aware
+compound representation (PathAppend is deliberately stroke-only).
+
+Closed-contour follow-up: include the closing cubic when measuring and cutting.
+Partial intervals expose open geometry with one endpoint beyond the source's
+vertex count. Full extent selects the authored closed contour instead, retaining
+its seam join and counting the seam vertex only once in a later centroid.
+The partial/full alternatives carry mutually exclusive live visibility through
+subsequent modifiers. Tests include moving controls, wrapped cuts, held full
+extents, zero/full round caps, local cuts before inherited nonuniform scale,
+polygon seams, filled geometry and the one-vertex loop cases in R48.
+
+Native fill qualification: adding an exactly zero-area closed contour changes
+native fill antialiasing. A native padded-control fixture reproduces this
+and matches RC within the original 0.0001 full-image / 0.25 peak bounds. The new
+un-padded closed-fill comparison initially failed that stroke-oriented mean gate
+(worst full-image red MAE about 0.000457). It now uses the same edge-local policy
+as R44: no changed pixels outside a one-pixel reference edge band, mean edge error
+<=0.1, and the tighter existing peak <=0.25. Only that new fill comparison opts
+in; every pre-existing bound and the padded control remain unchanged. Geometry
+is independently integrated in Double, and this native AA variance remains tracked
+rather than claimed to be bit-exact reference rendering. Runtime contour appends
+cannot currently preserve even-odd winding, so fills retain their compound paths.
+
+R49 below adds shared lengths within a compound path, including later pucker and
+trim consumers. R50 adds mode-2 lengths across authored paths/groups and paint views.
+Still open: nonlinear consumption of runtime Boolean results. Closed-cut materialization does not complete R09/R10's
+broader modifier/topology chains or remove RC's expression/state resource limits.
+
+R44 [P1] Native PathIterator extraction reads the segment start as its endpoint
+Location: renderer/shapes/MergePaths.kt, extractBezierViaPathIterator.
+The iterator includes the start point for line, quadratic, conic and cubic
+verbs. The extractor read coordinates one pair too early, duplicating
+the initial vertex and dropping/reassigning the actual endpoint and controls.
+Closed rectangle fills can hide this, whereas extracted curved Boolean results
+were corrupted. Conics also discarded their rational weight.
+Applied fix: read line endpoint at offsets 2/3; quadratic control at 2/3 and
+end at 4/5; cubic controls at 2/3 and 4/5 and end at 6/7. Convert rational conics
+with their weight rather than treating them as ordinary quadratics. The new
+ConicToCubics helper splits homogeneous quadratic controls, fits endpoint/tangent-
+matching cubics, and bounds the full-interval error using the Bernstein
+coefficients of the degree-five difference numerator divided by the minimum
+positive denominator weight. It subdivides until the bound is at most 0.0001
+local units (or four Float ULPs for large coordinates). Its depth limit is 20;
+non-finite/negative-weight input or failure to converge is reported explicitly.
+This is spatial approximation of native static paths, not frame/raster sampling.
+
+Also fixed: empty paths no longer become a one-vertex closed contour; exact
+closing endpoints are coalesced without welding nearby distinct vertices; a
+pre-API-34 path returning to its start retains PathMeasure's actual open flag.
+Zero-handle segments use native line verbs, avoiding spurious fill slivers on
+degenerate lines. API-34+ iterator failures are no longer caught as Throwable
+and silently routed into the coarse approximation fallback.
+
+NativePathConversionTest has 19 tests. Thirteen original cases reproduced genuine
+endpoint/control/topology/raster errors; an initial zero-weight test incorrectly
+required a visible fill and was corrected to require native-empty fill and visible
+stroke. Two API-33 fallback tests independently failed before their fixes. Exact
+line/quad/cubic and closing-control assertions are supplemented by independent
+rational-coordinate evaluation across weights 0.00001..10000 (101 points per
+emitted cubic; 0.00011 coordinate tolerance), and native fill/stroke captures of
+weighted conics, ovals, mixed contours and all four Boolean operations.
+
+Raster qualification: exact analytic quadratic degree elevation itself changes
+native scan-converted edges (full-image red MAE about 0.000168 for the control
+fixture). New conic/converted-cubic comparisons therefore do not require pixel
+identity. Their initial provisional full-image bounds were replaced with an
+edge-specific gate: no differences outside a one-pixel native edge band, mean
+edge-channel error <=0.1 and peak <=0.5. The independent coordinate tests guard
+geometry much more tightly. Existing test tolerances and golden screenshots were
+not changed. tools/check_native_paths.py audits all 15 capture scenarios / 30
+fill-and-stroke pairs, including the independent degree-elevation control.
+
+Remaining limitation: below API 34 the existing converter still approximates
+curves as polylines with Path.approximate(0.5); precise old-platform control
+extraction is not supplied by this fix. This also does not materialize runtime
+Boolean output for later nonlinear modifiers (R09/R10/R40).
+API contract: https://developer.android.com/reference/android/graphics/PathIterator
+
+R45 [P1] Expression-cache collisions ignore NaN variable/operator payloads
+Location: AndroidX RC alpha19 RemoteFloatExpression.writeToDocument.
+Reproduction: arrays [id(100), id(200), ADD] and [id(101), id(169), ADD]
+have the same raw-bit polynomial hash, but different operands. FloatArray
+contentEquals canonicalizes NaNs, so alpha19 assigns both expressions the same
+runtime ID. RemoteExpressionCacheTest reproduced the alias before the workaround.
+Suggested upstream fix: compare every element's toRawBits after a hash match;
+include operator payloads and animation arrays in collision tests.
+Applied local workaround: live-trim and logical-geometry expressions use rawReference, which
+emits the expression directly, bypassing that secondary expression cache while
+retaining structural state-key sharing. This is explicit local sharing, not a global
+repair of the dependency. The earlier balanced-prefix failure in R43 has not
+been requalified; no claim is made that this was its sole cause.
+
+Offset follow-up (2026-09-12): nested automatic materialization also uses the
+buggy cache. Rounded polygon playback reproduced [id(150),id(481),ADD] and
+[id(104),id(1907),ADD] both receiving ID 485: 150*31+481 == 104*31+1907.
+The live seven-point frame had red MAE 0.02143052; adding debug operations shifted
+IDs and hid the failure. A raw-bit audit confirmed the two different expressions
+aliased. Fix: explicitly share absolute source handles before linearization can
+grow and auto-materialize their sums. roundedPolygonPointCount and the new static
+seven-point control pass without debug operations or relaxed bounds. rawReference
+alone is not a blanket fix for nested expressions; its documentation now says so.
+The diagnostic map scan and recording-time stack traces have been removed.
+
+R46 [P1] Float-state IDs at or above 10000 silently stop updating
+Location: AndroidX RC alpha19 RemoteComposeState.updateFloat and MAX_STATE_DATA.
+Reproduction: the conditional-stroke implementation initially assigned live
+visibility/coordinate IDs 10319..10419. These stayed zero in the actual player,
+while lower-ID edge-presence values updated correctly. The player drops updates
+outside its fixed 10000-entry override array rather than rejecting the document.
+Suggested upstream fix: grow/bound state storage consistently, or reject oversized
+documents explicitly during generation/loading instead of displaying blank paths.
+Applied local mitigation: use Bernstein weights directly at the constant spatial
+sample parameters instead of recording every intermediate de Casteljau point.
+This preserves 256 spatial samples and live control updates while substantially
+reducing state usage. Cut endpoints still use de Casteljau. rawReference now
+reports the player limit when its generated geometry expression exceeds it.
+This guard is scoped to these expressions, not whole-document resource validation.
+
+R47 [P2] Constant trims expose coarse cubic controls to later modifiers
+Location: renderer/shapes/TrimPathEvaluator.kt, trimBezierValue.
+Reproduction: a static two-cubic closed curve trimmed to 65%, followed by 25%
+pucker/bloat, failed the existing 0.0001 red MAE bound (0.000112257; peak 56/255).
+The constant path used only 16 spatial length samples, unlike the 256-step live
+path. Subsequent control deformation makes that approximation visible.
+Applied/suggested fix: build a 256-step length table once per constant segment
+and derive both its length and inverse parameter lookup from that same table.
+This is spatial precision, not temporal sampling. The independent adaptive-
+integration fixture passes after the change; no tolerance was changed for it.
+
+R48 [P1] Single-vertex closed cubic loops are discarded or bypass deformation
+Location: renderer/shapes/{TrimPathEvaluator,LiveTrim,PuckerBloat}.kt.
+Reproduction: closed v=[[32,44]], i=[[-26,-40]], o=[[26,-40]], followed by
+a 65% constant trim or a live 20%-100% trim and 25% pucker/bloat. A single
+closed vertex can define a nonzero cubic loop, but count<2 guards treated it
+as an empty path. Constant cuts disappeared; live cuts and the full-loop
+controls bypassed their modifiers. Both regression cases failed before the fix.
+Applied/suggested fix: distinguish an open single point from a closed one-vertex
+curve when converting segments, materializing cuts and deforming its handles.
+The full-loop centroid is its sole vertex; its control points still move.
+
+R49 [P1] Compound trims use independent contour fractions or reject live geometry
+Location: renderer/shapes/{ParametricTrim,LiveTrim}.kt.
+Reproduction: concatenate open lines of lengths 16 and 32 using Merge mode 1,
+then trim to 50%. The old constant path draws lengths 8 and 16 rather than 16
+and 8. Animating either the second length or the trim throws "Multi-contour
+playback trims are not yet supported". Four new regression cases failed before
+the implementation, including wrapping and trim/pucker/trim ordering.
+Applied/suggested fix: measure the combined length in contour order, map each
+trim interval through contour prefixes, and expose live cut controls. Invisible
+contour alternatives and inactive topology edges contribute zero length. A fully
+covered closed contour retains its original closure even if the whole compound
+path is only partially selected. Strokes omit inactive contours and draw the
+surviving pieces together, retaining caps and opacity without ghost dots.
+Reference: lottie-web v5.12.2 TrimModifier sums pathsData.totalLength within one
+shape before applying its trim intervals:
+https://github.com/airbnb/lottie-web/blob/v5.12.2/player/js/utils/shapes/TrimModifier.js
+Tests use analytic unequal-length lines and an independent Double integration /
+de Casteljau oracle for deformed curves, not production length tables. The first
+new pucker oracle incorrectly treated deformed lines as endpoint-only segments;
+it was corrected to include displaced controls before judging the implementation.
+Coverage includes constant/live/wrapped cuts, pucker followed by another trim,
+full/partial closed-contour transitions, empty contours, round caps and alpha.
+This fixes multiple contours inside one RemoteLottiePath; R50 extends shared
+lengths across distinct authored path/group operands and overlapping paint views.
+Runtime Boolean-result extraction and RC float-state capacity limits also remain.
+
+R50 [P1] Trim mode 2 is parsed but ignored across authored paths and paint views
+Location: renderer/Shape.kt, RemoteShape.kt and shapes/{ParametricTrim,LiveTrim,
+GeometryTransform,Repeater,MergePaths}.kt.
+Reproduction: two authored lines of lengths 16 and 32 followed by m=2, e=50.
+The renderer trims both to half instead of selecting the full first line plus
+8 units of the second. The same error affects animated/wrapped trims, separately
+painted runs, and group-owned strokes. All five initial regressions failed before
+the fix. Treating each incoming paint-view list as a new length domain would
+still be wrong: one authored path can have several fills/strokes and group views.
+Applied/suggested fix: assign referential authored geometry identities and preserve
+them through modifiers, affine boundaries, fill-rule views, merges and repeater
+copies. Compute one mode-2 cut over the canonical ordered path operands, then
+map the resulting controls to every paint view without changing its style or
+transform. Coincident authored paths and separate repeater copies remain distinct;
+invisible copy slots do not contribute length. Mode 1 still trims authored paths
+separately. The shared cut retains live arc-length expressions rather than using
+endpoint chords, frame samples, or keyframe-baked trim geometry.
+Reference: lottie-web v5.12.2 TrimModifier.calculateShapeEdges/processShapes share
+totalModifierLength when m===2, while m===1 uses each shape's own length:
+https://github.com/airbnb/lottie-web/blob/v5.12.2/player/js/utils/shapes/TrimModifier.js
+The regression oracle uses analytic line lengths and independent Double adaptive
+integration/de Casteljau for live curves. Additional cases cover coincident
+authored inputs, mode-1 distinction, child groups with inherited strokes, earlier
+trims, merged operands, and painted repeater copies. The repeater fixture explicitly
+selects below ordering; its initial missing JSON brace and assumed default order
+were test-fixture errors, not attributed to the renderer.
+Broader nonlinear/Boolean topology chains and RC expression-capacity limits remain
+open. This does not establish parity with every renderer's trim implementation.
+
+R51 [P1] Closed single-vertex cubic loops are skipped and self-pruned by offsets
+Location: renderer/shapes/OffsetCurves.kt.
+Reproduction: closed v=[[32,48]], i=[[-16,-32]], o=[[16,-32]], followed by
+an offset whose amount animates from -4 to 6. One closed vertex defines a full
+cubic loop, but the count<2 guard returned it unchanged. Accepting that input
+alone still failed all six initial miter/bevel, fill/stroke and moving-control
+regressions: pruneAdjacent was comparing the only offset segment with itself.
+Its coincident interior points were mistaken for adjacent-curve crossings.
+Applied/suggested fix: only treat an open single vertex as empty, and run cyclic
+adjacent-segment pruning only when there is more than one source segment group.
+Endpoint joins are still emitted for the closed loop. This follows upstream's
+processPath count policy and pruneIntersections(segments.length > 1) guard:
+https://github.com/airbnb/lottie-web/blob/v5.12.2/player/js/utils/shapes/OffsetPathModifier.js
+The independent reference uses closed-form intersections of an isosceles control
+triangle's parallel-offset edges, plus analytic circular joins. Nine capture
+cases cover all three join styles, signed/zero offsets, live control motion,
+fills/strokes and backward/repeated seeks. A separate player-float test checks
+live loop endpoints and controls against the closed form to 0.00002 coordinate
+units, including the frames with native fill edge variance below.
+Tracked variance: three new filled-loop cases exceed the normal full-image
+0.0001 red MAE gate at isolated frames (up to about 0.000524). Every changed pixel
+is within a one-pixel reference edge band; observed edge MAE is below 0.0165
+and peak 39/255. Padding the reference seam did not remove the discrepancy, so
+the canonical unpadded reference is retained. Only these new loop-fill checks
+opt into zero off-edge differences, edge MAE <=0.02 and the unchanged peak <=0.25.
+All old tests and new stroke cases retain their original full-image thresholds.
+The inward miter's smallest valid reference has seven visible pixels on the
+64px sanity grid. These new fill checks require nonempty rather than >20-pixel
+artwork; the full-resolution geometry/image checks remain in force.
+Broader global intersections, eroded contours and dynamic collapsed segments
+remain open. This fix does not implement general offset topology cleanup.
+Verification: all 30 curved-offset scenarios / 320 unique frame pairs pass,
+including the nine new loop scenarios. The loop reference/RC contact sheets
+were visually reviewed. The full module check passes (852 tests), and all 45
+compose-preview outputs remain unchanged with no missing or skipped renders.
+
+R52 [P2] Ordinary layers with time-stretch metadata are unnecessarily rejected
+Location: RecordingValidation.kt; renderer/layers/Layer.kt.
+Origin: the interim unsupported-feature guard added during this review.
+Reproduction: a shape with sr=2, st=9 and a position keyed from [12,32] at t=0
+to [44,32] at t=40. Recording throws before drawing any frame. The same happens
+for sr=0.5/-1, a solid transform, a null parent, a masked shape and an ordinary
+child of a stretched precomposition. All eight initial regressions failed with
+the unsupported-time-stretch exception before this change.
+Applied/suggested fix: remove the ordinary-layer sr rejection. Ordinary-layer
+keys, masks, transforms and visibility retain their containing composition's
+authored time. Do not apply (frame-st)/sr again to those exported keys. Entering
+a precomposition still applies its existing child-timeline mapping.
+Pinned reference evidence: BaseLayer.setProgress passes the containing progress
+to transforms, masks, in/out animation and contents without an sr division;
+CompositionLayer.setProgress changes progress when entering child content.
+https://github.com/airbnb/lottie-android/blob/v6.7.1/lottie/src/main/java/com/airbnb/lottie/model/layer/BaseLayer.java
+https://github.com/airbnb/lottie-android/blob/v6.7.1/lottie/src/main/java/com/airbnb/lottie/model/layer/CompositionLayer.java
+Nine focused tests pass: eight reference-comparison scenarios at 13 frames each,
+plus an analytic visibility/content-position test with backward/repeated seeks.
+The native-resolution mask scenario includes an sr=1 control. These fixtures do
+not establish all text/image-specific animation or time-remap combinations.
+The artifact audit requires 64x64 mask captures and exact equality to the sr=1
+control for both RC and reference images. Worst mask foreground error is 0.763%;
+all six non-mask reference cases are below 0.052%. The review sheets were visually
+checked. Full build/API/lint/screenshot verification passes with 861 tests and
+the existing 16 skips; all 122 reference scenarios / 1586 frame pairs pass.
+compose-preview renders all 45 outputs unchanged, with no missing/skipped renders.
+The preview artifact audit passes for 21 samples, 22 GIFs and 16 moving GIFs;
+the other six animated captures intentionally contain static source artwork.
+
+R21 follow-up found while checking R52: at the parity harness's default 160px
+output, a masked 64px composition is rasterized at 64px then enlarged 2.5x.
+Its rectangle's softened edge exceeds the new timing cases' 1% foreground bound
+(observed worst 5.866%). At progress zero the solid interior is (255,178,178)
+versus reference (255,179,179), while the RC image has additional filtered edge
+pixels. At the final sample it is (255,0,0) versus (255,3,3), also including the
+reference's integer-opacity quantization. This enlarged-output check failed;
+it is not counted as fixed by R52. The two mask timing comparisons use 64px
+output, where they pass the same 1% bound. All existing test sizes/bounds remain
+unchanged. Output-scale-aware effect surfaces remain required; alpha19's
+createBitmap API takes fixed integer dimensions, so a general resize-aware
+solution must address both surface allocation and its drawing coordinate scale.
+
+R53 [P1] Curved offsets treat inactive recording slots as contour neighbours
+Locations: renderer/shapes/OffsetCurves.kt and PolystarTopology.kt.
+Animated-amount follow-up: four additional pinned-web fixture comparisons cover
+the split-group contour with amount 0->8 and -4->4, with and without neutral
+rounding's inactive slots. Forward, backward and repeated seeks preserve zero-
+amount identity and recover clipped pieces as the offset changes. All four pass
+unchanged image bounds (worst red MAE below 0.000013, peak 15/255). The expanded
+topology audit has 17 scenarios / 117 unique frame pairs; the contact sheet was
+visually reviewed. Original unsorted upstream output is retained for every new
+frame. These sampled cases do not prove exhaustive cubic-intersection cleanup.
+Reproduction: animate a polygon's point count 3->7, offset by 2 with miter joins;
+the initial implementation draws a closing spur. Round a square with radius
+0->12 before offsetting it: radius zero draws an incorrect closing join. A rounded
+star with point count 3->7, outer/inner radii 20/10 and roundness 60 renders blank.
+The three corresponding new playback tests failed initially; a rounded polygon
+and a static three-point rounded-star control pass.
+Cause: offsetCurves walks physical capacity slots and discards logical topology,
+including empty inflection/rounding slots. Its expressions also repeatedly inline
+polystar/control-polygon calculations. Raw shared source references expose the
+previously blank star as exceeding RC's 10000-entry float-state limit (R46).
+Applied partial fix: canonicalize logical source controls, traverse active
+neighbours for sequential/cyclic pruning, preserve output edge/vertex activity,
+share curve/solver expressions, and omit the nonexistent first predecessor.
+Keep unrounded polystar handles as literal zero so analytic straight-edge offsets
+do not unnecessarily invoke the curved solver. Reuse power-basis coefficients
+for the ten Newton steps: alpha19's combineToFloatArray splits expressions over
+30 terms into states, and repeated de Casteljau expansion wasted that capacity.
+Closed-contour canonicalization shares its any-active check and avoids round-trip
+handle scans when active vertices already own exactly the active edges. Logical
+references now also use NaN-payload-safe sharing. A new unit regression covers
+all sixteen four-slot activity patterns, including empty/single-active contours.
+Together these reductions allow the full live 3->7 rounded star to record/render;
+the float-state guard remains enabled and the animation is not baked or shrunk.
+
+Join follow-up: an already-pruned crossing must not be intersected a second time.
+Also skip joins between connected endpoints using the pinned web reference's
+per-coordinate relative tolerance (abs(a-b)*100000 <= min(abs(a),abs(b))).
+Before this change a seven-point static control drew a long spoke (MAE 0.004184),
+and a 3.4-point control failed the peak bound (239/255). At the latter's smooth
+join, endpoints [36.334904,43.189667] and [36.334896,43.189667] incorrectly created
+a miter at [34.1238,44.04625]. Both new controls now pass unchanged image bounds;
+the seven-point live frame's much larger spokes are also gone.
+Intersection follow-up: replace the single seed with nine uniform parameter-space
+seeds and ten Newton steps each. A shared RC float function reuses scratch state
+and snapshots each invocation's two results before the next call. Indexed loops
+refresh dependent expressions; this is live geometry, not animation-time sampling.
+The search selects the lowest validated t and excludes the shared end/start point.
+This fixes frame 9, but is bounded Newton search, NOT exhaustive root isolation.
+Tangencies, multiple roots in one basin and broader ordering still need work.
+More iterations of the old seed alone did not help: fourteen gave the same errors.
+For the pinned generator's frame 6 (5.4 points), pair 0's reference crossing is
+approximately (t,u)=(0.170454,0.218229). Starting at (0.8,0.2) instead converges
+near the shared endpoint (0.999990,0.000012); starting at (0.2,0.2) finds the
+interior crossing. Frame 9 pair 12 similarly needs an interior crossing near
+(0.597961,0.667528), but the old start converges near (1,0).
+The upstream intersection list itself warrants review: at frame 6 pair 10 its
+first result is near the shared endpoint, while another Newton start finds an
+interior root near (0.781771,0.829546). Do not tune one seed to these fixtures or
+silently replace the reference with the Kotlin result. Broader root-order and
+degenerate-intersection evidence is needed.
+Reference: tools/generate_offset_reference.mjs --precise-intersections
+  --logical-topology --ordered-intersections
+  --output src/test/resources/offset-topology-reference.json
+The generator runs pinned web rounding/offset code, not Kotlin production code.
+The regular-polygon oracle instead uses r' = r + amount/cos(pi/n), an independent
+closed-form parallel-edge construction. The equivalent web representation is
+retained as webExpected: its extra collinear cubic/join vertices produce native
+Android edge differences (up to 0.00143 full-image red MAE in this fixture).
+The analytic oracle retains the same 0.0002 / 0.3 mean/peak image bounds. The
+existing curved-offset-reference.json regeneration is byte-identical.
+New tests cover eleven authored frames plus backward/repeated seeks. Broader
+open-contour topology, downstream modifiers and arbitrary collapsed cubic groups
+still need expanded evidence. Global offset intersection cleanup remains open.
+Split-group pruning follow-up (deterministic probe, seed 12345):
+closed vertices [[16,16],[48,16],[48,48],[16,48]],
+incoming [[20,-24],[-20,12],[8,20],[-12,16]],
+outgoing [[-12,-16],[-20,-20],[16,-8],[-8,-24]],
+amount 4, miter join, limit 100. Upstream reaches its second
+pruneSegmentIntersection branch with three left pieces and two right pieces;
+the left FIRST/right LAST intersection is approximately (0.9625802,0.02252436).
+It clips those outer pieces and discards the intervening pieces. The prior local
+boundary-only traversal did not implement that second pruning branch. No earlier
+fixture reached it; the four new static/live and padded/unpadded regressions all
+failed before the fix (mean error up to 0.024986).
+Applied fix: retain the first-left/last-right clipped cubics, collapse intervening
+pieces and update their active flags. Logical traversal now carries complete
+piece groups through sequential and closing pruning, including activity changes.
+A neutral rounded-corner modifier adds logical padding to the already-curved
+test path without changing its geometry, so both traversal paths are exercised.
+
+The new case also contains crossings near (t,u)=(0.993405,0.979407) and
+(0.993451,0.863028). The old interior-only 3x3 seed grid missed the first root,
+leaving a small loop with peak image error 183/255. The grid is now endpoint-
+inclusive (0,.5,1 in each dimension), still nine seeds and ten steps. Independent
+2048/4096-segment polyline convergence checks verify the first crossing, alongside
+the existing analytic and 5.4-point-star checks. This is still a bounded Newton
+search, not a guarantee that every tangency or arbitrarily narrow basin is found.
+
+Full piece groups initially exceeded RC's float-state limit on the live star.
+Cubic slicing now uses a shared RC float function with eight snapshot outputs,
+plus identity/empty-cut simplifications. The constant path retains its direct
+evaluation. CubicSlicePlaybackTest checks all eight coordinates and a second
+slice of the first result against independent double-precision Bernstein math,
+including empty, reversed and repeated/backward ranges.
+The larger recording then exposed RC's 20000-operation playback limit. Searches
+now skip inactive groups and disjoint control bounds. A separating tangent plane
+also rejects hulls whose interiors cannot meet beyond their common endpoint,
+allowing only 1e-5 coordinate roundoff at that excluded point. Limits are not
+raised or disabled. The enabled/disabled search regression verifies that skipped
+calls reset their output rather than returning a previous call's roots.
+The live 3->7 rounded star and all four new pruning cases pass focused checks.
+Broader nonlinear/Boolean modifier chains, general erosion cleanup and exhaustive
+intersection isolation remain open; this is not an arbitrary-input parity claim.
+Previous multi-start/function follow-up tests: 873 passed, one failed, 16 skipped
+(890 discovered). The sole failure is roundedStarPointCount at frame 6: red MAE
+0.000443761 versus the unchanged 0.0002 bound. Frame 9 now passes. All eight
+topology scenarios remain active; seven pass, with 37 reference/RC frame pairs
+audited and visually checked. The verifier rejects the failing live-star scenario.
+The new static rounded-polygon control is included in the artifact audit.
+RuntimeFunctionPlaybackTest verifies execution order, loop refresh, one shared
+definition, multiple outputs/calls and result snapshots through backward/repeated
+seeks. CubicIntersectionPlaybackTest independently uses y=(t-.2)(t-.5)(t-.8)
+against y=0, expecting the first crossing at t=u=.2. It also checks separated
+curves and an excluded shared endpoint, both constant and translated at runtime.
+All four new function/analytic playback tests pass without re-recording.
+The first full run found a RestrictedApi lint error on the callback's writer
+receiver type; file/class/parameter suppressions did not cover that receiver.
+Using an explicit writer argument with a scoped parameter suppression passes
+lint and formatting. All twelve focused function/shader/recording tests pass
+after this equivalent callback refactor.
+Final full recheck after the refactor again has 873 passed, one failed and sixteen
+skipped. Compilation, debug/release API compatibility, lint, formatting and
+screenshot verification pass; only the frame-6 star regression fails.
+compose-preview then successfully rendered all 45 previews. The current contact
+sheet was visually checked; the audit passes for all 21 samples and 22 GIFs,
+including sixteen moving and six intentionally static inputs. Recording uses
+NoRuntimeShaders and preview playback denies shaders; no raster fallback is used.
+The image audits for curved offsets (320 pairs), polygon offsets (132), rounding
+(110), pucker topology (143), zigzag (220), trim timing (1008), group modifiers
+(55), nested Boolean (407) and full reference parity (122 fixtures/1586 pairs)
+pass. No failing regression is ignored and no image bound is loosened.
+This remains a partial implementation checkpoint, not completion of R53.
+
+Previous allocation/join follow-up verification: 868 passed, one failed, 16 skipped
+(885 discovered). Build, API compatibility, lint, formatting and screenshot
+verification pass. The sole failure remains roundedStarPointCount, now only at
+frames 6 and 9: red MAE 0.000445437 and 0.000675456 versus the unchanged 0.0002
+bound. All seven topology scenarios remain active; the three live polygon/rounding
+cases and all three static-star controls pass. The six passing scenarios' 36
+reference/RC pairs were audited and visually checked. The verifier continues to
+reject the failed live scenario's captures, rather than accepting partial success.
+The existing curved-offset (320 pairs), polygon-offset (132), rounding (110),
+pucker topology (143), zigzag (220), trim timing (1008), group-modifier (55),
+nested-Boolean (407) and 122-fixture parity (1586) audits all pass again.
+compose-preview renders all 45 previews unchanged with no missing/skipped outputs;
+21-sample and 22-GIF coverage/motion checks pass (16 moving, six static inputs).
+All temporary allocation/coordinate tracing has been removed. This remains a
+partial implementation checkpoint, not completion of R53 or the full task list.
+
+Previous full-module run (before the allocation/join follow-up): 865 passed,
+one failed, 16 skipped (882 discovered). The sole failure was
+OffsetTopologyTest.roundedStarPointCount, which then explicitly exceeded the
+10000-entry state limit. The four passing new cases
+have worst red MAE 0 for analytic polygons, 0.000037 for rounded polygons,
+0.000041 for zero/positive rounded corners, and 0.000001 for the static star.
+Their reference/RC sheet was visually checked. tools/check_offset_topology.py
+checks current JUnit status before accepting captures and correctly fails this
+run rather than accepting stale live-star images. No new test was ignored and
+no image bound was loosened. This is not a green implementation checkpoint.
+The existing curved-offset (320 pairs), polygon-offset (132), rounding (110),
+pucker topology (143), zigzag (220), trim timing (1008) and 122-fixture reference
+parity (1586) artifact audits still pass. Build, API compatibility, formatting and
+lint tasks complete successfully. All 45 compose-preview outputs render unchanged,
+with no missing/skipped renders, and the sample/GIF coverage audit passes.
+
+R54 [P1] Upstream offset pruning takes unsorted intersection candidates
+Location: pinned lottie-web v5.12.2 PolynomialBezier.intersections and
+OffsetPathModifier.getIntersection. This is an oracle/upstream defect, not an RC
+pixel-tolerance exception. The production multi-start solver already selects
+the lowest validated t.
+Reproduction: rounded star with 5.4 points, outer/inner radii 20/10, roundness 60,
+offset 2. At its final concave join, the precise upstream list starts with
+(t,u)=(0.9998703003,0.0001144409), followed by more near-endpoint candidates.
+The genuine interior crossing (0.7817707062,0.8295459747) is returned LAST.
+getIntersection removes only a first root approximately at t=1, then takes the
+first remaining item. Its near-endpoint candidate survives and prevents the cut.
+An independent polyline intersection calculation confirms the interior crossing:
+128 segments: (0.7817779986,0.8295277212)
+256 segments: (0.7817742371,0.8295388062)
+512 segments: (0.7817723662,0.8295444071)
+1024 segments: (0.7817715239,0.8295453112)
+These use double-precision evaluation of the logged web control points and line
+segment crossings, neither the production Newton solver nor web's recursive
+bounding-box candidate method. CubicIntersectionPlaybackTest contains float32
+controls from this join, checks 512/1024-segment convergence, and tests the constant
+and runtime results through translations and backward/repeated seeks.
+Suggested upstream fix: order candidates by contour parameter before selection;
+refine/validate and deduplicate near-tangent/endpoint candidates separately.
+Applied oracle fix: the generator's explicit --ordered-intersections option sorts
+the same upstream candidates by t. It requires precise logical-topology mode.
+Every original unsorted path remains under webExpected, with ordering metadata
+and a preservation test. Regeneration comparison confirms all 55 original paths
+are retained unchanged. Rounded-star frames 3, 6 and 9 and the eleven newly added
+split-prune frames differ from the unsorted reference. The later animated-amount
+fixtures add 22 retained originals: ordering changes expanding frames 1/2/5 and
+signed-amount frames 6/7/10. Regeneration preserves the preceding 55 paths exactly.
+The analytic polygon oracle is unaffected. No production solver results are used
+to generate expected paths, and no raster tolerance is relaxed.
+References:
+https://github.com/airbnb/lottie-web/blob/v5.12.2/player/js/utils/PolynomialBezier.js
+https://github.com/airbnb/lottie-web/blob/v5.12.2/player/js/utils/shapes/OffsetPathModifier.js
+
+Shader-checking follow-up: LottieProfiles.NoRuntimeShaders is a custom AndroidX
+recording profile that removes DATA_SHADER from the generation-time operation
+whitelist. All Lottie previews use it and explicitly set a deny-all shader policy
+on their player. Tests check luminance shader serialization and direct shader
+operation rejection, while normal drawing and gradient previews remain enabled.
+External recorders can opt into the same public profile by passing
+profile = LottieProfiles.NoRuntimeShaders to rememberRemoteDocument.
+
+Rechecked 2026-09-12: all eight focused LottieProfilesTest/RecordingSupportTest
+tests pass. compose-preview renders all 45 previews unchanged, with zero missing
+or skipped outputs. The coverage/motion audit passes for 21 samples and 22 GIFs
+(16 moving, six intentionally static); the contact sheet was visually checked.
+That shader-specific verification was independent of the then-failing R53 case;
+the subsequent green geometry checkpoints are recorded above.
+
+This chooses the user's "shader disabled" option, not a generation-time screenshot
+fallback. No live runtime shader is exported and no animation is frozen into a
+still image. Luminance matte input still fails explicitly; removing its matte and
+drawing the unmasked target would produce incorrect output. A future screenshot
+mode must render/capture successfully before replacing shader use with bitmap
+drawing, and must state its sampled frame rather than claim live animation.
+
+R05: alpha/inverted-alpha mattes now use the rendered layer surface, including
+disjoint shapes, opacity, layer visibility and precomp targets. Nested effects
+restore the containing surface instead of drawing prematurely to the main canvas.
+Luminance/inverted-luminance mattes are explicitly rejected (see blocker below).
+
+R06/R07: add/subtract/intersect masks run in authored order, with alpha and
+inversion applied to the finished layer composite. Mask expansion uses a stroked
+outline approximation. Precomp masks use parent time, and declared width/height
+clip transformed children. Tests cover zero/half opacity, overlap, expansion,
+subtract-then-add order, moving masks and nested effects. Difference/lighten/
+darken/unknown mask modes are explicitly unsupported; stroke-based expansion
+does not establish exact curved-offset parity.
+
+R08: font-backed text now renders even without exported glyphs. Font family/style
+is resolved through the fonts table; missing glyphs use the corresponding system
+font, not a glyph from an unrelated family. Document keyframes are selected at
+playback time. Tracking no longer adds a trailing character gap. Complex shaping,
+downloaded fonts and text animators remain outside verified support.
+
+R09: polystar position, radius, rotation, roundness and point counts keep live
+expressions (R29). Rounded-corner modifiers now support dynamic paths and polystars,
+including logical topology changes (R31). Pucker/bloat is now live and uses corrected reference
+math (R22). Twist angle, center, vertices and absolute controls now retain live
+expressions too; three formerly failing playback tests and an analytic control
+test pass. This verifies the branch's distance-weighted twist contract, not
+After Effects reference parity. Boolean operations support live coordinates
+(R23). Zigzag size, ridge counts, point type and cubic geometry now stay live with corrected
+reference math (R27). Polygon offsets now support live values and corrected joins
+(R28); curved offsets now use live control polygons, inflection splits, local
+intersection trimming, and distinct joins/caps (R33). Their original CPU-only
+chord-normal implementation has been removed. General intersection cleanup,
+animated degenerate source segments and large-eroded-contour collapse remain
+open. See R33 for the separate high-precision reference and analytic checks and
+their tracked raster-edge differences; this does not establish arbitrary-input
+offset parity or complete the broader modifier task list.
+Reference: https://github.com/airbnb/lottie-web/blob/v5.12.2/player/js/utils/shapes/OffsetPathModifier.js
+
+R10: animated repeater counts/offsets and exponential scaling stay live. Capacity
+is bounded (1024 copies, with an easing-overshoot allowance for dynamic counts).
+Fractional copy counts retain the pinned reference's truncation policy. Later
+modifiers retain group opacity multipliers. Live merge results followed by parent
+transforms and scaled repeaters have passing reference tests (R23). Broader
+modifier-order combinations still need reference tests. R37 fixes inherited
+path versus painted-content repetition, grouped path collection, stroke/gradient
+transforms, greedy earlier content and inactive open-stroke copies.
+Trim scope and compound non-wrapped trims are fixed by R25. R41 removes synthetic
+trimmed keyframes. R42 evaluates trims at their authored positions, shares native
+measurement for static/live final drawing, and exposes constant cut vertices to
+later modifiers. R43-R49 materialize live cuts before later deformation, including
+open/closed/wrapped and compound-contour cuts. R50 adds mode-2 shared lengths
+across authored paths/groups and their paint views. Trims/nonlinear consumers of
+runtime Boolean results and general offset/topology chains remain open. These
+verified cases do not complete all of R10.
+
+R14: stroke dashes now serialize through PaintBundle, since the alpha19 Compose
+paint tracker ignores ordinary PathEffect. Dash intervals/phase retain RemoteFloat
+dependencies; effects are cleared after drawing so they do not leak to siblings.
+
+R15: shape/solid/null layers now retain st/sr/bm/td/ddd JSON fields. Supported
+layer blend modes apply to the completed layer, with multiply covered by playback
+pixels. R52 removes the unnecessary non-precomp time-stretch rejection and
+verifies ordinary-layer authored timing. 3D, auto-orientation and hard-mix blending
+are explicitly rejected rather than silently ignored. This does not implement them.
+
+R16/R17: progress=1 displays the last representable frame before root op; all layer
+out-points remain exclusive. Invalid dimensions, frame rates/intervals, empty or
+undersized transform scales and inconsistent animated vectors fail clearly.
+Effect surfaces are limited to 16 megapixels and signed-short dimensions.
+
+R18: six unmodified CC0 fixtures have both still and animated previews. All 21
+bundled samples have numerical image comparisons with lottie-android 6.7.1 at
+13 shared authored-frame coordinates each.
+Tests require visible reference artwork and changing RC output for animated
+sources (the gradient-alpha fixture is intentionally static). Source revision,
+license statement and hashes are in sample-provenance.txt. Existing ignored/
+stale coverage is not treated as passing reference parity.
+
+PLAYER LIMITATION — LUMINANCE MATTES
+The attempted AGSL luminance conversion failed in native rendering with
+"Software rendering doesn't support RuntimeShader". The RC alpha19 offscreen
+target is a software Canvas backed by a Bitmap, even when a host view can use
+hardware acceleration. Its paint bridge does not support a color-matrix filter.
+The attempted shader path was removed. The original luminance playback test is
+retained with a specific Ignore reason; enabled tests verify explicit rejection.
+Suggested upstream fix: software-capable color-matrix / layer compositing in the
+player. No permissive shader policy or raster fallback was added.
+
+Two additional alpha19 integration pitfalls were fixed locally: offscreen bitmap
+drawing needs explicit dimensions, and named playback state must be declared
+outside private draw-content streams so the player can discover/update it.
+
+Screenshot baseline review: next, volumeUp and volumeDown now composite alpha
+matte surfaces rather than clip target paths. This changes edge antialiasing at
+composition-resolution bitmap boundaries. Reviewed changes affect 202, 592 and
+593 pixels respectively (whole-image RGB mean absolute differences of 0.011%,
+0.061% and 0.061%). Only these three progress=0 baselines were re-recorded; no
+comparison tolerances were changed. Output-scale-aware offscreen resolution is
+a possible future quality improvement, not established reference parity.
+
+R20 [P1] Animated color interpolation uses encoded RGB rather than linear light
+Location: renderer/properties/Color.kt, animateColor.
+Reproduction: CC0 color-ease.json compared with lottie-android at progress=0.5
+exceeded the fixed 3% RGB mean-absolute-error bound (actual approximately 3.50%).
+Cause: both static-frame and live playback branches interpolate sRGB-encoded
+channels directly. The pinned reference GammaEvaluator linearizes RGB first.
+Applied fix: decode sRGB, interpolate linear RGB with clamped eased progress,
+then encode sRGB; alpha remains linear. Updated obsolete midpoint assertions
+from 0.5 to the analytic sRGB value 0.735357, without changing static colors.
+Evidence: color property tests and the expanded 13-frame CC0 comparison pass.
+No image-difference tolerance was loosened to make the comparison pass.
+
+LAST FULLY GREEN VERIFICATION — 2026-09-12 (before R53 work in progress)
+build-brief ./gradlew :remotecompose:lottie:metalavaGenerateSignatureDebug
+  :remotecompose:lottie:assembleDebug :remotecompose:lottie:verifyRoborazziDebug
+  :remotecompose:lottie:check
+Result: 861 passed, 0 failed/errors, 16 explicitly skipped (877 discovered in
+the Lottie module's JUnit XML). The build wrapper also counts dependency tests.
+This includes all 21 bundled comparisons at 13 authored-frame coordinates each,
+compositing, motion, timing, pucker/bloat, twist, boolean merges and modifier
+chains, trim/rounded-corner scope, compound trims, static/live stroke miter limits,
+zigzag geometry/topology/point-type properties, live polygon offsets, invariant Bezier controls and
+exact linear timing, live polystar topology and compound fills, live rounded corners,
+geometry-modifier paint scope and repeated-instance opacity,
+live curved offsets, inflection geometry, signed caps and closed-contour seams,
+logical topology through rounded/polystar pucker chains and transforms,
+authored rounding order and repeated-rounding live dependencies,
+local-space group modifiers and composed group/repeater affine transforms,
+repeater path/paint scope, greedy collection, live visibility and stroke/gradient transforms,
+ordered grouped merge operands, paint consumption and pinned reference-cache diagnostics,
+nested live Boolean trees, retained operand winding and recursive transform/visibility,
+subframe trim measurement, retained holds/easing and duration-independent source geometry,
+authored trim order after static/live deformation, constant-cut materialization
+before later modifiers and inherited nonuniform transforms, live open-contour
+cut materialization before pucker and transforms, held/sliding/empty cut topology,
+and analytic player-coordinate checks through backward/repeated seeks,
+wrapped open-cut geometry, negative/held offsets, round caps and translucent strokes,
+closed-cut geometry and closing joins, full/partial topology transitions, inherited
+scale, qualified fill-edge variance, constant-cut precision and single-vertex loops,
+NaN-payload expression-cache collisions and explicit geometry state-limit rejection,
+native path conversion, conic precision, closed/open contour identity and API-33 fallback tests,
+restored mute screenshots,
+ordinary-layer authored timing with time-stretch metadata, unsupported-feature
+rejection and custom-profile tests. The API
+signature adds LottieProfiles.NoRuntimeShaders; compatibility checks pass.
+Lint: 0 errors, one existing compileSdk-newer-version warning. Debug AAR built.
+
+compose-preview show --module :remotecompose:lottie --json --timeout 1200
+python remotecompose/lottie/tools/check_previews.py
+python remotecompose/lottie/tools/check_parity.py --include-merge-regressions
+  --include-scope-regressions --include-miter-regressions
+  --include-topology-regressions --include-compound-fill-regressions
+  --include-rounding-regressions --include-group-modifier-regressions
+  --include-repeater-scope-regressions
+  --include-merge-scope-regressions
+  --include-layer-stretch-regressions
+Parity result: 122 fixture cases / 1586 frame pairs pass. The additional 10 merge
+and four static miter cases have zero measured RGB error; XOR comparisons
+explicitly use r=2 (R24). After R42, the 13 scope/compound cases have worst foreground
+error below 0.04%; they are sampled checks, not pixel-exact parity.
+New trim/rounding/miter comparison sheets were visually reviewed.
+All 17 polystar topology scenarios and six compound-fill scenarios pass at 13
+authored-frame coordinates each (299 new frame pairs). The topology cases have
+worst foreground RGB error 0.91% at a trimmed endpoint; the compound-fill cases
+have worst error 0.26% (opacity quantization). Their reference/RC sheets were
+visually inspected. Six capacity-bound unit tests also pass. The M3 play/pause
+golden was regenerated only after confirming exact reference-artwork agreement
+for the changed capture; full screenshot verification now passes.
+R31 added five Android rounded-path/intrinsic-roundness comparisons (65 frames)
+and ten independent reference-generated rounding scenarios (110 frames).
+python remotecompose/lottie/tools/check_rounding.py
+All rounding frame pairs pass without loosening test tolerances. Worst full-image
+red MAE is 0.000038; peak error is 8/255. Both reference-generated review sheets
+were visually inspected, along with the new Android-reference comparison sheet.
+No additional golden images changed for R31.
+python remotecompose/lottie/tools/check_modifier_scope.py
+R32 adds 15 paint-scope cases / 165 frame pairs. Full-image RGB MAE is at most
+0.000002 when rounded to six decimals; peak channel error is 16/255. All three
+geometry-oracle/RC review sheets were visually inspected, including nested group
+opacity and the repeater ramp. No golden images changed for R32.
+python remotecompose/lottie/tools/check_curved_offset.py
+R33 adds 24 passing tests, including 280 sampled reference geometries and 221
+captured frame pairs. All four curve/cap comparison sheets were visually
+reviewed. The tracked native raster-edge variance and reference precision choices
+are detailed under R33. All full-image checks pass; no golden images changed.
+python remotecompose/lottie/tools/check_pucker_topology.py
+R34 adds 13 passing tests / 143 frame pairs. The full red-channel mean error is
+at most 0.000068 (rounded to six decimals), with peak error 48/255. The new tests
+retain their original 0.0001 mean / 0.25 peak bounds; all ten initially failing
+cases pass without changing the oracle or relaxing the bounds. The three
+additional transform cases also pass. All three reference/RC review sheets were
+visually checked, including radius zero, mixed smooth/sharp corners, changing
+point counts, signed pucker amounts and closing-edge controls. No golden images
+changed for R34, and the existing 988 parity, 110 rounding and 221 curved-offset
+frame comparisons still pass.
+python remotecompose/lottie/tools/check_rounding.py --modifier-order
+R35 adds 16 passing tests: 14 native reference scenarios / 154 frame pairs,
+11 constant-frame logical-geometry checks, and a live-coordinate playback test.
+Worst full-image red MAE is 0.000044 (rounded to six decimals); peak is 8/255.
+All cases retain their original 0.0001 mean / 0.25 peak bounds. All three order
+comparison sheets were visually reviewed at frames 0, 4 and 10. The unchanged
+rounding-only audit retains its stricter 0.00005 mean bound. Existing parity,
+rounding, pucker-topology, paint-scope, polygon/curved-offset and zigzag audits
+still pass. No golden images changed for R35.
+python remotecompose/lottie/tools/check_modifier_scope.py --group-modifiers
+R36 adds 15 passing tests: eight Android-reference cases / 104 frame pairs,
+five analytic/reference-generated motion cases / 55 frame pairs, and two
+independent live-coordinate tests at 11 frames each. Worst Android foreground
+RGB MAE is 0.0026 (compound opacity quantization). Three analytic motion cases
+are pixel-identical; offset's worst full-image red MAE is 0.000528, peak 35/255,
+and the composed repeater's is 0.000217, peak 31/255. Their coordinate checks pass
+at the unchanged 0.0002-unit bound. The documented two-case raster allowance is
+explained under R36. All new comparison sheets were visually reviewed. Existing
+parity, rounding/order, pucker-topology, paint-scope, offset/curved-offset and
+zigzag audits pass. No new test exclusions or golden-image changes for R36.
+R37 adds 14 Android-reference cases / 182 frame pairs and one independent
+inherited-paint modifier case / 11 frame pairs. The owned-paint modifier fixture
+was also corrected as documented above. All reference cases pass the unchanged
+0.02 foreground bound; worst measured foreground RGB MAE is 0.0037. The owned
+and inherited analytic opacity cases both have zero pixel error at all 11 frames.
+Both repeater comparison sheets and the corrected/new paint-scope sheets were
+visually reviewed. The complete reference audit now covers 98 cases / 1274 pairs,
+and the paint-scope audit covers 16 cases / 176 pairs. Rounding/order, pucker
+topology, offset/curved-offset, zigzag and group-modifier audits also pass.
+Full module/API/lint/screenshot verification and debug assembly pass after R37.
+No new test exclusions or golden-image changes were required.
+R38/R39 add 17 tests: 16 grouped/greedy merge scenarios / 208 comparison pairs
+and a standalone repeated-draw reproduction for the pinned reference dependency.
+Worst foreground RGB MAE is 0.00009683, below the unchanged 0.02 bound. All
+three new merge comparison sheets were visually reviewed, including evolving
+intersection cuts and background-only merge results beside a visible control.
+The reference fixture adaptation and saved JSON inputs are explained under R39;
+these are not comparisons against cumulatively distorted cached paths.
+Full module/API/lint/screenshot verification and debug assembly pass after R38/R39.
+No tests were newly excluded and no golden images changed. Existing geometry,
+modifier, repeater, reference-parity and preview artifact audits remain passing.
+python remotecompose/lottie/tools/check_modifier_scope.py --nested-booleans
+R40 adds 39 passing tests: 37 native-path oracle scenarios / 407 frame pairs,
+and two explicit unsupported-concatenation guards. The initial sixteen left-nested
+tests failed before implementation; four static right-difference controls passed.
+All cases keep a 0.0001 full-image red MAE / 0.25 peak bound. Measured worst MAE
+rounds to 0.000005 and peak is 1/255. All seven contact sheets were visually
+reviewed at frames 0, 4 and 10, including mirrored nesting and inactive repeaters.
+The complete module/API/lint/screenshot build and debug assembly pass after R40.
+No tests were newly excluded, no screenshot goldens changed, and the 114-case /
+1482-pair Android reference audit still passes.
+python remotecompose/lottie/tools/check_modifier_scope.py --trim-timing
+R41 adds 11 tests: ten native-measurement scenarios / 160 capture pairs, plus a
+long-duration recording-structure assertion. Captures include subframes,
+backward seeks and repeated identical progress. Worst full-image red MAE is
+0.000075 and peak is 12/255, within unchanged 0.0001 / 0.25 bounds. Both trim
+comparison sheets were visually reviewed. The complete 114-case / 1482-pair
+Android-reference audit passes; mute-to-unmute's worst foreground RGB MAE is
+0.00364 after replacing baked trim geometry.
+
+R41 screenshot update: only muteToUnmute_progress25 changed (116 pixels,
+whole-image RGB MAE 0.00006779). In its aligned artwork boxes, reference-vs-RC
+RGB MAE improves from 0.00133970 to 0.00127898. The before/after/reference
+captures were visually reviewed before recording that sample. Progress 0, 50
+and 100 remain pixel-identical to their preceding baselines; no other sample's
+goldens were regenerated. No image bounds or test exclusions were relaxed.
+
+R42 adds nine tests / 144 native-oracle captures to TrimTimingTest. At that pass its
+suite had 20 passing tests (19 geometry scenarios / 304 captures and one recording-
+structure assertion). The new cases' worst full-image red MAE rounds to 0.000003,
+with peak 4/255; the complete suite retains the R41 worst MAE 0.000075 and peak
+12/255, within unchanged 0.0001 / 0.25 bounds. The new comparison sheets were
+visually reviewed at frames 0, 0.5 and 1, and all fractional/backward/repeated
+captures pass. No baseline screenshots or test exclusions changed in this pass.
+The full module/API/lint/screenshot/debug-assembly command passes serially.
+An earlier concurrent scoped/full-test attempt collided in Gradle's binary
+result output; that run is not counted as verification.
+
+R43 adds ten TrimTimingTest tests and one LiveTrimPlaybackTest. The trim suite
+now has 30 passing tests: 27 geometry scenarios / 432 capture pairs, plus
+recording structure, independent-oracle validation and round-cap invisibility.
+The analytic player-float test also passes. The eight new capture scenarios have
+worst full-image red MAE 0.000013 and peak 7/255; the whole suite's worst MAE
+remains 0.000075, within unchanged bounds. The new reference/RC comparison sheets
+were visually reviewed at frames 0, 0.5 and 1. The full module/API/lint/screenshot/
+debug-assembly command passes serially; no screenshot goldens or exclusions changed.
+
+R44 adds 19 native conversion tests, including two API-33 fallback regressions.
+python remotecompose/lottie/tools/check_native_paths.py
+All 15 scenarios / 30 native-to-converted fill/stroke pairs pass the edge-specific
+gate; the four comparison sheets were visually reviewed. No differences occur
+outside the native one-pixel edge band. Worst mean edge-channel error is 0.035736
+and peak is 107/255. The largest full-image red MAE is 0.002113 for a Boolean XOR
+stroke; this is native conic-versus-cubic raster variance, not pixel-exact parity.
+Independent rational-coordinate checks and exact polynomial-control assertions
+pass separately. The zero-weight degenerate fill is empty on both sides.
+The full module/API/lint/screenshot/debug-assembly command passes serially, with
+no golden screenshot changes and the same 16 explicit skips.
+R43/R45/R46 follow-up adds six wrapped-trim capture tests and two focused
+expression-cache/state-limit tests. All pass, alongside the earlier tests.
+python remotecompose/lottie/tools/check_modifier_scope.py --trim-timing
+The trim suite now has 36 tests / 33 captured scenarios / 528 frame pairs.
+All six comparison sheets were visually reviewed, including moving and wrapped
+cuts at frames 0, 0.5 and 1. New scenarios have worst full-image red MAE 0.000032
+and peak 42/255; the entire suite remains inside its unchanged 0.0001 / 0.25
+bounds. No golden screenshots or test exclusions changed. API, lint, assembly
+and explicit Roborazzi verification pass serially.
+
+Closed-contour / R47-R48 follow-up adds 12 tests and 192 capture pairs. The trim
+suite now has 48 passing tests, including 45 geometry scenarios / 720 frame pairs.
+All artifact audits pass. The 12 new scenarios were visually reviewed at frames
+0, 0.5 and 1, including backward-seek captures in the numerical audit. The static
+closed-cut, constant one-vertex loop and padded-native fill control are pixel-
+identical to their independent reference captures. The un-padded native fill
+variance is documented under R43; no differences escape its one-pixel edge band.
+Full module/API/lint/debug-assembly and explicit Roborazzi verification pass,
+with unchanged golden files and the same 16 explicit skips.
+
+Compound-contour / R49 follow-up adds six tests and 96 capture pairs. The trim
+suite now has 54 passing tests, including 51 geometry scenarios / 816 frame pairs.
+All six new scenarios were visually reviewed at frames 0, 0.5 and 1; the numerical
+audit also covers subframes and backward/repeated seeks. Their worst full-image
+red MAE is below 0.000003 and peak at most 4/255 under the unchanged strict gate.
+All other reference/geometry artifact audits pass, as do full module/API/lint/
+debug-assembly and explicit Roborazzi verification. No goldens or exclusions changed.
+
+Mode-2 / R50 follow-up adds 12 tests and 192 capture pairs. The trim suite now
+has 66 passing tests, including 63 geometry scenarios / 1008 frame pairs. The new
+scenarios were visually reviewed at frames 0, 0.5 and 1, with subframe/backward/
+repeated seeks in the numerical audit. Worst new full-image red MAE is below
+0.000013 and peak at most 8/255, inside the unchanged 0.0001 / 0.25 strict gate.
+All existing artifact audits and full module/API/lint/debug-assembly/Roborazzi
+checks pass. No screenshot goldens or test exclusions changed.
+
+python remotecompose/lottie/tools/check_zigzag.py
+Zigzag result: 32 upstream-generated static geometry cases and 220 playback
+frame pairs (20 scenarios x 11 authored frames) pass. Its reference/RC review
+sheets were visually checked; the bounded smooth-join variance is tracked in R27.
+The eight point-type scenarios add 88 frames with zero measured red-channel error;
+all five point-type decoding/round-trip tests also pass.
+python remotecompose/lottie/tools/check_offset.py
+Offset result: 12 analytic-fixture scenarios / 132 playback frame pairs pass,
+including moving geometry, signed amount, live miter limits and reverse winding.
+Both reference/RC review sheets were visually checked. Complete curved-offset
+intersection cleanup remains open (R28/R33); the generated web-reference audit data
+is not a passing-test manifest.
+Twist's three live cases also save analytic-fixture/RC images under
+build/outputs/lottie-motion/; all nine playback frames were visually reviewed.
+Result: all 45 previews rendered, covering 21 samples with 23 PNGs and 22 GIFs.
+The initial NoRuntimeShaders run kept all 45 outputs pixel-identical to the
+previous profile. R21 changed only the two precomp-stretch captures (still and
+animated). The run after polystar topology and compound-fill fixes changed
+only the M3 play/pause still and animated captures (two changed, 43 unchanged),
+with no missing or skipped renders. The changed artwork's edge coverage is
+validated against the reference renderer, and the complete preview contact sheet
+was visually inspected, including initial/middle/final animation frames.
+The R40 nested-merge run kept all 45 outputs unchanged. After R41, all 45 outputs
+render with zero missing or skipped captures; the complete preview sheet was
+visually reviewed and content, sample coverage and expected GIF-motion checks pass.
+The intermediate broad line-encoding experiment changed 25 outputs; its unrelated
+changes were reverted by limiting line encoding to wholly linear playback-trimmed
+contours. Final-preview change counts are relative to that intermediate run,
+not evidence that 25 bundled animations changed from the preceding verified state.
+The final R42 render is pixel-identical across all 45 previews (zero missing or
+skipped). The complete still/initial-middle-final animation contact sheet was
+reviewed; sample coverage, visible-content and GIF-motion checks pass. No preview
+baseline or capture settings were changed for the trim-order implementation.
+The R43 live-cut render also keeps all 45 outputs pixel-identical, with no missing
+or skipped renders. All reference and geometry artifact audits pass after the
+full test run, including the expanded 432-pair trim audit.
+The R44 native-path conversion run again renders all 45 previews unchanged, with
+zero missing/skipped outputs. Sample/animation coverage and all geometry-artifact
+audits pass; the new native-path comparison sheets were visually reviewed.
+The wrapped-trim / R45-R46 follow-up also renders all 45 previews unchanged:
+zero missing/skipped captures, all 21 samples covered, 23 PNGs and 22 GIFs.
+The complete still/initial-middle-final contact sheet was visually reviewed.
+All artifact audits pass again, including 528 trim frame pairs, and no screenshot
+goldens or capture settings were changed.
+The closed-contour / R47-R48 follow-up again renders all 45 previews unchanged,
+with zero missing/skipped captures. The 21-sample content/coverage/motion audit
+passes and the fresh full preview contact sheet was visually reviewed. All
+reference and geometry audits pass, including the expanded 720-pair trim audit.
+The compound-contour / R49 follow-up also renders all 45 previews unchanged,
+with zero missing/skipped outputs. All 21 samples have still and animated
+previews; the content/frame-count/motion audit passes (23 PNGs, 22 GIFs, 16 moving).
+The fresh full preview sheet and new compound-trim reference/RC sheets were
+visually reviewed. All artifact audits pass, including 816 trim frame pairs.
+The mode-2 / R50 follow-up again renders all 45 previews unchanged, with zero
+missing/skipped outputs. The 21-sample still/animation coverage and motion audit
+passes, and the fresh full preview sheet was visually reviewed. These bundled
+samples contain no m=2 trims: mode-2 correctness is established by the separate
+reference/RC geometry captures, not by unchanged sample previews. All artifact
+audits pass, including the expanded 1008-pair trim audit.
+Gradient rendering remains
+available without runtime shaders.
+All content/coverage/frame-count checks pass; 16 GIFs move and six represent
+intentionally static sources. The hold fixture changes for only one 60 Hz frame
+before looping, so its preview uses 10 ms capture intervals (201 frames, two
+distinct images); the initial 100 ms sampling missed the change. The fixture
+bytes and playback implementation were not altered for this capture correction.
+The rendered contact sheet was visually reviewed.
+
+R19 restoration follow-up: muteToUnmute and unmuteToMute now expect successful
+decoding and execute seven existing progress captures (0/25/50/100 and 0/50/100).
+The first mute baseline still contained a MissingFieldException panel; other
+baselines retained pre-compositing edge pixels. After their 13-frame numerical
+reference comparisons passed, all seven were deliberately recorded and visually
+reviewed. The tests are enabled again; this removes two obsolete Ignore entries.
+
+The original per-finding text below describes the starting implementation.
 
 Paths below are relative to remotecompose/lottie/src/main/java/com/google/
 android/horologist/remotecompose/lottie unless another source set is named.
@@ -203,7 +2020,9 @@ per frame.
 Applied parametric fix: retain rectangle/ellipse coordinate expressions. Apply
 rectangle rounding analytically (its own radius wins over the modifier), and
 use the player's live path measurement for dynamic geometry trimming. Constant
-geometry keeps the existing precomputed trim path. Ellipses have no sharp
+geometry with constant trim values keeps the existing precomputed trim path.
+R41 also moves authored paths and animated trims on static parametric shapes to
+native live measurement, removing synthetic trimmed keyframes. Ellipses have no sharp
 corners for the rounding modifier to replace.
 Evidence: eleven native playback tests cover translation, resizing, full and
 half trim, rounding, animated radius, and animated trim endpoints. Static

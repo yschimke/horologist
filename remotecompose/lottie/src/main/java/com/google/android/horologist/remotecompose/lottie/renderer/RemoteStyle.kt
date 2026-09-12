@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
+@file:Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
+
 package com.google.android.horologist.remotecompose.lottie.renderer
 
 import android.annotation.SuppressLint
+import androidx.compose.remote.core.operations.paint.PaintBundle
+import androidx.compose.remote.core.operations.paint.PaintPathEffects
+import androidx.compose.remote.creation.compose.layout.RemoteCanvas
 import androidx.compose.remote.creation.compose.shaders.RemoteLinearShader
 import androidx.compose.remote.creation.compose.shaders.RemoteRadialShader
 import androidx.compose.remote.creation.compose.shaders.RemoteShader
@@ -24,13 +29,13 @@ import androidx.compose.remote.creation.compose.state.RemoteColor
 import androidx.compose.remote.creation.compose.state.RemoteFloat
 import androidx.compose.remote.creation.compose.state.RemotePaint
 import androidx.compose.remote.creation.compose.state.lerp
+import androidx.compose.remote.creation.compose.state.max
 import androidx.compose.remote.creation.compose.state.rc
 import androidx.compose.remote.creation.compose.state.rf
 import androidx.compose.remote.creation.compose.state.selectIfLt
 import androidx.compose.remote.creation.compose.state.sqrt
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PaintingStyle
-import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.TileMode
@@ -40,14 +45,17 @@ import com.google.android.horologist.remotecompose.lottie.format.graphicelement.
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.LineCap
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.LineJoin
 import com.google.android.horologist.remotecompose.lottie.format.graphicelement.styles.StrokeDash
-import com.google.android.horologist.remotecompose.lottie.format.properties.AnimatedScalarProperty
-import com.google.android.horologist.remotecompose.lottie.format.properties.BaseScalarProperty
-import com.google.android.horologist.remotecompose.lottie.format.properties.StaticScalarProperty
 import com.google.android.horologist.remotecompose.lottie.format.values.Point
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.RemoteGradientValue
 import com.google.android.horologist.remotecompose.lottie.renderer.properties.animateScalar
 
 internal interface RemoteStyle {
+  val dashPattern: RemoteDash?
+    get() = null
+
+  val miterLimit: RemoteFloat?
+    get() = null
+
   fun getPaint(inheritedOpacity: RemoteFloat = 1f.rf): RemotePaint
 }
 
@@ -56,6 +64,12 @@ internal class RemoteStyleWithOpacity(
   val baseStyle: RemoteStyle,
   val opacityMultiplier: RemoteFloat,
 ) : RemoteStyle {
+  override val dashPattern: RemoteDash?
+    get() = baseStyle.dashPattern
+
+  override val miterLimit: RemoteFloat?
+    get() = baseStyle.miterLimit
+
   override fun getPaint(inheritedOpacity: RemoteFloat): RemotePaint {
     return baseStyle.getPaint(inheritedOpacity * opacityMultiplier)
   }
@@ -82,8 +96,8 @@ internal class RemoteStroke(
   val opacity: RemoteFloat,
   val lineCap: LineCap = LineCap.Round,
   val lineJoin: LineJoin = LineJoin.Round,
-  val miterLimit: RemoteFloat? = null,
-  val dashPattern: PathEffect? = null,
+  override val miterLimit: RemoteFloat? = null,
+  override val dashPattern: RemoteDash? = null,
 ) : RemoteStyle {
   override fun getPaint(inheritedOpacity: RemoteFloat): RemotePaint {
     return RemotePaint {
@@ -104,9 +118,6 @@ internal class RemoteStroke(
           LineJoin.Round -> StrokeJoin.Round
           LineJoin.Bevel -> StrokeJoin.Bevel
         }
-      if (this@RemoteStroke.dashPattern != null) {
-        this.pathEffect = this@RemoteStroke.dashPattern
-      }
     }
   }
 }
@@ -146,8 +157,8 @@ internal class RemoteGradientStroke(
   val strokeWidth: RemoteFloat,
   val lineCap: LineCap = LineCap.Round,
   val lineJoin: LineJoin = LineJoin.Round,
-  val miterLimit: RemoteFloat? = null,
-  val dashPattern: PathEffect? = null,
+  override val miterLimit: RemoteFloat? = null,
+  override val dashPattern: RemoteDash? = null,
 ) : RemoteStyle {
   override fun getPaint(inheritedOpacity: RemoteFloat): RemotePaint {
     return RemotePaint {
@@ -167,9 +178,6 @@ internal class RemoteGradientStroke(
           LineJoin.Round -> StrokeJoin.Round
           LineJoin.Bevel -> StrokeJoin.Bevel
         }
-      if (this@RemoteGradientStroke.dashPattern != null) {
-        this.pathEffect = this@RemoteGradientStroke.dashPattern
-      }
       this.shader =
         createGradientShader(
           gradient = gradient,
@@ -183,53 +191,53 @@ internal class RemoteGradientStroke(
   }
 }
 
+/** Dashes are serialized explicitly: alpha19's Compose paint tracker drops PathEffect. */
+internal data class RemoteDash(val intervals: List<RemoteFloat>, val phase: RemoteFloat)
+
+@SuppressLint("RestrictedApi")
+internal fun RemoteCanvas.applyStrokeDetails(style: RemoteStyle?) {
+  val dash = style?.dashPattern
+  val miter = style?.miterLimit ?: 4f.rf
+  val canvas = internalCanvas
+  val op = canvas.recordRenderingOp {
+    val bundle = PaintBundle()
+    // RemotePaint does not expose miter limits. Serialize the live value explicitly,
+    // including a reset for other styles so nested/repeated content cannot inherit it.
+    bundle.setStrokeMiter(miter.getFloatIdForCreationState(canvas.creationState))
+    bundle.setPathEffect(
+      dash?.let {
+        PaintPathEffects.encode(
+          PaintPathEffects.Dash(
+            it.phase.getFloatIdForCreationState(canvas.creationState),
+            *it.intervals
+              .map { value -> value.getFloatIdForCreationState(canvas.creationState) }
+              .toFloatArray(),
+          )
+        )
+      }
+    )
+    canvas.document.buffer.addPaint(bundle)
+  }
+  canvas.buffer.addRoots(op, miter)
+  if (dash != null) canvas.buffer.addRoots(op, dash.phase, *dash.intervals.toTypedArray())
+}
+
 @SuppressLint("RestrictedApi")
 internal fun createDashPathEffect(
   dashes: List<StrokeDash>?,
   animationSettings: LottieSettings,
-): PathEffect? {
+): RemoteDash? {
   if (dashes.isNullOrEmpty()) return null
-
-  val intervalsList = mutableListOf<Float>()
-  var phase = 0f
-
+  val intervals = mutableListOf<RemoteFloat>()
+  var phase = 0f.rf
   for (dash in dashes) {
     val property = dash.length ?: continue
-    val value = resolveScalarFloat(property, animationSettings)
-    val type = dash.type.value
-    if (type == "o" || type == "offset" || type?.startsWith("o") == true) {
-      phase = value
-    } else {
-      intervalsList.add(value)
-    }
+    val value = animateScalar(property, animationSettings)
+    if (dash.type.value?.startsWith("o") == true) phase = value
+    else intervals += max(value, 0.1f.rf)
   }
-
-  if (intervalsList.isEmpty()) return null
-
-  val finalIntervals =
-    if (intervalsList.size % 2 != 0) {
-      (intervalsList + intervalsList).toFloatArray()
-    } else {
-      intervalsList.toFloatArray()
-    }
-
-  if (finalIntervals.all { it == 0f }) return null
-
-  return PathEffect.dashPathEffect(finalIntervals, phase)
-}
-
-@SuppressLint("RestrictedApi")
-private fun resolveScalarFloat(
-  property: BaseScalarProperty,
-  animationSettings: LottieSettings,
-): Float {
-  val rf = animateScalar(property, animationSettings)
-  val constVal = rf.constantValueOrNull
-  if (constVal != null) return constVal
-  return when (property) {
-    is StaticScalarProperty -> property.value.constantValue
-    is AnimatedScalarProperty -> property.keyframes.firstOrNull()?.value?.constantValue ?: 0f
-  }
+  if (intervals.isEmpty()) return null
+  return RemoteDash(if (intervals.size % 2 == 0) intervals else intervals + intervals, phase)
 }
 
 @SuppressLint("RestrictedApi")

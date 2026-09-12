@@ -119,13 +119,13 @@ class RoundedCornersTest {
     assertThat(rounded.vertices).hasSize(8)
 
     // Corner 1 at (20,0): edge from (0,0) has length 20 -> max radius clamped to 10f
-    // pStart at (10, 0), pEnd at (20, 10)
+    // Each edge clamps independently: pStart at (10, 0), pEnd at (20, 50).
     val pStart1 = rounded.vertices[2]
     val pEnd1 = rounded.vertices[3]
     assertThat(pStart1[0]).isWithin(0.01f).of(10f)
     assertThat(pStart1[1]).isWithin(0.01f).of(0f)
     assertThat(pEnd1[0]).isWithin(0.01f).of(20f)
-    assertThat(pEnd1[1]).isWithin(0.01f).of(10f)
+    assertThat(pEnd1[1]).isWithin(0.01f).of(50f)
   }
 
   @Test
@@ -275,4 +275,3 @@ class RoundedCornersTest {
     assertThat(lottiePath.path).isNotEmpty()
   }
 }
-

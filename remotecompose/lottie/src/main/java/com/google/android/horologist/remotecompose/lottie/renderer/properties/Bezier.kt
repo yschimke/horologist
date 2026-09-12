@@ -35,6 +35,19 @@ internal data class RemoteBezierValue(
   val inTangents: List<List<RemoteFloat>>,
   val outTangents: List<List<RemoteFloat>>,
   val vertices: List<List<RemoteFloat>>,
+  val topology: RemoteBezierTopology? = null,
+  /** Binary contour presence, independent of collapsed recording capacity or paint opacity. */
+  val visibility: RemoteFloat = 1f.rf,
+)
+
+/**
+ * Logical vertices and edges within a fixed-capacity path. A collapsed recording slot is not an
+ * authored corner: centroid-based modifiers must not count it, or introduce controls on its empty
+ * edge. Segment j runs from vertex j to j+1 (wrapping for a closed path).
+ */
+internal data class RemoteBezierTopology(
+  val vertices: List<RemoteFloat>,
+  val segments: List<RemoteFloat>,
 )
 
 internal data class BezierAnimationSegment(val startFrame: Float, val value: RemoteBezierValue)
@@ -101,21 +114,24 @@ internal fun animateBezier(
                   startSubpath.inTangents.mapIndexed { v, point ->
                     listOf(point.x, point.y).mapIndexed { c, startCoord ->
                       val endCoord = endSubpath.inTangents.getOrNull(v)?.getOrNull(c) ?: startCoord
-                      selectIfLt(frameInAnimation, duration.rf, startCoord, endCoord)
+                      if (sameConstantCoordinate(startCoord, endCoord)) startCoord
+                      else selectIfLt(frameInAnimation, duration.rf, startCoord, endCoord)
                     }
                   },
                 outTangents =
                   startSubpath.outTangents.mapIndexed { v, point ->
                     listOf(point.x, point.y).mapIndexed { c, startCoord ->
                       val endCoord = endSubpath.outTangents.getOrNull(v)?.getOrNull(c) ?: startCoord
-                      selectIfLt(frameInAnimation, duration.rf, startCoord, endCoord)
+                      if (sameConstantCoordinate(startCoord, endCoord)) startCoord
+                      else selectIfLt(frameInAnimation, duration.rf, startCoord, endCoord)
                     }
                   },
                 vertices =
                   startSubpath.vertices.mapIndexed { v, point ->
                     listOf(point.x, point.y).mapIndexed { c, startCoord ->
                       val endCoord = endSubpath.vertices.getOrNull(v)?.getOrNull(c) ?: startCoord
-                      selectIfLt(frameInAnimation, duration.rf, startCoord, endCoord)
+                      if (sameConstantCoordinate(startCoord, endCoord)) startCoord
+                      else selectIfLt(frameInAnimation, duration.rf, startCoord, endCoord)
                     }
                   },
               )
@@ -139,21 +155,24 @@ internal fun animateBezier(
                   startSubpath.inTangents.mapIndexed { v, point ->
                     listOf(point.x, point.y).mapIndexed { c, startCoord ->
                       val endCoord = endSubpath.inTangents.getOrNull(v)?.getOrNull(c) ?: startCoord
-                      lerp(startCoord, endCoord, currentBezierValue)
+                      if (sameConstantCoordinate(startCoord, endCoord)) startCoord
+                      else lerp(startCoord, endCoord, currentBezierValue)
                     }
                   },
                 outTangents =
                   startSubpath.outTangents.mapIndexed { v, point ->
                     listOf(point.x, point.y).mapIndexed { c, startCoord ->
                       val endCoord = endSubpath.outTangents.getOrNull(v)?.getOrNull(c) ?: startCoord
-                      lerp(startCoord, endCoord, currentBezierValue)
+                      if (sameConstantCoordinate(startCoord, endCoord)) startCoord
+                      else lerp(startCoord, endCoord, currentBezierValue)
                     }
                   },
                 vertices =
                   startSubpath.vertices.mapIndexed { v, point ->
                     listOf(point.x, point.y).mapIndexed { c, startCoord ->
                       val endCoord = endSubpath.vertices.getOrNull(v)?.getOrNull(c) ?: startCoord
-                      lerp(startCoord, endCoord, currentBezierValue)
+                      if (sameConstantCoordinate(startCoord, endCoord)) startCoord
+                      else lerp(startCoord, endCoord, currentBezierValue)
                     }
                   },
               )
@@ -193,22 +212,30 @@ private fun chainBezierAnimation(
       firstSegment.value.inTangents.mapIndexed { v, point ->
         point.mapIndexed { c, coordVal ->
           val remainingVal = remainingChained.inTangents.getOrNull(v)?.getOrNull(c) ?: coordVal
-          selectIfLt(frame, nextStartFrame, coordVal, remainingVal)
+          if (sameConstantCoordinate(coordVal, remainingVal)) coordVal
+          else selectIfLt(frame, nextStartFrame, coordVal, remainingVal)
         }
       },
     outTangents =
       firstSegment.value.outTangents.mapIndexed { v, point ->
         point.mapIndexed { c, coordVal ->
           val remainingVal = remainingChained.outTangents.getOrNull(v)?.getOrNull(c) ?: coordVal
-          selectIfLt(frame, nextStartFrame, coordVal, remainingVal)
+          if (sameConstantCoordinate(coordVal, remainingVal)) coordVal
+          else selectIfLt(frame, nextStartFrame, coordVal, remainingVal)
         }
       },
     vertices =
       firstSegment.value.vertices.mapIndexed { v, point ->
         point.mapIndexed { c, coordVal ->
           val remainingVal = remainingChained.vertices.getOrNull(v)?.getOrNull(c) ?: coordVal
-          selectIfLt(frame, nextStartFrame, coordVal, remainingVal)
+          if (sameConstantCoordinate(coordVal, remainingVal)) coordVal
+          else selectIfLt(frame, nextStartFrame, coordVal, remainingVal)
         }
       },
   )
 }
+
+/** Keep invariant controls recognizable to topology-dependent geometry modifiers. */
+@SuppressLint("RestrictedApi")
+private fun sameConstantCoordinate(a: RemoteFloat, b: RemoteFloat): Boolean =
+  a.constantValueOrNull?.let { it == b.constantValueOrNull } == true
