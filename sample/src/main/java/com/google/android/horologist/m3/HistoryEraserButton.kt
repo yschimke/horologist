@@ -29,10 +29,8 @@ import androidx.compose.remote.creation.compose.modifier.RemoteModifier
 import androidx.compose.remote.creation.compose.modifier.fillMaxSize
 import androidx.compose.remote.creation.compose.modifier.fillMaxWidth
 import androidx.compose.remote.creation.compose.modifier.padding
-import androidx.compose.remote.creation.compose.state.RemoteBoolean
 import androidx.compose.remote.creation.compose.state.rb
 import androidx.compose.remote.creation.compose.state.rdp
-import androidx.compose.remote.creation.compose.state.rf
 import androidx.compose.remote.creation.compose.state.rs
 import androidx.compose.remote.tooling.preview.RemoteContentPreview
 import androidx.compose.runtime.Composable
@@ -57,31 +55,21 @@ import androidx.wear.compose.ui.tooling.preview.WearPreviewLargeRound
 fun HistoryEraserButton(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
-  checked: Boolean = true,
-  onCheckedChange: (Boolean) -> Unit = {},
-  enabled: Boolean = true,
 ) {
-  val colorScheme = MaterialTheme.colorScheme
-  val scaryColors =
-    SwitchButtonDefaults.splitSwitchButtonColors(
-      checkedContainerColor = colorScheme.errorDim,
-      checkedContentColor = colorScheme.onError,
-      checkedSecondaryContentColor = colorScheme.onError.copy(alpha = 0.8f),
-      checkedSplitContainerColor = colorScheme.errorContainer,
-      checkedThumbColor = colorScheme.error,
-      checkedThumbIconColor = colorScheme.onError,
-      checkedTrackColor = colorScheme.onErrorContainer,
-      checkedTrackBorderColor = colorScheme.error,
-    )
-
+  val colors = MaterialTheme.colorScheme
   SplitSwitchButton(
-    checked = checked,
-    onCheckedChange = onCheckedChange,
+    checked = true,
+    onCheckedChange = {},
     toggleContentDescription = "Arm History Eraser",
     onContainerClick = onClick,
     modifier = modifier.fillMaxWidth(),
-    enabled = enabled,
-    colors = scaryColors,
+    colors =
+      SwitchButtonDefaults.splitSwitchButtonColors(
+        checkedContainerColor = colors.errorContainer,
+        checkedSplitContainerColor = colors.errorDim,
+        checkedThumbColor = colors.errorContainer,
+        checkedTrackColor = colors.onError,
+      ),
     secondaryLabel = { Text("Don't touch it!") },
     label = { Text("History Eraser") },
   )
@@ -97,31 +85,21 @@ fun HistoryEraserButton(
 fun RemoteHistoryEraserButton(
   onClick: Action,
   modifier: RemoteModifier = RemoteModifier,
-  checked: RemoteBoolean = true.rb,
-  onCheckedChange: Action = Action.Empty,
-  enabled: RemoteBoolean = true.rb,
 ) {
-  val colorScheme = RemoteMaterialTheme.colorScheme
-  val scaryColors =
-    RemoteSplitSwitchButtonDefaults.splitSwitchButtonColors(
-      checkedContainerColor = colorScheme.errorDim,
-      checkedContentColor = colorScheme.onError,
-      checkedSecondaryContentColor = colorScheme.onError.copy(alpha = 0.8f.rf),
-      checkedSplitContainerColor = colorScheme.errorContainer,
-      checkedThumbColor = colorScheme.error,
-      checkedThumbIconColor = colorScheme.onError,
-      checkedTrackColor = colorScheme.onErrorContainer,
-      checkedTrackBorderColor = colorScheme.error,
-    )
-
+  val colors = RemoteMaterialTheme.colorScheme
   RemoteSplitSwitchButton(
-    checked = checked,
-    onCheckedChange = onCheckedChange,
+    checked = true.rb,
+    onCheckedChange = Action.Empty,
     toggleContentDescription = "Arm History Eraser".rs,
     onContainerClick = onClick,
     modifier = modifier.fillMaxWidth(),
-    enabled = enabled,
-    colors = scaryColors,
+    colors =
+      RemoteSplitSwitchButtonDefaults.splitSwitchButtonColors(
+        checkedContainerColor = colors.errorContainer,
+        checkedSplitContainerColor = colors.errorDim,
+        checkedThumbColor = colors.errorContainer,
+        checkedTrackColor = colors.onError,
+      ),
     secondaryLabel = { RemoteText("Don't touch it!".rs) },
     label = { RemoteText("History Eraser".rs) },
   )
@@ -130,13 +108,11 @@ fun RemoteHistoryEraserButton(
 @WearPreviewLargeRound
 @Composable
 fun HistoryEraserButtonWearPreview() {
-  MaterialTheme {
-    Box(
-      modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
-      contentAlignment = Alignment.Center,
-    ) {
-      HistoryEraserButton(onClick = {})
-    }
+  Box(
+    modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+    contentAlignment = Alignment.Center,
+  ) {
+    HistoryEraserButton(onClick = {})
   }
 }
 
@@ -145,13 +121,11 @@ fun HistoryEraserButtonWearPreview() {
 @Composable
 fun HistoryEraserButtonRemotePreview() {
   RemoteContentPreview {
-    RemoteMaterialTheme {
-      RemoteBox(
-        modifier = RemoteModifier.fillMaxSize().padding(horizontal = 16.rdp),
-        contentAlignment = RemoteAlignment.Center,
-      ) {
-        RemoteHistoryEraserButton(onClick = Action.Empty)
-      }
+    RemoteBox(
+      modifier = RemoteModifier.fillMaxSize().padding(horizontal = 16.rdp),
+      contentAlignment = RemoteAlignment.Center,
+    ) {
+      RemoteHistoryEraserButton(onClick = Action.Empty)
     }
   }
 }
