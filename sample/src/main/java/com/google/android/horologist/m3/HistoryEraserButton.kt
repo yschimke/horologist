@@ -72,13 +72,6 @@ fun HistoryEraserButton(
       checkedThumbIconColor = colorScheme.onError,
       checkedTrackColor = colorScheme.onErrorContainer,
       checkedTrackBorderColor = colorScheme.error,
-      uncheckedContainerColor = colorScheme.errorContainer,
-      uncheckedContentColor = colorScheme.onErrorContainer,
-      uncheckedSecondaryContentColor = colorScheme.onErrorContainer.copy(alpha = 0.8f),
-      uncheckedSplitContainerColor = colorScheme.errorDim,
-      uncheckedThumbColor = colorScheme.onErrorContainer,
-      uncheckedTrackColor = colorScheme.errorContainer,
-      uncheckedTrackBorderColor = colorScheme.onErrorContainer,
     )
 
   SplitSwitchButton(
@@ -119,13 +112,6 @@ fun RemoteHistoryEraserButton(
       checkedThumbIconColor = colorScheme.onError,
       checkedTrackColor = colorScheme.onErrorContainer,
       checkedTrackBorderColor = colorScheme.error,
-      uncheckedContainerColor = colorScheme.errorContainer,
-      uncheckedContentColor = colorScheme.onErrorContainer,
-      uncheckedSecondaryContentColor = colorScheme.onErrorContainer.copy(alpha = 0.8f.rf),
-      uncheckedSplitContainerColor = colorScheme.errorDim,
-      uncheckedThumbColor = colorScheme.onErrorContainer,
-      uncheckedTrackColor = colorScheme.errorContainer,
-      uncheckedTrackBorderColor = colorScheme.onErrorContainer,
     )
 
   RemoteSplitSwitchButton(
@@ -138,26 +124,6 @@ fun RemoteHistoryEraserButton(
     colors = scaryColors,
     secondaryLabel = { RemoteText("Don't touch it!".rs) },
     label = { RemoteText("History Eraser".rs) },
-  )
-}
-
-/** Overload of [HistoryEraserButton] for Remote Compose. */
-@SuppressLint("RestrictedApi")
-@RemoteComposable
-@Composable
-fun HistoryEraserButton(
-  onClick: Action,
-  modifier: RemoteModifier = RemoteModifier,
-  checked: RemoteBoolean = true.rb,
-  onCheckedChange: Action = Action.Empty,
-  enabled: RemoteBoolean = true.rb,
-) {
-  RemoteHistoryEraserButton(
-    onClick = onClick,
-    modifier = modifier,
-    checked = checked,
-    onCheckedChange = onCheckedChange,
-    enabled = enabled,
   )
 }
 
