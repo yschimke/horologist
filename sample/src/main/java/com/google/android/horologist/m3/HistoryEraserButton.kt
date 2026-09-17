@@ -29,6 +29,7 @@ import androidx.compose.remote.creation.compose.modifier.RemoteModifier
 import androidx.compose.remote.creation.compose.modifier.fillMaxSize
 import androidx.compose.remote.creation.compose.modifier.fillMaxWidth
 import androidx.compose.remote.creation.compose.modifier.padding
+import androidx.compose.remote.creation.compose.state.RemoteBoolean
 import androidx.compose.remote.creation.compose.state.rb
 import androidx.compose.remote.creation.compose.state.rdp
 import androidx.compose.remote.creation.compose.state.rs
@@ -55,11 +56,13 @@ import androidx.wear.compose.ui.tooling.preview.WearPreviewLargeRound
 fun HistoryEraserButton(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
+  checked: Boolean = true,
+  onCheckedChange: (Boolean) -> Unit = {},
 ) {
   val colors = MaterialTheme.colorScheme
   SplitSwitchButton(
-    checked = true,
-    onCheckedChange = {},
+    checked = checked,
+    onCheckedChange = onCheckedChange,
     toggleContentDescription = "Arm History Eraser",
     onContainerClick = onClick,
     modifier = modifier.fillMaxWidth(),
@@ -85,11 +88,13 @@ fun HistoryEraserButton(
 fun RemoteHistoryEraserButton(
   onClick: Action,
   modifier: RemoteModifier = RemoteModifier,
+  checked: RemoteBoolean = true.rb,
+  onCheckedChange: Action = Action.Empty,
 ) {
   val colors = RemoteMaterialTheme.colorScheme
   RemoteSplitSwitchButton(
-    checked = true.rb,
-    onCheckedChange = Action.Empty,
+    checked = checked,
+    onCheckedChange = onCheckedChange,
     toggleContentDescription = "Arm History Eraser".rs,
     onContainerClick = onClick,
     modifier = modifier.fillMaxWidth(),
