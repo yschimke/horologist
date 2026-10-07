@@ -16,6 +16,7 @@
 
 package com.google.android.horologist.remotecompose.fontvariation
 
+import android.annotation.SuppressLint
 import androidx.compose.remote.creation.compose.state.RemoteFloat
 import androidx.compose.remote.creation.compose.state.clamp
 import androidx.compose.remote.creation.compose.state.max
@@ -97,6 +98,7 @@ internal class AxisSpecialization(private val animated: Set<Int>, private val fi
  *
  * @param axes The animated axes, by index, with their user-space values.
  */
+@SuppressLint("RestrictedApi")
 internal class RemoteVariationModel(
   private val font: VariableFont,
   private val axes: Map<Int, RemoteFloat>,

@@ -215,6 +215,7 @@ fun VariableFontTextAnimatedPreview(
  * A value that sweeps from [from] to [to] and back every [periodSeconds], driven by the document's
  * own clock: the player animates it with no host input and no named float.
  */
+@SuppressLint("RestrictedApi")
 fun sweep(from: Float, to: Float, periodSeconds: Float): RemoteFloat {
   val phase = (RemoteTime().ContinuousSec() % periodSeconds) / periodSeconds
   val triangle = -abs(phase * 2f - 1f) + 1f
