@@ -17,6 +17,7 @@
 package com.google.android.horologist.remotecompose.fontvariation
 
 import android.annotation.SuppressLint
+import androidx.compose.remote.core.PaintOperation
 import androidx.compose.remote.core.operations.ConditionalOperations
 import androidx.compose.remote.creation.RemotePath
 import androidx.compose.remote.creation.compose.capture.RemoteComposeCreationState
@@ -66,8 +67,11 @@ internal constructor(
   internal val fonts: LookupFonts,
   internal val widest: Float,
 ) {
-  /** What the first text wrote into a document, for the others to refer to. */
-  internal class Written(val paths: List<Int>, val advances: List<RemoteFloat>)
+  /**
+   * What the first text wrote into a document, for the others to refer to. [firstPath] is set when
+   * the paths' ids are consecutive, so a character's path id is [firstPath] + its index.
+   */
+  internal class Written(val paths: List<Int>, val advances: List<RemoteFloat>, val firstPath: Int?)
 
   private var writtenTo: Any? = null
   private var written: Written? = null
@@ -89,11 +93,15 @@ internal constructor(
       val value = specialization.specialize(form)
       if (value.isConstant) value.constant else model.float(value).getFloatIdForCreationState(state)
     }
-    val paths = outlines.map { glyph ->
-      writer.addPathData(RemotePath().also { glyph.emit(RemotePathSink(it, coordinate)) })
+    // Every expression is written first, so the paths themselves are written back to back and
+    // get consecutive ids.
+    val remotePaths = outlines.map { glyph ->
+      RemotePath().also { glyph.emit(RemotePathSink(it, coordinate)) }
     }
+    val paths = remotePaths.map { writer.addPathData(it) }
     val advances = outlines.map { model.float(specialization.specialize(it.advance)) }
-    return Written(paths, advances).also {
+    val consecutive = paths.withIndex().all { (i, id) -> id == paths[0] + i }
+    return Written(paths, advances, paths.firstOrNull()?.takeIf { consecutive }).also {
       written = it
       writtenTo = writer
     }
@@ -137,13 +145,20 @@ internal fun variableFontGlyphs(
   val outlines = set.map { font.variedLayout(it) }
   val animated = indices.values.toSet()
   val fixed = font.normalize(location)
+  val specialization = AxisSpecialization(animated, fixed)
+  // When no animated axis moves an advance, the player can lay the text out by measuring alone.
+  val advances =
+    outlines
+      .map { specialization.specialize(it.advance) }
+      .takeIf { forms -> forms.all { it.isConstant } }
+      ?.map { it.constant }
   return VariableFontGlyphs(
     font = font,
     set = set,
     outlines = outlines,
-    specialization = AxisSpecialization(animated, fixed),
+    specialization = specialization,
     axes = indices.entries.associate { (tag, i) -> i to axes.getValue(tag) },
-    fonts = lookupFonts(set, font, kerningLocation),
+    fonts = lookupFonts(set, font, kerningLocation, advances),
     widest =
       set.indices.maxOf { c -> font.maxAdvance(set[c], outlines[c].advance, animated, fixed) },
   )
@@ -209,8 +224,9 @@ public fun RemoteVariableFontText(
  * but not the axes. The box is as wide as [maxLength] of the widest character over the axes' whole
  * range, so the layout never moves as the text or axes change; the text starts at its left edge.
  *
- * Each position holds one conditional draw per character, so the text grows with [maxLength] × the
- * number of characters, on top of the glyphs, which are shared.
+ * Each position draws once, by a path id the player computes from the character's index, so the
+ * text grows with [maxLength], on top of the glyphs, which are shared. When no animated axis moves
+ * an advance, each position is placed by measuring alone and costs about a quarter as much.
  *
  * @param text The text to draw; it may change on the player.
  * @param maxLength The most characters [text] may have.
@@ -254,52 +270,86 @@ public fun RemoteVariableFontText(
     writer.scale(id(scale), id(scale * -1f))
 
     val length = text.length
+    val layout = fonts.layout
     var pen: RemoteFloat = 0f.rf
     var known: RemoteFloat = 0f.rf
     for (i in 0 until maxLength) {
       val start = min(length, i.ri)
       val end = min(length, (i + 1).ri)
+      val glyph = text.substring(start, end)
       // The index of the character at i in the set, or -1 for none (past the end, or not in it).
-      val index =
-        (fonts.index.measureWidth(text.substring(start, end), 0f.rf) - 1f).createReference()
-      // Exactly one term is 1 when the index is c; all are 0 for no character.
-      val match = set.indices.map { c -> max(-abs(index - c.toFloat()) + 1f, 0f) }
-      known = (known + match.fold(0f.rf) { sum, m -> sum + m }).createReference()
-      // All the kerning up to this glyph: the text through it, measured with every glyph one unit
-      // wide, less one unit for each glyph the set has. The pair this glyph ends is included.
-      val kern = fonts.kerning.measureWidth(text.substring(0.ri, end), 0f.rf) - known
-      val x = id(pen + kern)
+      val index = (fonts.index.measureWidth(glyph, 0f.rf) - 1f).createReference()
+      val x: Float
+      if (layout != null) {
+        // Constant advances: the text through this glyph, less the glyph itself, is where it
+        // starts, kerning included.
+        val through = layout.measureWidth(text.substring(0.ri, end), 0f.rf)
+        x = id((through - layout.measureWidth(glyph, 0f.rf)) / fonts.layoutScale)
+      } else {
+        // Exactly one term is 1 when the index is c; all are 0 for no character.
+        val match = set.indices.map { c -> max(-abs(index - c.toFloat()) + 1f, 0f) }
+        known = (known + match.fold(0f.rf) { sum, m -> sum + m }).createReference()
+        // All the kerning up to this glyph: the text through it, measured with every glyph one
+        // unit wide, less one unit for each glyph the set has. The pair this glyph ends is
+        // included.
+        val kern = fonts.kerning.measureWidth(text.substring(0.ri, end), 0f.rf) - known
+        x = id(pen + kern)
+        pen =
+          (pen + set.indices.fold(0f.rf) { sum, c -> sum + match[c] * written.advances[c] })
+            .createReference()
+      }
       val indexId = id(index)
-      for (c in set.indices) {
-        writer.conditionalOperations(ConditionalOperations.TYPE_EQ, indexId, c.toFloat())
+      val firstPath = written.firstPath
+      if (firstPath != null) {
+        // One draw whose path id the player reads from an integer: the first glyph's path plus
+        // this character's index. Nothing is drawn when there is no character.
+        val pathId = (index.toRemoteInt() + firstPath).getIdForCreationState(state)
+        writer.conditionalOperations(ConditionalOperations.TYPE_GTE, indexId, 0f)
         writer.save()
         writer.translate(x, 0f)
-        writer.drawPath(written.paths[c])
+        writer.drawPath(pathId or PaintOperation.PTR_DEREFERENCE)
         writer.restore()
         writer.endConditionalOperations()
+      } else {
+        for (c in set.indices) {
+          writer.conditionalOperations(ConditionalOperations.TYPE_EQ, indexId, c.toFloat())
+          writer.save()
+          writer.translate(x, 0f)
+          writer.drawPath(written.paths[c])
+          writer.restore()
+          writer.endConditionalOperations()
+        }
       }
-      pen =
-        (pen + set.indices.fold(0f.rf) { sum, c -> sum + match[c] * written.advances[c] })
-          .createReference()
     }
     writer.restore()
   }
 }
 
-/** The two hidden bitmap fonts: one that reads a character's index, one that carries kerning. */
+/**
+ * The hidden bitmap fonts: one that reads a character's index, one that carries kerning, and — when
+ * no animated axis moves any advance — one that carries the advances too, so the player lays the
+ * text out by measuring alone.
+ */
 @SuppressLint("RestrictedApi")
 internal class LookupFonts(
   val index: RemoteBitmapFont,
   val kerning: RemoteBitmapFont,
   val widestKern: Float,
+  /** Advances and kerning in units of 1/[layoutScale] font unit, or null if advances vary. */
+  val layout: RemoteBitmapFont?,
+  val layoutScale: Float,
 )
 
-/** Builds the [LookupFonts] for [set], with [font]'s pair kerning at [location]. */
+/**
+ * Builds the [LookupFonts] for [set], with [font]'s pair kerning at [location], and with [advances]
+ * — each character's advance, when the animated axes leave them all constant.
+ */
 @SuppressLint("RestrictedApi")
 internal fun lookupFonts(
   set: List<String>,
   font: VariableFont,
   location: Map<String, Float>,
+  advances: List<Float>? = null,
 ): LookupFonts {
   val pixel = ImageBitmap(1, 1)
   // A glyph is marginLeft + width + marginRight wide: index + 1 here, so 0 means no character.
@@ -309,19 +359,43 @@ internal fun lookupFonts(
       emptyMap(),
     )
   val ids = set.map { font.glyphId(it.codePointAt(0)) }
-  val pairs = HashMap<String, Short>()
+  val kerns = HashMap<String, Float>()
   for (a in set.indices) {
     for (b in set.indices) {
-      val k = font.kerning(ids[a], ids[b], location).roundToInt()
-      if (k != 0)
-        pairs[set[a] + set[b]] =
-          k.coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt()).toShort()
+      val k = font.kerning(ids[a], ids[b], location)
+      if (k != 0f) kerns[set[a] + set[b]] = k
     }
   }
   val kerning =
-    RemoteBitmapFont(set.map { c -> RemoteBitmapFont.Glyph(c, pixel, 0, 0, 0, 0, 1, 1) }, pairs)
-  return LookupFonts(index, kerning, maxOf(0f, pairs.values.maxOfOrNull { it.toFloat() } ?: 0f))
+    RemoteBitmapFont(
+      set.map { c -> RemoteBitmapFont.Glyph(c, pixel, 0, 0, 0, 0, 1, 1) },
+      kerns.mapValues { short(it.value) },
+    )
+  // Bitmap glyph widths and kerning are whole numbers, so the layout font counts in fractions of a
+  // font unit: as fine as fits the widest glyph in a short.
+  val layoutScale =
+    advances?.let { (Short.MAX_VALUE / maxOf(1f, it.max() + 1f)).toInt().coerceIn(1, 16).toFloat() }
+      ?: 1f
+  val layout = advances?.let {
+    RemoteBitmapFont(
+      set.mapIndexed { i, c ->
+        val width = (it[i] * layoutScale).roundToInt().coerceAtLeast(1)
+        RemoteBitmapFont.Glyph(c, pixel, 0, 0, (width - 1).toShort(), 0, 1, 1)
+      },
+      kerns.mapValues { short(it.value * layoutScale) },
+    )
+  }
+  return LookupFonts(
+    index,
+    kerning,
+    maxOf(0f, kerns.values.maxOfOrNull { it } ?: 0f),
+    layout,
+    layoutScale,
+  )
 }
+
+private fun short(value: Float): Short =
+  value.roundToInt().coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt()).toShort()
 
 /** Emits outline commands into a [RemotePath], each coordinate a literal or an expression id. */
 @SuppressLint("RestrictedApi")

@@ -73,7 +73,46 @@ class RemoteStringTextTest {
     follow(testFonts[1].font, LETTERS, 8, listOf("AVATAR", "Tokyo", "WAVY", "LT"))
   }
 
-  private fun follow(font: VariableFont, characters: String, maxLength: Int, texts: List<String>) {
+  // Axes that move no advance: the player lays the text out by measuring alone.
+
+  @Test
+  fun constantAdvanceRoundness() {
+    constantAdvances(googleSansFlex.font, mapOf("ROND" to 100f), listOf("12:45", "09:30", "7"))
+  }
+
+  @Test
+  fun constantAdvanceSlantAndGrade() {
+    constantAdvances(
+      testFonts[1].font,
+      mapOf("slnt" to -10f, "GRAD" to 150f),
+      listOf("AVATAR", "Tokyo"),
+    )
+  }
+
+  @Test
+  fun constantAdvanceRecursiveWeight() {
+    constantAdvances(
+      testFonts[2].font,
+      mapOf("wght" to 900f, "CASL" to 1f),
+      listOf("WAVY", "LT", ""),
+    )
+  }
+
+  private fun constantAdvances(font: VariableFont, axes: Map<String, Float>, texts: List<String>) {
+    val characters = DIGITS + LETTERS
+    val glyphs =
+      variableFontGlyphs(font, characters, axes.mapValues { it.value.rf }, emptyMap(), emptyMap())
+    assertWithMessage("$axes leave advances constant").that(glyphs.fonts.layout).isNotNull()
+    follow(font, characters, 8, texts, axes)
+  }
+
+  private fun follow(
+    font: VariableFont,
+    characters: String,
+    maxLength: Int,
+    texts: List<String>,
+    axes: Map<String, Float> = mapOf("wght" to 700f),
+  ) {
     composeRule.setContent {
       Column(Modifier.background(Color.Black)) {
         Player("live") {
@@ -82,7 +121,7 @@ class RemoteStringTextTest {
             characters,
             maxLength,
             font,
-            mapOf("wght" to 700f.rf * 1f),
+            axes.mapValues { it.value.rf * 1f },
             SIZE.dp.asRdp(),
             color = Color.White.rc,
           )
@@ -92,7 +131,7 @@ class RemoteStringTextTest {
             RemoteVariableFontText(
               text,
               font,
-              mapOf("wght" to 700f.rf * 1f),
+              axes.mapValues { it.value.rf * 1f },
               SIZE.dp.asRdp(),
               color = Color.White.rc,
             )

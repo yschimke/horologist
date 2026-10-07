@@ -114,9 +114,16 @@ RemoteVariableFontText(date, maxLength = 5, glyphs = glyphs, fontSize = 16.rdp)
 The first text writes the outlines, their axis expressions and the hidden bitmap fonts; the others
 refer to them. The overload that takes `characters` and `font` builds glyphs for itself.
 
-Roboto Flex digits and `:`, weight animated: the glyphs are about 6.5 KB and each position about
-1.6 KB. Two five-character texts are 22 KB with shared glyphs, 29 KB without. Repeated characters
-within a text always share their outline.
+Each position reads its character, places it, and draws it once: its path id is the first glyph's
+path id plus the character's index, which the player reads from an integer (a dereferenced draw).
+When no animated axis moves an advance — roundness, grade and slant usually don't; weight and width
+usually do — a third hidden bitmap font carries the advances as well as the kerning, and each glyph
+is placed by measuring alone.
+
+Roboto Flex digits and `:`, per position: about 240 bytes with constant advances (`GRAD`), about
+1.3 KB when the advances vary (`wght`), on top of the glyphs (about 6–7 KB). A ten-character `GRAD`
+clock is 9.5 KB. Two five-character weight-animated texts are 19.6 KB with shared glyphs, 26.4 KB
+without. Repeated characters within a text always share their outline.
 
 ## Kerning
 
@@ -174,7 +181,8 @@ sources start from the document's clock.
 - `KerningTest` checks the `GPOS` reader against the platform's shaping.
 - `RemoteStringTextTest` checks one `RemoteString` document against the `String` overload for
   each of several texts, kerned letters and clock digits.
-- `SharedGlyphsTest` checks two texts sharing glyphs draw exactly what two texts with their own do.
+- `SharedGlyphsTest` checks two texts sharing glyphs draw exactly what two texts with their own do;
+  `RemoteStringTextTest` also covers axes that leave advances constant.
 
 ## Limits
 
