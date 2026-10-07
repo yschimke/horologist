@@ -184,6 +184,16 @@ sources start from the document's clock.
 - `SharedGlyphsTest` checks two texts sharing glyphs draw exactly what two texts with their own do;
   `RemoteStringTextTest` also covers axes that leave advances constant.
 
+## Sizzle reel
+
+`SizzleReel.kt` (debug) has five round-watch scenes after the Wear OS Material 3 Expressive guide's
+"Rich color" and "Variable fonts" sections: Roboto Flex weight and width, a weight wave through a
+word in three accents, a stopwatch whose digits are a `RemoteString` with a red stop button,
+Google Sans Flex roundness, and a closing title. Every axis follows the document's own clock.
+`./remotecompose/fontvariation/sizzle-reel.sh [out-dir]` records them on the View player
+(`SizzleReelRecorder`, skipped unless `SIZZLE_OUT` is set) and joins them into an MP4 and a GIF
+with `ffmpeg`.
+
 ## Limits
 
 - One line, placed by advances and pair kerning: no ligatures, contextual alternates or
