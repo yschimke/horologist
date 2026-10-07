@@ -48,3 +48,40 @@ fun HelloRoundnessAnimatedPreview() {
 fun HelloWeightAnimatedPreview() {
   VariableFontTextAnimatedPreview("Hello", "wght", 100f, 1000f, Modifier.size(200.dp, 50.dp))
 }
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 200, heightDp = 50)
+@AnimatedPreview(durationMs = 2000, frameIntervalMs = 100, showCurves = false)
+@Composable
+fun HelloWeightAndRoundnessExpressionAnimatedPreview() {
+  VariableFontExpressionTextAnimatedPreview(
+    "Hello",
+    from = mapOf("wght" to 100f, "ROND" to 0f),
+    to = mapOf("wght" to 1000f, "ROND" to 100f),
+    modifier = Modifier.size(200.dp, 50.dp),
+  )
+}
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 200, heightDp = 50)
+@Composable
+fun RobotoFlexSlantPreview() {
+  VariableFontTextPreview(
+    "Hello",
+    "slnt",
+    -10f,
+    Modifier.size(200.dp, 50.dp),
+    fontResId = R.raw.roboto_flex,
+  )
+}
+
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 200, heightDp = 50)
+@AnimatedPreview(durationMs = 2000, frameIntervalMs = 100, showCurves = false)
+@Composable
+fun RobotoFlexSlantWidthExpressionAnimatedPreview() {
+  VariableFontExpressionTextAnimatedPreview(
+    "Hello",
+    from = mapOf("slnt" to 0f, "wdth" to 25f),
+    to = mapOf("slnt" to -10f, "wdth" to 151f),
+    modifier = Modifier.size(200.dp, 50.dp),
+    fontResId = R.raw.roboto_flex,
+  )
+}

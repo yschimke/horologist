@@ -27,6 +27,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.remote.core.RemoteClock
 import androidx.compose.remote.creation.compose.capture.rememberRemoteDocument
+import androidx.compose.remote.creation.compose.state.asRdp
 import androidx.compose.remote.creation.compose.state.rc
 import androidx.compose.remote.creation.compose.state.rememberNamedRemoteFloat
 import androidx.compose.remote.creation.compose.state.rf
@@ -66,15 +67,18 @@ fun VariableFontTextPreview(
 ) {
   val context = LocalContext.current
   val font = remember(fontResId) { context.variableFont(fontResId) }
+  // The document starts at the first value too, so a frame drawn before the player's float is set
+  // already shows it. Later values only reach the player.
+  val initial = remember { value }
   val doc =
     rememberRemoteDocument(clock = clock) {
-      val axisValue = rememberNamedRemoteFloat("axis") { 0f.rf }
+      val axisValue = rememberNamedRemoteFloat("axis") { initial.rf }
       RemoteVariableFontText(
         text = text,
         font = font,
         axis = axis,
         value = axisValue,
-        fontSize = fontSize,
+        fontSize = fontSize.asRdp(),
         color = color.rc,
         location = location,
       )
@@ -86,6 +90,51 @@ fun VariableFontTextPreview(
       documentWidth = documentWidth,
       documentHeight = documentHeight,
       update = { player -> player.setUserLocalFloat("axis", value) },
+    )
+  }
+}
+
+/**
+ * Captures a [RemoteVariableFontExpressionText] document with one named float per axis in [values],
+ * named `axis.<tag>`, and plays it with those floats set to [values]. As with
+ * [VariableFontTextPreview], one document serves every value.
+ */
+@SuppressLint("RestrictedApi")
+@Composable
+fun VariableFontExpressionTextPreview(
+  text: String,
+  values: Map<String, Float>,
+  modifier: Modifier = Modifier,
+  @RawRes fontResId: Int = R.raw.google_sans_flex_wght_rond,
+  fontSize: Dp = 32.dp,
+  color: Color = Color.White,
+  location: Map<String, Float> = emptyMap(),
+  documentWidth: Int = 400,
+  documentHeight: Int = 100,
+  clock: RemoteClock = RemoteClock.SYSTEM,
+) {
+  val context = LocalContext.current
+  val font = remember(fontResId) { context.variableFont(fontResId) }
+  val initial = remember { values }
+  val doc =
+    rememberRemoteDocument(clock = clock) {
+      val axes = initial.mapValues { (tag, v) -> rememberNamedRemoteFloat("axis.$tag") { v.rf } }
+      RemoteVariableFontExpressionText(
+        text = text,
+        font = font,
+        axes = axes,
+        fontSize = fontSize.asRdp(),
+        color = color.rc,
+        location = location,
+      )
+    }
+  doc.value?.let { document ->
+    RemoteDocumentPlayer(
+      document = document,
+      modifier = modifier,
+      documentWidth = documentWidth,
+      documentHeight = documentHeight,
+      update = { player -> values.forEach { (tag, v) -> player.setUserLocalFloat("axis.$tag", v) } },
     )
   }
 }
@@ -121,5 +170,40 @@ fun VariableFontTextAnimatedPreview(
     modifier = modifier,
     fontSize = fontSize,
     location = location,
+  )
+}
+
+/**
+ * [VariableFontExpressionTextPreview] with every axis swept together from [from] to [to] and back,
+ * forever: one document, several axes moving at once.
+ */
+@Composable
+fun VariableFontExpressionTextAnimatedPreview(
+  text: String,
+  from: Map<String, Float>,
+  to: Map<String, Float>,
+  modifier: Modifier = Modifier,
+  @RawRes fontResId: Int = R.raw.google_sans_flex_wght_rond,
+  durationMillis: Int = 2000,
+  fontSize: Dp = 32.dp,
+) {
+  val transition = rememberInfiniteTransition(label = "FontAxes")
+  val t by
+    transition.animateFloat(
+      initialValue = 0f,
+      targetValue = 1f,
+      animationSpec =
+        infiniteRepeatable(
+          animation = tween(durationMillis = durationMillis, easing = LinearEasing),
+          repeatMode = RepeatMode.Reverse,
+        ),
+      label = "Axes",
+    )
+  VariableFontExpressionTextPreview(
+    text = text,
+    values = from.mapValues { (tag, a) -> a + (to.getValue(tag) - a) * t },
+    modifier = modifier,
+    fontResId = fontResId,
+    fontSize = fontSize,
   )
 }

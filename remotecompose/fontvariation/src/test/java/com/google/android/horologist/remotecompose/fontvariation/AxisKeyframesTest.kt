@@ -92,13 +92,73 @@ class AxisKeyframesTest {
     }
   }
 
+  @Test
+  fun everyTestFontSharesOneCommandSequencePerAxis() {
+    for (testFont in testFonts) {
+      for (axis in testFont.axes) {
+        val sequences =
+          testFont.font.axisKeyframes(LATIN, axis).map { v ->
+            Recorder().also { testFont.font.layout(LATIN, mapOf(axis to v)).emit(it) }.commands
+          }
+        sequences.forEach {
+          assertWithMessage("$axis of $testFont").that(it).isEqualTo(sequences.first())
+        }
+      }
+    }
+  }
+
+  /**
+   * The tween reproduces the font on every tested axis of every test font, with the other axes at
+   * their defaults and again at an off-default point, so the `avar` mappings and the regions that
+   * span two axes are both exercised.
+   */
+  @Test
+  fun tweensReproduceEveryTestFont() {
+    for (testFont in testFonts) {
+      val font = testFont.font
+      val offDefault =
+        font.axes.associate { it.tag to it.minValue + (it.maxValue - it.minValue) * 0.7f }
+      for (axis in testFont.axes) {
+        for (others in listOf(emptyMap(), offDefault - axis)) {
+          val worst = worstTweenError(font, LATIN, axis, others, steps = 100)
+          assertWithMessage("$axis of $testFont with $others").that(worst).isLessThan(0.05f)
+        }
+      }
+    }
+  }
+
+  private fun worstTweenError(
+    font: VariableFont,
+    text: String,
+    axis: String,
+    location: Map<String, Float>,
+    steps: Int,
+  ): Float {
+    val keys = font.axisKeyframes(text, axis)
+    val frames = keys.map { v -> points(font.layout(text, location + (axis to v))) }
+    val axisInfo = font.axes.first { it.tag == axis }
+    var worst = 0f
+    for (step in 0..steps) {
+      val v = axisInfo.minValue + (axisInfo.maxValue - axisInfo.minValue) * step / steps
+      val segment = (0 until keys.size - 1).first { v <= keys[it + 1] }
+      val t = (v - keys[segment]) / (keys[segment + 1] - keys[segment])
+      val a = frames[segment]
+      val b = frames[segment + 1]
+      val truth = points(font.layout(text, location + (axis to v)))
+      for (i in truth.indices) {
+        worst = maxOf(worst, abs(a[i] + (b[i] - a[i]) * t - truth[i]))
+      }
+    }
+    return worst
+  }
+
   private fun points(outline: TextOutline): FloatArray =
     outline.contours
       .flatMap { c -> (0 until c.size).flatMap { listOf(c.xs[it], c.ys[it]) } }
       .plus(outline.advance)
       .toFloatArray()
 
-  private class Recorder : PathSink {
+  private class Recorder : PathSink<Float> {
     val commands = mutableListOf<String>()
 
     override fun moveTo(x: Float, y: Float) {
@@ -120,5 +180,8 @@ class AxisKeyframesTest {
 
   private companion object {
     const val TEXT = "Hello, Wear OS 12:45! café"
+
+    /** Within every test font's Basic Latin subset. */
+    const val LATIN = "Hamburgefonstiv HOW 0123 &?"
   }
 }

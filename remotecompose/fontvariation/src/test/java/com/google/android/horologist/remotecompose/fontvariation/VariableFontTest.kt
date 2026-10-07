@@ -18,7 +18,7 @@ package com.google.android.horologist.remotecompose.fontvariation
 
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
-import java.io.File
+import java.util.zip.GZIPInputStream
 import kotlin.math.abs
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.boolean
@@ -29,11 +29,7 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.junit.Test
 
-internal val testFont: VariableFont by lazy {
-  VariableFont.parse(File("src/debug/res/raw/google_sans_flex_wght_rond.ttf").readBytes())
-}
-
-/** Checks the Kotlin reader against outlines `fontTools` produced for the same font. */
+/** Checks the Kotlin reader against outlines `fontTools` produced for the same fonts. */
 class VariableFontTest {
 
   @Test
@@ -46,25 +42,46 @@ class VariableFontTest {
 
   @Test
   fun outlinesMatchFontTools() {
+    for (testFont in testFonts) {
+      val checked = checkAgainstGolden(testFont)
+      assertWithMessage("points checked in $testFont").that(checked).isGreaterThan(1_000)
+    }
+  }
+
+  @Test
+  fun testFontsKeepTheirTestedAxes() {
+    for (testFont in testFonts) {
+      assertWithMessage("axes of $testFont")
+        .that(testFont.font.axes.map { it.tag })
+        .containsAtLeastElementsIn(testFont.axes)
+    }
+  }
+
+  /**
+   * Compares every glyph of the golden text at every golden location — the defaults, every axis at
+   * its minimum, every axis at its maximum, and three random points — and returns the number of
+   * points compared.
+   */
+  private fun checkAgainstGolden(testFont: TestFont): Int {
+    val font = testFont.font
     val golden =
-      Json.parseToJsonElement(
-          javaClass.classLoader!!.getResource("google_sans_flex_golden.json")!!.readText()
-        )
-        .jsonObject
+      GZIPInputStream(javaClass.classLoader!!.getResourceAsStream(testFont.golden)).use {
+        Json.parseToJsonElement(it.readBytes().decodeToString()).jsonObject
+      }
     var checkedPoints = 0
     for (case in golden.getValue("cases").jsonArray) {
       val location =
         case.jsonObject.getValue("location").jsonObject.mapValues { it.value.jsonPrimitive.float }
-      val coords = testFont.normalize(location)
+      val coords = font.normalize(location)
       for ((char, expected) in case.jsonObject.getValue("glyphs").jsonObject) {
         val e = expected.jsonObject
-        val glyph = testFont.glyphId(char.codePointAt(0))
-        val where = "'$char' at $location"
+        val glyph = font.glyphId(char.codePointAt(0))
+        val where = "'$char' of $testFont at $location"
         assertWithMessage("glyph id of $where")
           .that(glyph)
           .isEqualTo(e.getValue("glyph").jsonPrimitive.int)
 
-        val outline = testFont.outline(glyph, coords)
+        val outline = font.outline(glyph, coords)
         assertWithMessage("advance of $where")
           .that(outline.advance)
           .isWithin(TOLERANCE)
@@ -93,7 +110,7 @@ class VariableFontTest {
         }
       }
     }
-    assertThat(checkedPoints).isGreaterThan(5_000)
+    return checkedPoints
   }
 
   @Test
@@ -109,7 +126,7 @@ class VariableFontTest {
   }
 
   private companion object {
-    /** Font units; fontTools rounds the golden coordinates to 4 decimal places. */
+    /** Font units; the goldens round coordinates to 3 or 4 decimal places. */
     const val TOLERANCE = 0.01f
   }
 }

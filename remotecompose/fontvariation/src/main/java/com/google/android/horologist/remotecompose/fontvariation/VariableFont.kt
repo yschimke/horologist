@@ -82,6 +82,20 @@ public class VariableFont private constructor(private val data: FontBytes) {
       avarMaps?.getOrNull(i)?.let { piecewiseLinear(it, n) } ?: n
     }
 
+  /**
+   * The user-space values of axis [axisIndex] where its `avar` mapping bends: the inputs of each
+   * map entry. They are listed here rather than recovered by inverting the map, because a flat
+   * stretch (two inputs mapping to one output) has no single inverse and one of its corners would
+   * be lost.
+   */
+  internal fun avarBreakpoints(axisIndex: Int): List<Float> {
+    val axis = axes[axisIndex]
+    return avarMaps?.getOrNull(axisIndex).orEmpty().map { (from, _) ->
+      if (from < 0) axis.defaultValue + from * (axis.defaultValue - axis.minValue)
+      else axis.defaultValue + from * (axis.maxValue - axis.defaultValue)
+    }
+  }
+
   /** Maps a normalized coordinate on [axisIndex] back to user space, inverting `avar`. */
   internal fun denormalize(axisIndex: Int, normalized: Float): Float {
     val axis = axes[axisIndex]
@@ -96,13 +110,12 @@ public class VariableFont private constructor(private val data: FontBytes) {
   /**
    * Every normalized coordinate of axis [axisIndex] at which an outline or advance of [glyphIds]
    * changes slope: the corners of each `gvar` tuple and `HVAR` region, the axis extremes and
-   * default, and the `avar` mapping points. Between two consecutive breakpoints the outlines are
-   * exactly linear in the axis value, which is what makes a chain of path tweens reproduce the font
-   * exactly.
+   * default (`avarBreakpoints` adds the `avar` corners). Between two consecutive breakpoints the
+   * outlines are exactly linear in the axis value, which is what makes a chain of path tweens
+   * reproduce the font exactly.
    */
   internal fun normalizedBreakpoints(axisIndex: Int, glyphIds: Collection<Int>): Set<Float> {
     val points = sortedSetOf(-1f, 0f, 1f)
-    avarMaps?.getOrNull(axisIndex)?.forEach { (_, to) -> points.add(to) }
     for (glyph in closure(glyphIds)) {
       val regions = gvar?.tuples(glyph).orEmpty() + hvar?.regions(glyph).orEmpty()
       for (tuple in regions) {
@@ -127,6 +140,89 @@ public class VariableFont private constructor(private val data: FontBytes) {
       }
     }
     return out
+  }
+
+  /**
+   * The outline and advance of [glyphId] everywhere in the design space at once: each coordinate as
+   * its default plus a delta per variation region. [outline] at any location equals this evaluated
+   * there.
+   */
+  internal fun variedOutline(glyphId: Int): VariedOutline {
+    val glyph = glyph(glyphId)
+    val (advance, lsb) = hMetrics(glyphId)
+    val points: Int
+    val xs: FloatArray
+    val ys: FloatArray
+    when (glyph) {
+      is Glyf.Simple -> {
+        points = glyph.xs.size
+        xs = FloatArray(points + PHANTOM_POINTS) { if (it < points) glyph.xs[it].toFloat() else 0f }
+        ys = FloatArray(points + PHANTOM_POINTS) { if (it < points) glyph.ys[it].toFloat() else 0f }
+      }
+      is Glyf.Composite -> {
+        points = glyph.components.size
+        xs =
+          FloatArray(points + PHANTOM_POINTS) {
+            if (it < points) glyph.components[it].dx.toFloat() else 0f
+          }
+        ys =
+          FloatArray(points + PHANTOM_POINTS) {
+            if (it < points) glyph.components[it].dy.toFloat() else 0f
+          }
+      }
+      null -> {
+        points = 0
+        xs = FloatArray(PHANTOM_POINTS)
+        ys = FloatArray(PHANTOM_POINTS)
+      }
+    }
+    xs[points] = ((glyph?.xMin ?: 0) - if (glyph == null) 0 else lsb).toFloat()
+    xs[points + 1] = xs[points] + advance
+    val termsX = Array(xs.size) { LinkedHashMap<TupleRegion, Float>() }
+    val termsY = Array(ys.size) { LinkedHashMap<TupleRegion, Float>() }
+    val endPts =
+      when (glyph) {
+        is Glyf.Simple -> glyph.endPts
+        is Glyf.Composite -> null
+        null -> IntArray(0)
+      }
+    gvar?.forEachTuple(glyphId, xs.copyOf(), ys.copyOf(), endPts) { region, dx, dy ->
+      for (i in xs.indices) {
+        if (dx[i] != 0f) termsX[i].merge(region, dx[i], Float::plus)
+        if (dy[i] != 0f) termsY[i].merge(region, dy[i], Float::plus)
+      }
+    }
+    val formX = List(xs.size) { LinearForm(xs[it], termsX[it]) }
+    val formY = List(ys.size) { LinearForm(ys[it], termsY[it]) }
+    val contours =
+      when (glyph) {
+        is Glyf.Simple -> {
+          var start = 0
+          glyph.endPts.map { end ->
+            VariedContour(
+                formX.subList(start, end + 1),
+                formY.subList(start, end + 1),
+                glyph.onCurve.sliceArray(start..end),
+              )
+              .also { start = end + 1 }
+          }
+        }
+        is Glyf.Composite ->
+          glyph.components.flatMapIndexed { i, c ->
+            variedOutline(c.glyphId).contours.map {
+              it.transformed(c.xx, c.xy, c.yx, c.yy, formX[i], formY[i])
+            }
+          }
+        null -> emptyList()
+      }
+    // As in [outline]: HVAR, when present, is the authority for advances.
+    val advanceForm =
+      hvar?.let { h ->
+        val terms = LinkedHashMap<TupleRegion, Float>()
+        h.advanceTerms(glyphId).forEach { (region, k) -> terms.merge(region, k, Float::plus) }
+        LinearForm(advance.toFloat(), terms)
+      } ?: (formX[points + 1] - formX[points])
+    return VariedOutline(contours, advanceForm)
   }
 
   /** The outline and advance of [glyphId] at the normalized [coords]. */

@@ -180,8 +180,21 @@ internal sealed class Glyf(val xMin: Int) {
   }
 }
 
-/** One tuple variation's region, as normalized start/peak/end per axis. */
+/**
+ * One tuple variation's region, as normalized start/peak/end per axis. Equal regions compare equal,
+ * so the same region shared by many glyphs becomes one term — one player expression — in a
+ * [LinearForm].
+ */
 internal class TupleRegion(val start: FloatArray, val peak: FloatArray, val end: FloatArray) {
+  override fun equals(other: Any?): Boolean =
+    other is TupleRegion &&
+      start.contentEquals(other.start) &&
+      peak.contentEquals(other.peak) &&
+      end.contentEquals(other.end)
+
+  override fun hashCode(): Int =
+    (start.contentHashCode() * 31 + peak.contentHashCode()) * 31 + end.contentHashCode()
+
   /** The weight of this region at normalized [coords] (OpenType "scalar"). */
   fun scalar(coords: FloatArray): Float {
     var scalar = 1f
@@ -275,10 +288,34 @@ internal class Gvar(
    * delta.
    */
   fun apply(glyphId: Int, coords: FloatArray, xs: FloatArray, ys: FloatArray, endPts: IntArray?) {
-    val (serialized, tuples, countAndFlags) = headers(glyphId) ?: return
-    val numPoints = xs.size
     val origX = xs.copyOf()
     val origY = ys.copyOf()
+    forEachTuple(glyphId, origX, origY, endPts, include = { it.scalar(coords) != 0f }) {
+      region,
+      deltaX,
+      deltaY ->
+      val scalar = region.scalar(coords)
+      for (i in xs.indices) {
+        xs[i] += deltaX[i] * scalar
+        ys[i] += deltaY[i] * scalar
+      }
+    }
+  }
+
+  /**
+   * Calls [block] with each tuple's region and its full, unscaled per-point deltas (IUP applied),
+   * for the points [origX]/[origY] of [glyphId]. Tuples [include] rejects are skipped unread.
+   */
+  fun forEachTuple(
+    glyphId: Int,
+    origX: FloatArray,
+    origY: FloatArray,
+    endPts: IntArray?,
+    include: (TupleRegion) -> Boolean = { true },
+    block: (TupleRegion, FloatArray, FloatArray) -> Unit,
+  ) {
+    val (serialized, tuples, countAndFlags) = headers(glyphId) ?: return
+    val numPoints = origX.size
     var p = serialized
     var sharedPoints: IntArray? = null
     if (countAndFlags and SHARED_POINT_NUMBERS != 0) {
@@ -288,8 +325,7 @@ internal class Gvar(
     }
     for (tuple in tuples) {
       val tupleEnd = p + tuple.dataSize
-      val scalar = tuple.region.scalar(coords)
-      if (scalar == 0f) {
+      if (!include(tuple.region)) {
         p = tupleEnd
         continue
       }
@@ -314,10 +350,7 @@ internal class Gvar(
       if (endPts != null && points.size < numPoints) {
         interpolateUntouched(endPts, origX, origY, deltaX, deltaY, touched)
       }
-      for (i in 0 until numPoints) {
-        xs[i] += deltaX[i] * scalar
-        ys[i] += deltaY[i] * scalar
-      }
+      block(tuple.region, deltaX, deltaY)
     }
   }
 
@@ -480,6 +513,10 @@ internal class Hvar(private val data: FontBytes, private val offset: Int) {
       regionIndexes[r] to delta
     }
   }
+
+  /** The advance-width deltas of [glyphId] by region, unscaled; zero deltas left out. */
+  fun advanceTerms(glyphId: Int): List<Pair<TupleRegion, Float>> =
+    deltas(glyphId).filter { it.second != 0 }.map { regions[it.first] to it.second.toFloat() }
 
   /** The advance-width delta of [glyphId] at normalized [coords], in font units. */
   fun advanceDelta(glyphId: Int, coords: FloatArray): Float =

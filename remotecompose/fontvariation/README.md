@@ -1,17 +1,26 @@
 # Remote Compose: variable-font axis animation
 
-`RemoteVariableFontText` draws a line of text in a variable font with one axis (`ROND`, `wght`,
-…) driven by a `RemoteFloat`, and the player never loads, re-instances or lays out a font.
+Two composables draw a line of text in a variable font with its axes (`ROND`, `wght`, `slnt`, …)
+driven by `RemoteFloat`s. In both, the player never loads, re-instances or lays out a font.
 
 ```kotlin
 val font = VariableFont.parse(context.resources.openRawResource(R.raw.my_font).readBytes())
 
+// 1. Path tween: one axis, keyframe outlines tweened on the player.
 RemoteVariableFontText(
   text = "Hello",
   font = font,
   axis = "ROND",
   value = roundness, // any RemoteFloat: a named float, an animation, a time expression
-  fontSize = 32.dp,
+  fontSize = 32.rdp,
+)
+
+// 2. Expression path: any number of axes, the font's variation model evaluated on the player.
+RemoteVariableFontExpressionText(
+  text = "Hello",
+  font = font,
+  axes = mapOf("wght" to weight, "slnt" to slant),
+  fontSize = 32.rdp,
 )
 ```
 
@@ -33,7 +42,13 @@ about 2.5 ms for the path tween used here; with the value held still both were a
 
 ## How
 
-Variable-font outlines are piecewise linear in each axis. Their deltas only change slope where a
+Every outline coordinate of a variable font is the font's own linear model:
+`default + Σ delta(region) × scalar(region, axes)`, where each region scalar is a product of
+per-axis "tents" over the normalized axis values. That makes outlines piecewise linear in each
+axis, and the two approaches use that in different ways.
+
+### 1. Path tween (`RemoteVariableFontText`)
+ Their deltas only change slope where a
 `gvar` or `HVAR` region starts, peaks or ends (or where `avar` bends the mapping). So, with the
 other axes held fixed:
 
@@ -49,6 +64,30 @@ The result is the font's own outline at every value, not an approximation. `Axis
 checks the tween against the font at 201 values per axis, and `VariableFontTest` checks the reader
 against `fontTools` to 0.01 font units.
 
+### 2. Expression path (`RemoteVariableFontExpressionText`)
+
+The document carries the model itself, as Remote Compose float expressions:
+
+1. Each animated axis is normalized once: the font's user-to-normalized mapping, `avar` included,
+   written as a sum of clamped ramps.
+2. Each distinct product of tents is written once and shared; axes that are not animated are
+   folded into the coefficients at creation time, and regions that cannot move drop out.
+3. Each distinct outline coordinate is one expression, `constant + Σ coefficient × scalar`.
+4. The path is written with `PathCreate`/`PathAppend`, whose coordinates are those expressions'
+   ids. These are paint operations, so the player rebuilds the path from the current values on
+   each paint. (A `RemotePath` is `PathData`, which reads its variables once, at load.)
+
+Several axes can move at once and independently, and the document needs no keyframes: it grows
+with the number of distinct coordinates and regions in the text. The text's box is its widest
+advance over the animated range, computed exactly at creation time, so animating never reflows
+the layout.
+
+`VariationModelTest` checks the expressions' model against the font everywhere in each test
+font's design space, and `RenderFidelityTest` renders both approaches and the platform's own text
+for every tested axis of six fonts (Google Sans Flex, Roboto Flex, Recursive, Fraunces, Noto
+Sans, Inter): the tween and the expression path agree to within antialiasing, and both match the
+platform glyph for glyph. `LiveUpdateTest` checks both follow a float changed after load.
+
 ## Limits
 
 - One line, placed by nominal advances: no kerning, ligatures or complex-script shaping.
@@ -58,4 +97,5 @@ against `fontTools` to 0.01 font units.
 - The text is fixed when the document is created, and it is drawn as a path: there is no
   accessible text unless the caller adds a content description, and edge anti-aliasing is that
   of a path fill rather than the platform's text rasterizer.
-- Only one axis animates; the others are fixed by `location`.
+- The path tween animates one axis; the others are fixed by `location`. The expression path
+  animates any set of axes.

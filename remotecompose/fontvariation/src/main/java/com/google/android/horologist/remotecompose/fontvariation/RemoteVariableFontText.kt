@@ -24,17 +24,15 @@ import androidx.compose.remote.creation.compose.modifier.RemoteModifier
 import androidx.compose.remote.creation.compose.modifier.height
 import androidx.compose.remote.creation.compose.modifier.width
 import androidx.compose.remote.creation.compose.state.RemoteColor
+import androidx.compose.remote.creation.compose.state.RemoteDp
 import androidx.compose.remote.creation.compose.state.RemoteFloat
 import androidx.compose.remote.creation.compose.state.RemotePaint
-import androidx.compose.remote.creation.compose.state.asRdp
 import androidx.compose.remote.creation.compose.state.clamp
 import androidx.compose.remote.creation.compose.state.rc
 import androidx.compose.remote.creation.compose.state.rf
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 
 /**
  * Draws one line of [text] in a variable [font] with its [axis] driven by a [RemoteFloat], without
@@ -71,7 +69,7 @@ public fun RemoteVariableFontText(
   font: VariableFont,
   axis: String,
   value: RemoteFloat,
-  fontSize: Dp,
+  fontSize: RemoteDp,
   modifier: RemoteModifier = RemoteModifier,
   color: RemoteColor = Color.Black.rc,
   location: Map<String, Float> = emptyMap(),
@@ -81,13 +79,13 @@ public fun RemoteVariableFontText(
     remember(text, font, axis, location, axisRange) {
       variableTextKeyframes(font, text, axis, location, axisRange)
     }
-  val em = fontSize.value / font.unitsPerEm
-  val width = frames.maxOf { it.advance } * em
-  val height = (font.ascender - font.descender) * em
+  val em = 1f / font.unitsPerEm
+  val width = fontSize * (frames.maxOf { it.advance } * em)
+  val height = fontSize * ((font.ascender - font.descender) * em)
 
-  RemoteCanvas(modifier = modifier.width(width.dp.asRdp()).height(height.dp.asRdp())) {
+  RemoteCanvas(modifier = modifier.width(width).height(height)) {
     val paint = RemotePaint { this.color = color }
-    val scale = fontSize.asRdp().toPx() / font.unitsPerEm.toFloat()
+    val scale = fontSize.toPx() * em
     remoteCanvas.save()
     remoteCanvas.translate(0f.rf, scale * font.ascender.toFloat())
     remoteCanvas.scale(scale, -scale)
@@ -135,7 +133,7 @@ internal fun variableTextKeyframes(
     val outline = font.layout(text, location + (axis to v))
     val path = RemotePath()
     outline.emit(
-      object : PathSink {
+      object : PathSink<Float> {
         override fun moveTo(x: Float, y: Float) = path.moveTo(x, y)
 
         override fun lineTo(x: Float, y: Float) = path.lineTo(x, y)

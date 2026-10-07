@@ -1,19 +1,30 @@
 # Font Variation Test Resources
 
 Fonts used by the previews, unit tests and Roborazzi screenshot tests in
-`remotecompose/fontvariation`.
+`remotecompose/fontvariation`. Each is an OFL variable font from
+[google/fonts](https://github.com/google/fonts), reduced with `fontTools`: `subset` to the
+characters listed, then `varLib.instancer` to pin every axis not listed to its default.
 
-| File | Description | Source |
-|------|-------------|--------|
-| `res/raw/google_sans_flex_wght_rond.ttf` | Google Sans Flex, subset to Basic Latin and Latin-1 (U+0020–007E, U+00A0–00FF), with `opsz`, `wdth`, `GRAD` and `slnt` pinned to their defaults, so only the `wght` and `ROND` axes remain. About 120 KB rather than 4 MB. | [google/fonts `ofl/googlesansflex`](https://github.com/google/fonts/tree/main/ofl/googlesansflex), reduced with `fontTools` `subset` then `varLib.instancer` |
+| File | Font | Characters | Axes kept | Source |
+|------|------|------------|-----------|--------|
+| `res/raw/google_sans_flex_wght_rond.ttf` | Google Sans Flex | U+0020–007E, U+00A0–00FF | `wght`, `ROND` | [`ofl/googlesansflex`](https://github.com/google/fonts/tree/main/ofl/googlesansflex) |
+| `res/raw/roboto_flex.ttf` | Roboto Flex | U+0020–007E | `wght`, `wdth`, `slnt`, `opsz`, `GRAD`, `XTRA` | [`ofl/robotoflex`](https://github.com/google/fonts/tree/main/ofl/robotoflex) |
+| `res/raw/recursive.ttf` | Recursive | U+0020–007E | `wght`, `slnt`, `CASL`, `MONO` | [`ofl/recursive`](https://github.com/google/fonts/tree/main/ofl/recursive) |
+| `res/raw/fraunces.ttf` | Fraunces | U+0020–007E | `wght`, `opsz`, `SOFT` | [`ofl/fraunces`](https://github.com/google/fonts/tree/main/ofl/fraunces) |
+| `res/raw/noto_sans.ttf` | Noto Sans | U+0020–007E | `wght`, `wdth` | [`ofl/notosans`](https://github.com/google/fonts/tree/main/ofl/notosans) |
+| `res/raw/inter.ttf` | Inter | U+0020–007E | `wght`, `opsz` | [`ofl/inter`](https://github.com/google/fonts/tree/main/ofl/inter) |
 
-`src/test/resources/google_sans_flex_golden.json` holds outlines and advances of the same font at
-several `wght`/`ROND` locations, produced by `fontTools` `getGlyphSet(location=...)` with
-`DecomposingRecordingPointPen`. The unit tests check the Kotlin reader against it.
+Recursive's `CRSV` and Fraunces' `WONK` are pinned: they mostly swap glyphs through GSUB feature
+variations, which the module's cmap-only layout does not apply.
+
+`src/test/resources/<font>_golden.json.gz` holds each font's outlines and advances at its
+default, minimum, maximum and three random locations, produced by `fontTools`
+`getGlyphSet(location=...)` with `DecomposingRecordingPointPen`. The unit tests check the Kotlin
+reader against them.
 
 ## License & Copyright
 
-Google Sans Flex is Copyright 2015 The Google Sans Flex Authors and is licensed under the SIL
-Open Font License, Version 1.1; see [`OFL.txt`](OFL.txt). The reduced font is a Modified Version
-under that license and keeps the original name table, as the license permits for fonts without
-a Reserved Font Name.
+All six fonts are licensed under the SIL Open Font License, Version 1.1; each license, with its
+copyright notice, is in [`licenses/`](licenses). The reduced fonts are Modified Versions under
+that license and keep the original name tables, as the license permits for fonts without a
+Reserved Font Name.

@@ -32,56 +32,76 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.takahirom.roborazzi.captureRoboImage
 import com.google.android.horologist.screenshots.rng.WearScreenshotTest
 import org.junit.Test
+import org.robolectric.annotation.Config
 
 /**
- * Each row: the Remote Compose path tween on the left, the platform's own text in the same font
- * instanced at the same axis value on the right. One document is captured per axis and only its
- * named float changes between rows.
+ * One image per test font. Each row is one tested axis at its minimum or maximum, drawn three ways:
+ * the Remote Compose path tween, the Remote Compose expression path, and the platform's own text in
+ * the same font instanced at the same value. Each Remote Compose document is captured once and only
+ * its named floats change.
  */
+@Config(qualifiers = "w420dp-h900dp-xhdpi")
 class VariableFontTextScreenshotTest : WearScreenshotTest() {
 
-  @Test
-  fun roundness() {
-    compare("ROND", listOf(0f, 50f, 100f))
-  }
+  @Test fun googleSansFlex() = compare(testFonts[0])
 
-  @Test
-  fun weight() {
-    compare("wght", listOf(100f, 400f, 700f, 1000f))
-  }
+  @Test fun robotoFlex() = compare(testFonts[1])
 
-  private fun compare(axis: String, values: List<Float>) {
+  @Test fun recursive() = compare(testFonts[2])
+
+  @Test fun fraunces() = compare(testFonts[3])
+
+  @Test fun notoSans() = compare(testFonts[4])
+
+  @Test fun inter() = compare(testFonts[5])
+
+  private fun compare(testFont: TestFont) {
+    val resId = R.raw::class.java.getField(testFont.resource).getInt(null)
+    val rows =
+      testFont.axes.flatMap { axis ->
+        val info = testFont.font.axes.first { it.tag == axis }
+        listOf(axis to info.minValue, axis to info.maxValue)
+      }
     composeRule.setContent {
       Column(Modifier.background(Color.Black).testTag("Box")) {
-        for (v in values) {
+        for ((axis, v) in rows) {
           Row {
+            val cell = Modifier.size(CELL_WIDTH.dp, CELL_HEIGHT.dp)
             VariableFontTextPreview(
-              "Hello",
+              TEXT,
               axis,
               v,
-              Modifier.size(100.dp, 40.dp),
-              fontSize = 28.dp,
-              documentWidth = 100,
-              documentHeight = 40,
+              cell,
+              fontResId = resId,
+              fontSize = SIZE.dp,
+              documentWidth = CELL_WIDTH,
+              documentHeight = CELL_HEIGHT,
+            )
+            VariableFontExpressionTextPreview(
+              TEXT,
+              mapOf(axis to v),
+              cell,
+              fontResId = resId,
+              fontSize = SIZE.dp,
+              documentWidth = CELL_WIDTH,
+              documentHeight = CELL_HEIGHT,
             )
             BasicText(
-              "Hello",
-              Modifier.size(100.dp, 40.dp),
+              TEXT,
+              cell,
               style =
                 TextStyle(
                   color = Color.White,
-                  fontSize = 28.sp,
+                  fontSize = SIZE.sp,
                   fontFamily =
                     FontFamily(
                       Font(
-                        R.raw.google_sans_flex_wght_rond,
-                        weight = FontWeight.Normal,
+                        resId,
                         variationSettings = FontVariation.Settings(FontVariation.Setting(axis, v)),
                       )
                     ),
@@ -91,6 +111,13 @@ class VariableFontTextScreenshotTest : WearScreenshotTest() {
         }
       }
     }
-    composeRule.onNodeWithTag("Box").captureRoboImage(testName("_$axis"))
+    composeRule.onNodeWithTag("Box").captureRoboImage(testName("_${testFont.resource}"))
+  }
+
+  private companion object {
+    const val TEXT = "Hamburg"
+    const val SIZE = 22
+    const val CELL_WIDTH = 140
+    const val CELL_HEIGHT = 32
   }
 }
