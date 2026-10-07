@@ -1,0 +1,47 @@
+// Signature format: 4.0
+package com.google.android.horologist.remotecompose.fontvariation {
+
+  public final class AxisKeyframesKt {
+    method public static java.util.List<java.lang.Float> axisKeyframes(com.google.android.horologist.remotecompose.fontvariation.VariableFont, String text, String axis, optional kotlin.ranges.ClosedFloatingPointRange<java.lang.Float>? range);
+  }
+
+  public final class FontAxis {
+    ctor public FontAxis(String tag, float minValue, float defaultValue, float maxValue);
+    method public String component1();
+    method public float component2();
+    method public float component3();
+    method public float component4();
+    method public com.google.android.horologist.remotecompose.fontvariation.FontAxis copy(optional String tag, optional float minValue, optional float defaultValue, optional float maxValue);
+    method @InaccessibleFromKotlin public float getDefaultValue();
+    method @InaccessibleFromKotlin public float getMaxValue();
+    method @InaccessibleFromKotlin public float getMinValue();
+    method @InaccessibleFromKotlin public String getTag();
+    property public float defaultValue;
+    property public float maxValue;
+    property public float minValue;
+    property public String tag;
+  }
+
+  public final class RemoteVariableFontTextKt {
+    method @KotlinOnly @androidx.compose.remote.creation.compose.layout.RemoteComposable @androidx.compose.runtime.Composable public static void RemoteVariableFontText(String text, com.google.android.horologist.remotecompose.fontvariation.VariableFont font, String axis, androidx.compose.remote.creation.compose.state.RemoteFloat value, androidx.compose.ui.unit.Dp fontSize, optional androidx.compose.remote.creation.compose.modifier.RemoteModifier modifier, optional androidx.compose.remote.creation.compose.state.RemoteColor color, optional java.util.Map<java.lang.String,java.lang.Float> location, optional kotlin.ranges.ClosedFloatingPointRange<java.lang.Float>? axisRange);
+  }
+
+  public final class VariableFont {
+    method @InaccessibleFromKotlin public int getAscender();
+    method @InaccessibleFromKotlin public java.util.List<com.google.android.horologist.remotecompose.fontvariation.FontAxis> getAxes();
+    method @InaccessibleFromKotlin public int getDescender();
+    method @InaccessibleFromKotlin public int getUnitsPerEm();
+    method public int glyphId(int codePoint);
+    property public int ascender;
+    property public java.util.List<com.google.android.horologist.remotecompose.fontvariation.FontAxis> axes;
+    property public int descender;
+    property public int unitsPerEm;
+    field public static final com.google.android.horologist.remotecompose.fontvariation.VariableFont.Companion Companion;
+  }
+
+  public static final class VariableFont.Companion {
+    method public com.google.android.horologist.remotecompose.fontvariation.VariableFont parse(byte[] bytes);
+  }
+
+}
+

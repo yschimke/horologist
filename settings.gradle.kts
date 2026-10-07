@@ -133,6 +133,8 @@ include(":network-awareness:okhttp")
 
 include(":network-awareness:ui")
 
+include(":remotecompose:fontvariation")
+
 include(":remotecompose:lottie")
 
 include(":roboscreenshots")
