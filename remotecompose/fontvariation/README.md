@@ -97,9 +97,26 @@ position draws the one whose index matches, after the advances of the glyphs bef
 comes from a second hidden bitmap font whose kerning table holds the font's pair kerning, so the
 player kerns while it measures the text so far.
 
-The document grows with `maxLength`: about 2 KB per position for 15 characters of Roboto Flex.
 Characters outside `characters` and beyond `maxLength` are not drawn. The box is as wide as
 `maxLength` of the widest character, and the text starts at its left edge.
+
+### Sharing glyphs between texts
+
+Several texts in one document — a clock's time and date, a counter and its label — can share their
+glyphs. Build them once with `rememberVariableFontGlyphs` and pass them to each text:
+
+```kotlin
+val glyphs = rememberVariableFontGlyphs(robotoFlex, "0123456789:/", mapOf("wght" to weight))
+RemoteVariableFontText(time, maxLength = 5, glyphs = glyphs, fontSize = 32.rdp)
+RemoteVariableFontText(date, maxLength = 5, glyphs = glyphs, fontSize = 16.rdp)
+```
+
+The first text writes the outlines, their axis expressions and the hidden bitmap fonts; the others
+refer to them. The overload that takes `characters` and `font` builds glyphs for itself.
+
+Roboto Flex digits and `:`, weight animated: the glyphs are about 6.5 KB and each position about
+1.6 KB. Two five-character texts are 22 KB with shared glyphs, 29 KB without. Repeated characters
+within a text always share their outline.
 
 ## Kerning
 
@@ -157,6 +174,7 @@ sources start from the document's clock.
 - `KerningTest` checks the `GPOS` reader against the platform's shaping.
 - `RemoteStringTextTest` checks one `RemoteString` document against the `String` overload for
   each of several texts, kerned letters and clock digits.
+- `SharedGlyphsTest` checks two texts sharing glyphs draw exactly what two texts with their own do.
 
 ## Limits
 

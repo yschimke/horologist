@@ -19,6 +19,7 @@ package com.google.android.horologist.remotecompose.fontvariation
 import android.annotation.SuppressLint
 import androidx.compose.remote.core.operations.ConditionalOperations
 import androidx.compose.remote.creation.RemotePath
+import androidx.compose.remote.creation.compose.capture.RemoteComposeCreationState
 import androidx.compose.remote.creation.compose.layout.RemoteCanvas
 import androidx.compose.remote.creation.compose.layout.RemoteComposable
 import androidx.compose.remote.creation.compose.modifier.RemoteModifier
@@ -43,26 +44,119 @@ import androidx.compose.ui.graphics.ImageBitmap
 import kotlin.math.roundToInt
 
 /**
+ * The glyphs of a variable font for a known set of characters, prepared once and shared by every
+ * [RemoteVariableFontText] in a document that draws a [RemoteString] with them: a clock's time and
+ * date, a counter and its label.
+ *
+ * Holds each character's outline and advance as expressions of the [axes], the hidden bitmap fonts
+ * that read the text and carry the kerning, and the widest advance. The first text that draws with
+ * it writes the outlines and expressions into the document; the others refer to them, so each
+ * further text costs only its own positions.
+ *
+ * Build it with [rememberVariableFontGlyphs] inside the document being captured; it belongs to that
+ * one document.
+ */
+public class VariableFontGlyphs
+internal constructor(
+  internal val font: VariableFont,
+  internal val set: List<String>,
+  private val outlines: List<VariedOutline>,
+  private val specialization: AxisSpecialization,
+  private val axes: Map<Int, RemoteFloat>,
+  internal val fonts: LookupFonts,
+  internal val widest: Float,
+) {
+  /** What the first text wrote into a document, for the others to refer to. */
+  internal class Written(val paths: List<Int>, val advances: List<RemoteFloat>)
+
+  private var writtenTo: Any? = null
+  private var written: Written? = null
+
+  /**
+   * Writes the outlines and their expressions into [state]'s document the first time, and returns
+   * them every time. The caller must be writing directly to the document, in order.
+   */
+  @SuppressLint("RestrictedApi")
+  internal fun write(state: RemoteComposeCreationState): Written {
+    val writer = state.document
+    written
+      ?.takeIf { writtenTo === writer }
+      ?.let {
+        return it
+      }
+    val model = RemoteVariationModel(font, axes)
+    val coordinate = { form: LinearForm ->
+      val value = specialization.specialize(form)
+      if (value.isConstant) value.constant else model.float(value).getFloatIdForCreationState(state)
+    }
+    val paths = outlines.map { glyph ->
+      writer.addPathData(RemotePath().also { glyph.emit(RemotePathSink(it, coordinate)) })
+    }
+    val advances = outlines.map { model.float(specialization.specialize(it.advance)) }
+    return Written(paths, advances).also {
+      written = it
+      writtenTo = writer
+    }
+  }
+}
+
+/**
+ * Prepares [VariableFontGlyphs] for [characters] in [font], with its [axes] driven by
+ * [RemoteFloat]s, to share between several [RemoteVariableFontText]s in this document.
+ *
+ * @param font The variable font to take outlines from.
+ * @param characters Every character the texts may contain.
+ * @param axes The animated axes, by tag, with their values in the axis' user units.
+ * @param location Values for the axes not in [axes], held fixed; missing axes take their defaults.
+ * @param kerningLocation Where in the design space the font's `GPOS` pair kerning is taken.
+ */
+@Composable
+public fun rememberVariableFontGlyphs(
+  font: VariableFont,
+  characters: String,
+  axes: Map<String, RemoteFloat>,
+  location: Map<String, Float> = emptyMap(),
+  kerningLocation: Map<String, Float> = location,
+): VariableFontGlyphs =
+  remember(font, characters, axes, location, kerningLocation) {
+    variableFontGlyphs(font, characters, axes, location, kerningLocation)
+  }
+
+internal fun variableFontGlyphs(
+  font: VariableFont,
+  characters: String,
+  axes: Map<String, RemoteFloat>,
+  location: Map<String, Float>,
+  kerningLocation: Map<String, Float>,
+): VariableFontGlyphs {
+  val indices = axes.keys.associateWith { tag -> font.axes.indexOfFirst { it.tag == tag } }
+  require(indices.values.none { it < 0 }) {
+    "${indices.filterValues { it < 0 }.keys} not among ${font.axes.map { it.tag }}"
+  }
+  val set = characters.codePoints().toArray().distinct().map { String(Character.toChars(it)) }
+  val outlines = set.map { font.variedLayout(it) }
+  val animated = indices.values.toSet()
+  val fixed = font.normalize(location)
+  return VariableFontGlyphs(
+    font = font,
+    set = set,
+    outlines = outlines,
+    specialization = AxisSpecialization(animated, fixed),
+    axes = indices.entries.associate { (tag, i) -> i to axes.getValue(tag) },
+    fonts = lookupFonts(set, font, kerningLocation),
+    widest =
+      set.indices.maxOf { c -> font.maxAdvance(set[c], outlines[c].advance, animated, fixed) },
+  )
+}
+
+/**
  * Draws one line of a [RemoteString] [text], which may change on the player, in a variable [font]
  * with its [axes] driven by [RemoteFloat]s, without the player ever loading a font.
  *
  * The text is limited to a known set of [characters] — digits and punctuation for a clock, ASCII
- * for a label — and to at most [maxLength] of them. Each character's outline is in the document
- * once, as expressions of the axes (as for the `String` overload), and the player picks one for
- * each position from the text it has:
- * - it reads the character at each position by measuring that one-character substring with a hidden
- *   bitmap font whose glyph for each of [characters] is as wide as its index;
- * - it places each glyph after the advances of those before it, also expressions of the axes, plus
- *   the font's pair kerning, which a second hidden bitmap font carries in its kerning table so the
- *   player applies it while measuring.
- *
- * Characters outside [characters], and any beyond [maxLength], are not drawn. Kerning is the font's
- * own `GPOS` pair kerning, taken at [kerningLocation]: it follows the text but not the axes. The
- * box is as wide as [maxLength] of the widest character over the axes' whole range, so the layout
- * never moves as the text or axes change; the text starts at its left edge.
- *
- * The document holds one conditional draw per position and character, so it grows with [maxLength]
- * × [characters].
+ * for a label — and to at most [maxLength] of them. To draw several texts with the same font,
+ * characters and axes, build their glyphs once with [rememberVariableFontGlyphs] and use the
+ * overload that takes them: the outlines are then in the document once rather than once per text.
  *
  * @param text The text to draw; it may change on the player.
  * @param characters Every character [text] may contain.
@@ -75,7 +169,6 @@ import kotlin.math.roundToInt
  * @param location Values for the axes not in [axes], held fixed; missing axes take their defaults.
  * @param kerningLocation Where in the design space the kerning is taken.
  */
-@SuppressLint("RestrictedApi")
 @Composable
 @RemoteComposable
 public fun RemoteVariableFontText(
@@ -90,53 +183,75 @@ public fun RemoteVariableFontText(
   location: Map<String, Float> = emptyMap(),
   kerningLocation: Map<String, Float> = location,
 ) {
-  val indices = axes.keys.associateWith { tag -> font.axes.indexOfFirst { it.tag == tag } }
-  require(indices.values.none { it < 0 }) {
-    "${indices.filterValues { it < 0 }.keys} not among ${font.axes.map { it.tag }}"
-  }
-  val set =
-    remember(characters) {
-      characters.codePoints().toArray().distinct().map { String(Character.toChars(it)) }
-    }
-  val glyphs = remember(set, font) { set.map { font.variedLayout(it) } }
-  val animated = indices.values.toSet()
-  val specialization =
-    remember(font, animated, location) { AxisSpecialization(animated, font.normalize(location)) }
-  val fonts = remember(set, font, kerningLocation) { lookupFonts(set, font, kerningLocation) }
-  val widest =
-    remember(set, font, animated, location) {
-      set.indices.maxOf { c ->
-        font.maxAdvance(set[c], glyphs[c].advance, animated, font.normalize(location))
-      }
-    }
+  RemoteVariableFontText(
+    text = text,
+    maxLength = maxLength,
+    glyphs = rememberVariableFontGlyphs(font, characters, axes, location, kerningLocation),
+    fontSize = fontSize,
+    modifier = modifier,
+    color = color,
+  )
+}
+
+/**
+ * Draws one line of a [RemoteString] [text], which may change on the player, with [glyphs] prepared
+ * by [rememberVariableFontGlyphs], without the player ever loading a font.
+ *
+ * Each of the [glyphs]' characters has its outline in the document once, as expressions of the
+ * axes, and the player picks one for each position from the text it has:
+ * - it reads the character at each position by measuring that one-character substring with a hidden
+ *   bitmap font whose glyph for each character is as wide as its index;
+ * - it places each glyph after the advances of those before it, also expressions of the axes, plus
+ *   the font's pair kerning, which a second hidden bitmap font carries in its kerning table so the
+ *   player applies it while measuring.
+ *
+ * Characters the [glyphs] lack, and any beyond [maxLength], are not drawn. Kerning follows the text
+ * but not the axes. The box is as wide as [maxLength] of the widest character over the axes' whole
+ * range, so the layout never moves as the text or axes change; the text starts at its left edge.
+ *
+ * Each position holds one conditional draw per character, so the text grows with [maxLength] × the
+ * number of characters, on top of the glyphs, which are shared.
+ *
+ * @param text The text to draw; it may change on the player.
+ * @param maxLength The most characters [text] may have.
+ * @param glyphs The glyphs to draw with, shared with the document's other texts.
+ * @param fontSize The font size.
+ * @param modifier Modifier for the canvas; the text's own width and height are applied after it.
+ * @param color The fill color.
+ */
+@SuppressLint("RestrictedApi")
+@Composable
+@RemoteComposable
+public fun RemoteVariableFontText(
+  text: RemoteString,
+  maxLength: Int,
+  glyphs: VariableFontGlyphs,
+  fontSize: RemoteDp,
+  modifier: RemoteModifier = RemoteModifier,
+  color: RemoteColor = Color.Black.rc,
+) {
+  val font = glyphs.font
+  val set = glyphs.set
+  val fonts = glyphs.fonts
   val em = 1f / font.unitsPerEm
-  val width = fontSize * ((maxLength * widest + (maxLength - 1) * fonts.widestKern) * em)
+  val width = fontSize * ((maxLength * glyphs.widest + (maxLength - 1) * fonts.widestKern) * em)
   val height = fontSize * ((font.ascender - font.descender) * em)
-  val animatedAxes = indices.entries.associate { (tag, i) -> i to axes.getValue(tag) }
 
   RemoteCanvas(modifier = modifier.width(width).height(height)) {
     val state = remoteComposeCreationState
     val writer = state.document
-    val model = RemoteVariationModel(font, animatedAxes)
     val id = { value: RemoteFloat -> value.getFloatIdForCreationState(state) }
-    val coordinate = { form: LinearForm ->
-      val value = specialization.specialize(form)
-      if (value.isConstant) value.constant else id(model.float(value))
-    }
     // The glyph layer is written straight to the document: RemoteCanvas writes a path's data again
     // each time it draws it, and every glyph is drawn at every position. The canvas' recorded
     // operations (the paint) are flushed first so everything stays in order.
     val canvas = remoteCanvas.internalCanvas
     canvas.usePaint(RemotePaint { this.color = color })
     canvas.flush()
+    val written = glyphs.write(state)
     val scale = fontSize.toPx() * em
     writer.save()
     writer.translate(0f, id(scale * font.ascender.toFloat()))
     writer.scale(id(scale), id(scale * -1f))
-    val paths = glyphs.map { glyph ->
-      writer.addPathData(RemotePath().also { glyph.emit(RemotePathSink(it, coordinate)) })
-    }
-    val advances = glyphs.map { model.float(specialization.specialize(it.advance)) }
 
     val length = text.length
     var pen: RemoteFloat = 0f.rf
@@ -159,12 +274,13 @@ public fun RemoteVariableFontText(
         writer.conditionalOperations(ConditionalOperations.TYPE_EQ, indexId, c.toFloat())
         writer.save()
         writer.translate(x, 0f)
-        writer.drawPath(paths[c])
+        writer.drawPath(written.paths[c])
         writer.restore()
         writer.endConditionalOperations()
       }
       pen =
-        (pen + set.indices.fold(0f.rf) { sum, c -> sum + match[c] * advances[c] }).createReference()
+        (pen + set.indices.fold(0f.rf) { sum, c -> sum + match[c] * written.advances[c] })
+          .createReference()
     }
     writer.restore()
   }
