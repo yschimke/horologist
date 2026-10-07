@@ -27,6 +27,9 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.remote.core.RemoteClock
 import androidx.compose.remote.creation.compose.capture.rememberRemoteDocument
+import androidx.compose.remote.creation.compose.layout.RemoteTime
+import androidx.compose.remote.creation.compose.state.RemoteFloat
+import androidx.compose.remote.creation.compose.state.abs
 import androidx.compose.remote.creation.compose.state.asRdp
 import androidx.compose.remote.creation.compose.state.rc
 import androidx.compose.remote.creation.compose.state.rememberNamedRemoteFloat
@@ -206,4 +209,59 @@ fun VariableFontExpressionTextAnimatedPreview(
     fontResId = fontResId,
     fontSize = fontSize,
   )
+}
+
+/**
+ * A value that sweeps from [from] to [to] and back every [periodSeconds], driven by the document's
+ * own clock: the player animates it with no host input and no named float.
+ */
+fun sweep(from: Float, to: Float, periodSeconds: Float): RemoteFloat {
+  val phase = (RemoteTime().ContinuousSec() % periodSeconds) / periodSeconds
+  val triangle = -abs(phase * 2f - 1f) + 1f
+  return triangle * (to - from) + from
+}
+
+/** The value of [sweep] at [seconds]. */
+fun sweepAt(from: Float, to: Float, periodSeconds: Float, seconds: Float): Float {
+  val phase = (seconds % periodSeconds) / periodSeconds
+  return from + (to - from) * (1f - kotlin.math.abs(phase * 2f - 1f))
+}
+
+/**
+ * A [RemoteVariableFontExpressionText] document whose [axes] are built inside the document, for
+ * example with [sweep], so it animates on the player's own clock: no named floats, no host input.
+ */
+@SuppressLint("RestrictedApi")
+@Composable
+fun VariableFontSelfAnimatedPreview(
+  text: String,
+  axes: () -> Map<String, RemoteFloat>,
+  modifier: Modifier = Modifier,
+  @RawRes fontResId: Int = R.raw.google_sans_flex_wght_rond,
+  fontSize: Dp = 32.dp,
+  color: Color = Color.White,
+  documentWidth: Int = 400,
+  documentHeight: Int = 100,
+  clock: RemoteClock = RemoteClock.SYSTEM,
+) {
+  val context = LocalContext.current
+  val font = remember(fontResId) { context.variableFont(fontResId) }
+  val doc =
+    rememberRemoteDocument(clock = clock) {
+      RemoteVariableFontExpressionText(
+        text = text,
+        font = font,
+        axes = axes(),
+        fontSize = fontSize.asRdp(),
+        color = color.rc,
+      )
+    }
+  doc.value?.let { document ->
+    RemoteDocumentPlayer(
+      document = document,
+      modifier = modifier,
+      documentWidth = documentWidth,
+      documentHeight = documentHeight,
+    )
+  }
 }

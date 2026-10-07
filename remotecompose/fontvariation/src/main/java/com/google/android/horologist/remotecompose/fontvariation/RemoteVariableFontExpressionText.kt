@@ -17,7 +17,7 @@
 package com.google.android.horologist.remotecompose.fontvariation
 
 import android.annotation.SuppressLint
-import androidx.compose.remote.core.operations.PathAppend
+import androidx.compose.remote.creation.RemotePath
 import androidx.compose.remote.creation.compose.layout.RemoteCanvas
 import androidx.compose.remote.creation.compose.layout.RemoteComposable
 import androidx.compose.remote.creation.compose.modifier.RemoteModifier
@@ -28,6 +28,7 @@ import androidx.compose.remote.creation.compose.state.RemoteDp
 import androidx.compose.remote.creation.compose.state.RemoteFloat
 import androidx.compose.remote.creation.compose.state.RemotePaint
 import androidx.compose.remote.creation.compose.state.rc
+import androidx.compose.remote.creation.compose.state.rf
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
@@ -40,7 +41,8 @@ import androidx.compose.ui.graphics.Color
  * carries the model itself: every outline coordinate is a float expression of the axis values — the
  * default position plus each variation region's delta weighted by that region's scalar, exactly as
  * the font defines it. The player re-evaluates those expressions when an axis changes and draws a
- * single path whose points are the results. It never loads or re-instances a font.
+ * single path whose points are the results. It never loads or re-instances a font. The axes can be
+ * any [RemoteFloat]: named floats a host sets, animations, or expressions of the document's clock.
  *
  * Compared with the tween:
  * - several axes can move at once and independently, and the axis values need no keyframes;
@@ -92,44 +94,34 @@ public fun RemoteVariableFontExpressionText(
   RemoteCanvas(modifier = modifier.width(width).height(height)) {
     val state = remoteComposeCreationState
     val model = RemoteVariationModel(font, animatedAxes)
-    val writer = state.document
-    // Each coordinate is either a literal or the NaN-boxed id of its expression.
+    // Each coordinate is either a literal or the NaN-boxed id of its expression; the player
+    // resolves the ids whenever the expressions change.
     val coordinate = { form: LinearForm ->
       val animated = specialization.specialize(form)
       if (animated.isConstant) animated.constant
       else model.float(animated).getFloatIdForCreationState(state)
     }
-    // A path built with PathCreate and PathAppend is rebuilt from its variables on every paint;
-    // a RemotePath (PathData) reads them only once, when the document loads. RemoteCanvas has no
-    // API for those operations, so the canvas' recorded operations (the paint) are flushed first
-    // and everything after, transforms included, is written directly, in order.
-    val canvas = remoteCanvas.internalCanvas
-    canvas.usePaint(RemotePaint { this.color = color })
-    canvas.flush()
-    val scale = (fontSize.toPx() * em).getFloatIdForCreationState(state)
-    val negativeScale = (fontSize.toPx() * -em).getFloatIdForCreationState(state)
-    val top = (fontSize.toPx() * (em * font.ascender)).getFloatIdForCreationState(state)
-    writer.save()
-    writer.translate(0f, top)
-    writer.scale(scale, negativeScale)
-    val sink = PathAppendSink { x, y -> writer.pathCreate(x, y) }
+    val path = RemotePath()
     outline.emit(
       object : PathSink<LinearForm> {
         override fun moveTo(x: LinearForm, y: LinearForm) =
-          sink.moveTo(coordinate(x), coordinate(y))
+          path.moveTo(coordinate(x), coordinate(y))
 
         override fun lineTo(x: LinearForm, y: LinearForm) =
-          sink.lineTo(coordinate(x), coordinate(y))
+          path.lineTo(coordinate(x), coordinate(y))
 
         override fun quadTo(x1: LinearForm, y1: LinearForm, x2: LinearForm, y2: LinearForm) =
-          sink.quadTo(coordinate(x1), coordinate(y1), coordinate(x2), coordinate(y2))
+          path.quadTo(coordinate(x1), coordinate(y1), coordinate(x2), coordinate(y2))
 
-        override fun close() = sink.close()
+        override fun close() = path.close()
       }
     )
-    val pathId = sink.finish { id, floats -> writer.pathAppend(id, *floats) }
-    if (pathId != null) writer.drawPath(pathId)
-    writer.restore()
+    val scale = fontSize.toPx() * em
+    remoteCanvas.save()
+    remoteCanvas.translate(0f.rf, scale * font.ascender.toFloat())
+    remoteCanvas.scale(scale, -scale)
+    drawPath(path, RemotePaint { this.color = color })
+    remoteCanvas.restore()
   }
 }
 
@@ -154,47 +146,4 @@ internal fun VariableFont.maxAdvance(
     points = points.flatMap { p -> values.map { v -> p.copyOf().also { it[axis] = v } } }
   }
   return points.maxOf { advance.evaluate(it) }
-}
-
-/**
- * Buffers path commands in the `PathAppend` encoding, starting the path with [create] at its first
- * move and flushing in chunks below the player's per-operation limit.
- */
-@SuppressLint("RestrictedApi")
-internal class PathAppendSink(private val create: (Float, Float) -> Int) : PathSink<Float> {
-  private var id: Int? = null
-  private val buffer = ArrayList<Float>()
-  private val chunks = ArrayList<FloatArray>()
-
-  override fun moveTo(x: Float, y: Float) {
-    if (id == null) id = create(x, y) else add(PathAppend.MOVE_NAN, x, y)
-  }
-
-  override fun lineTo(x: Float, y: Float) = add(PathAppend.LINE_NAN, 0f, 0f, x, y)
-
-  override fun quadTo(x1: Float, y1: Float, x2: Float, y2: Float) =
-    add(PathAppend.QUADRATIC_NAN, 0f, 0f, x1, y1, x2, y2)
-
-  override fun close() = add(PathAppend.CLOSE_NAN)
-
-  private fun add(vararg command: Float) {
-    if (buffer.size + command.size > CHUNK) {
-      chunks += buffer.toFloatArray()
-      buffer.clear()
-    }
-    command.forEach { buffer += it }
-  }
-
-  /** Writes the buffered commands with [append] and returns the path id, if anything was drawn. */
-  fun finish(append: (Int, FloatArray) -> Unit): Int? {
-    val id = id ?: return null
-    if (buffer.isNotEmpty()) chunks += buffer.toFloatArray()
-    chunks.forEach { append(id, it) }
-    return id
-  }
-
-  private companion object {
-    /** Below `PathAppend`'s 2000-float limit per operation. */
-    const val CHUNK = 1900
-  }
 }

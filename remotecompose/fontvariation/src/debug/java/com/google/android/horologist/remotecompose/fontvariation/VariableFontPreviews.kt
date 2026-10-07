@@ -85,3 +85,16 @@ fun RobotoFlexSlantWidthExpressionAnimatedPreview() {
     fontResId = R.raw.roboto_flex,
   )
 }
+
+/** Weight and slant on their own periods, animated by the document's clock alone. */
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 200, heightDp = 50)
+@AnimatedPreview(durationMs = 6000, frameIntervalMs = 200, showCurves = false)
+@Composable
+fun RobotoFlexWeightAndSlantSelfAnimatedPreview() {
+  VariableFontSelfAnimatedPreview(
+    "Hello",
+    axes = { mapOf("wght" to sweep(100f, 1000f, 4f), "slnt" to sweep(0f, -10f, 6f)) },
+    modifier = Modifier.size(200.dp, 50.dp),
+    fontResId = R.raw.roboto_flex,
+  )
+}

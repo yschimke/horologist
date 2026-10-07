@@ -73,9 +73,8 @@ The document carries the model itself, as Remote Compose float expressions:
 2. Each distinct product of tents is written once and shared; axes that are not animated are
    folded into the coefficients at creation time, and regions that cannot move drop out.
 3. Each distinct outline coordinate is one expression, `constant + Σ coefficient × scalar`.
-4. The path is written with `PathCreate`/`PathAppend`, whose coordinates are those expressions'
-   ids. These are paint operations, so the player rebuilds the path from the current values on
-   each paint. (A `RemotePath` is `PathData`, which reads its variables once, at load.)
+4. The path is an ordinary `RemotePath` whose coordinates are those expressions' ids; the player
+   resolves them whenever the expressions change.
 
 Several axes can move at once and independently, and the document needs no keyframes: it grows
 with the number of distinct coordinates and regions in the text. The text's box is its widest
@@ -87,6 +86,41 @@ font's design space, and `RenderFidelityTest` renders both approaches and the pl
 for every tested axis of six fonts (Google Sans Flex, Roboto Flex, Recursive, Fraunces, Noto
 Sans, Inter): the tween and the expression path agree to within antialiasing, and both match the
 platform glyph for glyph. `LiveUpdateTest` checks both follow a float changed after load.
+
+## Driving the axes
+
+The axes are any `RemoteFloat`s. Named floats that a host sets work, but nothing requires them: an
+axis can be an expression of the document's own clock, so the document animates with no host
+input at all. For example, weight and slant on their own periods:
+
+```kotlin
+fun sweep(from: Float, to: Float, periodSeconds: Float): RemoteFloat {
+  val phase = (RemoteTime().ContinuousSec() % periodSeconds) / periodSeconds
+  return (-abs(phase * 2f - 1f) + 1f) * (to - from) + from
+}
+
+RemoteVariableFontExpressionText(
+  text = "Hello",
+  font = robotoFlex,
+  axes = mapOf("wght" to sweep(100f, 1000f, 4f), "slnt" to sweep(0f, -10f, 6f)),
+  fontSize = 32.rdp,
+)
+```
+
+## Players
+
+Both approaches play in the View player (`RemoteDocumentPlayer`) and in the embedded Compose
+player (`RcPlayer`, behind `RemoteComposePlayerFlags.isEmbeddedPlayerEnabled`).
+`ClockDrivenAxesTest` animates weight and slant together (and the tween on weight) from the
+document's clock and compares every frame with a document built with that instant's values as
+constants:
+
+- the View player reads the document's `RemoteClock` and matches the reference at the clock's
+  time;
+- the embedded player matches the reference exactly too, but keeps its own time: it counts Compose
+  frame time from its first frame and ignores the document's `RemoteClock`, so here it trails the
+  frame clock by a few frames, and clock expressions such as `ContinuousSec` are not wall-clock
+  time in it.
 
 ## Limits
 
