@@ -143,8 +143,12 @@ internal sealed class Glyf(val xMin: Int) {
           dy = data.i8(p + 1)
           p += 2
         }
+        // Point-matched placement (anchoring a component point to a parent point) needs the
+        // component's points resolved first; variable fonts place components by offset, so it is
+        // an explicit, documented limitation rather than a silent misplacement.
         require(flags and ARGS_ARE_XY_VALUES != 0) {
-          "component anchored by point matching is not supported"
+          "composite glyph positions component $glyphId by point matching, which this reader " +
+            "does not support"
         }
         var xx = 1f
         var xy = 0f
@@ -412,4 +416,78 @@ internal class Gvar(
       }
     }
   }
+}
+
+/**
+ * The `HVAR` table: advance-width variation, which a font may keep here rather than (or as well as)
+ * in the `gvar` phantom points. When it is present it is the authority for advances.
+ */
+internal class Hvar(private val data: FontBytes, private val offset: Int) {
+  private val store = offset + data.u32(offset + 4).toInt()
+  private val advanceMap = data.u32(offset + 8).toInt().takeIf { it != 0 }?.let { offset + it }
+
+  private val regions: List<TupleRegion> = run {
+    val list = store + data.u32(store + 2).toInt()
+    val axisCount = data.u16(list)
+    List(data.u16(list + 2)) { r ->
+      val p = list + 4 + r * axisCount * 6
+      TupleRegion(
+        FloatArray(axisCount) { data.f2dot14(p + it * 6) },
+        FloatArray(axisCount) { data.f2dot14(p + it * 6 + 2) },
+        FloatArray(axisCount) { data.f2dot14(p + it * 6 + 4) },
+      )
+    }
+  }
+
+  /** The (outer, inner) item a glyph's advance delta lives at. */
+  private fun item(glyphId: Int): Pair<Int, Int> {
+    val map = advanceMap ?: return 0 to glyphId
+    val format = data.u8(map)
+    val entryFormat = data.u8(map + 1)
+    val count = if (format == 0) data.u16(map + 2) else data.u32(map + 2).toInt()
+    val entries = map + if (format == 0) 4 else 6
+    val size = ((entryFormat shr 4) and 0x3) + 1
+    val innerBits = (entryFormat and 0xF) + 1
+    val index = minOf(glyphId, count - 1)
+    var entry = 0
+    for (b in 0 until size) entry = (entry shl 8) or data.u8(entries + index * size + b)
+    return (entry ushr innerBits) to (entry and ((1 shl innerBits) - 1))
+  }
+
+  /** The region indexes and deltas of the item behind [glyphId]'s advance. */
+  private fun deltas(glyphId: Int): List<Pair<Int, Int>> {
+    val (outer, inner) = item(glyphId)
+    if (outer >= data.u16(store + 6)) return emptyList()
+    val itemData = store + data.u32(store + 8 + outer * 4).toInt()
+    val itemCount = data.u16(itemData)
+    if (inner >= itemCount) return emptyList()
+    val wordCountField = data.u16(itemData + 2)
+    val longWords = wordCountField and 0x8000 != 0
+    val wordCount = wordCountField and 0x7FFF
+    val regionCount = data.u16(itemData + 4)
+    val regionIndexes = IntArray(regionCount) { data.u16(itemData + 6 + it * 2) }
+    val wordSize = if (longWords) 4 else 2
+    val byteSize = if (longWords) 2 else 1
+    val rowSize = wordCount * wordSize + (regionCount - wordCount) * byteSize
+    var p = itemData + 6 + regionCount * 2 + inner * rowSize
+    return List(regionCount) { r ->
+      val delta =
+        if (r < wordCount) {
+          (if (longWords) data.i32(p) else data.i16(p)).also { p += wordSize }
+        } else {
+          (if (longWords) data.i16(p) else data.i8(p)).also { p += byteSize }
+        }
+      regionIndexes[r] to delta
+    }
+  }
+
+  /** The advance-width delta of [glyphId] at normalized [coords], in font units. */
+  fun advanceDelta(glyphId: Int, coords: FloatArray): Float =
+    deltas(glyphId).fold(0f) { sum, (region, delta) ->
+      sum + regions[region].scalar(coords) * delta
+    }
+
+  /** The regions that vary [glyphId]'s advance. */
+  fun regions(glyphId: Int): List<TupleRegion> =
+    deltas(glyphId).filter { it.second != 0 }.map { regions[it.first] }
 }

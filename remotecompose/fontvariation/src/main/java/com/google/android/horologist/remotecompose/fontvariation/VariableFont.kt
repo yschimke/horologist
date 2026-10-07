@@ -34,7 +34,9 @@ public data class FontAxis(
  *
  * Because every outline is generated from the font's own point list, the outlines of one glyph at
  * two different locations always have exactly the same structure, which is what a path tween needs.
- * CFF2 (PostScript-outline) variable fonts are not supported.
+ * CFF2 (PostScript-outline) variable fonts are not supported, nor are composite glyphs that place a
+ * component by point matching rather than by offset; drawing one throws. Advances come from `HVAR`
+ * when the font has one, otherwise from the `gvar` phantom points.
  */
 public class VariableFont private constructor(private val data: FontBytes) {
   private val tables: Map<String, Int> = readTableDirectory(data)
@@ -57,6 +59,7 @@ public class VariableFont private constructor(private val data: FontBytes) {
 
   private val avarMaps: List<List<Pair<Float, Float>>>? = readAvar()
   private val gvar: Gvar? = tables["gvar"]?.let { Gvar(data, it, axes.size) }
+  private val hvar: Hvar? = tables["HVAR"]?.let { Hvar(data, it) }
   private val cmap: Map<Int, Int> = readCmap()
 
   /** Returns the glyph id for [codePoint], or 0 (`.notdef`) when the font has none. */
@@ -92,16 +95,17 @@ public class VariableFont private constructor(private val data: FontBytes) {
 
   /**
    * Every normalized coordinate of axis [axisIndex] at which an outline or advance of [glyphIds]
-   * changes slope: the corners of each `gvar` tuple, the axis extremes and default, and the `avar`
-   * mapping points. Between two consecutive breakpoints the outlines are exactly linear in the axis
-   * value, which is what makes a chain of path tweens reproduce the font exactly.
+   * changes slope: the corners of each `gvar` tuple and `HVAR` region, the axis extremes and
+   * default, and the `avar` mapping points. Between two consecutive breakpoints the outlines are
+   * exactly linear in the axis value, which is what makes a chain of path tweens reproduce the font
+   * exactly.
    */
   internal fun normalizedBreakpoints(axisIndex: Int, glyphIds: Collection<Int>): Set<Float> {
     val points = sortedSetOf(-1f, 0f, 1f)
     avarMaps?.getOrNull(axisIndex)?.forEach { (_, to) -> points.add(to) }
-    val gvar = gvar ?: return points
     for (glyph in closure(glyphIds)) {
-      for (tuple in gvar.tuples(glyph)) {
+      val regions = gvar?.tuples(glyph).orEmpty() + hvar?.regions(glyph).orEmpty()
+      for (tuple in regions) {
         val peak = tuple.peak[axisIndex]
         if (peak == 0f) continue
         points.add(tuple.start[axisIndex])
@@ -127,6 +131,17 @@ public class VariableFont private constructor(private val data: FontBytes) {
 
   /** The outline and advance of [glyphId] at the normalized [coords]. */
   internal fun outline(glyphId: Int, coords: FloatArray): GlyphOutline {
+    val outline = gvarOutline(glyphId, coords)
+    // `HVAR`, when present, is the authority for advances: a font may leave the phantom-point
+    // deltas out of `gvar` and keep the advance variation only there.
+    val hvar = hvar ?: return outline
+    return GlyphOutline(
+      outline.contours,
+      hMetrics(glyphId).first + hvar.advanceDelta(glyphId, coords),
+    )
+  }
+
+  private fun gvarOutline(glyphId: Int, coords: FloatArray): GlyphOutline {
     val glyph = glyph(glyphId)
     val (advance, lsb) = hMetrics(glyphId)
     return when (glyph) {

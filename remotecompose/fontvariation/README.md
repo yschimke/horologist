@@ -34,14 +34,14 @@ about 2.5 ms for the path tween used here; with the value held still both were a
 ## How
 
 Variable-font outlines are piecewise linear in each axis. Their deltas only change slope where a
-`gvar` region starts, peaks or ends (or where `avar` bends the mapping). So, with the other axes
-held fixed:
+`gvar` or `HVAR` region starts, peaks or ends (or where `avar` bends the mapping). So, with the
+other axes held fixed:
 
 1. `axisKeyframes` collects those breakpoints for just the glyphs in the text. Google Sans Flex
    needs 2 for `ROND` and 9 for `wght`.
-2. `VariableFont` (a small `glyf`/`gvar`/`avar`/`cmap` reader) produces the text's outline at each
-   keyframe. Every outline is emitted from the font's own point list, so all keyframes have
-   exactly the same path structure, which `DrawTweenPath` requires.
+2. `VariableFont` (a small `glyf`/`gvar`/`HVAR`/`avar`/`cmap` reader) produces the text's
+   outline at each keyframe. Every outline is emitted from the font's own point list, so all
+   keyframes have exactly the same path structure, which `DrawTweenPath` requires.
 3. The document draws `drawTweenPath(keyframe[i], keyframe[i + 1], t)` for the segment that
    contains the value, chosen with `drawConditionally`.
 
@@ -53,7 +53,8 @@ against `fontTools` to 0.01 font units.
 
 - One line, placed by nominal advances: no kerning, ligatures or complex-script shaping.
 - No font fallback: characters the font lacks draw as `.notdef`.
-- TrueType (`glyf`) outlines only, not CFF2.
+- TrueType (`glyf`) outlines only, not CFF2. Composite glyphs must place their components by
+  offset; a composite that anchors a component by point matching throws when it is drawn.
 - The text is fixed when the document is created, and it is drawn as a path: there is no
   accessible text unless the caller adds a content description, and edge anti-aliasing is that
   of a path fill rather than the platform's text rasterizer.
