@@ -18,9 +18,7 @@ package com.google.android.horologist.remotecompose.fontvariation
 
 import android.annotation.SuppressLint
 import androidx.compose.remote.creation.compose.state.RemoteFloat
-import androidx.compose.remote.creation.compose.state.clamp
-import androidx.compose.remote.creation.compose.state.max
-import androidx.compose.remote.creation.compose.state.min
+import androidx.compose.remote.creation.compose.state.mad
 import androidx.compose.remote.creation.compose.state.rf
 
 /**
@@ -93,8 +91,9 @@ internal class AxisSpecialization(private val animated: Set<Int>, private val fi
 
 /**
  * Builds the Remote Compose float expressions that evaluate a font's variation model on the player.
- * Each axis is normalized once, each distinct product of tents is written once, and each distinct
- * coordinate once; the [RemoteFloat]s returned refer to them rather than repeat them.
+ * Each tent is written once, as clamped ramps of its axis' user value, each distinct product of
+ * tents once, and each distinct coordinate once, as a chain of multiply-adds; the [RemoteFloat]s
+ * returned refer to them rather than repeat them.
  *
  * @param axes The animated axes, by index, with their user-space values.
  */
@@ -103,59 +102,34 @@ internal class RemoteVariationModel(
   private val font: VariableFont,
   private val axes: Map<Int, RemoteFloat>,
 ) {
-  private val normalized = HashMap<Int, RemoteFloat>()
+  private val tents = HashMap<Tent, RemoteFloat>()
   private val scalars = HashMap<List<Tent>, RemoteFloat>()
   private val forms = HashMap<AnimatedForm, RemoteFloat>()
 
-  /** The value of [form] on the player. */
+  /**
+   * The value of [form] on the player. Each multiply-add holds two more values on the stack until
+   * the chain unwinds, so a long chain is written in parts that fit an expression's 32 tokens.
+   */
   fun float(form: AnimatedForm): RemoteFloat =
     if (form.isConstant) form.constant.rf
     else
       forms.getOrPut(form) {
-        form.terms.entries
-          .fold(form.constant.rf) { sum, (tents, k) -> sum + scalar(tents) * k }
-          .createReference()
+        form.terms.entries.chunked(TERMS_PER_EXPRESSION).fold(form.constant.rf) { sum, terms ->
+          terms.fold(sum) { s, (region, k) -> mad(scalar(region), k.rf, s) }.createReference()
+        }
       }
 
-  private fun scalar(tents: List<Tent>): RemoteFloat =
-    scalars.getOrPut(tents) { tents.map { tent(it) }.reduce { p, t -> p * t }.createReference() }
-
-  private fun tent(t: Tent): RemoteFloat {
-    val n = normalized(t.axis)
-    // A side with no width is a step; a slope steep enough to cross a whole 1/16384 F2DOT14 step
-    // is indistinguishable from one.
-    val rise =
-      if (t.peak > t.start) (n - t.start) / (t.peak - t.start) else (n - t.start) * STEP + 1f
-    val fall = if (t.end > t.peak) (-n + t.end) / (t.end - t.peak) else (-n + t.end) * STEP + 1f
-    return max(min(rise, fall), 0f)
-  }
-
-  /**
-   * The normalized coordinate of an axis: the font's own user-to-normalized mapping, `avar`
-   * included, which is piecewise linear with corners at the axis' minimum, default, maximum and
-   * `avar` inputs. Written as a sum of clamped ramps, one per segment.
-   */
-  private fun normalized(axis: Int): RemoteFloat =
-    normalized.getOrPut(axis) {
-      val info = font.axes[axis]
-      val value = axes.getValue(axis)
-      val knots =
-        (listOf(info.minValue, info.defaultValue, info.maxValue) + font.avarBreakpoints(axis))
-          .filter { it in info.minValue..info.maxValue }
-          .distinct()
-          .sorted()
-      val ys = knots.map { font.normalize(mapOf(info.tag to it))[axis] }
-      var sum: RemoteFloat = ys.first().rf
-      for (k in 0 until knots.size - 1) {
-        val width = knots[k + 1] - knots[k]
-        val rise = ys[k + 1] - ys[k]
-        if (rise == 0f) continue
-        sum += clamp(value - knots[k], 0f, width) * (rise / width)
-      }
-      sum.createReference()
+  private fun scalar(region: List<Tent>): RemoteFloat =
+    scalars.getOrPut(region) {
+      if (region.size == 1) tent(region.single())
+      else region.map(::tent).reduce { p, t -> p * t }.createReference()
     }
 
+  private fun tent(t: Tent): RemoteFloat =
+    tents.getOrPut(t) { font.tentOf(t, axes.getValue(t.axis)).createReference() }
+
   private companion object {
-    const val STEP = 1e6f
+    /** Three tokens a term and one for the sum so far: 31 of the 32 an expression may have. */
+    const val TERMS_PER_EXPRESSION = 10
   }
 }

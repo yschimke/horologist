@@ -118,6 +118,32 @@ class ClockDrivenAxesTest {
     )
   }
 
+  /** One axis whose regions meet at its default: drawn as a tween between key outlines. */
+  @Test
+  fun tweenGridWeight() {
+    val font = testFonts[1].font
+    follow(
+      live = {
+        RemoteVariableFontText(
+          TEXT,
+          font,
+          mapOf("wght" to sweep(100f, 1000f, 4f)),
+          SIZE.dp.asRdp(),
+          color = Color.White.rc,
+        )
+      },
+      reference = { s ->
+        RemoteVariableFontText(
+          TEXT,
+          font,
+          mapOf("wght" to constant(sweepAt(100f, 1000f, 4f, s))),
+          SIZE.dp.asRdp(),
+          color = Color.White.rc,
+        )
+      },
+    )
+  }
+
   /** Approach 1: the path tween on one axis. */
   @Test
   fun pathTweenWeight() {

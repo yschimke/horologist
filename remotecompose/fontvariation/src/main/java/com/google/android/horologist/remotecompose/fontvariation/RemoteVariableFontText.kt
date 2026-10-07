@@ -45,6 +45,11 @@ import androidx.compose.ui.graphics.Color
  * path whose points are the results, so the outline is the font's own at every value, not an
  * approximation, and the document needs no font.
  *
+ * When one axis is animated and its variation regions meet without overlapping (as when they meet
+ * only at its default), the same outline is drawn instead as a path tween between a few key
+ * outlines, with no expression per coordinate: exact, and usually smaller and faster to play. See
+ * [TweenGrid].
+ *
  * The axes can be any [RemoteFloat]: named floats a host sets, animations, or expressions of the
  * document's own clock. The document grows with the number of distinct coordinates and variation
  * regions in [text], and fastest with the number of axes animated together, since regions that span
@@ -79,6 +84,24 @@ public fun RemoteVariableFontText(
   location: Map<String, Float> = emptyMap(),
   kerningLocation: Map<String, Float> = location,
 ) {
+  VariableFontText(text, font, axes, fontSize, modifier, color, location, kerningLocation)
+}
+
+/** [RemoteVariableFontText], with the tween grid allowed or not. */
+@SuppressLint("RestrictedApi")
+@Composable
+@RemoteComposable
+internal fun VariableFontText(
+  text: String,
+  font: VariableFont,
+  axes: Map<String, RemoteFloat>,
+  fontSize: RemoteDp,
+  modifier: RemoteModifier = RemoteModifier,
+  color: RemoteColor = Color.Black.rc,
+  location: Map<String, Float> = emptyMap(),
+  kerningLocation: Map<String, Float> = location,
+  allowTweenGrid: Boolean = true,
+) {
   val indices = axes.keys.associateWith { tag -> font.axes.indexOfFirst { it.tag == tag } }
   require(indices.values.none { it < 0 }) {
     "${indices.filterValues { it < 0 }.keys} not among ${font.axes.map { it.tag }}"
@@ -96,6 +119,36 @@ public fun RemoteVariableFontText(
   val em = 1f / font.unitsPerEm
   val width = fontSize * (maxAdvance * em)
   val height = fontSize * ((font.ascender - font.descender) * em)
+
+  val grid =
+    remember(outline, specialization, indices.values.toList(), allowTweenGrid) {
+      if (allowTweenGrid) TweenGrid.of(outline, specialization, indices.values.toList()) else null
+    }
+
+  if (grid != null) {
+    RemoteCanvas(modifier = modifier.width(width).height(height)) {
+      val state = remoteComposeCreationState
+      val writer = state.document
+      val id = { value: RemoteFloat -> value.getFloatIdForCreationState(state) }
+      val tents =
+        grid.tents.associateWith { tent ->
+          font.tentOf(tent, animatedAxes.getValue(tent.axis)).createReference()
+        }
+      val scalars = tents.mapValues { (_, value) -> id(value) }
+      val anyTent = id(tents.values.reduce { a, b -> a + b })
+      // The paint and anything already recorded go first, so the writes below stay in order.
+      val canvas = remoteCanvas.internalCanvas
+      canvas.usePaint(RemotePaint { this.color = color })
+      canvas.flush()
+      val scale = fontSize.toPx() * em
+      writer.save()
+      writer.translate(0f, id(scale * font.ascender.toFloat()))
+      writer.scale(id(scale), id(scale * -1f))
+      grid.draw(writer, scalars::getValue, anyTent)
+      writer.restore()
+    }
+    return
+  }
 
   RemoteCanvas(modifier = modifier.width(width).height(height)) {
     val state = remoteComposeCreationState

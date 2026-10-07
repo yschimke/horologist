@@ -41,13 +41,22 @@ Compose float expressions:
 
 1. `VariableFont` (a small `glyf`/`gvar`/`HVAR`/`avar`/`cmap` reader) turns the text into outlines
    whose coordinates are those linear forms.
-2. Each animated axis is normalized once: the font's user-to-normalized mapping, `avar` included,
-   written as a sum of clamped ramps.
+2. Each tent is written once, straight from its axis' user value: the font's user-to-normalized
+   mapping (`avar` included) and the tent together are piecewise linear, so a sum of clamped
+   ramps.
 3. Each distinct product of tents is written once and shared. Axes that are not animated are
    folded into the coefficients at creation time, and regions that cannot move drop out.
-4. Each distinct outline coordinate is one expression, `constant + Σ coefficient × scalar`.
+4. Each distinct outline coordinate is one expression, a chain of multiply-adds
+   `constant + Σ coefficient × scalar`.
 5. The path is an ordinary `RemotePath` whose coordinates are those expressions' ids; the player
    resolves them whenever the expressions change.
+
+When one axis is animated and its regions do not overlap (they usually meet only at the
+default), there is a cheaper exact form: at most one tent is non-zero, so the outline is the
+default outline tweened towards that tent's key outline (the outline with the tent at its peak).
+The document then holds a few whole outlines and no coordinate expressions, and draws one
+`drawTweenPath`, picked by a condition on the tents. It is used when its keys come to fewer bytes
+than the expressions (`TweenGrid`).
 
 The result is the font's own outline at every value, not an approximation. The text's box is its
 widest advance over the animated range, computed exactly at creation time, so animating never
@@ -135,21 +144,29 @@ checks it against the platform's own shaping of each test font at three location
 ## Cost
 
 The document grows with the distinct coordinates and regions in the text, and fastest with the
-number of axes animated together, since regions that span several axes multiply. Roboto Flex, in
-`rc-player-compose` on the desktop JVM, warm:
+number of axes animated together, since regions that span several axes multiply. Animate only the
+axes that move and fix the rest with `location`.
 
-| Text | Animated axes | Document | Frame |
+"Hamburgefonstiv 0123", one axis (`TweenGridTest`; frame in `rc-player-compose` 2.1.2 on the
+desktop JVM, CPU raster, a new value every frame, best of five runs):
+
+| Font | Axis | Expressions | Key outlines |
 | --- | --- | --- | --- |
-| "Hamburg" | `wght` | 20 KB | 0.39 ms |
-| "Hamburg" | `wght`, `slnt` | 32 KB | 0.35 ms |
-| "Hello, Wear OS 12:45!" | `wght` | 35 KB | 0.44 ms |
-| "Hello, Wear OS 12:45!" | all six | 594 KB | 3.6 ms |
+| Roboto Flex | `wght` | 42 KB, 1.02 ms | 32 KB, 0.70 ms |
+| Roboto Flex | `slnt` | 27 KB, 0.91 ms | 21 KB, 0.76 ms |
+| Roboto Flex | `GRAD` | 38 KB, 1.06 ms | 32 KB, 0.64 ms |
+| Inter | `wght` | 57 KB, 1.26 ms | 38 KB, 0.80 ms |
+| Fraunces | `SOFT` | 76 KB, 1.69 ms | 48 KB, 1.05 ms |
+| Recursive | `CASL` | 104 KB, 2.19 ms | 59 KB, 1.02 ms |
+| Google Sans Flex | `ROND` | 32 KB, 0.95 ms | 32 KB, 0.86 ms |
 
-Animate only the axes that move and fix the rest with `location`.
+Google Sans Flex's and Noto Sans' weight regions overlap, so their weight is expressions only (69
+and 70 KB). Several axes at once are expressions; writing each tent as ramps of the user value and
+each coordinate as multiply-adds made those 12 to 20% smaller than before: Roboto Flex `wght` +
+`slnt` 82 → 68 KB, Inter `wght` + `opsz` 124 → 100 KB, Fraunces three axes 324 → 258 KB.
 
 An earlier design tweened pre-instanced outlines between per-axis keyframes. It is still here,
-internal, as an independent check (`RemoteVariableFontTweenText`): for one axis it is about the
-same size and a little cheaper per frame (0.26 ms for "Hamburg"), but it animates only one axis.
+internal, as an independent check (`RemoteVariableFontTweenText`).
 
 ## Players
 
@@ -157,6 +174,10 @@ Checked in the View player (`RemoteDocumentPlayer`), the embedded Compose player
 behind `RemoteComposePlayerFlags.isEmbeddedPlayerEnabled`) and the CMP player
 (`rc-player-compose`), with axes driven by named floats and by the document's clock. Every frame
 matches a document built with that instant's axis values as constants.
+
+The embedded player in 1.0.0-alpha18 draws nothing for a path made by a `PathTween` operation,
+though it draws `drawTweenPath`; so the key outlines are used for one animated axis only, where a
+single `drawTweenPath` suffices, and not as tweens of tweens across axes.
 
 The `RemoteString` overload plays in the View and CMP players. The embedded player does not
 implement `BitmapTextMeasure`, which it needs to read the text, and draws nothing.
@@ -176,6 +197,8 @@ sources start from the document's clock.
 - `RenderFidelityTest` renders the expression path, the tween and the platform's own text for
   every tested axis of all six fonts, and several axes at once: the two paths agree to within
   antialiasing, and match the platform glyph for glyph.
+- `TweenGridTest` checks the key outlines draw what the expressions draw, to within
+  antialiasing, at each axis' extremes, default and random values, for each test font.
 - `LiveUpdateTest` and `ClockDrivenAxesTest` check frames follow a named float changed after load
   and the document's clock, in the View and embedded players.
 - `KerningTest` checks the `GPOS` reader against the platform's shaping.
