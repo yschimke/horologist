@@ -22,8 +22,12 @@ package com.google.android.horologist.remotecompose.fontvariation {
     property public String tag;
   }
 
+  public final class RemoteVariableFontStringTextKt {
+    method @KotlinOnly @androidx.compose.remote.creation.compose.layout.RemoteComposable @androidx.compose.runtime.Composable public static void RemoteVariableFontText(androidx.compose.remote.creation.compose.state.RemoteString text, String characters, int maxLength, com.google.android.horologist.remotecompose.fontvariation.VariableFont font, java.util.Map<java.lang.String,androidx.compose.remote.creation.compose.state.RemoteFloat> axes, androidx.compose.remote.creation.compose.state.RemoteDp fontSize, optional androidx.compose.remote.creation.compose.modifier.RemoteModifier modifier, optional androidx.compose.remote.creation.compose.state.RemoteColor color, optional java.util.Map<java.lang.String,java.lang.Float> location, optional java.util.Map<java.lang.String,java.lang.Float> kerningLocation);
+  }
+
   public final class RemoteVariableFontTextKt {
-    method @KotlinOnly @androidx.compose.remote.creation.compose.layout.RemoteComposable @androidx.compose.runtime.Composable public static void RemoteVariableFontText(String text, com.google.android.horologist.remotecompose.fontvariation.VariableFont font, java.util.Map<java.lang.String,androidx.compose.remote.creation.compose.state.RemoteFloat> axes, androidx.compose.remote.creation.compose.state.RemoteDp fontSize, optional androidx.compose.remote.creation.compose.modifier.RemoteModifier modifier, optional androidx.compose.remote.creation.compose.state.RemoteColor color, optional java.util.Map<java.lang.String,java.lang.Float> location);
+    method @KotlinOnly @androidx.compose.remote.creation.compose.layout.RemoteComposable @androidx.compose.runtime.Composable public static void RemoteVariableFontText(String text, com.google.android.horologist.remotecompose.fontvariation.VariableFont font, java.util.Map<java.lang.String,androidx.compose.remote.creation.compose.state.RemoteFloat> axes, androidx.compose.remote.creation.compose.state.RemoteDp fontSize, optional androidx.compose.remote.creation.compose.modifier.RemoteModifier modifier, optional androidx.compose.remote.creation.compose.state.RemoteColor color, optional java.util.Map<java.lang.String,java.lang.Float> location, optional java.util.Map<java.lang.String,java.lang.Float> kerningLocation);
   }
 
   public final class VariableFont {

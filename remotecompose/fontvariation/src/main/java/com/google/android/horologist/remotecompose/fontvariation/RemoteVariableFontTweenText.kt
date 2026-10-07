@@ -73,10 +73,11 @@ internal fun RemoteVariableFontTweenText(
   color: RemoteColor = Color.Black.rc,
   location: Map<String, Float> = emptyMap(),
   axisRange: ClosedFloatingPointRange<Float>? = null,
+  kerningLocation: Map<String, Float> = location,
 ) {
   val frames =
-    remember(text, font, axis, location, axisRange) {
-      variableTextKeyframes(font, text, axis, location, axisRange)
+    remember(text, font, axis, location, axisRange, kerningLocation) {
+      variableTextKeyframes(font, text, axis, location, axisRange, kerningLocation)
     }
   val em = 1f / font.unitsPerEm
   val width = fontSize * (frames.maxOf { it.advance } * em)
@@ -127,9 +128,10 @@ internal fun variableTextKeyframes(
   axis: String,
   location: Map<String, Float>,
   axisRange: ClosedFloatingPointRange<Float>?,
+  kerningLocation: Map<String, Float>? = null,
 ): List<VariableTextFrame> =
   font.axisKeyframes(text, axis, axisRange).map { v ->
-    val outline = font.layout(text, location + (axis to v))
+    val outline = font.layout(text, location + (axis to v), kerningLocation)
     val path = RemotePath()
     outline.emit(
       object : PathSink<Float> {

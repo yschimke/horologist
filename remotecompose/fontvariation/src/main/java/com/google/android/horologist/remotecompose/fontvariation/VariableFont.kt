@@ -61,6 +61,22 @@ public class VariableFont private constructor(private val data: FontBytes) {
   private val gvar: Gvar? = tables["gvar"]?.let { Gvar(data, it, axes.size) }
   private val hvar: Hvar? = tables["HVAR"]?.let { Hvar(data, it) }
   private val cmap: Map<Int, Int> = readCmap()
+  private val gpos: Gpos? =
+    tables["GPOS"]?.let { Gpos(data, it, tables["GDEF"]?.let { gdef -> gdefVariations(gdef) }) }
+
+  /**
+   * The `GPOS` pair kerning between glyphs [first] and [second] at user-space [location], in font
+   * units; 0 for a font without `GPOS` kerning.
+   */
+  internal fun kerning(first: Int, second: Int, location: Map<String, Float>): Float =
+    gpos?.kerning(first, second, normalize(location)) ?: 0f
+
+  /** `GDEF` 1.3's item variation store, which `GPOS` device tables index into. */
+  private fun gdefVariations(gdef: Int): ItemVariationStore? {
+    if (data.u16(gdef) != 1 || data.u16(gdef + 2) < 3) return null
+    val store = data.u32(gdef + 14).toInt()
+    return if (store == 0) null else ItemVariationStore(data, gdef + store)
+  }
 
   /** Returns the glyph id for [codePoint], or 0 (`.notdef`) when the font has none. */
   public fun glyphId(codePoint: Int): Int = cmap[codePoint] ?: 0

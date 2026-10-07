@@ -73,6 +73,41 @@ RemoteVariableFontText(
 )
 ```
 
+## Text that changes: `RemoteString`
+
+An overload takes the text as a `RemoteString`, so the player can change it — a clock, a counter,
+a label a host updates — limited to a known set of characters and a maximum length:
+
+```kotlin
+RemoteVariableFontText(
+  text = minutes + ":" + seconds, // any RemoteString
+  characters = "0123456789:",
+  maxLength = 5,
+  font = robotoFlex,
+  axes = mapOf("wght" to weight),
+  fontSize = 32.rdp,
+)
+```
+
+Remote Compose has no operation that reads a character's code, so the document reads one with a
+hidden bitmap font. Each character in `characters` gets a glyph as wide as its index, and measuring
+the one-character substring at position *i* with that font gives the index of the character there
+(0 for none). Each character's outline is in the document once, as expressions of the axes; each
+position draws the one whose index matches, after the advances of the glyphs before it. Kerning
+comes from a second hidden bitmap font whose kerning table holds the font's pair kerning, so the
+player kerns while it measures the text so far.
+
+The document grows with `maxLength`: about 2 KB per position for 15 characters of Roboto Flex.
+Characters outside `characters` and beyond `maxLength` are not drawn. The box is as wide as
+`maxLength` of the widest character, and the text starts at its left edge.
+
+## Kerning
+
+Both overloads kern with the font's own `GPOS` pair kerning (the `kern` feature's pair lookups,
+formats 1 and 2, with their `GDEF` variation deltas), read at `kerningLocation`, which defaults to
+`location`. It is a constant per pair: kerning does not follow the animated axes. `KerningTest`
+checks it against the platform's own shaping of each test font at three locations.
+
 ## Cost
 
 The document grows with the distinct coordinates and regions in the text, and fastest with the
@@ -99,6 +134,9 @@ behind `RemoteComposePlayerFlags.isEmbeddedPlayerEnabled`) and the CMP player
 (`rc-player-compose`), with axes driven by named floats and by the document's clock. Every frame
 matches a document built with that instant's axis values as constants.
 
+The `RemoteString` overload plays in the View and CMP players. The embedded player does not
+implement `BitmapTextMeasure`, which it needs to read the text, and draws nothing.
+
 The embedded player in `remote-player-compose` 1.0.0-alpha18 keeps its own time: it counts
 Compose frame time from its first frame rather than reading the document's `RemoteClock`, so
 `ContinuousSec` there is time since the player started, not wall-clock time. Newer AndroidX
@@ -116,10 +154,14 @@ sources start from the document's clock.
   antialiasing, and match the platform glyph for glyph.
 - `LiveUpdateTest` and `ClockDrivenAxesTest` check frames follow a named float changed after load
   and the document's clock, in the View and embedded players.
+- `KerningTest` checks the `GPOS` reader against the platform's shaping.
+- `RemoteStringTextTest` checks one `RemoteString` document against the `String` overload for
+  each of several texts, kerned letters and clock digits.
 
 ## Limits
 
-- One line, placed by nominal advances: no kerning, ligatures or complex-script shaping.
+- One line, placed by advances and pair kerning: no ligatures, contextual alternates or
+  complex-script shaping.
 - No font fallback: characters the font lacks draw as `.notdef`.
 - TrueType (`glyf`) outlines only, not CFF2. Composite glyphs must place their components by
   offset; a composite that anchors a component by point matching throws when it is drawn.

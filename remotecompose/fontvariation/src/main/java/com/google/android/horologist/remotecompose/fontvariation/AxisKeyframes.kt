@@ -22,18 +22,26 @@ internal class TextOutline(val contours: List<Contour>, val advance: Float)
 /**
  * Lays [text] out on one line at [location] using nominal glyph advances.
  *
- * This is `cmap` + advance layout only: no kerning, ligatures or complex-script shaping. The point
- * is that the result is structurally identical at every location — the same glyphs, contours and
- * points in the same order — so two layouts can be tweened point by point.
+ * This is `cmap` + advance layout, with `GPOS` pair kerning at [kerningLocation] when one is given,
+ * and no ligatures or complex-script shaping. The point is that the result is structurally
+ * identical at every location — the same glyphs, contours and points in the same order — so two
+ * layouts can be tweened point by point.
  */
-internal fun VariableFont.layout(text: String, location: Map<String, Float>): TextOutline {
+internal fun VariableFont.layout(
+  text: String,
+  location: Map<String, Float>,
+  kerningLocation: Map<String, Float>? = null,
+): TextOutline {
   val coords = normalize(location)
   var x = 0f
   val contours = mutableListOf<Contour>()
+  var previous = -1
   for (glyph in glyphIds(text)) {
+    if (previous >= 0 && kerningLocation != null) x += kerning(previous, glyph, kerningLocation)
     val outline = outline(glyph, coords)
     outline.contours.mapTo(contours) { it.transformed(1f, 0f, 0f, 1f, x, 0f) }
     x += outline.advance
+    previous = glyph
   }
   return TextOutline(contours, x)
 }
@@ -41,14 +49,25 @@ internal fun VariableFont.layout(text: String, location: Map<String, Float>): Te
 /**
  * Lays [text] out like [layout], but for the whole design space at once: every coordinate and the
  * advance are [LinearForm]s, so the line can be re-evaluated at any location without the font.
+ *
+ * With [kerningLocation], each pair of glyphs is also kerned by the font's `GPOS` pair kerning at
+ * that location, a constant; without it the layout is nominal advances only, like [layout].
  */
-internal fun VariableFont.variedLayout(text: String): VariedOutline {
+internal fun VariableFont.variedLayout(
+  text: String,
+  kerningLocation: Map<String, Float>? = null,
+): VariedOutline {
   var x = LinearForm.ZERO
   val contours = mutableListOf<VariedContour>()
+  var previous = -1
   for (glyph in glyphIds(text)) {
+    if (previous >= 0 && kerningLocation != null) {
+      x += LinearForm.of(kerning(previous, glyph, kerningLocation))
+    }
     val outline = variedOutline(glyph)
     outline.contours.mapTo(contours) { it.transformed(1f, 0f, 0f, 1f, x, LinearForm.ZERO) }
     x += outline.advance
+    previous = glyph
   }
   return VariedOutline(contours, x)
 }

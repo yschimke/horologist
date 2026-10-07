@@ -50,8 +50,8 @@ import androidx.compose.ui.graphics.Color
  * regions in [text], and fastest with the number of axes animated together, since regions that span
  * several axes multiply; animate only the axes that move and fix the rest with [location].
  *
- * The trade-off is that the text is fixed at creation time and drawn as a path: there is no
- * kerning, ligature or complex-script shaping (glyphs are placed by their nominal advances), no
+ * The trade-off is that the text is fixed at creation time and drawn as a path: glyphs are placed
+ * by their advances and the font's pair kerning, with no ligatures or complex-script shaping, no
  * font fallback for characters [font] lacks, and no accessible text unless the caller adds a
  * content description.
  *
@@ -63,6 +63,8 @@ import androidx.compose.ui.graphics.Color
  * @param modifier Modifier for the canvas; the text's own width and height are applied after it.
  * @param color The fill color.
  * @param location Values for the axes not in [axes], held fixed; missing axes take their defaults.
+ * @param kerningLocation Where in the design space the font's `GPOS` pair kerning is taken. Kerning
+ *   is a constant per pair: it does not follow the animated axes.
  */
 @SuppressLint("RestrictedApi")
 @Composable
@@ -75,12 +77,13 @@ public fun RemoteVariableFontText(
   modifier: RemoteModifier = RemoteModifier,
   color: RemoteColor = Color.Black.rc,
   location: Map<String, Float> = emptyMap(),
+  kerningLocation: Map<String, Float> = location,
 ) {
   val indices = axes.keys.associateWith { tag -> font.axes.indexOfFirst { it.tag == tag } }
   require(indices.values.none { it < 0 }) {
     "${indices.filterValues { it < 0 }.keys} not among ${font.axes.map { it.tag }}"
   }
-  val outline = remember(text, font) { font.variedLayout(text) }
+  val outline = remember(text, font, kerningLocation) { font.variedLayout(text, kerningLocation) }
   val specialization =
     remember(font, indices.values.toSet(), location) {
       AxisSpecialization(indices.values.toSet(), font.normalize(location))

@@ -16,9 +16,19 @@
 
 package com.google.android.horologist.remotecompose.fontvariation
 
+import android.annotation.SuppressLint
+import android.icu.text.DecimalFormat
 import androidx.compose.foundation.layout.size
+import androidx.compose.remote.creation.compose.layout.RemoteTime
+import androidx.compose.remote.creation.compose.state.RemoteFloat
+import androidx.compose.remote.creation.compose.state.RemoteString
+import androidx.compose.remote.creation.compose.state.asRdp
+import androidx.compose.remote.creation.compose.state.rc
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ee.schimke.composeai.preview.AnimatedPreview
@@ -97,4 +107,38 @@ fun RobotoFlexWeightAndSlantSelfAnimatedPreview() {
     modifier = Modifier.size(200.dp, 50.dp),
     fontResId = R.raw.roboto_flex,
   )
+}
+
+/** [value], a whole number from 0 to 99, as two digits. */
+@SuppressLint("RestrictedApi")
+private fun twoDigits(value: RemoteFloat): RemoteString {
+  val digit = DecimalFormat("0")
+  val ones = value % 10f
+  return ((value - ones) / 10f).toRemoteString(digit) + ones.toRemoteString(digit)
+}
+
+/**
+ * A clock whose text is a [RemoteString] built in the document from its own time, drawn in Roboto
+ * Flex with the weight sweeping: the digits change and the weight moves with no host input.
+ */
+@Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 200, heightDp = 50)
+@AnimatedPreview(durationMs = 4000, frameIntervalMs = 250, showCurves = false)
+@SuppressLint("RestrictedApi")
+@Composable
+fun RemoteStringClockPreview() {
+  val context = LocalContext.current
+  val font = remember { context.variableFont(R.raw.roboto_flex) }
+  SelfAnimatedDocumentPreview(Modifier.size(200.dp, 50.dp)) {
+    val time = RemoteTime()
+    val text = twoDigits(time.Minutes() % 60f) + ":" + twoDigits(time.Seconds() % 60f)
+    RemoteVariableFontText(
+      text = text,
+      characters = "0123456789:",
+      maxLength = 5,
+      font = font,
+      axes = mapOf("wght" to sweep(100f, 1000f, 4f)),
+      fontSize = 32.dp.asRdp(),
+      color = Color.White.rc,
+    )
+  }
 }

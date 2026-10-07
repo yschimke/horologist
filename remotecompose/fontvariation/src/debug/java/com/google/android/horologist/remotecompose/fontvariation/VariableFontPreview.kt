@@ -64,6 +64,7 @@ fun VariableFontTweenTextPreview(
   fontSize: Dp = 32.dp,
   color: Color = Color.White,
   location: Map<String, Float> = emptyMap(),
+  kerningLocation: Map<String, Float> = emptyMap(),
   documentWidth: Int = 400,
   documentHeight: Int = 100,
   clock: RemoteClock = RemoteClock.SYSTEM,
@@ -84,6 +85,7 @@ fun VariableFontTweenTextPreview(
         fontSize = fontSize.asRdp(),
         color = color.rc,
         location = location,
+        kerningLocation = kerningLocation,
       )
     }
   doc.value?.let { document ->
@@ -112,6 +114,7 @@ fun VariableFontTextPreview(
   fontSize: Dp = 32.dp,
   color: Color = Color.White,
   location: Map<String, Float> = emptyMap(),
+  kerningLocation: Map<String, Float> = emptyMap(),
   documentWidth: Int = 400,
   documentHeight: Int = 100,
   clock: RemoteClock = RemoteClock.SYSTEM,
@@ -129,6 +132,7 @@ fun VariableFontTextPreview(
         fontSize = fontSize.asRdp(),
         color = color.rc,
         location = location,
+        kerningLocation = kerningLocation,
       )
     }
   doc.value?.let { document ->
@@ -257,6 +261,27 @@ fun VariableFontSelfAnimatedPreview(
         color = color.rc,
       )
     }
+  doc.value?.let { document ->
+    RemoteDocumentPlayer(
+      document = document,
+      modifier = modifier,
+      documentWidth = documentWidth,
+      documentHeight = documentHeight,
+    )
+  }
+}
+
+/** Plays a document that animates itself: no named floats, no host input. */
+@SuppressLint("RestrictedApi")
+@Composable
+fun SelfAnimatedDocumentPreview(
+  modifier: Modifier = Modifier,
+  documentWidth: Int = 400,
+  documentHeight: Int = 100,
+  clock: RemoteClock = RemoteClock.SYSTEM,
+  content: @Composable () -> Unit,
+) {
+  val doc = rememberRemoteDocument(clock = clock) { content() }
   doc.value?.let { document ->
     RemoteDocumentPlayer(
       document = document,

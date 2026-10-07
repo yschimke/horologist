@@ -455,11 +455,12 @@ internal class Gvar(
  * The `HVAR` table: advance-width variation, which a font may keep here rather than (or as well as)
  * in the `gvar` phantom points. When it is present it is the authority for advances.
  */
-internal class Hvar(private val data: FontBytes, private val offset: Int) {
-  private val store = offset + data.u32(offset + 4).toInt()
-  private val advanceMap = data.u32(offset + 8).toInt().takeIf { it != 0 }?.let { offset + it }
-
-  private val regions: List<TupleRegion> = run {
+/**
+ * An `ItemVariationStore`, shared by `HVAR`, `GDEF` and others: rows of deltas, one per variation
+ * region, addressed by (outer, inner) index.
+ */
+internal class ItemVariationStore(private val data: FontBytes, private val store: Int) {
+  val regions: List<TupleRegion> = run {
     val list = store + data.u32(store + 2).toInt()
     val axisCount = data.u16(list)
     List(data.u16(list + 2)) { r ->
@@ -472,24 +473,8 @@ internal class Hvar(private val data: FontBytes, private val offset: Int) {
     }
   }
 
-  /** The (outer, inner) item a glyph's advance delta lives at. */
-  private fun item(glyphId: Int): Pair<Int, Int> {
-    val map = advanceMap ?: return 0 to glyphId
-    val format = data.u8(map)
-    val entryFormat = data.u8(map + 1)
-    val count = if (format == 0) data.u16(map + 2) else data.u32(map + 2).toInt()
-    val entries = map + if (format == 0) 4 else 6
-    val size = ((entryFormat shr 4) and 0x3) + 1
-    val innerBits = (entryFormat and 0xF) + 1
-    val index = minOf(glyphId, count - 1)
-    var entry = 0
-    for (b in 0 until size) entry = (entry shl 8) or data.u8(entries + index * size + b)
-    return (entry ushr innerBits) to (entry and ((1 shl innerBits) - 1))
-  }
-
-  /** The region indexes and deltas of the item behind [glyphId]'s advance. */
-  private fun deltas(glyphId: Int): List<Pair<Int, Int>> {
-    val (outer, inner) = item(glyphId)
+  /** The region indexes and deltas of item ([outer], [inner]). */
+  fun deltas(outer: Int, inner: Int): List<Pair<Int, Int>> {
     if (outer >= data.u16(store + 6)) return emptyList()
     val itemData = store + data.u32(store + 8 + outer * 4).toInt()
     val itemCount = data.u16(itemData)
@@ -512,6 +497,41 @@ internal class Hvar(private val data: FontBytes, private val offset: Int) {
         }
       regionIndexes[r] to delta
     }
+  }
+
+  /** The delta of item ([outer], [inner]) at normalized [coords]. */
+  fun delta(outer: Int, inner: Int, coords: FloatArray): Float =
+    deltas(outer, inner).fold(0f) { sum, (region, delta) ->
+      sum + regions[region].scalar(coords) * delta
+    }
+}
+
+internal class Hvar(private val data: FontBytes, private val offset: Int) {
+  private val store = ItemVariationStore(data, offset + data.u32(offset + 4).toInt())
+  private val advanceMap = data.u32(offset + 8).toInt().takeIf { it != 0 }?.let { offset + it }
+
+  private val regions: List<TupleRegion>
+    get() = store.regions
+
+  /** The (outer, inner) item a glyph's advance delta lives at. */
+  private fun item(glyphId: Int): Pair<Int, Int> {
+    val map = advanceMap ?: return 0 to glyphId
+    val format = data.u8(map)
+    val entryFormat = data.u8(map + 1)
+    val count = if (format == 0) data.u16(map + 2) else data.u32(map + 2).toInt()
+    val entries = map + if (format == 0) 4 else 6
+    val size = ((entryFormat shr 4) and 0x3) + 1
+    val innerBits = (entryFormat and 0xF) + 1
+    val index = minOf(glyphId, count - 1)
+    var entry = 0
+    for (b in 0 until size) entry = (entry shl 8) or data.u8(entries + index * size + b)
+    return (entry ushr innerBits) to (entry and ((1 shl innerBits) - 1))
+  }
+
+  /** The region indexes and deltas of the item behind [glyphId]'s advance. */
+  private fun deltas(glyphId: Int): List<Pair<Int, Int>> {
+    val (outer, inner) = item(glyphId)
+    return store.deltas(outer, inner)
   }
 
   /** The advance-width deltas of [glyphId] by region, unscaled; zero deltas left out. */
