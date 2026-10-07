@@ -168,6 +168,51 @@ each coordinate as multiply-adds made those 12 to 20% smaller than before: Robot
 An earlier design tweened pre-instanced outlines between per-axis keyframes. It is still here,
 internal, as an independent check (`RemoteVariableFontTweenText`).
 
+## Ahead of time
+
+Most of the cost of making a document is working the text's outline out from the font: about 40
+ms for "Hello, Wear OS 12:45!" on the desktop JVM, where parsing the font is 0.1 ms and writing the
+document about 1 ms. `RemoteVariableFontText` keeps the outlines of recent texts, so making the same
+text's document again costs only the writing. To pay nothing at run time, and leave the font out of
+the app, work the outline out ahead of time:
+
+```kotlin
+// At build time:
+val encoded = font.outline("Hamburg", axes = listOf("wght")).encode()
+
+// In the app, with no font:
+val outline = VariableTextOutline.decode(encoded) // 0.07 ms
+RemoteVariableFontText(outline, mapOf("wght" to weight), fontSize = 32.rdp)
+```
+
+`VariableTextOutline` holds the outline in whichever exact form the document will use (key
+outlines or one expression per coordinate), the tents as clamped ramps of the axis values and the
+box; `encode` writes it compactly as a string (whole numbers, as most font values are, in one
+character, path coordinates as differences). "Hamburg" with `wght` is 2,344 characters.
+
+`VariableFontCodegen` (in the tests) writes such an outline into a Kotlin file with a composable that
+draws it; `VariableFontCodegenTest` regenerates the examples in `src/debug/.../generated`
+(`CODEGEN_WRITE=1`) and fails when they are stale, and `GeneratedVsLibraryTest` checks each writes
+the same document as `RemoteVariableFontText` from the font, byte for byte.
+
+### Simplifying for a pixel size
+
+With `pixelSize`, the font size in pixels the text will be drawn at, `outline` also drops what
+cannot move an edge by more than `tolerancePixels`: variation terms too small to matter, curves flat
+at every axis value, points on a straight line at every axis value. Glyph outlines at watch sizes
+have few flat curves or collinear points, so it mostly prunes small terms, and saves little
+(`SimplifiedOutlineTest`, "Hamburgefonstiv 0123"):
+
+| Font, axes, size | Exact | ¹⁄₁₆ px | ¹⁄₈ px | ¹⁄₂ px |
+| --- | --- | --- | --- | --- |
+| Roboto Flex `wght` (keys), 44 px | 31.7 KB | −0.2% | −0.6% | −4% |
+| Roboto Flex `wght` + `slnt`, 44 px | 68.1 KB | −4% | −7% | −20% |
+| Roboto Flex `wght` + `slnt`, 24 px | 68.1 KB | −7% | −11% | −31% |
+| Google Sans Flex `wght` + `ROND`, 44 px | 125.0 KB | −1% | −2% | −8% |
+
+No tolerance leaves every pixel the same: antialiasing quantizes coverage, so any moved edge can
+change a few dozen pixels by up to a quarter. At a sixteenth of a pixel the change is invisible.
+
 ## Players
 
 Checked in the View player (`RemoteDocumentPlayer`), the embedded Compose player (`RcPlayer`,
@@ -199,6 +244,8 @@ sources start from the document's clock.
   antialiasing, and match the platform glyph for glyph.
 - `TweenGridTest` checks the key outlines draw what the expressions draw, to within
   antialiasing, at each axis' extremes, default and random values, for each test font.
+- `VariableTextOutlineTest` checks an outline is the font's own at random axis values and that
+  `encode` round-trips exactly; `SimplifiedOutlineTest` measures simplification.
 - `LiveUpdateTest` and `ClockDrivenAxesTest` check frames follow a named float changed after load
   and the document's clock, in the View and embedded players.
 - `KerningTest` checks the `GPOS` reader against the platform's shaping.

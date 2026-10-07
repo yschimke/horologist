@@ -29,6 +29,7 @@ package com.google.android.horologist.remotecompose.fontvariation {
   }
 
   public final class RemoteVariableFontTextKt {
+    method @KotlinOnly @androidx.compose.remote.creation.compose.layout.RemoteComposable @androidx.compose.runtime.Composable public static void RemoteVariableFontText(com.google.android.horologist.remotecompose.fontvariation.VariableTextOutline outline, java.util.Map<java.lang.String,androidx.compose.remote.creation.compose.state.RemoteFloat> axes, androidx.compose.remote.creation.compose.state.RemoteDp fontSize, optional androidx.compose.remote.creation.compose.modifier.RemoteModifier modifier, optional androidx.compose.remote.creation.compose.state.RemoteColor color);
     method @KotlinOnly @androidx.compose.remote.creation.compose.layout.RemoteComposable @androidx.compose.runtime.Composable public static void RemoteVariableFontText(String text, com.google.android.horologist.remotecompose.fontvariation.VariableFont font, java.util.Map<java.lang.String,androidx.compose.remote.creation.compose.state.RemoteFloat> axes, androidx.compose.remote.creation.compose.state.RemoteDp fontSize, optional androidx.compose.remote.creation.compose.modifier.RemoteModifier modifier, optional androidx.compose.remote.creation.compose.state.RemoteColor color, optional java.util.Map<java.lang.String,java.lang.Float> location, optional java.util.Map<java.lang.String,java.lang.Float> kerningLocation);
   }
 
@@ -50,6 +51,23 @@ package com.google.android.horologist.remotecompose.fontvariation {
   }
 
   public final class VariableFontGlyphs {
+  }
+
+  public final class VariableTextOutline {
+    method public String encode();
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getAxes();
+    property public java.util.List<java.lang.String> axes;
+    field public static final com.google.android.horologist.remotecompose.fontvariation.VariableTextOutline.Companion Companion;
+  }
+
+  public static final class VariableTextOutline.Companion {
+    method public com.google.android.horologist.remotecompose.fontvariation.VariableTextOutline decode(java.lang.String... parts);
+  }
+
+  public final class VariableTextOutlineKt {
+    method public static com.google.android.horologist.remotecompose.fontvariation.VariableTextOutline outline(com.google.android.horologist.remotecompose.fontvariation.VariableFont, String text, java.util.List<java.lang.String> axes, optional java.util.Map<java.lang.String,java.lang.Float> location, optional java.util.Map<java.lang.String,java.lang.Float> kerningLocation, optional Float? pixelSize, optional float tolerancePixels);
+    property public static float DEFAULT_TOLERANCE_PIXELS;
+    field public static final float DEFAULT_TOLERANCE_PIXELS = 0.0625f;
   }
 
 }

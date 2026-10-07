@@ -18,6 +18,7 @@ package com.google.android.horologist.remotecompose.fontvariation
 
 import android.annotation.SuppressLint
 import androidx.compose.remote.creation.compose.state.RemoteFloat
+import androidx.compose.remote.creation.compose.state.clamp
 import androidx.compose.remote.creation.compose.state.mad
 import androidx.compose.remote.creation.compose.state.rf
 
@@ -127,9 +128,38 @@ internal class RemoteVariationModel(
 
   private fun tent(t: Tent): RemoteFloat =
     tents.getOrPut(t) { font.tentOf(t, axes.getValue(t.axis)).createReference() }
+}
 
-  private companion object {
-    /** Three tokens a term and one for the sum so far: 31 of the 32 an expression may have. */
-    const val TERMS_PER_EXPRESSION = 10
+/**
+ * A tent as a function of its axis' user value: piecewise linear, with corners where the font's
+ * user-to-normalized mapping (`avar` included) has them and where the tent does. Returns its value
+ * at the axis' minimum and the clamped ramps it adds, as (knot, width, slope).
+ */
+internal fun VariableFont.tentRamps(tent: Tent): Pair<Float, List<Triple<Float, Float, Float>>> {
+  val info = axes[tent.axis]
+  val f = { v: Float -> tent.evaluate(normalize(mapOf(info.tag to v))[tent.axis]) }
+  val knots =
+    (listOf(info.minValue, info.maxValue) +
+        avarBreakpoints(tent.axis) +
+        listOf(tent.start, tent.peak, tent.end).map { denormalize(tent.axis, it) })
+      .filter { it in info.minValue..info.maxValue }
+      .distinct()
+      .sorted()
+  val ys = knots.map(f)
+  val ramps =
+    (0 until knots.size - 1).mapNotNull { k ->
+      val width = knots[k + 1] - knots[k]
+      val rise = ys[k + 1] - ys[k]
+      if (rise == 0f) null else Triple(knots[k], width, rise / width)
+    }
+  return ys.first() to ramps
+}
+
+/** [tent] on the player, as clamped ramps of its axis' user [value]. */
+@SuppressLint("RestrictedApi")
+internal fun VariableFont.tentOf(tent: Tent, value: RemoteFloat): RemoteFloat {
+  val (y0, ramps) = tentRamps(tent)
+  return ramps.fold(y0.rf) { sum, (knot, width, slope) ->
+    sum + clamp(value - knot, 0f, width) * slope
   }
 }

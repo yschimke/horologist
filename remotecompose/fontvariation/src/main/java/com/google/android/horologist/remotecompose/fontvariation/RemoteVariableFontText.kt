@@ -27,6 +27,8 @@ import androidx.compose.remote.creation.compose.state.RemoteColor
 import androidx.compose.remote.creation.compose.state.RemoteDp
 import androidx.compose.remote.creation.compose.state.RemoteFloat
 import androidx.compose.remote.creation.compose.state.RemotePaint
+import androidx.compose.remote.creation.compose.state.clamp
+import androidx.compose.remote.creation.compose.state.mad
 import androidx.compose.remote.creation.compose.state.rc
 import androidx.compose.remote.creation.compose.state.rf
 import androidx.compose.runtime.Composable
@@ -45,15 +47,18 @@ import androidx.compose.ui.graphics.Color
  * path whose points are the results, so the outline is the font's own at every value, not an
  * approximation, and the document needs no font.
  *
- * When one axis is animated and its variation regions meet without overlapping (as when they meet
- * only at its default), the same outline is drawn instead as a path tween between a few key
- * outlines, with no expression per coordinate: exact, and usually smaller and faster to play. See
- * [TweenGrid].
+ * When one axis is animated and its variation regions do not overlap (as when they meet only at its
+ * default), the same outline is drawn instead as a path tween between a few key outlines, with no
+ * expression per coordinate: exact, and usually smaller and faster to play.
  *
  * The axes can be any [RemoteFloat]: named floats a host sets, animations, or expressions of the
  * document's own clock. The document grows with the number of distinct coordinates and variation
  * regions in [text], and fastest with the number of axes animated together, since regions that span
  * several axes multiply; animate only the axes that move and fix the rest with [location].
+ *
+ * This works the outline out from [font] each time a document is made. To do that ahead of time,
+ * and leave the font out of the app, make a [VariableTextOutline] at build time and draw it with
+ * the other overload.
  *
  * The trade-off is that the text is fixed at creation time and drawn as a path: glyphs are placed
  * by their advances and the font's pair kerning, with no ligatures or complex-script shaping, no
@@ -71,7 +76,6 @@ import androidx.compose.ui.graphics.Color
  * @param kerningLocation Where in the design space the font's `GPOS` pair kerning is taken. Kerning
  *   is a constant per pair: it does not follow the animated axes.
  */
-@SuppressLint("RestrictedApi")
 @Composable
 @RemoteComposable
 public fun RemoteVariableFontText(
@@ -87,8 +91,7 @@ public fun RemoteVariableFontText(
   VariableFontText(text, font, axes, fontSize, modifier, color, location, kerningLocation)
 }
 
-/** [RemoteVariableFontText], with the tween grid allowed or not. */
-@SuppressLint("RestrictedApi")
+/** [RemoteVariableFontText], with the key outlines allowed or not. */
 @Composable
 @RemoteComposable
 internal fun VariableFontText(
@@ -100,89 +103,169 @@ internal fun VariableFontText(
   color: RemoteColor = Color.Black.rc,
   location: Map<String, Float> = emptyMap(),
   kerningLocation: Map<String, Float> = location,
-  allowTweenGrid: Boolean = true,
+  allowKeys: Boolean = true,
 ) {
-  val indices = axes.keys.associateWith { tag -> font.axes.indexOfFirst { it.tag == tag } }
-  require(indices.values.none { it < 0 }) {
-    "${indices.filterValues { it < 0 }.keys} not among ${font.axes.map { it.tag }}"
-  }
-  val outline = remember(text, font, kerningLocation) { font.variedLayout(text, kerningLocation) }
-  val specialization =
-    remember(font, indices.values.toSet(), location) {
-      AxisSpecialization(indices.values.toSet(), font.normalize(location))
+  val tags = axes.keys.toList()
+  val outline =
+    remember(text, font, tags, location, kerningLocation, allowKeys) {
+      OutlineCache.get(OutlineKey(font, text, tags, location, kerningLocation, allowKeys)) {
+        font.outline(text, tags, location, kerningLocation, null, 0f, allowKeys)
+      }
     }
-  val animatedAxes = indices.entries.associate { (tag, i) -> i to axes.getValue(tag) }
-  val maxAdvance =
-    remember(text, font, indices.values.toSet(), location) {
-      font.maxAdvance(text, outline.advance, indices.values.toSet(), font.normalize(location))
-    }
-  val em = 1f / font.unitsPerEm
-  val width = fontSize * (maxAdvance * em)
-  val height = fontSize * ((font.ascender - font.descender) * em)
+  RemoteVariableFontText(outline, axes, fontSize, modifier, color)
+}
 
-  val grid =
-    remember(outline, specialization, indices.values.toList(), allowTweenGrid) {
-      if (allowTweenGrid) TweenGrid.of(outline, specialization, indices.values.toList()) else null
+private data class OutlineKey(
+  val font: VariableFont,
+  val text: String,
+  val axes: List<String>,
+  val location: Map<String, Float>,
+  val kerningLocation: Map<String, Float>,
+  val allowKeys: Boolean,
+)
+
+/**
+ * The outlines of recent texts. Working one out from the font is most of the cost of making a
+ * document, and a widget or server often makes the same text's document again and again, each time
+ * in a new composition where `remember` starts afresh.
+ */
+private object OutlineCache {
+  private const val SIZE = 32
+  private val entries =
+    object : LinkedHashMap<OutlineKey, VariableTextOutline>(SIZE, 0.75f, true) {
+      override fun removeEldestEntry(
+        eldest: MutableMap.MutableEntry<OutlineKey, VariableTextOutline>
+      ) = size > SIZE
     }
 
-  if (grid != null) {
-    RemoteCanvas(modifier = modifier.width(width).height(height)) {
-      val state = remoteComposeCreationState
-      val writer = state.document
-      val id = { value: RemoteFloat -> value.getFloatIdForCreationState(state) }
-      val tents =
-        grid.tents.associateWith { tent ->
-          font.tentOf(tent, animatedAxes.getValue(tent.axis)).createReference()
-        }
-      val scalars = tents.mapValues { (_, value) -> id(value) }
-      val anyTent = id(tents.values.reduce { a, b -> a + b })
-      // The paint and anything already recorded go first, so the writes below stay in order.
-      val canvas = remoteCanvas.internalCanvas
-      canvas.usePaint(RemotePaint { this.color = color })
-      canvas.flush()
-      val scale = fontSize.toPx() * em
-      writer.save()
-      writer.translate(0f, id(scale * font.ascender.toFloat()))
-      writer.scale(id(scale), id(scale * -1f))
-      grid.draw(writer, scalars::getValue, anyTent)
-      writer.restore()
-    }
-    return
-  }
+  fun get(key: OutlineKey, make: () -> VariableTextOutline): VariableTextOutline =
+    synchronized(entries) { entries[key] }
+      ?: make().also { synchronized(entries) { entries[key] = it } }
+}
+
+/**
+ * Draws [outline], made by [VariableFont.outline] now or ahead of time and perhaps read back with
+ * [VariableTextOutline.decode], with its axes driven by [axes]. Nothing about the font is worked
+ * out here, so making the document is quick, and the font itself is not needed.
+ *
+ * @param outline The text, its font and its animated axes, worked out.
+ * @param axes A value for each of [VariableTextOutline.axes], by tag, in the axis' user units.
+ * @param fontSize The font size.
+ * @param modifier Modifier for the canvas; the text's own width and height are applied after it.
+ * @param color The fill color.
+ */
+@SuppressLint("RestrictedApi")
+@Composable
+@RemoteComposable
+public fun RemoteVariableFontText(
+  outline: VariableTextOutline,
+  axes: Map<String, RemoteFloat>,
+  fontSize: RemoteDp,
+  modifier: RemoteModifier = RemoteModifier,
+  color: RemoteColor = Color.Black.rc,
+) {
+  require(axes.keys == outline.axes.toSet()) { "axes ${axes.keys} must be ${outline.axes}" }
+  val em = 1f / outline.unitsPerEm
+  val width = fontSize * (outline.width * em)
+  val height = fontSize * ((outline.ascender - outline.descender) * em)
 
   RemoteCanvas(modifier = modifier.width(width).height(height)) {
-    val state = remoteComposeCreationState
-    val model = RemoteVariationModel(font, animatedAxes)
-    // Each coordinate is either a literal or the NaN-boxed id of its expression; the player
-    // resolves the ids whenever the expressions change.
-    val coordinate = { form: LinearForm ->
-      val animated = specialization.specialize(form)
-      if (animated.isConstant) animated.constant
-      else model.float(animated).getFloatIdForCreationState(state)
-    }
-    val path = RemotePath()
-    outline.emit(
-      object : PathSink<LinearForm> {
-        override fun moveTo(x: LinearForm, y: LinearForm) =
-          path.moveTo(coordinate(x), coordinate(y))
-
-        override fun lineTo(x: LinearForm, y: LinearForm) =
-          path.lineTo(coordinate(x), coordinate(y))
-
-        override fun quadTo(x1: LinearForm, y1: LinearForm, x2: LinearForm, y2: LinearForm) =
-          path.quadTo(coordinate(x1), coordinate(y1), coordinate(x2), coordinate(y2))
-
-        override fun close() = path.close()
-      }
-    )
+    val values = outline.axes.map { axes.getValue(it) }
+    val tents = outline.tents.map { it.remote(values[it.axis]).createReference() }
+    val paint = RemotePaint { this.color = color }
     val scale = fontSize.toPx() * em
     remoteCanvas.save()
-    remoteCanvas.translate(0f.rf, scale * font.ascender.toFloat())
+    remoteCanvas.translate(0f.rf, scale * outline.ascender.toFloat())
     remoteCanvas.scale(scale, -scale)
-    drawPath(path, RemotePaint { this.color = color })
+    when (val body = outline.body) {
+      is VariableTextOutline.Keys -> {
+        // At most one tent is above zero: tween from the default outline towards its key. The
+        // first tent's tween also draws the default outline, when none is.
+        val base = outline.path(body.base) { it }
+        val keys = body.keys.map { key -> outline.path(key) { it } }
+        tents.forEachIndexed { i, scalar ->
+          val draw = { drawTweenPath(base, keys[i], scalar, 0f.rf, 1f.rf, paint) }
+          val others = tents.filterIndexed { j, _ -> j != i }
+          when {
+            i > 0 -> remoteCanvas.drawConditionally(scalar.isGreaterThan(0f.rf), draw)
+            others.isEmpty() -> draw()
+            else ->
+              remoteCanvas.drawConditionally(
+                others.reduce { a, b -> a + b }.isLessThanOrEqualTo(0f.rf),
+                draw,
+              )
+          }
+        }
+      }
+      is VariableTextOutline.Forms -> {
+        val state = remoteComposeCreationState
+        val regions =
+          body.regions.map { r ->
+            if (r.size == 1) tents[r[0]]
+            else r.map { tents[it] }.reduce { a, b -> a * b }.createReference()
+          }
+        val forms =
+          body.constants.indices.map { f ->
+            val terms = body.termStart[f] until body.termStart[f + 1]
+            // Each multiply-add holds two more values on the stack until the chain unwinds, so a
+            // long chain is written in parts that fit an expression's 32 tokens.
+            terms.chunked(TERMS_PER_EXPRESSION).fold(body.constants[f].rf) { sum, part ->
+              part
+                .fold(sum) { s, t -> mad(regions[body.regionOf[t]], body.coefficients[t].rf, s) }
+                .createReference()
+            }
+          }
+        val ids = forms.map { it.getFloatIdForCreationState(state) }
+        val coordinates =
+          FloatArray(body.slots.size) {
+            if (body.slots[it] < 0) body.literals[it] else ids[body.slots[it]]
+          }
+        drawPath(outline.path(coordinates) { it }, paint)
+      }
+    }
     remoteCanvas.restore()
   }
 }
+
+/** The path of [verbs][VariableTextOutline.verbs] through [coordinates], mapped by [value]. */
+@SuppressLint("RestrictedApi")
+private inline fun VariableTextOutline.path(
+  coordinates: FloatArray,
+  value: (Float) -> Float,
+): RemotePath {
+  val path = RemotePath()
+  var i = 0
+  for (verb in verbs) {
+    when (verb.toInt()) {
+      MOVE -> path.moveTo(value(coordinates[i]), value(coordinates[i + 1]))
+      LINE -> path.lineTo(value(coordinates[i]), value(coordinates[i + 1]))
+      QUAD ->
+        path.quadTo(
+          value(coordinates[i]),
+          value(coordinates[i + 1]),
+          value(coordinates[i + 2]),
+          value(coordinates[i + 3]),
+        )
+      else -> path.close()
+    }
+    i +=
+      when (verb.toInt()) {
+        MOVE,
+        LINE -> 2
+        QUAD -> 4
+        else -> 0
+      }
+  }
+  return path
+}
+
+/** This tent on the player, as clamped ramps of its axis' [value]. */
+@SuppressLint("RestrictedApi")
+internal fun VariableTextOutline.TentRamps.remote(value: RemoteFloat): RemoteFloat =
+  knots.indices.fold(y0.rf) { sum, i -> sum + clamp(value - knots[i], 0f, widths[i]) * slopes[i] }
+
+/** Three tokens a term and one for the sum so far: 31 of the 32 an expression may have. */
+internal const val TERMS_PER_EXPRESSION = 10
 
 /**
  * The widest [advance] of [text] anywhere the [animated] axes can move, the others held at [fixed].

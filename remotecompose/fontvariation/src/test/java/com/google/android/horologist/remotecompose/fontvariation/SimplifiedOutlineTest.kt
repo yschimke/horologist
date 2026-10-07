@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.remote.core.CoreDocument
 import androidx.compose.remote.creation.compose.capture.rememberRemoteDocument
+import androidx.compose.remote.creation.compose.state.RemoteFloat
 import androidx.compose.remote.creation.compose.state.asRdp
 import androidx.compose.remote.creation.compose.state.rc
 import androidx.compose.remote.creation.compose.state.rememberNamedRemoteFloat
@@ -41,9 +42,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
-import java.io.File
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.random.Random
@@ -54,48 +53,36 @@ import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
 /**
- * The tween grid draws exactly what an expression per coordinate draws, in the View player, at each
- * axis' extremes, default and random values, for every test font, to within antialiasing. Where it
- * does not apply (several axes, overlapping regions, or keys that would outweigh the expressions)
- * both documents are the expression one. Set `TWEEN_GRID_EXPORT` to a directory to also write each
- * document there.
+ * An outline simplified for the pixel size it is drawn at, against the exact one: what each
+ * tolerance saves and how many pixels it changes, at each axis' extremes, default and random
+ * values.
  */
 @Config(sdk = [35], qualifiers = "w600dp-h900dp-xhdpi")
 @RunWith(AndroidJUnit4::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-class TweenGridTest {
+class SimplifiedOutlineTest {
   @get:Rule val composeRule = createAndroidComposeRule<ComponentActivity>()
 
   private val values = mutableStateMapOf<String, Float>()
   private val documents = mutableStateMapOf<String, CoreDocument>()
 
-  @Test fun robotoFlexWeight() = compare(robotoFlex, listOf("wght"), grid = true)
+  @Test fun robotoFlexWeight22() = compare(testFonts[1], listOf("wght"), 22)
 
-  @Test fun robotoFlexSlant() = compare(robotoFlex, listOf("slnt"), grid = true)
+  @Test fun robotoFlexWeightSlant22() = compare(testFonts[1], listOf("wght", "slnt"), 22)
 
-  @Test fun robotoFlexGrade() = compare(robotoFlex, listOf("GRAD"))
+  @Test fun robotoFlexWeightSlant12() = compare(testFonts[1], listOf("wght", "slnt"), 12)
 
-  /** Two axes would need tweens of tweens, which the embedded player does not draw. */
-  @Test fun robotoFlexWeightSlant() = compare(robotoFlex, listOf("wght", "slnt"), grid = false)
+  @Test fun googleSansFlex22() = compare(googleSansFlex, listOf("wght", "ROND"), 22)
 
-  /** Google Sans Flex's weight regions overlap (it has intermediate masters). */
-  @Test fun googleSansFlexWeight() = compare(googleSansFlex, listOf("wght"), grid = false)
-
-  @Test fun googleSansFlexRoundness() = compare(googleSansFlex, listOf("ROND"))
-
-  @Test fun recursiveCasual() = compare(testFonts[2], listOf("CASL"))
-
-  @Test fun recursiveSeveral() = compare(testFonts[2], listOf("wght", "slnt", "CASL"))
-
-  @Test fun frauncesSoft() = compare(testFonts[3], listOf("SOFT"))
-
-  @Test fun notoSansWeight() = compare(testFonts[4], listOf("wght"))
-
-  @Test fun interWeight() = compare(testFonts[5], listOf("wght"))
-
-  /** [grid] when the case is known to use the grid, so a regression to expressions shows. */
-  private fun compare(testFont: TestFont, axes: List<String>, grid: Boolean? = null) {
+  private fun compare(testFont: TestFont, axes: List<String>, sizeDp: Int) {
     val font = testFont.font
+    val pixelSize = sizeDp * DENSITY
+    val outlines =
+      linkedMapOf("exact" to font.outline(TEXT, axes)) +
+        TOLERANCES.associate { t ->
+          "1/${(1 / t).toInt()} px" to
+            font.outline(TEXT, axes, pixelSize = pixelSize, tolerancePixels = t)
+        }
     val info = axes.map { tag -> font.axes.first { it.tag == tag } }
     val random = Random(axes.hashCode())
     val locations =
@@ -104,55 +91,43 @@ class TweenGridTest {
         info.associate { it.tag to it.minValue },
         info.associate { it.tag to it.maxValue },
       ) +
-        List(4) {
+        List(3) {
           info.associate {
             it.tag to it.minValue + (it.maxValue - it.minValue) * random.nextFloat()
           }
         }
     locations.first().forEach { (k, v) -> values[k] = v }
-    val variants = mapOf("grid" to true, "expressions" to false)
     composeRule.setContent {
       Column(Modifier.background(Color.Black)) {
-        variants.forEach { (tag, allow) ->
+        outlines.forEach { (tag, outline) ->
           Player(tag, axes) { a ->
-            VariableFontText(
-              TEXT,
-              font,
-              a,
-              SIZE.dp.asRdp(),
-              color = Color.White.rc,
-              allowKeys = allow,
-            )
+            RemoteVariableFontText(outline, a, sizeDp.dp.asRdp(), color = Color.White.rc)
           }
         }
       }
     }
-    composeRule.waitUntil(20_000) { documents.size == variants.size }
-
-    val stats = variants.keys.associateWith { DocumentStats.of(documents.getValue(it)) }
-    val report = StringBuilder("$testFont $axes\n")
-    stats.forEach { (tag, s) -> report.appendLine("  %-12s %s".format(tag, s)) }
-    val usesGrid = stats.getValue("grid").expressions < stats.getValue("expressions").expressions
-    report.appendLine("  grid ${if (usesGrid) "used" else "not applicable"}")
-    grid?.let { assertWithMessage("$report").that(usesGrid).isEqualTo(it) }
-    System.getenv("TWEEN_GRID_EXPORT")?.let { dir ->
-      variants.keys.forEach { tag ->
-        val buffer = documents.getValue(tag).buffer.buffer
-        File(dir, "${testFont.resource}_${axes.joinToString("_")}_$tag.rc")
-          .apply { parentFile!!.mkdirs() }
-          .writeBytes(buffer.buffer.copyOf(buffer.size))
-      }
-    }
-
+    composeRule.waitUntil(20_000) { documents.size == outlines.size }
+    val worst = outlines.keys.associateWith { 0 to 0 }.toMutableMap()
     for (location in locations) {
       location.forEach { (k, v) -> values[k] = v }
-      val (expressions, grid) = settled()
-      val (maxDiff, differing) = diff(grid, expressions)
-      report.appendLine("  $location: $differing px differ, max $maxDiff")
-      assertWithMessage("$report at $location").that(maxDiff).isAtMost(MAX_DIFF)
-      assertThat(ink(expressions)).isGreaterThan(0)
+      val frames = settled(outlines.keys)
+      outlines.keys.drop(1).forEach { tag ->
+        val (max, count) = diff(frames.getValue(tag), frames.getValue("exact"))
+        val (m, c) = worst.getValue(tag)
+        worst[tag] = maxOf(m, max) to maxOf(c, count)
+      }
+    }
+    val report = StringBuilder("$testFont $axes at $sizeDp dp ($pixelSize px)\n")
+    outlines.forEach { (tag, outline) ->
+      val (max, count) = worst.getValue(tag)
+      report.appendLine(
+        "  %-9s %s  %4d verbs  worst: %3d px differ, max %3d"
+          .format(tag, DocumentStats.of(documents.getValue(tag)), outline.verbs.size, count, max)
+      )
     }
     println(report)
+    val (max, _) = worst.getValue("1/${(1 / DEFAULT_TOLERANCE_PIXELS).toInt()} px")
+    assertWithMessage("$report").that(max).isAtMost(MAX_DIFF)
   }
 
   @SuppressLint("RestrictedApi")
@@ -160,9 +135,7 @@ class TweenGridTest {
   private fun Player(
     tag: String,
     axes: List<String>,
-    content:
-      @Composable
-      (Map<String, androidx.compose.remote.creation.compose.state.RemoteFloat>) -> Unit,
+    content: @Composable (Map<String, RemoteFloat>) -> Unit,
   ) {
     val initial = values.toMap()
     val doc = rememberRemoteDocument {
@@ -186,6 +159,18 @@ class TweenGridTest {
     }
   }
 
+  /** Every player's frame once two captures in a row agree. */
+  private fun settled(tags: Collection<String>): Map<String, Bitmap> {
+    var last: Map<String, Bitmap>? = null
+    repeat(10) {
+      composeRule.waitForIdle()
+      val now = tags.associateWith(::capture)
+      if (last != null && tags.all { last!!.getValue(it).sameAs(now.getValue(it)) }) return now
+      last = now
+    }
+    return last!!
+  }
+
   private fun capture(tag: String): Bitmap {
     val root = composeRule.activity.window.decorView
     val whole = Bitmap.createBitmap(root.width, root.height, Bitmap.Config.ARGB_8888)
@@ -200,21 +185,6 @@ class TweenGridTest {
     )
   }
 
-  /** Both players' frames once two captures in a row agree, so neither is a frame behind. */
-  private fun settled(): Pair<Bitmap, Bitmap> {
-    var last: Pair<Bitmap, Bitmap>? = null
-    repeat(10) {
-      composeRule.waitForIdle()
-      val now = capture("expressions") to capture("grid")
-      if (last != null && last!!.first.sameAs(now.first) && last!!.second.sameAs(now.second)) {
-        return now
-      }
-      last = now
-    }
-    return last!!
-  }
-
-  /** The largest channel difference and the number of pixels that differ at all. */
   private fun diff(a: Bitmap, b: Bitmap): Pair<Int, Int> {
     var max = 0
     var count = 0
@@ -228,18 +198,17 @@ class TweenGridTest {
     return max to count
   }
 
-  private fun ink(b: Bitmap): Long =
-    (0 until b.height).sumOf { y ->
-      (0 until b.width).sumOf { x -> (b.getPixel(x, y) and 0xff).toLong() }
-    }
-
   private companion object {
-    val robotoFlex = testFonts[1]
     const val TEXT = "Hamburgefonstiv 0123"
-    const val SIZE = 22
+    const val DENSITY = 2f
     const val WIDTH = 300
     const val HEIGHT = 32
-    /** Antialiasing: a tween's lerp and an expression's sum round differently at edges. */
-    const val MAX_DIFF = 16
+    val TOLERANCES = listOf(1f / 16, 1f / 8, 1f / 4, 1f / 2)
+
+    /**
+     * Any change to an edge can flip a pixel by about a quarter, as antialiasing quantizes
+     * coverage; a sixteenth of a pixel never does more.
+     */
+    const val MAX_DIFF = 72
   }
 }
