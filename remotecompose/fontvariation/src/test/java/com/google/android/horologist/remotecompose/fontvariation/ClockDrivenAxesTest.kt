@@ -95,7 +95,7 @@ class ClockDrivenAxesTest {
     val font = testFonts[1].font
     follow(
       live = {
-        RemoteVariableFontExpressionText(
+        RemoteVariableFontText(
           TEXT,
           font,
           mapOf("wght" to sweep(100f, 1000f, 4f), "slnt" to sweep(0f, -10f, 6f)),
@@ -104,7 +104,7 @@ class ClockDrivenAxesTest {
         )
       },
       reference = { s ->
-        RemoteVariableFontExpressionText(
+        RemoteVariableFontText(
           TEXT,
           font,
           mapOf(
@@ -124,7 +124,7 @@ class ClockDrivenAxesTest {
     val font = testFonts[1].font
     follow(
       live = {
-        RemoteVariableFontText(
+        RemoteVariableFontTweenText(
           TEXT,
           font,
           "wght",
@@ -134,7 +134,7 @@ class ClockDrivenAxesTest {
         )
       },
       reference = { s ->
-        RemoteVariableFontText(
+        RemoteVariableFontTweenText(
           TEXT,
           font,
           "wght",

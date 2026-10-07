@@ -72,7 +72,7 @@ class VariableFontTextScreenshotTest : WearScreenshotTest() {
         for ((axis, v) in rows) {
           Row {
             val cell = Modifier.size(CELL_WIDTH.dp, CELL_HEIGHT.dp)
-            VariableFontTextPreview(
+            VariableFontTweenTextPreview(
               TEXT,
               axis,
               v,
@@ -82,7 +82,7 @@ class VariableFontTextScreenshotTest : WearScreenshotTest() {
               documentWidth = CELL_WIDTH,
               documentHeight = CELL_HEIGHT,
             )
-            VariableFontExpressionTextPreview(
+            VariableFontTextPreview(
               TEXT,
               mapOf(axis to v),
               cell,

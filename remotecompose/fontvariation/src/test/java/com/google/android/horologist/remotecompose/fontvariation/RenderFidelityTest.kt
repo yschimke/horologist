@@ -127,7 +127,7 @@ class RenderFidelityTest {
     val (axis, value) = case.values.entries.first()
     Column(Modifier.background(Color.Black)) {
       Box(Modifier.testTag("tween")) {
-        VariableFontTextPreview(
+        VariableFontTweenTextPreview(
           TEXT,
           axis,
           value,
@@ -165,7 +165,7 @@ class RenderFidelityTest {
 
   @Composable
   private fun Expression(case: Case, text: String, width: Int) {
-    VariableFontExpressionTextPreview(
+    VariableFontTextPreview(
       text,
       case.values,
       Modifier.size(width.dp, HEIGHT.dp),

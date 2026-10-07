@@ -26,34 +26,34 @@ import ee.schimke.composeai.preview.AnimatedPreview
 @Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 200, heightDp = 50)
 @Composable
 fun HelloRoundness0Preview() {
-  VariableFontTextPreview("Hello", "ROND", 0f, Modifier.size(200.dp, 50.dp))
+  VariableFontTweenTextPreview("Hello", "ROND", 0f, Modifier.size(200.dp, 50.dp))
 }
 
 @Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 200, heightDp = 50)
 @Composable
 fun HelloRoundness100Preview() {
-  VariableFontTextPreview("Hello", "ROND", 100f, Modifier.size(200.dp, 50.dp))
+  VariableFontTweenTextPreview("Hello", "ROND", 100f, Modifier.size(200.dp, 50.dp))
 }
 
 @Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 200, heightDp = 50)
 @AnimatedPreview(durationMs = 2000, frameIntervalMs = 100, showCurves = false)
 @Composable
 fun HelloRoundnessAnimatedPreview() {
-  VariableFontTextAnimatedPreview("Hello", "ROND", 0f, 100f, Modifier.size(200.dp, 50.dp))
+  VariableFontTweenTextAnimatedPreview("Hello", "ROND", 0f, 100f, Modifier.size(200.dp, 50.dp))
 }
 
 @Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 200, heightDp = 50)
 @AnimatedPreview(durationMs = 2000, frameIntervalMs = 100, showCurves = false)
 @Composable
 fun HelloWeightAnimatedPreview() {
-  VariableFontTextAnimatedPreview("Hello", "wght", 100f, 1000f, Modifier.size(200.dp, 50.dp))
+  VariableFontTweenTextAnimatedPreview("Hello", "wght", 100f, 1000f, Modifier.size(200.dp, 50.dp))
 }
 
 @Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 200, heightDp = 50)
 @AnimatedPreview(durationMs = 2000, frameIntervalMs = 100, showCurves = false)
 @Composable
 fun HelloWeightAndRoundnessExpressionAnimatedPreview() {
-  VariableFontExpressionTextAnimatedPreview(
+  VariableFontTextAnimatedPreview(
     "Hello",
     from = mapOf("wght" to 100f, "ROND" to 0f),
     to = mapOf("wght" to 1000f, "ROND" to 100f),
@@ -64,7 +64,7 @@ fun HelloWeightAndRoundnessExpressionAnimatedPreview() {
 @Preview(backgroundColor = 0xff000000, showBackground = true, widthDp = 200, heightDp = 50)
 @Composable
 fun RobotoFlexSlantPreview() {
-  VariableFontTextPreview(
+  VariableFontTweenTextPreview(
     "Hello",
     "slnt",
     -10f,
@@ -77,7 +77,7 @@ fun RobotoFlexSlantPreview() {
 @AnimatedPreview(durationMs = 2000, frameIntervalMs = 100, showCurves = false)
 @Composable
 fun RobotoFlexSlantWidthExpressionAnimatedPreview() {
-  VariableFontExpressionTextAnimatedPreview(
+  VariableFontTextAnimatedPreview(
     "Hello",
     from = mapOf("slnt" to 0f, "wdth" to 25f),
     to = mapOf("slnt" to -10f, "wdth" to 151f),

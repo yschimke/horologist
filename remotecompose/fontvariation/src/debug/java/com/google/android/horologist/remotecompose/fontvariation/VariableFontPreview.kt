@@ -49,13 +49,13 @@ fun Context.variableFont(@RawRes resId: Int): VariableFont =
   resources.openRawResource(resId).use { VariableFont.parse(it.readBytes()) }
 
 /**
- * Captures a [RemoteVariableFontText] document whose axis is the named float `"axis"`, and plays it
- * with that float set to [value]. One document serves every value: only the player's float changes,
- * never the document or a font.
+ * Captures a [RemoteVariableFontTweenText] document whose axis is the named float `"axis"`, and
+ * plays it with that float set to [value]. One document serves every value: only the player's float
+ * changes, never the document or a font.
  */
 @SuppressLint("RestrictedApi")
 @Composable
-fun VariableFontTextPreview(
+fun VariableFontTweenTextPreview(
   text: String,
   axis: String,
   value: Float,
@@ -76,7 +76,7 @@ fun VariableFontTextPreview(
   val doc =
     rememberRemoteDocument(clock = clock) {
       val axisValue = rememberNamedRemoteFloat("axis") { initial.rf }
-      RemoteVariableFontText(
+      RemoteVariableFontTweenText(
         text = text,
         font = font,
         axis = axis,
@@ -98,13 +98,13 @@ fun VariableFontTextPreview(
 }
 
 /**
- * Captures a [RemoteVariableFontExpressionText] document with one named float per axis in [values],
- * named `axis.<tag>`, and plays it with those floats set to [values]. As with
- * [VariableFontTextPreview], one document serves every value.
+ * Captures a [RemoteVariableFontText] document with one named float per axis in [values], named
+ * `axis.<tag>`, and plays it with those floats set to [values]. As with
+ * [VariableFontTweenTextPreview], one document serves every value.
  */
 @SuppressLint("RestrictedApi")
 @Composable
-fun VariableFontExpressionTextPreview(
+fun VariableFontTextPreview(
   text: String,
   values: Map<String, Float>,
   modifier: Modifier = Modifier,
@@ -122,7 +122,7 @@ fun VariableFontExpressionTextPreview(
   val doc =
     rememberRemoteDocument(clock = clock) {
       val axes = initial.mapValues { (tag, v) -> rememberNamedRemoteFloat("axis.$tag") { v.rf } }
-      RemoteVariableFontExpressionText(
+      RemoteVariableFontText(
         text = text,
         font = font,
         axes = axes,
@@ -142,9 +142,9 @@ fun VariableFontExpressionTextPreview(
   }
 }
 
-/** [VariableFontTextPreview] with the axis swept from [from] to [to] and back, forever. */
+/** [VariableFontTweenTextPreview] with the axis swept from [from] to [to] and back, forever. */
 @Composable
-fun VariableFontTextAnimatedPreview(
+fun VariableFontTweenTextAnimatedPreview(
   text: String,
   axis: String,
   from: Float,
@@ -166,7 +166,7 @@ fun VariableFontTextAnimatedPreview(
         ),
       label = "Axis",
     )
-  VariableFontTextPreview(
+  VariableFontTweenTextPreview(
     text = text,
     axis = axis,
     value = value,
@@ -177,11 +177,11 @@ fun VariableFontTextAnimatedPreview(
 }
 
 /**
- * [VariableFontExpressionTextPreview] with every axis swept together from [from] to [to] and back,
- * forever: one document, several axes moving at once.
+ * [VariableFontTextPreview] with every axis swept together from [from] to [to] and back, forever:
+ * one document, several axes moving at once.
  */
 @Composable
-fun VariableFontExpressionTextAnimatedPreview(
+fun VariableFontTextAnimatedPreview(
   text: String,
   from: Map<String, Float>,
   to: Map<String, Float>,
@@ -202,7 +202,7 @@ fun VariableFontExpressionTextAnimatedPreview(
         ),
       label = "Axes",
     )
-  VariableFontExpressionTextPreview(
+  VariableFontTextPreview(
     text = text,
     values = from.mapValues { (tag, a) -> a + (to.getValue(tag) - a) * t },
     modifier = modifier,
@@ -228,8 +228,8 @@ fun sweepAt(from: Float, to: Float, periodSeconds: Float, seconds: Float): Float
 }
 
 /**
- * A [RemoteVariableFontExpressionText] document whose [axes] are built inside the document, for
- * example with [sweep], so it animates on the player's own clock: no named floats, no host input.
+ * A [RemoteVariableFontText] document whose [axes] are built inside the document, for example with
+ * [sweep], so it animates on the player's own clock: no named floats, no host input.
  */
 @SuppressLint("RestrictedApi")
 @Composable
@@ -248,7 +248,7 @@ fun VariableFontSelfAnimatedPreview(
   val font = remember(fontResId) { context.variableFont(fontResId) }
   val doc =
     rememberRemoteDocument(clock = clock) {
-      RemoteVariableFontExpressionText(
+      RemoteVariableFontText(
         text = text,
         font = font,
         axes = axes(),

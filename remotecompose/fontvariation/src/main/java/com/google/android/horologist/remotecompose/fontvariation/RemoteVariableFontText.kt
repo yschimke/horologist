@@ -27,7 +27,6 @@ import androidx.compose.remote.creation.compose.state.RemoteColor
 import androidx.compose.remote.creation.compose.state.RemoteDp
 import androidx.compose.remote.creation.compose.state.RemoteFloat
 import androidx.compose.remote.creation.compose.state.RemotePaint
-import androidx.compose.remote.creation.compose.state.clamp
 import androidx.compose.remote.creation.compose.state.rc
 import androidx.compose.remote.creation.compose.state.rf
 import androidx.compose.runtime.Composable
@@ -35,15 +34,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 
 /**
- * Draws one line of [text] in a variable [font] with its [axis] driven by a [RemoteFloat], without
- * the player ever loading or re-instancing a font.
+ * Draws one line of [text] in a variable [font] with any number of its axes driven by
+ * [RemoteFloat]s, without the player ever loading or re-instancing a font.
  *
  * Changing a font-variation setting normally means building a new typeface instance and laying the
- * text out again, which is expensive per frame. Instead, the text's outlines are computed here, at
- * document creation time, at each of the axis' [keyframes][axisKeyframes]; the document carries
- * those paths and the player only interpolates between the two that bracket [value]. Because
- * variable-font outlines are piecewise linear in the axis between those keyframes, the result is
- * the font's own outline at every value, not an approximation, and the document needs no font.
+ * text out again, which is expensive per frame. Instead the document carries the font's own
+ * variation model: every outline coordinate is a float expression of the axis values — the default
+ * position plus each variation region's delta weighted by that region's scalar, exactly as the font
+ * defines it. The player re-evaluates those expressions when an axis changes and draws a single
+ * path whose points are the results, so the outline is the font's own at every value, not an
+ * approximation, and the document needs no font.
+ *
+ * The axes can be any [RemoteFloat]: named floats a host sets, animations, or expressions of the
+ * document's own clock. The document grows with the number of distinct coordinates and variation
+ * regions in [text], and fastest with the number of axes animated together, since regions that span
+ * several axes multiply; animate only the axes that move and fix the rest with [location].
  *
  * The trade-off is that the text is fixed at creation time and drawn as a path: there is no
  * kerning, ligature or complex-script shaping (glyphs are placed by their nominal advances), no
@@ -52,14 +57,12 @@ import androidx.compose.ui.graphics.Color
  *
  * @param text The single line of text to draw.
  * @param font The variable font to take outlines from.
- * @param axis The tag of the axis to animate, for example `"ROND"` or `"wght"`.
- * @param value The axis value, in the axis' user units; clamped to [axisRange].
+ * @param axes The animated axes, by tag, with their values in the axis' user units. Values are
+ *   clamped to the axis' range on the player.
  * @param fontSize The font size.
  * @param modifier Modifier for the canvas; the text's own width and height are applied after it.
  * @param color The fill color.
- * @param location Values for the other axes, held fixed; missing axes take their defaults.
- * @param axisRange The part of the axis [value] moves through. Keyframes outside it are not
- *   emitted, so a narrower range means a smaller document.
+ * @param location Values for the axes not in [axes], held fixed; missing axes take their defaults.
  */
 @SuppressLint("RestrictedApi")
 @Composable
@@ -67,82 +70,83 @@ import androidx.compose.ui.graphics.Color
 public fun RemoteVariableFontText(
   text: String,
   font: VariableFont,
-  axis: String,
-  value: RemoteFloat,
+  axes: Map<String, RemoteFloat>,
   fontSize: RemoteDp,
   modifier: RemoteModifier = RemoteModifier,
   color: RemoteColor = Color.Black.rc,
   location: Map<String, Float> = emptyMap(),
-  axisRange: ClosedFloatingPointRange<Float>? = null,
 ) {
-  val frames =
-    remember(text, font, axis, location, axisRange) {
-      variableTextKeyframes(font, text, axis, location, axisRange)
+  val indices = axes.keys.associateWith { tag -> font.axes.indexOfFirst { it.tag == tag } }
+  require(indices.values.none { it < 0 }) {
+    "${indices.filterValues { it < 0 }.keys} not among ${font.axes.map { it.tag }}"
+  }
+  val outline = remember(text, font) { font.variedLayout(text) }
+  val specialization =
+    remember(font, indices.values.toSet(), location) {
+      AxisSpecialization(indices.values.toSet(), font.normalize(location))
+    }
+  val animatedAxes = indices.entries.associate { (tag, i) -> i to axes.getValue(tag) }
+  val maxAdvance =
+    remember(text, font, indices.values.toSet(), location) {
+      font.maxAdvance(text, outline.advance, indices.values.toSet(), font.normalize(location))
     }
   val em = 1f / font.unitsPerEm
-  val width = fontSize * (frames.maxOf { it.advance } * em)
+  val width = fontSize * (maxAdvance * em)
   val height = fontSize * ((font.ascender - font.descender) * em)
 
   RemoteCanvas(modifier = modifier.width(width).height(height)) {
-    val paint = RemotePaint { this.color = color }
-    val scale = fontSize.toPx() * em
-    remoteCanvas.save()
-    remoteCanvas.translate(0f.rf, scale * font.ascender.toFloat())
-    remoteCanvas.scale(scale, -scale)
-    if (frames.size == 1) {
-      drawPath(frames[0].path, paint)
-    } else {
-      val v = clamp(value, frames.first().value, frames.last().value)
-      for (i in 0 until frames.size - 1) {
-        val from = frames[i]
-        val to = frames[i + 1]
-        val tween = clamp((v - from.value) / (to.value - from.value), 0f, 1f)
-        val draw = { drawTweenPath(from.path, to.path, tween, paint = paint) }
-        // Exactly one segment draws: the first below its upper keyframe, the last from its
-        // lower one, and each middle one over [from, to).
-        when {
-          frames.size == 2 -> draw()
-          i == 0 -> remoteCanvas.drawConditionally(v.isLessThan(to.value.rf), draw)
-          i == frames.size - 2 ->
-            remoteCanvas.drawConditionally(v.isGreaterThanOrEqualTo(from.value.rf), draw)
-          else ->
-            remoteCanvas.drawConditionally(
-              v.isGreaterThanOrEqualTo(from.value.rf) and v.isLessThan(to.value.rf),
-              draw,
-            )
-        }
-      }
+    val state = remoteComposeCreationState
+    val model = RemoteVariationModel(font, animatedAxes)
+    // Each coordinate is either a literal or the NaN-boxed id of its expression; the player
+    // resolves the ids whenever the expressions change.
+    val coordinate = { form: LinearForm ->
+      val animated = specialization.specialize(form)
+      if (animated.isConstant) animated.constant
+      else model.float(animated).getFloatIdForCreationState(state)
     }
-    remoteCanvas.restore()
-  }
-}
-
-/** The outline of a line of text at one value of the animated axis. */
-@SuppressLint("RestrictedApi")
-internal class VariableTextFrame(val value: Float, val path: RemotePath, val advance: Float)
-
-@SuppressLint("RestrictedApi")
-internal fun variableTextKeyframes(
-  font: VariableFont,
-  text: String,
-  axis: String,
-  location: Map<String, Float>,
-  axisRange: ClosedFloatingPointRange<Float>?,
-): List<VariableTextFrame> =
-  font.axisKeyframes(text, axis, axisRange).map { v ->
-    val outline = font.layout(text, location + (axis to v))
     val path = RemotePath()
     outline.emit(
-      object : PathSink<Float> {
-        override fun moveTo(x: Float, y: Float) = path.moveTo(x, y)
+      object : PathSink<LinearForm> {
+        override fun moveTo(x: LinearForm, y: LinearForm) =
+          path.moveTo(coordinate(x), coordinate(y))
 
-        override fun lineTo(x: Float, y: Float) = path.lineTo(x, y)
+        override fun lineTo(x: LinearForm, y: LinearForm) =
+          path.lineTo(coordinate(x), coordinate(y))
 
-        override fun quadTo(x1: Float, y1: Float, x2: Float, y2: Float) =
-          path.quadTo(x1, y1, x2, y2)
+        override fun quadTo(x1: LinearForm, y1: LinearForm, x2: LinearForm, y2: LinearForm) =
+          path.quadTo(coordinate(x1), coordinate(y1), coordinate(x2), coordinate(y2))
 
         override fun close() = path.close()
       }
     )
-    VariableTextFrame(v, path, outline.advance)
+    val scale = fontSize.toPx() * em
+    remoteCanvas.save()
+    remoteCanvas.translate(0f.rf, scale * font.ascender.toFloat())
+    remoteCanvas.scale(scale, -scale)
+    drawPath(path, RemotePaint { this.color = color })
+    remoteCanvas.restore()
   }
+}
+
+/**
+ * The widest [advance] of [text] anywhere the [animated] axes can move, the others held at [fixed].
+ *
+ * The box is fixed rather than following the axes, so animating them never reflows the layout. (A
+ * layout modifier driven by the axes would also stop the canvas' expressions from following them on
+ * the AndroidX player.) The advance is linear in each axis between the corners of the regions that
+ * vary it, so its maximum is at one of the grid points those corners make.
+ */
+internal fun VariableFont.maxAdvance(
+  text: String,
+  advance: LinearForm,
+  animated: Set<Int>,
+  fixed: FloatArray,
+): Float {
+  val glyphs = glyphIds(text).toSet()
+  var points = listOf(fixed)
+  for (axis in animated) {
+    val values = normalizedBreakpoints(axis, glyphs)
+    points = points.flatMap { p -> values.map { v -> p.copyOf().also { it[axis] = v } } }
+  }
+  return points.maxOf { advance.evaluate(it) }
+}

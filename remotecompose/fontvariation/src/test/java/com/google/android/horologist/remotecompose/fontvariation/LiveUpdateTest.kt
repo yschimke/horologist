@@ -88,10 +88,10 @@ class LiveUpdateTest {
     composeRule.setContent {
       Column(Modifier.background(Color.Black)) {
         Player("tween", axis) { v ->
-          RemoteVariableFontText(TEXT, font, axis, v, SIZE.dp.asRdp(), color = Color.White.rc)
+          RemoteVariableFontTweenText(TEXT, font, axis, v, SIZE.dp.asRdp(), color = Color.White.rc)
         }
         Player("expression", axis) { v ->
-          RemoteVariableFontExpressionText(
+          RemoteVariableFontText(
             TEXT,
             font,
             mapOf(axis to v),
